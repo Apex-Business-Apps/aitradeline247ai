@@ -17,7 +17,7 @@ const navigationItems = [
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, userRole, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,9 +60,19 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-2">
           {user ? (
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground hidden sm:block">
-                Welcome, {user.user_metadata?.display_name || user.email}
-              </span>
+              <div className="flex flex-col items-end">
+                <span className="text-sm text-muted-foreground hidden sm:block">
+                  Welcome, {user.user_metadata?.display_name || user.email}
+                </span>
+                {userRole && (
+                  <span className={cn(
+                    "text-xs px-2 py-1 rounded-full font-medium hidden sm:block",
+                    isAdmin() ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                  )}>
+                    {userRole.toUpperCase()}
+                  </span>
+                )}
+              </div>
               <Button 
                 variant="outline" 
                 size={isScrolled ? 'sm' : 'default'}
