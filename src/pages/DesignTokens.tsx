@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/ui/logo";
 
 const DesignTokens = () => {
   const colorTokens = [
@@ -28,7 +29,10 @@ const DesignTokens = () => {
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-foreground">TradeLine 24/7 Design System</h1>
+          <div className="flex items-center justify-center gap-2">
+            <Logo variant="text" size="xl" />
+            <span className="text-4xl font-bold text-foreground">Design System</span>
+          </div>
           <p className="text-xl text-muted-foreground">Enterprise-grade design tokens and components</p>
         </header>
 

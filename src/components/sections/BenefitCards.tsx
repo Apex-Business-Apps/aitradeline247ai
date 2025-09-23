@@ -1,5 +1,6 @@
 import { Zap, User, Target } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/ui/logo";
 
 export const BenefitCards = () => {
   const benefits = [
@@ -27,9 +28,11 @@ export const BenefitCards = () => {
     <section className="py-20 bg-gradient-orange-subtle">
       <div className="container">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-            Why Choose TradeLine 24/7?
-          </h2>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="text-3xl md:text-4xl font-bold text-foreground">Why Choose</span>
+            <Logo variant="text" size="lg" />
+            <span className="text-3xl md:text-4xl font-bold text-foreground">?</span>
+          </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Transform every call into an opportunity with our intelligent reception system.
           </p>
