@@ -27,13 +27,7 @@ export const Logo: React.FC<LogoProps> = ({
   className,
   ...props 
 }) => {
-  const logoImage = (
-    <img 
-      src={officialLogo} 
-      alt="TradeLine AI Logo" 
-      className={cn(sizeClasses[size], "w-auto")}
-    />
-  );
+  const logoImage = null;
 
   const logoText = (
     <span className={cn(
