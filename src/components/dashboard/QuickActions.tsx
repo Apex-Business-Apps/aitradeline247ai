@@ -32,30 +32,43 @@ const actions = [
 
 export const QuickActions: React.FC = () => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold text-foreground">
+    <Card 
+      className="relative overflow-hidden border-0 bg-card/60 backdrop-blur-sm"
+      style={{ 
+        boxShadow: 'var(--premium-shadow-subtle)',
+        background: 'linear-gradient(135deg, hsl(var(--card) / 0.8) 0%, hsl(var(--card) / 0.6) 100%)',
+        border: '1px solid hsl(var(--premium-border))'
+      }}
+    >
+      {/* Premium Glass Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+      
+      <CardHeader className="relative z-10 pb-4">
+        <CardTitle className="text-lg font-bold text-foreground tracking-tight">
           Quick Actions
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {actions.map((action) => (
-          <Button
+      <CardContent className="space-y-3 relative z-10">
+        {actions.map((action, index) => (
+          <button
             key={action.title}
-            variant={action.variant}
-            className="w-full h-auto p-3 sm:p-4 justify-start min-h-[3rem] touch-manipulation"
-            asChild
+            className="group w-full h-auto p-4 justify-start min-h-[4rem] touch-manipulation text-left rounded-2xl bg-gradient-to-r from-muted/10 to-muted/5 hover:from-primary/5 hover:to-primary/10 border border-transparent hover:border-primary/20 transition-all duration-300 hover:shadow-[var(--premium-shadow-subtle)] hover:-translate-y-0.5 animate-fade-in"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
-            <div className="flex items-start space-x-2 sm:space-x-3">
-              <action.icon className="h-4 w-4 sm:h-5 sm:w-5 mt-1 flex-shrink-0" />
-              <div className="text-left min-w-0">
-                <div className="font-medium text-sm sm:text-base truncate">{action.title}</div>
-                <div className="text-xs text-muted-foreground line-clamp-2">
+            <div className="flex items-start space-x-4">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 group-hover:from-primary/15 group-hover:to-primary/8 transition-all duration-300">
+                <action.icon className="h-5 w-5 text-primary/70 group-hover:text-primary transition-colors duration-300" />
+              </div>
+              <div className="flex-1 min-w-0 pt-1">
+                <div className="font-semibold text-base text-foreground group-hover:text-primary/90 transition-colors duration-300 truncate mb-1">
+                  {action.title}
+                </div>
+                <div className="text-sm text-muted-foreground/70 line-clamp-2 leading-relaxed">
                   {action.description}
                 </div>
               </div>
             </div>
-          </Button>
+          </button>
         ))}
       </CardContent>
     </Card>

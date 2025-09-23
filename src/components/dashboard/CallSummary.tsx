@@ -64,39 +64,55 @@ const getTypeColor = (type: string) => {
 
 export const CallSummary: React.FC = () => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold text-foreground flex items-center space-x-2">
-          <Phone className="h-5 w-5" />
-          <span>Recent Calls</span>
+    <Card 
+      className="relative overflow-hidden border-0 bg-card/60 backdrop-blur-sm group"
+      style={{ 
+        boxShadow: 'var(--premium-shadow-subtle)',
+        background: 'linear-gradient(135deg, hsl(var(--card) / 0.8) 0%, hsl(var(--card) / 0.6) 100%)',
+        border: '1px solid hsl(var(--premium-border))'
+      }}
+    >
+      {/* Premium Glass Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+      
+      <CardHeader className="relative z-10 pb-4">
+        <CardTitle className="text-lg font-bold text-foreground flex items-center space-x-3">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5">
+            <Phone className="h-5 w-5 text-primary/70" />
+          </div>
+          <span className="tracking-tight">Recent Calls</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {recentCalls.map((call) => (
-          <div key={call.id} className="flex items-center justify-between space-x-3 p-3 rounded-lg bg-muted/30">
+      <CardContent className="space-y-3 relative z-10">
+        {recentCalls.map((call, index) => (
+          <div 
+            key={call.id} 
+            className="group/item flex items-center justify-between space-x-4 p-4 rounded-2xl bg-gradient-to-r from-muted/20 to-muted/10 hover:from-muted/30 hover:to-muted/20 border border-transparent hover:border-primary/10 transition-all duration-300 hover:shadow-[var(--premium-shadow-subtle)] animate-fade-in"
+            style={{ animationDelay: `${index * 80}ms` }}
+          >
             <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2 mb-1">
-                <p className="text-sm font-medium text-foreground truncate">
+              <div className="flex items-center space-x-3 mb-2">
+                <p className="text-sm font-semibold text-foreground truncate group-hover/item:text-primary/90 transition-colors">
                   {call.caller}
                 </p>
                 <Badge 
                   variant="secondary" 
-                  className={`text-xs ${getStatusColor(call.status)}`}
+                  className={`text-xs font-medium px-2 py-1 ${getStatusColor(call.status)} border-0`}
                 >
                   {call.status}
                 </Badge>
               </div>
-              <div className="flex items-center space-x-3 text-xs text-muted-foreground">
-                <span>{call.time}</span>
+              <div className="flex items-center space-x-4 text-xs text-muted-foreground/80">
+                <span className="font-medium">{call.time}</span>
                 <div className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
-                  <span>{call.duration}</span>
+                  <span className="font-mono">{call.duration}</span>
                 </div>
               </div>
             </div>
             <Badge 
               variant="outline" 
-              className={`text-xs ${getTypeColor(call.type)}`}
+              className={`text-xs font-medium px-3 py-1 ${getTypeColor(call.type)} border-0`}
             >
               {call.type}
             </Badge>

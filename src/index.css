@@ -26,6 +26,15 @@ All colors MUST be HSL.
     --brand-green-light: 142 69% 58%;
     --brand-green-dark: 142 85% 25%;
     
+    /* Premium Design System - Elevated Aesthetics */
+    --premium-glow: 0 20px 40px -12px hsl(var(--brand-orange-primary) / 0.25);
+    --premium-shadow-subtle: 0 2px 8px -2px hsl(220 10% 10% / 0.08);
+    --premium-shadow-medium: 0 8px 32px -8px hsl(220 10% 10% / 0.12);
+    --premium-shadow-strong: 0 16px 64px -12px hsl(220 10% 10% / 0.16);
+    --premium-border: 0 0% 0% / 0.06;
+    --premium-glass: hsl(0 0% 100% / 0.8);
+    --premium-backdrop: backdrop-blur(12px) saturate(180%);
+    
     /* Canonical Background Images */
     --bg-pattern-1: url('/src/assets/BACKGROUND_IMAGE1.svg');
     --bg-pattern-2: url('/src/assets/BACKGROUND_IMAGE2.svg');
@@ -34,9 +43,11 @@ All colors MUST be HSL.
     --bg-pattern-5: url('/src/assets/BACKGROUND_IMAGE5.svg');
     --bg-pattern-6: url('/src/assets/BACKGROUND_IMAGE6.svg');
     
-    /* Translucent Orange Gradients - Lower Translucency for Background Visibility */
+    /* Premium Gradients - Sophisticated Color Blends */
     --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-light) / 0.25));
     --gradient-orange-medium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.45), hsl(var(--brand-orange-light) / 0.35));
+    --gradient-premium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.05) 0%, hsl(var(--brand-orange-light) / 0.03) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.1) 0%, hsl(0 0% 100% / 0.05) 100%);
     --overlay-orange: hsl(var(--brand-orange-primary) / 0.30);
 
     --background: 0 0% 100%;
@@ -87,9 +98,20 @@ All colors MUST be HSL.
   }
 
   .dark {
+    /* Premium Dark Mode - Enhanced Depth */
+    --premium-glow: 0 20px 40px -12px hsl(var(--brand-orange-primary) / 0.4);
+    --premium-shadow-subtle: 0 2px 8px -2px hsl(220 10% 0% / 0.2);
+    --premium-shadow-medium: 0 8px 32px -8px hsl(220 10% 0% / 0.25);
+    --premium-shadow-strong: 0 16px 64px -12px hsl(220 10% 0% / 0.3);
+    --premium-border: 0 0% 100% / 0.08;
+    --premium-glass: hsl(0 0% 0% / 0.4);
+    --premium-backdrop: backdrop-blur(12px) saturate(180%);
+    
     /* Dark mode with orange accents - Lower Translucency */
     --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-dark) / 0.25));
     --gradient-orange-medium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.45), hsl(var(--brand-orange-dark) / 0.35));
+    --gradient-premium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.08) 0%, hsl(var(--brand-orange-dark) / 0.04) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.05) 0%, hsl(0 0% 100% / 0.02) 100%);
     --overlay-orange: hsl(var(--brand-orange-primary) / 0.30);
 
     --background: 222.2 84% 4.9%;
