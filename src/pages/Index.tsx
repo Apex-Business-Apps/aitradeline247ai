@@ -12,15 +12,3 @@ const Index = () => {
 };
 
 export default Index;
-export OLD_REPO="https://github.com/sinyorlang-design/TradeLine24-7Ai.git"
-export NEW_REPO="https://github.com/sinyorlang-design/tradeline-quest.git"
-
-git clone "$NEW_REPO" tl247 && cd tl247
-git remote add old "$OLD_REPO"
-git fetch old --prune
-git checkout -B main old/main || git checkout -B main old/master
-git push -f origin main
-
-git ls-remote --heads origin
-```0
-
