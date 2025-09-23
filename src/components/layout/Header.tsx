@@ -54,8 +54,8 @@ export const Header: React.FC = () => {
 
         {/* CTA Button & Mobile Menu */}
         <div className="flex items-center gap-2">
-          <Button size={isScrolled ? 'sm' : 'default'}>
-            Grow now
+          <Button variant="success" size={isScrolled ? 'sm' : 'default'}>
+            Login
           </Button>
           
           {/* Mobile Menu Button */}

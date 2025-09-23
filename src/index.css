@@ -21,6 +21,11 @@ All colors MUST be HSL.
     --brand-orange-light: 28 100% 75%;
     --brand-orange-dark: 14 100% 35%;
     
+    /* Green Colors for Login/Success Actions */
+    --brand-green-primary: 142 76% 36%;
+    --brand-green-light: 142 69% 58%;
+    --brand-green-dark: 142 85% 25%;
+    
     /* Canonical Background Images */
     --bg-pattern-1: url('/src/assets/BACKGROUND_IMAGE1.svg');
     --bg-pattern-2: url('/src/assets/BACKGROUND_IMAGE2.svg');
