@@ -14,9 +14,10 @@ const Index = () => {
           <div className="flex items-center justify-center mb-6">
             <Logo variant="full" size="xl" />
           </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Your intelligent receptionist that never sleeps. Handle calls, capture messages, and deliver insights 24/7.
-          </p>
+          <div className="text-xl text-muted-foreground max-w-2xl mx-auto text-center">
+            <p className="font-semibold text-2xl mb-2">Your 24/7 Ai Receptionist!</p>
+            <p>Never miss a call. Works while you sleep.</p>
+          </div>
         </header>
 
         {/* Stats Cards */}
