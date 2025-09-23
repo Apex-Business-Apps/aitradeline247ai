@@ -11,8 +11,8 @@ const Index = () => {
         backgroundSize: '400px 400px'
       }}></div>
       
-      {/* Orange gradient overlay maintaining 30% background visibility */}
-      <div className="absolute inset-0 bg-gradient-orange-subtle opacity-40"></div>
+      {/* Orange gradient overlay maintaining 60% background visibility */}
+      <div className="absolute inset-0 bg-gradient-orange-subtle opacity-25"></div>
       
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
