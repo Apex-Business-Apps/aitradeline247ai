@@ -16,15 +16,15 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Brand Orange Colors from Logo - Higher Saturation */
-    --brand-orange-primary: 24 100% 58%;
-    --brand-orange-light: 30 100% 80%;
-    --brand-orange-dark: 16 100% 40%;
+    /* Brand Orange Colors from Logo - Maximum Saturation + 15% Vibrancy */
+    --brand-orange-primary: 20 100% 55%;
+    --brand-orange-light: 28 100% 75%;
+    --brand-orange-dark: 14 100% 35%;
     
-    /* Translucent Orange Gradients - More Translucent */
-    --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.15), hsl(var(--brand-orange-light) / 0.08));
-    --gradient-orange-medium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.25), hsl(var(--brand-orange-light) / 0.15));
-    --overlay-orange: hsl(var(--brand-orange-primary) / 0.12);
+    /* Translucent Orange Gradients - Lower Translucency for Background Visibility */
+    --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-light) / 0.25));
+    --gradient-orange-medium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.45), hsl(var(--brand-orange-light) / 0.35));
+    --overlay-orange: hsl(var(--brand-orange-primary) / 0.30);
 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -74,10 +74,10 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark mode with orange accents */
-    --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.15), hsl(var(--brand-orange-dark) / 0.08));
-    --gradient-orange-medium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.25), hsl(var(--brand-orange-dark) / 0.15));
-    --overlay-orange: hsl(var(--brand-orange-primary) / 0.12);
+    /* Dark mode with orange accents - Lower Translucency */
+    --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-dark) / 0.25));
+    --gradient-orange-medium: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.45), hsl(var(--brand-orange-dark) / 0.35));
+    --overlay-orange: hsl(var(--brand-orange-primary) / 0.30);
 
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
