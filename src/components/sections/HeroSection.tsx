@@ -3,7 +3,7 @@ import officialLogo from '@/assets/official-logo.svg';
 
 export const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-orange-subtle py-32 text-center overflow-hidden">
+    <section className="relative bg-gradient-orange-subtle pt-28 pb-32 text-center overflow-hidden">
       <div className="container relative z-10">
         {/* Hero Logo - Prominent and High Quality */}
         <div className="mb-2">
