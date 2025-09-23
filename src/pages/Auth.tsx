@@ -21,6 +21,7 @@ const Auth = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,7 +52,42 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const validatePassword = (password: string): { isValid: boolean; strength: string; message?: string } => {
+    if (password.length < 8) {
+      return { isValid: false, strength: 'Too short', message: 'Password must be at least 8 characters long' };
+    }
+    
+    const hasLower = /[a-z]/.test(password);
+    const hasUpper = /[A-Z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    const criteriaCount = [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
+    
+    if (criteriaCount < 3) {
+      return { 
+        isValid: false, 
+        strength: 'Weak', 
+        message: 'Password must contain at least 3 of: lowercase, uppercase, number, special character' 
+      };
+    }
+    
+    const strength = criteriaCount === 4 ? 'Strong' : 'Good';
+    return { isValid: true, strength };
+  };
+
+  const handlePasswordChange = (newPassword: string) => {
+    setPassword(newPassword);
+    const validation = validatePassword(newPassword);
+    setPasswordStrength(validation.strength);
+  };
+
   const signUp = async (email: string, password: string, displayName: string) => {
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      throw new Error(passwordValidation.message || 'Password does not meet requirements');
+    }
+
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
@@ -217,18 +253,35 @@ const Auth = () => {
                     />
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      placeholder="Create a password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      minLength={6}
-                    />
-                  </div>
+                   <div className="space-y-2">
+                     <Label htmlFor="signup-password">Password</Label>
+                     <Input
+                       id="signup-password"
+                       type="password"
+                       placeholder="Create a strong password"
+                       value={password}
+                       onChange={(e) => handlePasswordChange(e.target.value)}
+                       required
+                       minLength={8}
+                     />
+                     {password && (
+                       <div className="text-sm">
+                         <span className="text-muted-foreground">Strength: </span>
+                         <span className={`font-medium ${
+                           passwordStrength === 'Strong' ? 'text-green-600' :
+                           passwordStrength === 'Good' ? 'text-yellow-600' :
+                           'text-red-600'
+                         }`}>
+                           {passwordStrength}
+                         </span>
+                         {passwordStrength !== 'Strong' && (
+                           <div className="text-xs text-muted-foreground mt-1">
+                             Use 8+ characters with uppercase, lowercase, numbers, and symbols
+                           </div>
+                         )}
+                       </div>
+                     )}
+                   </div>
                   
                   <Button 
                     type="submit" 
