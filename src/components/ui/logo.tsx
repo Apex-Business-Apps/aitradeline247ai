@@ -1,5 +1,5 @@
 import React from 'react';
-import tradelineLogo from '@/assets/tradeline-logo.png';
+import officialLogo from '@/assets/official-logo.svg';
 import { cn } from '@/lib/utils';
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -29,7 +29,7 @@ export const Logo: React.FC<LogoProps> = ({
 }) => {
   const logoImage = (
     <img 
-      src={tradelineLogo} 
+      src={officialLogo} 
       alt="TradeLine AI Logo" 
       className={cn(sizeClasses[size], "w-auto")}
     />

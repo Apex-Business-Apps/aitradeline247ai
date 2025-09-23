@@ -1,20 +1,10 @@
 import React from 'react';
 import { Logo } from '@/components/ui/logo';
-import backgroundImage from '@/assets/background-image1.svg';
 
 const Index = () => {
   return (
-    <div 
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 relative"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundBlendMode: 'soft-light'
-      }}
-    >
-      <div className="absolute inset-0 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm"></div>
-      <div className="container mx-auto px-4 py-8 relative z-10">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <header className="text-center mb-12">
           <div className="flex items-center justify-center mb-6">
