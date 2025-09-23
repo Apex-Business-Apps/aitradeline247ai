@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/hooks/useAuth';
+import { Loader2 } from 'lucide-react';
+import { Session, User } from '@supabase/supabase-js';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
@@ -14,38 +16,72 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  
-  const { signIn, signUp, user } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect if already logged in
-    if (user) {
-      navigate('/');
-    }
-  }, [user, navigate]);
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Redirect authenticated users to home
+        if (session?.user) {
+          navigate('/');
+        }
+      }
+    );
 
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      // Redirect if already logged in
+      if (session?.user) {
+        navigate('/');
+      }
+    });
 
-    const { error } = await signIn(email, password);
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const signUp = async (email: string, password: string, displayName: string) => {
+    const redirectUrl = `${window.location.origin}/`;
     
-    if (error) {
-      setError(error.message);
-    } else {
-      navigate('/');
-    }
-    
-    setLoading(false);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: {
+          display_name: displayName,
+        }
+      }
+    });
+    return { error };
+  };
+
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    return { error };
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password || !displayName) {
+      setError('Please fill in all fields');
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setMessage(null);
@@ -53,9 +89,36 @@ const Auth = () => {
     const { error } = await signUp(email, password, displayName);
     
     if (error) {
-      setError(error.message);
+      if (error.message.includes('already registered')) {
+        setError('This email is already registered. Please sign in instead.');
+      } else {
+        setError(error.message);
+      }
     } else {
-      setMessage('Please check your email for a confirmation link to complete your signup.');
+      setMessage('Check your email for a confirmation link!');
+    }
+    
+    setLoading(false);
+  };
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const { error } = await signIn(email, password);
+    
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        setError('Invalid email or password. Please check your credentials.');
+      } else {
+        setError(error.message);
+      }
     }
     
     setLoading(false);
@@ -67,20 +130,29 @@ const Auth = () => {
       
       <main className="flex-1 container py-8 px-4 flex items-center justify-center">
         <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
-              Welcome to TradeLine 24/7
-            </CardTitle>
-            <CardDescription className="text-center">
-              Sign in to your account or create a new one
-            </CardDescription>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Welcome to TradeLine 24/7</CardTitle>
+            <CardDescription>Sign in to your account or create a new one</CardDescription>
           </CardHeader>
+          
           <CardContent>
             <Tabs defaultValue="signin" className="space-y-4">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>
               </TabsList>
+              
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              
+              {message && (
+                <Alert>
+                  <AlertDescription>{message}</AlertDescription>
+                </Alert>
+              )}
               
               <TabsContent value="signin">
                 <form onSubmit={handleSignIn} className="space-y-4">
@@ -89,35 +161,32 @@ const Auth = () => {
                     <Input
                       id="signin-email"
                       type="email"
+                      placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      placeholder="Enter your email"
                     />
                   </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="signin-password">Password</Label>
                     <Input
                       id="signin-password"
                       type="password"
+                      placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      placeholder="Enter your password"
                     />
                   </div>
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-                  <Button
-                    type="submit"
+                  
+                  <Button 
+                    type="submit" 
                     className="w-full"
                     disabled={loading}
-                    variant="success"
                   >
-                    {loading ? 'Signing in...' : 'Sign In'}
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Sign In
                   </Button>
                 </form>
               </TabsContent>
@@ -129,51 +198,46 @@ const Auth = () => {
                     <Input
                       id="signup-name"
                       type="text"
+                      placeholder="Enter your name"
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
-                      placeholder="Enter your display name"
+                      required
                     />
                   </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="signup-email">Email</Label>
                     <Input
                       id="signup-email"
                       type="email"
+                      placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      placeholder="Enter your email"
                     />
                   </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Password</Label>
                     <Input
                       id="signup-password"
                       type="password"
+                      placeholder="Create a password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      placeholder="Enter your password"
                       minLength={6}
                     />
                   </div>
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-                  {message && (
-                    <Alert>
-                      <AlertDescription>{message}</AlertDescription>
-                    </Alert>
-                  )}
-                  <Button
-                    type="submit"
+                  
+                  <Button 
+                    type="submit" 
+                    variant="success"
                     className="w-full"
                     disabled={loading}
-                    variant="success"
                   >
-                    {loading ? 'Creating account...' : 'Create Account'}
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Create Account
                   </Button>
                 </form>
               </TabsContent>
