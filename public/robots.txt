@@ -12,3 +12,12 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /design-tokens/
+
+# Sitemap
+Sitemap: https://tradeline247.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

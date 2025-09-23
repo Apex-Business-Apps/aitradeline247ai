@@ -13,6 +13,8 @@ import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import CRMIntegration from "./pages/integrations/CRMIntegration";
 import EmailIntegration from "./pages/integrations/EmailIntegration";
 import PhoneIntegration from "./pages/integrations/PhoneIntegration";
@@ -35,6 +37,8 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/design-tokens" element={<DesignTokens />} />
           <Route path="/dashboard" element={<ClientDashboard />} />
           <Route path="/dashboard/integrations/crm" element={<CRMIntegration />} />

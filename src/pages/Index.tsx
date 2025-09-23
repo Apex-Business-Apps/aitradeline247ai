@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { TrustBadges } from "@/components/sections/TrustBadges";
 import { BenefitCards } from "@/components/sections/BenefitCards";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { LeadCaptureForm } from "@/components/sections/LeadCaptureForm";
 
 const Index = () => {
   return (
@@ -13,6 +15,8 @@ const Index = () => {
         <HeroSection />
         <TrustBadges />
         <BenefitCards />
+        <HowItWorks />
+        <LeadCaptureForm />
       </main>
       
       <Footer />
