@@ -9,6 +9,12 @@ import DesignTokens from "./pages/DesignTokens";
 import ClientDashboard from "./pages/ClientDashboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import CRMIntegration from "./pages/integrations/CRMIntegration";
+import EmailIntegration from "./pages/integrations/EmailIntegration";
+import PhoneIntegration from "./pages/integrations/PhoneIntegration";
+import MessagingIntegration from "./pages/integrations/MessagingIntegration";
+import MobileIntegration from "./pages/integrations/MobileIntegration";
+import AutomationIntegration from "./pages/integrations/AutomationIntegration";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +29,12 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/design-tokens" element={<DesignTokens />} />
           <Route path="/dashboard" element={<ClientDashboard />} />
+          <Route path="/dashboard/integrations/crm" element={<CRMIntegration />} />
+          <Route path="/dashboard/integrations/email" element={<EmailIntegration />} />
+          <Route path="/dashboard/integrations/phone" element={<PhoneIntegration />} />
+          <Route path="/dashboard/integrations/messaging" element={<MessagingIntegration />} />
+          <Route path="/dashboard/integrations/mobile" element={<MobileIntegration />} />
+          <Route path="/dashboard/integrations/automation" element={<AutomationIntegration />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
