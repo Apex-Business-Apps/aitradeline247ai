@@ -10,7 +10,7 @@ export const HeroSection = () => {
           <img 
             src={officialLogo} 
             alt="TradeLine AI - 24/7 AI Receptionist" 
-            className="h-40 md:h-60 lg:h-72 w-auto mx-auto drop-shadow-2xl"
+            className="h-44 md:h-[16.5rem] lg:h-[19.8rem] w-auto mx-auto drop-shadow-2xl"
           />
         </div>
         
