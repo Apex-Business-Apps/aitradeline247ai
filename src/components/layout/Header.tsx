@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Logo } from '@/components/ui/logo';
 import { Button } from '@/components/ui/button';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const navigationItems = [
   { name: 'Features', href: '/features' },
@@ -15,6 +17,8 @@ const navigationItems = [
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,9 +58,29 @@ export const Header: React.FC = () => {
 
         {/* CTA Button & Mobile Menu */}
         <div className="flex items-center gap-2">
-          <Button variant="success" size={isScrolled ? 'sm' : 'default'}>
-            Login
-          </Button>
+          {user ? (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground hidden sm:block">
+                Welcome, {user.user_metadata?.display_name || user.email}
+              </span>
+              <Button 
+                variant="outline" 
+                size={isScrolled ? 'sm' : 'default'}
+                onClick={() => signOut()}
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline ml-2">Sign Out</span>
+              </Button>
+            </div>
+          ) : (
+            <Button 
+              variant="success" 
+              size={isScrolled ? 'sm' : 'default'}
+              onClick={() => navigate('/auth')}
+            >
+              Login
+            </Button>
+          )}
           
           {/* Mobile Menu Button */}
           <button
