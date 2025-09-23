@@ -16,7 +16,7 @@ export const HeroSection = () => {
         
         {/* Main Headline */}
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
-          Your 24/7 AI Receptionist
+          Your 24/7 Ai Receptionist
         </h1>
         
         {/* Value Proposition */}
