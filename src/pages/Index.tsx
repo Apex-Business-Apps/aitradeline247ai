@@ -3,10 +3,16 @@ import { Logo } from '@/components/ui/logo';
 
 const Index = () => {
   return (
-    <div className="min-h-screen relative">
-      {/* Orange gradient overlay with 30% background visibility */}
-      <div className="absolute inset-0 bg-gradient-orange-subtle opacity-70"></div>
-      <div className="absolute inset-0" style={{ backgroundColor: 'var(--overlay-orange)' }}></div>
+    <div className="min-h-screen relative bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* Background pattern for visual interest */}
+      <div className="absolute inset-0 opacity-30" style={{
+        backgroundImage: `radial-gradient(circle at 25% 25%, hsl(var(--brand-orange-primary) / 0.1) 0%, transparent 50%), 
+                          radial-gradient(circle at 75% 75%, hsl(var(--brand-orange-light) / 0.1) 0%, transparent 50%)`,
+        backgroundSize: '400px 400px'
+      }}></div>
+      
+      {/* Orange gradient overlay maintaining 30% background visibility */}
+      <div className="absolute inset-0 bg-gradient-orange-subtle opacity-40"></div>
       
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
