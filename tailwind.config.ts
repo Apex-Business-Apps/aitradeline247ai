@@ -17,6 +17,11 @@ export default {
         'brand': ['BrandFont', 'system-ui', 'sans-serif'],
       },
       colors: {
+        'brand-orange': {
+          DEFAULT: "hsl(var(--brand-orange-primary))",
+          light: "hsl(var(--brand-orange-light))",
+          dark: "hsl(var(--brand-orange-dark))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -65,6 +70,10 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      backgroundImage: {
+        'gradient-orange-subtle': 'var(--gradient-orange-subtle)',
+        'gradient-orange-medium': 'var(--gradient-orange-medium)',
       },
       keyframes: {
         "accordion-down": {
