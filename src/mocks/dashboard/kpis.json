@@ -1,0 +1,21 @@
+[
+  {
+    "id": "bookings",
+    "value": 47,
+    "deltaPct": 12
+  },
+  {
+    "id": "payout",
+    "value": 3240,
+    "currency": "USD"
+  },
+  {
+    "id": "answerRate",
+    "value": 94,
+    "deltaPct": 8
+  },
+  {
+    "id": "rescued",
+    "value": 8
+  }
+]

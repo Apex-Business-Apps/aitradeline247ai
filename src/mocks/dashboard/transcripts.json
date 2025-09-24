@@ -1,0 +1,26 @@
+[
+  {
+    "id": "transcript_001",
+    "atISO": "2024-09-24T15:22:00Z",
+    "caller": "David Wilson",
+    "summary": "Interested in our premium package, asked about pricing and implementation timeline.",
+    "sentiment": "positive",
+    "needsReply": false
+  },
+  {
+    "id": "transcript_002",
+    "atISO": "2024-09-24T11:45:00Z", 
+    "caller": "Jennifer Adams",
+    "summary": "Had technical issues with current setup, needs support call scheduled.",
+    "sentiment": "neutral",
+    "needsReply": true
+  },
+  {
+    "id": "transcript_003",
+    "atISO": "2024-09-24T09:30:00Z",
+    "caller": "Robert Kim",
+    "summary": "Very satisfied with service, looking to expand to additional locations.",
+    "sentiment": "positive",
+    "needsReply": false
+  }
+]

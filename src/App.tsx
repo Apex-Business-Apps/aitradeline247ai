@@ -22,6 +22,7 @@ import PhoneIntegration from "./pages/integrations/PhoneIntegration";
 import MessagingIntegration from "./pages/integrations/MessagingIntegration";
 import MobileIntegration from "./pages/integrations/MobileIntegration";
 import AutomationIntegration from "./pages/integrations/AutomationIntegration";
+import ComponentShowcase from "./pages/ComponentShowcase";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/dashboard/integrations/messaging" element={<MessagingIntegration />} />
           <Route path="/dashboard/integrations/mobile" element={<MobileIntegration />} />
           <Route path="/dashboard/integrations/automation" element={<AutomationIntegration />} />
+          <Route path="/components" element={<ComponentShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
