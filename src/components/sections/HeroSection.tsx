@@ -6,7 +6,7 @@ export const HeroSection = () => {
     <section className="relative bg-gradient-orange-subtle pt-2 pb-32 text-center overflow-hidden">
       <div className="container relative z-10">
         {/* Hero Logo - Prominent and High Quality */}
-        <div className="mb-2">
+        <div className="mb-2 -mt-[1.5cm]">
           <img 
             src={officialLogo} 
             alt="TradeLine AI - 24/7 AI Receptionist" 
