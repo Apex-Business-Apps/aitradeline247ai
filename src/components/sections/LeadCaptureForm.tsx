@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { useABTest } from "@/hooks/useABTest";
 
 interface LeadFormData {
   name: string;
@@ -25,6 +27,8 @@ export const LeadCaptureForm = () => {
     notes: ""
   });
   const { toast } = useToast();
+  const { trackFormSubmission, trackConversion, trackButtonClick } = useAnalytics();
+  const { variant, variantData, convert } = useABTest('hero_cta_test');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,24 +40,65 @@ export const LeadCaptureForm = () => {
         description: "Please fill in your name, email, and company name.",
         variant: "destructive"
       });
+      
+      trackFormSubmission('lead_capture', false, { 
+        error: 'missing_required_fields',
+        variant: variant
+      });
       return;
     }
 
     setIsSubmitting(true);
+    trackButtonClick('lead_form_submit', 'lead_capture_form');
 
     try {
       console.log("Submitting lead:", formData);
 
-      const { data, error } = await supabase.functions.invoke('send-lead-email', {
+      // Submit lead via email function
+      const { data: emailData, error: emailError } = await supabase.functions.invoke('send-lead-email', {
         body: formData
       });
 
-      if (error) {
-        console.error("Supabase function error:", error);
-        throw error;
+      if (emailError) {
+        console.error("Email function error:", emailError);
+        throw emailError;
       }
 
-      console.log("Lead submission successful:", data);
+      // Store lead in database with automatic scoring
+      const { data: leadData, error: leadError } = await supabase
+        .from('leads')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          notes: formData.notes,
+          source: 'website_lead_form'
+        }])
+        .select()
+        .single();
+
+      if (leadError) {
+        console.error("Lead storage error:", leadError);
+        // Don't throw here - email was sent successfully
+      }
+
+      console.log("Lead submission successful:", { emailData, leadData });
+      
+      // Track successful form submission
+      trackFormSubmission('lead_capture', true, {
+        lead_score: leadData?.lead_score || 0,
+        email_domain: formData.email.split('@')[1],
+        variant: variant
+      });
+
+      // Track conversion for A/B test
+      await convert(leadData?.lead_score || 50);
+
+      // Track business conversion
+      trackConversion('lead_generated', leadData?.lead_score || 50, {
+        source: 'website_form',
+        variant: variant
+      });
       
       setIsSuccess(true);
       toast({
@@ -69,6 +114,12 @@ export const LeadCaptureForm = () => {
 
     } catch (error: any) {
       console.error("Lead submission error:", error);
+      
+      trackFormSubmission('lead_capture', false, {
+        error: error.message || 'unknown_error',
+        variant: variant
+      });
+
       toast({
         title: "Oops! Something went wrong",
         description: error.message || "Please try again or contact us directly at info@tradeline247ai.com",
@@ -82,6 +133,10 @@ export const LeadCaptureForm = () => {
   const handleInputChange = (field: keyof LeadFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  // Get button text and color from A/B test
+  const ctaText = variantData.text || "Grow Now";
+  const ctaVariant = variantData.color === "secondary" ? "secondary" : "default";
 
   if (isSuccess) {
     return (
@@ -190,6 +245,7 @@ export const LeadCaptureForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
+                variant={ctaVariant}
                 className="w-full shadow-lg"
                 disabled={isSubmitting}
               >
@@ -201,7 +257,7 @@ export const LeadCaptureForm = () => {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2" />
-                    Grow Now
+                    {ctaText}
                   </>
                 )}
               </Button>

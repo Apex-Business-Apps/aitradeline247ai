@@ -1,7 +1,13 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+
+// Initialize Supabase client for the edge function
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,22 +43,56 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // Store lead in database with automatic lead scoring
+    const { data: leadData, error: leadError } = await supabase
+      .from('leads')
+      .insert([{
+        name,
+        email,
+        company,
+        notes,
+        source: 'website_lead_form'
+      }])
+      .select('*, lead_score')
+      .single();
+
+    if (leadError) {
+      console.error("Lead storage error:", leadError);
+      // Continue with email sending even if database insert fails
+    }
+
+    const leadScore = leadData?.lead_score || 50;
+    const emailDomain = email.split('@')[1];
+
+    console.log(`Lead scored: ${leadScore}/100 for ${company} (${emailDomain})`);
+
+    // Determine lead priority and urgency
+    const isHighValue = leadScore >= 70;
+    const priorityEmoji = isHighValue ? '🔥 HIGH PRIORITY' : '📋 New Lead';
+    const urgencyText = isHighValue ? 'URGENT: High-value lead detected!' : 'New lead captured';
+
     // Send notification email to TradeLine 24/7 team
     const notificationEmail = await resend.emails.send({
       from: "TradeLine 24/7 <leads@tradeline247ai.com>",
       to: ["info@tradeline247ai.com"],
       reply_to: email,
-      subject: `🚀 New Lead: ${company} - ${name}`,
+      subject: `🚀 ${priorityEmoji}: ${company} - ${name} (Score: ${leadScore}/100)`,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #ff6b35, #ff8c5f); padding: 30px; border-radius: 12px; color: white; text-align: center; margin-bottom: 30px;">
-            <h1 style="margin: 0; font-size: 28px; font-weight: bold;">🎯 New Lead Captured!</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Someone wants to grow their business with TradeLine 24/7</p>
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold;">${priorityEmoji}</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">${urgencyText}</p>
+            <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; margin-top: 15px;">
+              <p style="margin: 0; font-size: 18px; font-weight: bold;">Lead Score: ${leadScore}/100</p>
+            </div>
           </div>
           
           <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
             <h2 style="color: #333; margin-top: 0;">Lead Information</h2>
-            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; font-weight: bold; color: #666;">Lead Score:</td>
+                <td style="padding: 8px 0; color: #333;"><strong style="color: ${isHighValue ? '#e74c3c' : '#27ae60'};">${leadScore}/100</strong> ${isHighValue ? '(High Priority!)' : '(Standard)'}</td>
+              </tr>
               <tr>
                 <td style="padding: 8px 0; font-weight: bold; color: #666; width: 100px;">Name:</td>
                 <td style="padding: 8px 0; color: #333;">${name}</td>
@@ -176,6 +216,8 @@ const handler = async (req: Request): Promise<Response> => {
       JSON.stringify({ 
         success: true, 
         message: "Lead captured successfully! Check your email for next steps.",
+        lead_id: leadData?.id,
+        lead_score: leadScore,
         notificationId: notificationEmail.data?.id,
         confirmationId: confirmationEmail.data?.id
       }),

@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CheckCircle, Phone, MessageSquare, Brain, Zap, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const features = [
   {
@@ -44,6 +46,15 @@ const features = [
 ];
 
 const Features = () => {
+  const { trackPageView, trackButtonClick } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView('features');
+  }, [trackPageView]);
+
+  const handleCTAClick = () => {
+    trackButtonClick('features_cta', 'features_page');
+  };
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -59,7 +70,7 @@ const Features = () => {
               <p className="text-lg md:text-xl text-muted-foreground mb-8">
                 Everything you need to transform customer interactions with AI-powered automation
               </p>
-              <Button size="lg" className="shadow-lg">
+              <Button size="lg" className="shadow-lg" onClick={handleCTAClick}>
                 Start Free Trial
               </Button>
             </div>
@@ -107,7 +118,7 @@ const Features = () => {
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of businesses already using TradeLine 24/7 to grow their customer relationships
             </p>
-            <Button size="lg" className="shadow-lg">
+            <Button size="lg" className="shadow-lg" onClick={handleCTAClick}>
               Grow Now
             </Button>
           </div>

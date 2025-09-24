@@ -6,6 +6,7 @@ import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { CallSummary } from '@/components/dashboard/CallSummary';
 import { IntegrationsGrid } from '@/components/dashboard/IntegrationsGrid';
+import { AnalyticsDashboard } from '@/components/analytics/AnalyticsDashboard';
 import { Button } from '@/components/ui/button';
 import { Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -42,6 +43,9 @@ const ClientDashboard = () => {
         <div className="space-y-6">
           {/* Stats Section */}
           <DashboardStats />
+
+          {/* Analytics Section */}
+          <AnalyticsDashboard />
 
           {/* Integrations Section */}
           <IntegrationsGrid />
