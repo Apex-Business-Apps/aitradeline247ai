@@ -28,3 +28,15 @@ enable_confirmations = false
 
 [functions.send-lead-email]
 verify_jwt = false
+
+[functions.secure-ab-assign]
+verify_jwt = false
+
+[functions.secure-analytics]  
+verify_jwt = false
+
+[functions.check-password-breach]
+verify_jwt = false
+
+[functions.ab-convert]
+verify_jwt = false
