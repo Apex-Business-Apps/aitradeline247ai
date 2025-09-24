@@ -1,5 +1,5 @@
-// TradeLine 24/7 Service Worker - Minimal PWA Support
-const CACHE_NAME = 'tradeline247-v1';
+// TradeLine 24/7 Service Worker - Enhanced PWA Support
+const CACHE_NAME = 'tradeline247-v2';
 const OFFLINE_URL = '/';
 
 // Essential files to cache for offline functionality
@@ -7,7 +7,9 @@ const urlsToCache = [
   '/',
   '/manifest.json',
   '/pwa-192x192.png',
-  '/pwa-512x512.png'
+  '/pwa-512x512.png',
+  '/favicon.ico',
+  '/og-image.jpg'
 ];
 
 // Install event - cache essential resources
