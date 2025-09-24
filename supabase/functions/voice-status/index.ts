@@ -9,14 +9,48 @@ const corsHeaders = {
 
 const BASE_URL = 'https://jbcxceojrztklnvwgyrq.supabase.co/functions/v1';
 
-// Twilio webhook signature validation
-function validateTwilioSignature(authToken: string, signature: string, url: string, params: any): boolean {
+// Twilio webhook signature validation using HMAC-SHA1
+async function validateTwilioSignature(authToken: string, signature: string, url: string, params: Record<string, string>): Promise<boolean> {
   try {
-    // Simple validation - in production use proper crypto validation
-    const expectedSig = signature.replace('sha1=', '');
+    if (!signature || !signature.startsWith('sha1=')) {
+      console.error('Missing or invalid Twilio signature format');
+      return false;
+    }
+
+    // Create the expected signature string from URL + sorted params
+    const sortedParams = Object.keys(params).sort().reduce((result: string[], key: string) => {
+      result.push(`${key}=${params[key]}`);
+      return result;
+    }, []);
+    
+    const data = url + sortedParams.join('');
     console.log('Validating Twilio signature for URL:', url);
-    // For now, accept all requests from Twilio (implement proper validation in production)
-    return true;
+
+    // Create HMAC-SHA1 signature
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(authToken),
+      { name: 'HMAC', hash: 'SHA-1' },
+      false,
+      ['sign']
+    );
+
+    const signatureBuffer = await crypto.subtle.sign('HMAC', key, encoder.encode(data));
+    const expectedSignature = Array.from(new Uint8Array(signatureBuffer))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    const receivedSignature = signature.replace('sha1=', '');
+    const isValid = expectedSignature === receivedSignature;
+    
+    if (!isValid) {
+      console.error('Twilio signature validation failed');
+      console.error('Expected:', expectedSignature);
+      console.error('Received:', receivedSignature);
+    }
+    
+    return isValid;
   } catch (error) {
     console.error('Signature validation error:', error);
     return false;
@@ -65,12 +99,21 @@ serve(async (req) => {
       RecordingUrl: params.RecordingUrl
     });
 
-    // Validate Twilio signature
+    // Validate Twilio signature - CRITICAL SECURITY CHECK
     const twilioSignature = req.headers.get('x-twilio-signature');
     const requestUrl = `${BASE_URL}/voice-status`;
     
-    if (twilioSignature && !validateTwilioSignature(twilioAuthToken, twilioSignature, requestUrl, params)) {
-      console.error('Invalid Twilio signature');
+    if (!twilioSignature) {
+      console.error('Missing Twilio signature header');
+      return new Response('Forbidden', { 
+        status: 403, 
+        headers: corsHeaders 
+      });
+    }
+    
+    const isValidSignature = await validateTwilioSignature(twilioAuthToken, twilioSignature, requestUrl, params);
+    if (!isValidSignature) {
+      console.error('Invalid Twilio signature - rejecting request');
       return new Response('Forbidden', { 
         status: 403, 
         headers: corsHeaders 
