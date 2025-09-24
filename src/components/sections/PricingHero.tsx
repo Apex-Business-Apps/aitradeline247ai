@@ -35,7 +35,7 @@ export const PricingHero = () => {
             <img 
               src={officialLogo} 
               alt="TradeLine AI - 24/7 AI Receptionist" 
-              className="h-48 md:h-[18.15rem] lg:h-[21.78rem] w-[46.2rem] md:w-[69.875rem] lg:w-[83.85rem] mx-auto drop-shadow-2xl -mt-8"
+              className="h-48 md:h-[18.15rem] lg:h-[21.78rem] w-[46.2rem] md:w-[69.875rem] lg:w-[83.85rem] mx-auto drop-shadow-2xl -mt-12"
               width="420"
               height="120"
               fetchPriority="high"
