@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
         name: "Sarah Johnson",
         contact: "sarah@example.com",
         status: 'new' as const,
-        actions: ['confirm', 'reschedule', 'note'] as const
+        actions: ['confirm', 'reschedule', 'note'] as Array<'confirm' | 'reschedule' | 'note'>
       },
       {
         id: 'appt_' + (Date.now() + 1),
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
         name: "Mike Chen",
         contact: "(555) 123-4567",
         status: 'confirmed' as const,
-        actions: ['reschedule', 'note'] as const
+        actions: ['reschedule', 'note'] as Array<'confirm' | 'reschedule' | 'note'>
       }
     ];
 
@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         error: 'Failed to generate dashboard summary',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Unknown error'
       }),
       {
         status: 500,

@@ -180,59 +180,14 @@ const handler = async (req: Request): Promise<Response> => {
         </div>`,
       "TradeLine 24/7 <leads@tradeline247ai.com>"
     );
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #666;">Lead Score:</td>
-                <td style="padding: 8px 0; color: #333;"><strong style="color: ${isHighValue ? '#e74c3c' : '#27ae60'};">${leadScore}/100</strong> ${isHighValue ? '(High Priority!)' : '(Standard)'}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #666; width: 100px;">Name:</td>
-                <td style="padding: 8px 0; color: #333;">${name}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #666;">Email:</td>
-                <td style="padding: 8px 0;"><a href="mailto:${email}" style="color: #ff6b35; text-decoration: none;">${email}</a></td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #666;">Company:</td>
-                <td style="padding: 8px 0; color: #333;">${company}</td>
-              </tr>
-              ${notes ? `
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #666; vertical-align: top;">Notes:</td>
-                <td style="padding: 8px 0; color: #333;">${notes}</td>
-              </tr>
-              ` : ''}
-            </table>
-          </div>
-          
-          <div style="text-align: center; padding: 20px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;">
-            <h3 style="color: #333; margin-top: 0;">⚡ Quick Actions</h3>
-            <a href="mailto:${email}?subject=Welcome%20to%20TradeLine%2024%2F7%20%2D%20Let%27s%20discuss%20your%20AI%20receptionist&body=Hi%20${encodeURIComponent(name)}%2C%0A%0AThank%20you%20for%20your%20interest%20in%20TradeLine%2024%2F7%21%20I%27d%20love%20to%20discuss%20how%20our%20AI%20receptionist%20can%20help%20${encodeURIComponent(company)}%20grow.%0A%0AWhat%27s%20the%20best%20time%20for%20a%20quick%2015%2Dminute%20call%20this%20week%3F%0A%0ABest%20regards%2C%0ATradeLine%2024%2F7%20Team" 
-               style="display: inline-block; background: #ff6b35; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-right: 10px;">
-              📧 Reply to Lead
-            </a>
-            <a href="https://cal.com/tradeline247" target="_blank"
-               style="display: inline-block; background: #28a745; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">
-              📅 Schedule Call
-            </a>
-          </div>
-          
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666; font-size: 14px;">
-            <p>This lead was captured from <strong>tradeline247.com</strong> on ${new Date().toLocaleDateString()}</p>
-          </div>
-        </div>
-      `,
-    });
 
     console.log("Notification email sent:", notificationEmail);
 
     // Send confirmation email to the lead
-    const confirmationEmail = await resend.emails.send({
-      from: "TradeLine 24/7 <welcome@tradeline247ai.com>",
-      to: [email],
-      subject: `Welcome to TradeLine 24/7, ${name}! 🚀`,
-      html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    const confirmationEmail = await sendEmail(
+      email,
+      `Welcome to TradeLine 24/7, ${name}! 🚀`,
+      `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #ff6b35, #ff8c5f); padding: 30px; border-radius: 12px; color: white; text-align: center; margin-bottom: 30px;">
             <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Welcome to TradeLine 24/7! 🎉</h1>
             <p style="margin: 10px 0 0 0; opacity: 0.9;">Your AI receptionist journey starts now</p>
@@ -297,9 +252,9 @@ const handler = async (req: Request): Promise<Response> => {
               <a href="https://tradeline247.com/terms" style="color: #999; text-decoration: none;">Terms of Service</a>
             </p>
           </div>
-        </div>
-      `,
-    });
+        </div>`,
+      "TradeLine 24/7 <welcome@tradeline247ai.com>"
+    );
 
     console.log("Confirmation email sent:", confirmationEmail);
 
