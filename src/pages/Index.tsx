@@ -18,26 +18,54 @@ const Index = () => {
   }, [trackPageView]);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <SEOHead 
-        title="TradeLine 24/7 — Your 24/7 AI Receptionist!"
-        description="Transform your business with AI-powered customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
-        keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
-        canonical="https://tradeline247.com"
+    <div className="min-h-screen flex flex-col relative">
+      {/* Background Image Layer */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: 'var(--bg-pattern-1)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
       />
-      <OrganizationSchema />
       
-      <Header />
-      
-      <main className="flex-1">
-        <HeroSection />
-        <TrustBadges />
-        <BenefitCards />
-        <HowItWorks />
-        <LeadCaptureForm />
-      </main>
-      
-      <Footer />
+      {/* Content with translucency */}
+      <div className="relative z-10">
+        <SEOHead 
+          title="TradeLine 24/7 — Your 24/7 AI Receptionist!"
+          description="Transform your business with AI-powered customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
+          keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
+          canonical="https://tradeline247.com"
+        />
+        <OrganizationSchema />
+        
+        <div className="backdrop-blur-sm bg-background/80">
+          <Header />
+        </div>
+        
+        <main className="flex-1">
+          <div className="backdrop-blur-sm bg-background/75">
+            <HeroSection />
+          </div>
+          <div className="backdrop-blur-sm bg-background/70">
+            <TrustBadges />
+          </div>
+          <div className="backdrop-blur-sm bg-background/75">
+            <BenefitCards />
+          </div>
+          <div className="backdrop-blur-sm bg-background/70">
+            <HowItWorks />
+          </div>
+          <div className="backdrop-blur-sm bg-background/75">
+            <LeadCaptureForm />
+          </div>
+        </main>
+        
+        <div className="backdrop-blur-sm bg-background/80">
+          <Footer />
+        </div>
+      </div>
       
       {/* TL247 MiniBot — left-side trial chat (3 prompts) */}
       <aside id="tl-mini-bot" aria-label="Try our AI receptionist" data-state="open">
