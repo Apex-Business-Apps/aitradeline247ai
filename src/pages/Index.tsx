@@ -4,8 +4,10 @@ import { Footer } from "@/components/layout/Footer";
 import { PricingHero } from "@/components/sections/PricingHero";
 import { TrustBadgesSlim } from "@/components/sections/TrustBadgesSlim";
 import { BenefitCards } from "@/components/sections/BenefitCards";
+import { ImpactStrip } from "@/components/sections/ImpactStrip";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { LeadCaptureForm } from "@/components/sections/LeadCaptureForm";
+import { NoAIHypeFooter } from "@/components/sections/NoAIHypeFooter";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
@@ -49,13 +51,16 @@ const Index = () => {
             <PricingHero />
           </div>
           <div className="backdrop-blur-sm bg-background/75">
-            <BenefitCards />
-          </div>
-          <div className="backdrop-blur-sm bg-background/70">
-            <HowItWorks />
-          </div>
-          <div className="backdrop-blur-sm bg-background/75">
-            <LeadCaptureForm />
+          <BenefitCards />
+        </div>
+        <div className="backdrop-blur-sm bg-background/70">
+          <ImpactStrip />
+        </div>
+        <div className="backdrop-blur-sm bg-background/70">
+          <HowItWorks />
+        </div>
+        <div className="backdrop-blur-sm bg-background/75">
+          <LeadCaptureForm />
           </div>
         </main>
         
@@ -66,6 +71,8 @@ const Index = () => {
         <div className="backdrop-blur-sm bg-background/80">
           <Footer />
         </div>
+        
+        <NoAIHypeFooter />
       </div>
       
       {/* TL247 MiniBot — Accessible Chat Dialog */}
@@ -243,7 +250,7 @@ const Index = () => {
 
   // greet once
   if(!sessionStorage.getItem('tl-mini-greet')){
-    pushMsg("Hi! I'm TrAdeleine 🤖 — ask me up to 3 quick questions about TradeLine 24/7.");
+    pushMsg("Hi! Got a question? Ask me anything about getting set up.");
     sessionStorage.setItem('tl-mini-greet','1');
   }
   updateLimit();
@@ -251,7 +258,7 @@ const Index = () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if(left() === 0){
-      pushMsg("You've reached the trial limit. Tap "Start free trial" to continue. 💙");
+      pushMsg("That's 3 for now. Want more? Start a free trial.");
       return;
     }
     const q = input.value.trim();
@@ -272,10 +279,10 @@ const Index = () => {
       pushMsg(data.reply || '…');
       setCount(getCount()+1);
       updateLimit();
-      if(left()===0) pushMsg("That's 3! Want more? Click "Start free trial". 🚀");
+      if(left()===0) pushMsg("That's 3 for now. Want more? Start a free trial.");
     }catch(err){
       typing(false);
-      pushMsg("Oops, I hit a snag. Please try again, or start a free trial for full chat. 🙏");
+      pushMsg("One sec—pulling that up…");
       console.error(err);
     }
   });

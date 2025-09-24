@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
               <Logo variant="text" size="sm" />
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2024 All rights reserved.
+              © 2024 TradeLine 24/7. Never miss a call. We've got it.
             </p>
           </div>
           

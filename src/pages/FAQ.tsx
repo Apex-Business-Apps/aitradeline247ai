@@ -7,12 +7,20 @@ import { SEOHead } from "@/components/seo/SEOHead";
 
 const faqs = [
   {
-    question: "How does TradeLine 24/7 AI work?",
-    answer: "Our AI receptionist uses advanced natural language processing to understand and respond to customer inquiries. It can handle calls, messages, emails, and chat across multiple channels, learning from each interaction to improve over time."
+    question: "Do you record calls?",
+    answer: "Yes—only with notice and consent. You can opt out anytime."
   },
   {
-    question: "Can the AI handle complex customer inquiries?",
-    answer: "Yes, our AI is trained to handle a wide range of inquiries from simple questions to complex requests. For situations requiring human intervention, it seamlessly transfers to your team with full context and conversation history."
+    question: "How do transcripts work?",
+    answer: "After each call, a short summary goes to your inbox with next steps."
+  },
+  {
+    question: "Is this compliant in Canada?",
+    answer: "Yes. Every message identifies us and includes an unsubscribe. We honour requests within 10 business days."
+  },
+  {
+    question: "Can you handle complex customer inquiries?",
+    answer: "Yes, we handle a wide range of inquiries from simple questions to complex requests. For situations requiring human help, we transfer to your team with full context."
   },
   {
     question: "What integrations are available?",
@@ -20,31 +28,23 @@ const faqs = [
   },
   {
     question: "Is my customer data secure?",
-    answer: "Absolutely. We're SOC 2 compliant with bank-level security measures. All data is encrypted in transit and at rest, and we follow strict GDPR and privacy regulations. Your data is never shared with third parties."
+    answer: "Yes. We're SOC 2 compliant with bank-level security. All data is encrypted and we follow strict GDPR and privacy rules. Your data is never shared with third parties."
   },
   {
     question: "How quickly can I get started?",
-    answer: "Most businesses are up and running within 24 hours. Our onboarding team helps configure your AI, set up integrations, and train the system with your specific business information and preferences."
+    answer: "Most businesses are up and running within 24 hours. Our team helps configure your service, set up integrations, and train the system with your business information."
   },
   {
-    question: "Can I customize the AI's responses?",
-    answer: "Yes, you can fully customize your AI's personality, responses, and workflows. Set custom greetings, FAQ responses, escalation rules, and business-specific information to match your brand voice."
+    question: "Can I customize the responses?",
+    answer: "Yes, you can fully customize your service's personality, responses, and workflows. Set custom greetings, FAQ responses, and business-specific information to match your brand voice."
   },
   {
-    question: "What languages does the AI support?",
-    answer: "Our AI supports over 50 languages with native-level fluency. It can automatically detect the customer's language and respond appropriately, making it perfect for global businesses."
-  },
-  {
-    question: "How accurate is the call transcription?",
-    answer: "Our transcription accuracy is over 95% for clear audio in supported languages. The system continuously improves by learning industry-specific terminology and your business context."
+    question: "What languages are supported?",
+    answer: "We support over 50 languages with native-level fluency. The system can automatically detect the customer's language and respond appropriately."
   },
   {
     question: "Can I try before I buy?",
-    answer: "Yes, we offer a 14-day free trial with full access to all features. No credit card required to start. Our team will help you set up and test the system with your actual business scenarios."
-  },
-  {
-    question: "What kind of support do you provide?",
-    answer: "We provide 24/7 technical support via chat, email, and phone. Enterprise customers get dedicated account managers and priority support with guaranteed response times."
+    answer: "Yes, we offer a 14-day free trial with full access to all features. No credit card required to start. Our team will help you set up and test the system."
   }
 ];
 

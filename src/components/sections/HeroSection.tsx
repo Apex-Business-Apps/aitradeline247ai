@@ -37,15 +37,17 @@ export const HeroSection = () => {
         
         {/* Value Proposition */}
         <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-          Never miss a lead. Our intelligent receptionist handles calls, schedules appointments, and qualifies prospects around the clock.
+          We pick up when you can't—so customers aren't kept waiting.
         </p>
         
         {/* Primary CTA */}
         <div className="space-y-4">
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-12 py-6 rounded-full transition-all duration-300 transform hover:scale-105" style={{boxShadow: 'var(--premium-glow)'}}>
-            Grow now
+            Start free trial
           </Button>
-          <p className="text-sm text-muted-foreground">Start your free trial • No credit card required</p>
+          <p className="text-sm text-muted-foreground">
+            <Button variant="link" className="text-sm p-0 h-auto">See how it works</Button>
+          </p>
         </div>
       </div>
     </section>

@@ -37,6 +37,7 @@ const leadFormSchema = z.object({
 interface LeadFormData {
   name: string;
   email: string;
+  phone?: string;
   company: string;
   notes: string;
 }
@@ -46,6 +47,7 @@ export const LeadCaptureForm = () => {
   const [formData, setFormData] = useState<LeadFormData>({
     name: "",
     email: "",
+    phone: "",
     company: "",
     notes: ""
   });
@@ -153,6 +155,7 @@ export const LeadCaptureForm = () => {
         setFormData({
           name: "",
           email: "",
+          phone: "",
           company: "",
           notes: ""
         });
@@ -193,7 +196,7 @@ export const LeadCaptureForm = () => {
               </div>
               <CardTitle className="text-2xl">🎉 Welcome Aboard!</CardTitle>
               <CardDescription>
-                Your AI receptionist setup is starting! Check your email for next steps.
+                Thanks—check your email. We'll follow up within 2 hours.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -215,10 +218,10 @@ export const LeadCaptureForm = () => {
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Grow Your Business?
+            Tell us a bit about you
           </h2>
           <p className="text-lg max-w-2xl mx-auto text-[#1e556b]">
-            Join thousands of businesses already using TradeLine 24/7. Get started with your AI receptionist today.
+            Get started with your free trial today.
           </p>
         </div>
 
@@ -235,42 +238,53 @@ export const LeadCaptureForm = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="lead-name">Full Name *</Label>
-                <Input id="lead-name" placeholder="Enter your full name" value={formData.name} onChange={e => handleInputChange("name", e.target.value)} required />
+                <Label htmlFor="lead-name">Your name *</Label>
+                <Input id="lead-name" placeholder="Your name" value={formData.name} onChange={e => handleInputChange("name", e.target.value)} required />
               </div>
 
               <div>
-                <Label htmlFor="lead-email">Work Email *</Label>
-                <Input id="lead-email" type="email" placeholder="name@company.com" value={formData.email} onChange={e => handleInputChange("email", e.target.value)} required />
+                <Label htmlFor="lead-email">Work email *</Label>
+                <Input id="lead-email" type="email" placeholder="Work email" value={formData.email} onChange={e => handleInputChange("email", e.target.value)} required />
               </div>
 
               <div>
-                <Label htmlFor="lead-company">Company Name *</Label>
-                <Input id="lead-company" placeholder="Your Company Inc." value={formData.company} onChange={e => handleInputChange("company", e.target.value)} required />
+                <Label htmlFor="lead-phone">Best number</Label>
+                <Input id="lead-phone" type="tel" placeholder="Best number" value={formData.phone || ""} onChange={e => handleInputChange("phone" as keyof LeadFormData, e.target.value)} />
               </div>
 
               <div>
-                <Label htmlFor="lead-notes">Tell us about your needs</Label>
-                <Textarea id="lead-notes" placeholder="How many calls do you get per day? What's your biggest customer service challenge?" value={formData.notes} onChange={e => handleInputChange("notes", e.target.value)} className="min-h-[100px]" />
+                <Label htmlFor="lead-company">Company name *</Label>
+                <Input id="lead-company" placeholder="Company name" value={formData.company} onChange={e => handleInputChange("company", e.target.value)} required />
               </div>
+
+              <div>
+                <Label htmlFor="lead-notes">What do you want help with?</Label>
+                <Textarea id="lead-notes" placeholder="What do you want help with?" value={formData.notes} onChange={e => handleInputChange("notes", e.target.value)} className="min-h-[100px]" />
+              </div>
+
+              <label className="flex items-start space-x-3 text-sm text-muted-foreground">
+                <input
+                  type="checkbox"
+                  required
+                  className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <span>
+                  I agree to get emails about setup and updates. Unsubscribe anytime.
+                  By submitting, you agree to our{" "}
+                  <a href="/terms" className="text-primary hover:underline">Terms of Service</a> and{" "}
+                  <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.
+                </span>
+              </label>
 
               <Button type="submit" size="lg" variant={ctaVariant} className="w-full shadow-lg" disabled={isSubmitting}>
                 {isSubmitting ? <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Setting Up Your AI...
+                    Processing...
                   </> : <>
                     <Sparkles className="w-4 h-4 mr-2" />
-                    {ctaText}
+                    Grow now
                   </>}
               </Button>
-
-              <p className="text-xs text-muted-foreground text-center">
-                By submitting, you agree to our{" "}
-                <a href="/terms" className="text-primary hover:underline">Terms of Service</a> and{" "}
-                <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>. 
-                <br />
-                No spam, unsubscribe anytime.
-              </p>
             </form>
           </CardContent>
         </Card>

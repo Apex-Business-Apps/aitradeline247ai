@@ -197,12 +197,12 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="font-size: 18px; color: #333; line-height: 1.6;">Hi ${name},</p>
             
             <p style="color: #666; line-height: 1.6; margin: 20px 0;">
-              Thank you for choosing TradeLine 24/7! We're excited to help <strong>${company}</strong> 
-              transform customer interactions with our AI-powered receptionist service.
+      "Thank you for choosing TradeLine 24/7! We're excited to help <strong>${company}</strong> 
+      get better call coverage with our service.
             </p>
             
             <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
-              <h2 style="color: #333; margin-top: 0; font-size: 20px;">🚀 What Happens Next?</h2>
+               <h2 style="color: #333; margin-top: 0; font-size: 20px;">🚀 What Happens Next?</h2>
               <div style="margin: 15px 0;">
                 <div style="display: flex; align-items: center; margin: 10px 0;">
                   <span style="background: #ff6b35; color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 15px;">1</span>
@@ -210,7 +210,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </div>
                 <div style="display: flex; align-items: center; margin: 10px 0;">
                   <span style="background: #ff6b35; color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 15px;">2</span>
-                  <span style="color: #333;"><strong>Custom Setup:</strong> We'll configure your AI receptionist for your business</span>
+                  <span style="color: #333;"><strong>Custom Setup:</strong> We'll configure your service for your business</span>
                 </div>
                 <div style="display: flex; align-items: center; margin: 10px 0;">
                   <span style="background: #ff6b35; color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; margin-right: 15px;">3</span>
@@ -228,10 +228,10 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div style="background: #e8f4fd; border-left: 4px solid #2196F3; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0;">
               <h3 style="color: #1976D2; margin-top: 0; font-size: 16px;">💡 Quick Tip</h3>
-              <p style="color: #666; margin: 0; line-height: 1.6;">
-                Have questions before our call? Reply to this email or check out our 
-                <a href="https://tradeline247.com/faq" style="color: #ff6b35;">FAQ page</a> for instant answers.
-              </p>
+               <p style="color: #666; margin: 0; line-height: 1.6;">
+                 Have questions before our call? Reply to this email or check out our 
+                 <a href="https://tradeline247.com/faq" style="color: #ff6b35;">FAQ page</a> for instant answers.
+               </p>
             </div>
             
             <div style="text-align: center; margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
@@ -242,11 +242,11 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #999; font-size: 14px;">
-            <p style="margin: 5px 0;">
-              TradeLine 24/7 - Your AI Receptionist That Never Sleeps
-              <br>
-              <a href="https://tradeline247.com" style="color: #ff6b35;">tradeline247.com</a> | Toronto, ON, Canada
-            </p>
+             <p style="margin: 5px 0;">
+               TradeLine 24/7 - Your Service That Never Sleeps
+               <br>
+               <a href="https://tradeline247.com" style="color: #ff6b35;">tradeline247.com</a> | Toronto, ON, Canada
+             </p>
             <p style="margin: 15px 0 5px 0;">
               <a href="https://tradeline247.com/privacy" style="color: #999; text-decoration: none;">Privacy Policy</a> | 
               <a href="https://tradeline247.com/terms" style="color: #999; text-decoration: none;">Terms of Service</a>

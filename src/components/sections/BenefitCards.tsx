@@ -5,17 +5,17 @@ export const BenefitCards = () => {
   const benefits = [{
     icon: Zap,
     title: "Lightning Speed",
-    description: "Respond to calls in under 2 rings. Never keep prospects waiting while you're busy or away.",
+    description: "Respond in under 2–3 rings. Customers stay, and you keep the work moving.",
     color: "text-brand-orange"
   }, {
     icon: User,
     title: "Personal Touch",
-    description: "Each caller gets personalized attention with custom scripts tailored to your business needs.",
+    description: "Every caller gets a friendly, on-brand script that feels like your team.",
     color: "text-primary"
   }, {
     icon: Target,
     title: "Cleaner Follow-through",
-    description: "Qualified leads delivered instantly with complete call summaries and next-step recommendations.",
+    description: "A short call summary lands in your inbox—next steps included.",
     color: "text-accent-foreground"
   }];
   return <section className="py-24 bg-gradient-orange-subtle relative overflow-hidden">
@@ -27,7 +27,7 @@ export const BenefitCards = () => {
             <span className="text-4xl md:text-5xl font-bold text-foreground">?</span>
           </div>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed text-[#1e556b]">
-            Transform every call into an opportunity with our intelligent reception system designed for modern businesses.
+            What changes when no call is missed
           </p>
         </div>
         
