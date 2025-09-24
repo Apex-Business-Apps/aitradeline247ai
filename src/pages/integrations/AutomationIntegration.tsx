@@ -219,7 +219,8 @@ const AutomationIntegration = () => {
 
                 <div className="pt-4 border-t border-muted/20">
                   <Button
-                    className="w-full"
+                    variant="default"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                     onClick={() => handleConnect(provider)}
                     disabled={isConnecting || provider.status === 'coming-soon'}
                   >
