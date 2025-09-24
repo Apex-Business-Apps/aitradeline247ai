@@ -121,30 +121,45 @@ export const useABTest = (testName: string) => {
     loadTest();
   }, [testName, getAssignedVariant]);
 
-  // Mark conversion for this user
+  // Mark conversion for this user - secure implementation
   const convert = useCallback(async (conversionValue?: number) => {
     try {
       const sessionId = getSessionId();
       
-      // Update assignment to mark conversion
-      const { error } = await supabase
+      // Use secure update approach - only update if not already converted
+      const { data: currentAssignment } = await supabase
         .from('ab_test_assignments')
-        .update({ converted: true })
+        .select('converted')
         .eq('test_name', testName)
-        .eq('user_session', sessionId);
+        .eq('user_session', sessionId)
+        .single();
 
-      if (!error) {
-        // Track conversion event
-        track({
-          event_type: 'ab_test_conversion',
-          event_data: { 
-            test_name: testName, 
-            variant: variant,
-            conversion_value: conversionValue 
-          }
-        });
-        
-        console.log(`A/B test conversion tracked for ${testName}, variant ${variant}`);
+      // Only proceed if assignment exists and hasn't been converted yet
+      if (currentAssignment && !currentAssignment.converted) {
+        const { error } = await supabase
+          .from('ab_test_assignments')
+          .update({ converted: true })
+          .eq('test_name', testName)
+          .eq('user_session', sessionId)
+          .eq('converted', false); // Extra security: only update if still false
+
+        if (!error) {
+          // Track conversion event
+          track({
+            event_type: 'ab_test_conversion',
+            event_data: { 
+              test_name: testName, 
+              variant: variant,
+              conversion_value: conversionValue 
+            }
+          });
+          
+          console.log(`A/B test conversion tracked for ${testName}, variant ${variant}`);
+        } else {
+          console.warn('Conversion update failed:', error);
+        }
+      } else {
+        console.warn('Assignment already converted or not found');
       }
     } catch (error) {
       console.error('Error tracking A/B test conversion:', error);

@@ -22,7 +22,8 @@ export const useAnalytics = () => {
   const track = useCallback(async (event: AnalyticsEvent) => {
     try {
       const sessionId = getSessionId();
-      const userAgent = navigator.userAgent;
+      // Limit user agent data to reduce fingerprinting potential
+      const limitedUserAgent = navigator.userAgent.substring(0, 200);
       const pageUrl = event.page_url || window.location.href;
 
       const { error } = await supabase.from('analytics_events').insert({
@@ -30,7 +31,8 @@ export const useAnalytics = () => {
         event_data: event.event_data || {},
         user_session: sessionId,
         page_url: pageUrl,
-        user_agent: userAgent,
+        user_agent: limitedUserAgent,
+        // IP anonymization is handled by the backend/edge functions
       });
 
       if (error) {
