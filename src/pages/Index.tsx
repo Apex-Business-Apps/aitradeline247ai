@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { HeroSection } from "@/components/sections/HeroSection";
-import { TrustBadges } from "@/components/sections/TrustBadges";
+import { PricingHero } from "@/components/sections/PricingHero";
+import { TrustBadgesSlim } from "@/components/sections/TrustBadgesSlim";
 import { BenefitCards } from "@/components/sections/BenefitCards";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { LeadCaptureForm } from "@/components/sections/LeadCaptureForm";
@@ -46,10 +46,7 @@ const Index = () => {
         
         <main className="flex-1">
           <div className="backdrop-blur-sm bg-background/75">
-            <HeroSection />
-          </div>
-          <div className="backdrop-blur-sm bg-background/70">
-            <TrustBadges />
+            <PricingHero />
           </div>
           <div className="backdrop-blur-sm bg-background/75">
             <BenefitCards />
@@ -61,6 +58,10 @@ const Index = () => {
             <LeadCaptureForm />
           </div>
         </main>
+        
+        <div className="backdrop-blur-sm bg-background/70">
+          <TrustBadgesSlim />
+        </div>
         
         <div className="backdrop-blur-sm bg-background/80">
           <Footer />
