@@ -83,6 +83,7 @@ export type Database = {
           ip_address: string | null
           page_url: string | null
           user_agent: string | null
+          user_id: string | null
           user_session: string | null
         }
         Insert: {
@@ -93,6 +94,7 @@ export type Database = {
           ip_address?: string | null
           page_url?: string | null
           user_agent?: string | null
+          user_id?: string | null
           user_session?: string | null
         }
         Update: {
@@ -103,6 +105,7 @@ export type Database = {
           ip_address?: string | null
           page_url?: string | null
           user_agent?: string | null
+          user_id?: string | null
           user_session?: string | null
         }
         Relationships: []
