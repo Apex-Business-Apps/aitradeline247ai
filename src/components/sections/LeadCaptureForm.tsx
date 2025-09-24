@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle } from "lucide-react";
+import { Loader2, CheckCircle, Sparkles } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LeadFormData {
   name: string;
@@ -27,28 +28,50 @@ export const LeadCaptureForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.company) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in your name, email, and company name.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // TODO: Replace with actual Supabase edge function call
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
+      console.log("Submitting lead:", formData);
+
+      const { data, error } = await supabase.functions.invoke('send-lead-email', {
+        body: formData
+      });
+
+      if (error) {
+        console.error("Supabase function error:", error);
+        throw error;
+      }
+
+      console.log("Lead submission successful:", data);
       
       setIsSuccess(true);
       toast({
-        title: "Success!",
-        description: "We'll be in touch within 24 hours to help you grow your business.",
+        title: "🚀 Welcome to TradeLine 24/7!",
+        description: "We've sent you an email with next steps. Our team will contact you within 2 hours.",
       });
 
       // Reset form after success
       setTimeout(() => {
         setFormData({ name: "", email: "", company: "", notes: "" });
         setIsSuccess(false);
-      }, 3000);
+      }, 5000);
 
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Lead submission error:", error);
       toast({
         title: "Oops! Something went wrong",
-        description: "Please try again or contact us directly at info@tradeline247ai.com",
+        description: error.message || "Please try again or contact us directly at info@tradeline247ai.com",
         variant: "destructive"
       });
     } finally {
@@ -66,14 +89,29 @@ export const LeadCaptureForm = () => {
         <div className="container">
           <Card className="max-w-md mx-auto text-center">
             <CardHeader>
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
-              <CardTitle className="text-2xl">Thank You!</CardTitle>
+              <CardTitle className="text-2xl">🎉 Welcome Aboard!</CardTitle>
               <CardDescription>
-                We've received your information and will contact you within 24 hours.
+                Your AI receptionist setup is starting! Check your email for next steps.
               </CardDescription>
             </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-primary/5 p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  <Sparkles className="w-4 h-4 inline mr-1" />
+                  Our team will contact you within <strong>2 hours</strong> to get you started.
+                </p>
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={() => setIsSuccess(false)}
+                className="w-full"
+              >
+                Submit Another Lead
+              </Button>
+            </CardContent>
           </Card>
         </div>
       </section>
@@ -94,7 +132,10 @@ export const LeadCaptureForm = () => {
 
         <Card className="max-w-lg mx-auto">
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Start Your Free Trial</CardTitle>
+            <CardTitle className="text-2xl text-center flex items-center justify-center gap-2">
+              <Sparkles className="w-6 h-6 text-primary" />
+              Start Your Free Trial
+            </CardTitle>
             <CardDescription className="text-center">
               Tell us about your business and we'll set up your AI receptionist
             </CardDescription>
@@ -149,7 +190,7 @@ export const LeadCaptureForm = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="w-full"
+                className="w-full shadow-lg"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -158,12 +199,18 @@ export const LeadCaptureForm = () => {
                     Setting Up Your AI...
                   </>
                 ) : (
-                  "Grow Now"
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Grow Now
+                  </>
                 )}
               </Button>
 
               <p className="text-xs text-muted-foreground text-center">
-                By submitting, you agree to our Terms of Service and Privacy Policy. 
+                By submitting, you agree to our{" "}
+                <a href="/terms" className="text-primary hover:underline">Terms of Service</a> and{" "}
+                <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>. 
+                <br />
                 No spam, unsubscribe anytime.
               </p>
             </form>
