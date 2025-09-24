@@ -3,30 +3,30 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Phone, MessageSquare, Users, ArrowRight, CheckCircle2 } from 'lucide-react';
 
-const upcomingActions = [
+const todaysAppointments = [
   {
-    id: 'missed-calls',
-    title: 'Follow up on missed calls',
-    description: '3 potential customers called after hours',
-    priority: 'high',
-    action: 'Review & call back',
-    icon: Phone
+    id: 'appt-1',
+    time: '10:30 AM',
+    client: 'Sarah Johnson',
+    type: 'Consultation',
+    status: 'confirmed',
+    actions: ['Confirm', 'Reschedule', 'Add note']
   },
   {
-    id: 'review-conversations',
-    title: 'Check conversation summaries',
-    description: '12 new conversations from this week',
-    priority: 'medium',
-    action: 'Review summaries',
-    icon: MessageSquare
+    id: 'appt-2',
+    time: '2:00 PM',
+    client: 'Mike Chen',
+    type: 'Follow-up',
+    status: 'pending',
+    actions: ['Confirm', 'Reschedule', 'Add note']
   },
   {
-    id: 'update-availability',
-    title: 'Update your availability',
-    description: 'Holiday schedule for next month',
-    priority: 'low',
-    action: 'Set schedule',
-    icon: Users
+    id: 'appt-3',
+    time: '4:15 PM',
+    client: 'Emma Davis',
+    type: 'New client',
+    status: 'tentative',
+    actions: ['Confirm', 'Reschedule', 'Add note']
   }
 ];
 
@@ -50,49 +50,54 @@ export const NextActionsSection: React.FC = () => {
       >
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-semibold text-foreground">
-            What's next for you
+            Today's appointments
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Simple actions to keep your business growing
+            Upcoming calls and meetings
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
-          {upcomingActions.map((action) => (
+          {todaysAppointments.map((appointment) => (
             <div 
-              key={action.id}
-              className="flex items-center gap-3 p-3 rounded-lg bg-accent/20 hover:bg-accent/30 transition-colors group"
-              data-testid={`action-item-${action.id}`}
+              key={appointment.id}
+              className="flex items-center gap-3 p-3 rounded-lg bg-accent/20 border border-border/50"
+              data-testid={`appointment-${appointment.id}`}
             >
-              <div className={`p-2 rounded-lg ${
-                action.priority === 'high' ? 'bg-red-100 dark:bg-red-900/30' :
-                action.priority === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900/30' :
-                'bg-blue-100 dark:bg-blue-900/30'
-              }`}>
-                <action.icon className={`h-4 w-4 ${
-                  action.priority === 'high' ? 'text-red-600 dark:text-red-400' :
-                  action.priority === 'medium' ? 'text-yellow-600 dark:text-yellow-400' :
-                  'text-blue-600 dark:text-blue-400'
-                }`} />
+              <div className="flex-shrink-0">
+                <div className="text-sm font-medium text-foreground">
+                  {appointment.time}
+                </div>
+                <div className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                  appointment.status === 'confirmed' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' :
+                  appointment.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' :
+                  'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                }`}>
+                  {appointment.status}
+                </div>
               </div>
               
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground">
-                  {action.title}
+                  {appointment.client}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {action.description}
+                <p className="text-xs text-muted-foreground">
+                  {appointment.type}
                 </p>
               </div>
               
-              <Button 
-                size="sm" 
-                variant="ghost"
-                className="text-xs hover:bg-accent group-hover:text-primary transition-colors"
-                data-testid={`action-button-${action.id}`}
-              >
-                {action.action}
-                <ArrowRight className="h-3 w-3 ml-1" />
-              </Button>
+              <div className="flex gap-1">
+                {appointment.actions.slice(0, 2).map((action) => (
+                  <Button 
+                    key={action}
+                    size="sm" 
+                    variant="ghost"
+                    className="text-xs px-2"
+                    data-testid={`action-${appointment.id}-${action.toLowerCase().replace(' ', '-')}`}
+                  >
+                    {action}
+                  </Button>
+                ))}
+              </div>
             </div>
           ))}
         </CardContent>
