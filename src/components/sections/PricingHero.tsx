@@ -2,6 +2,7 @@ import { CheckCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import officialLogo from '@/assets/official-logo.svg';
 
 const plans = [
   {
@@ -51,8 +52,17 @@ export const PricingHero = () => {
       <div className="container">
         {/* Hero Content */}
         <div className="text-center mb-16">
+          {/* Hero Logo */}
+          <div className="mb-2">
+            <img 
+              src={officialLogo} 
+              alt="TradeLine AI - 24/7 AI Receptionist" 
+              className="h-44 md:h-[16.5rem] lg:h-[19.8rem] w-auto mx-auto drop-shadow-2xl"
+            />
+          </div>
+          
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-            Your 24/7 AI Receptionist
+            Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
             Never miss a call. Our intelligent receptionist handles calls, schedules appointments, and qualifies prospects around the clock.
