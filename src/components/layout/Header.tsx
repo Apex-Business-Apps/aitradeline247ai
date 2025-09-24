@@ -14,6 +14,11 @@ const navigationItems = [
   { name: 'Contact', href: '/contact' }
 ];
 
+const adminNavigationItems = [
+  { name: 'Call Center', href: '/call-center' },
+  { name: 'Dashboard', href: '/dashboard' }
+];
+
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,6 +58,20 @@ export const Header: React.FC = () => {
                     to={item.href}
                     className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 story-link hover-scale"
                     style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    {item.name}
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            ))}
+            {/* Admin-only navigation items */}
+            {isAdmin() && adminNavigationItems.map((item, index) => (
+              <NavigationMenuItem key={item.name}>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to={item.href}
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-primary/10 px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-primary/20 hover:text-primary focus:bg-primary/20 focus:text-primary focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-primary/30 data-[state=open]:bg-primary/30 story-link hover-scale text-primary"
+                    style={{ animationDelay: `${(navigationItems.length + index) * 100}ms` }}
                   >
                     {item.name}
                   </Link>
@@ -123,6 +142,18 @@ export const Header: React.FC = () => {
                 className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-300 hover-scale animate-fade-in"
                 onClick={() => setIsMobileMenuOpen(false)}
                 style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {item.name}
+              </Link>
+            ))}
+            {/* Admin-only mobile navigation items */}
+            {isAdmin() && adminNavigationItems.map((item, index) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="block px-4 py-2 text-sm font-medium rounded-md bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 hover-scale animate-fade-in"
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{ animationDelay: `${(navigationItems.length + index) * 100}ms` }}
               >
                 {item.name}
               </Link>

@@ -30,6 +30,7 @@ import MessagingIntegration from "./pages/integrations/MessagingIntegration";
 import MobileIntegration from "./pages/integrations/MobileIntegration";
 import AutomationIntegration from "./pages/integrations/AutomationIntegration";
 import ComponentShowcase from "./pages/ComponentShowcase";
+import CallCenter from "./pages/CallCenter";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const AppWithMonitoring = () => {
         <Route path="/dashboard/integrations/messaging" element={<main id="main"><MessagingIntegration /></main>} />
         <Route path="/dashboard/integrations/mobile" element={<main id="main"><MobileIntegration /></main>} />
         <Route path="/dashboard/integrations/automation" element={<main id="main"><AutomationIntegration /></main>} />
+        <Route path="/call-center" element={<main id="main"><CallCenter /></main>} />
         <Route path="/components" element={<main id="main"><ComponentShowcase /></main>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
