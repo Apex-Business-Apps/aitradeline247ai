@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
+import { HelmetProvider } from 'react-helmet-async';
 import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
 import ClientDashboard from "./pages/ClientDashboard";
@@ -28,13 +29,14 @@ import ComponentShowcase from "./pages/ComponentShowcase";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AnalyticsTracker />
-        <Routes>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AnalyticsTracker />
+          <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/features" element={<Features />} />
@@ -54,11 +56,12 @@ const App = () => (
           <Route path="/components" element={<ComponentShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
-        <InstallPrompt />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+          </Routes>
+          <InstallPrompt />
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;

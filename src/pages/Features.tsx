@@ -5,6 +5,7 @@ import { CheckCircle, Phone, MessageSquare, Brain, Zap, Shield, Clock } from "lu
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const features = [
   {
@@ -57,6 +58,13 @@ const Features = () => {
   };
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="Features — TradeLine 24/7 AI Receptionist"
+        description="Discover powerful AI features: 24/7 call handling, smart routing, omnichannel messaging, CRM integration, and enterprise security. Transform your customer service today."
+        keywords="AI receptionist features, call management, omnichannel messaging, CRM integration, business automation, 24/7 customer service"
+        canonical="https://tradeline247.com/features"
+      />
+      
       <Header />
       
       <main className="flex-1">
