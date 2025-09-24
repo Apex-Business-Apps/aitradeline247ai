@@ -282,7 +282,7 @@ const Index = () => {
       if(left()===0) pushMsg("That's 3 for now. Want more? Start a free trial.");
     }catch(err){
       typing(false);
-      pushMsg("One sec—pulling that up…");
+      pushMsg("Something went wrong. Please try again, or start a free trial for full chat.");
       console.error(err);
     }
   });

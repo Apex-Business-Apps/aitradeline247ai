@@ -32,24 +32,27 @@ export const Header: React.FC = () => {
   return (
     <header 
       className={cn(
-        'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200',
-        isScrolled ? 'shadow-sm py-2' : 'py-4'
+        'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300',
+        isScrolled ? 'shadow-lg py-2' : 'py-4'
       )}
     >
       <div className="container flex h-14 items-center justify-between">
-        {/* Logo */}
-        <Logo variant="full" size={isScrolled ? 'sm' : 'md'} />
+        {/* Logo with Animation */}
+        <div className="animate-fade-in">
+          <Logo variant="full" size={isScrolled ? 'sm' : 'md'} className="transition-all duration-300" />
+        </div>
 
         {/* Desktop Navigation */}
-        <nav aria-label="Primary" className="hidden md:flex">
+        <nav aria-label="Primary" className="hidden md:flex animate-fade-in" style={{ animationDelay: '200ms' }}>
           <NavigationMenu>
             <NavigationMenuList>
-            {navigationItems.map((item) => (
+            {navigationItems.map((item, index) => (
               <NavigationMenuItem key={item.name}>
                 <NavigationMenuLink asChild>
                   <Link
                     to={item.href}
-                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 story-link hover-scale"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     {item.name}
                   </Link>
@@ -60,8 +63,8 @@ export const Header: React.FC = () => {
         </NavigationMenu>
         </nav>
 
-        {/* CTA Button & Mobile Menu */}
-        <div className="flex items-center gap-2">
+        {/* Enhanced CTA Button & Mobile Menu */}
+        <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '400ms' }}>
           {user ? (
             <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
@@ -70,7 +73,7 @@ export const Header: React.FC = () => {
                 </span>
                 {userRole && (
                   <span className={cn(
-                    "text-xs px-2 py-1 rounded-full font-medium hidden sm:block",
+                    "text-xs px-2 py-1 rounded-full font-medium hidden sm:block transition-all duration-300",
                     isAdmin() ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                   )}>
                     {userRole.toUpperCase()}
@@ -81,6 +84,7 @@ export const Header: React.FC = () => {
                 variant="outline" 
                 size={isScrolled ? 'sm' : 'default'}
                 onClick={() => signOut()}
+                className="hover-scale transition-all duration-300"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Sign Out</span>
@@ -91,14 +95,15 @@ export const Header: React.FC = () => {
               variant="success" 
               size={isScrolled ? 'sm' : 'default'}
               onClick={() => navigate('/auth')}
+              className="hover-scale transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Login
             </Button>
           )}
           
-          {/* Mobile Menu Button */}
+          {/* Enhanced Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-md hover:bg-accent"
+            className="md:hidden p-2 rounded-md hover:bg-accent transition-all duration-300 hover-scale"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
@@ -107,16 +112,17 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Enhanced Mobile Navigation with Slide Animation */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t bg-background">
+        <div className="md:hidden border-t bg-background/95 backdrop-blur animate-slide-in-right">
           <nav className="container py-4 space-y-2">
-            {navigationItems.map((item) => (
+            {navigationItems.map((item, index) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-300 hover-scale animate-fade-in"
                 onClick={() => setIsMobileMenuOpen(false)}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 {item.name}
               </Link>

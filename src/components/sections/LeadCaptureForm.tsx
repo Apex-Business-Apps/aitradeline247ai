@@ -189,24 +189,29 @@ export const LeadCaptureForm = () => {
   if (isSuccess) {
     return <section className="py-20 bg-gradient-to-br from-primary/10 to-accent/10">
         <div className="container">
-          <Card className="max-w-md mx-auto text-center">
+          <Card className="max-w-md mx-auto text-center shadow-2xl border-0 bg-gradient-to-br from-green-50/80 to-emerald-50/80 backdrop-blur-sm animate-scale-in">
             <CardHeader>
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <CheckCircle className="w-8 h-8 text-white" />
               </div>
-              <CardTitle className="text-2xl">🎉 Welcome Aboard!</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-2xl animate-fade-in">🎉 Welcome Aboard!</CardTitle>
+              <CardDescription className="animate-fade-in" style={{ animationDelay: '200ms' }}>
                 Thanks—check your email. We'll follow up within 2 hours.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-primary/5 p-4 rounded-lg">
+              <div className="bg-primary/5 p-4 rounded-lg animate-fade-in" style={{ animationDelay: '400ms' }}>
                 <p className="text-sm text-muted-foreground">
                   <Sparkles className="w-4 h-4 inline mr-1" />
                   Our team will contact you within <strong>2 hours</strong> to get you started.
                 </p>
               </div>
-              <Button variant="outline" onClick={() => setIsSuccess(false)} className="w-full">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsSuccess(false)} 
+                className="w-full hover-scale transition-all duration-300 animate-fade-in" 
+                style={{ animationDelay: '600ms' }}
+              >
                 Submit Another Lead
               </Button>
             </CardContent>
@@ -225,66 +230,113 @@ export const LeadCaptureForm = () => {
           </p>
         </div>
 
-        <Card className="max-w-lg mx-auto">
-          <CardHeader>
-            <CardTitle className="text-2xl text-center flex items-center justify-center gap-2">
-              <Sparkles className="w-6 h-6 text-primary" />
-              Start Your Free Trial
-            </CardTitle>
-            <CardDescription className="text-center">
-              Tell us about your business and we'll set up your AI receptionist
-            </CardDescription>
+        <Card className="max-w-lg mx-auto shadow-2xl border-0 bg-background/95 backdrop-blur-sm">
+          <CardHeader className="text-center space-y-4">
+            <div className="animate-fade-in">
+              <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                Start Your Free Trial
+              </CardTitle>
+              <CardDescription className="text-center mt-2">
+                Tell us about your business and we'll set up your service
+              </CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
+              <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
                 <Label htmlFor="lead-name">Your name *</Label>
-                <Input id="lead-name" placeholder="Your name" value={formData.name} onChange={e => handleInputChange("name", e.target.value)} required />
-              </div>
-
-              <div>
-                <Label htmlFor="lead-email">Work email *</Label>
-                <Input id="lead-email" type="email" placeholder="Work email" value={formData.email} onChange={e => handleInputChange("email", e.target.value)} required />
-              </div>
-
-              <div>
-                <Label htmlFor="lead-phone">Best number</Label>
-                <Input id="lead-phone" type="tel" placeholder="Best number" value={formData.phone || ""} onChange={e => handleInputChange("phone" as keyof LeadFormData, e.target.value)} />
-              </div>
-
-              <div>
-                <Label htmlFor="lead-company">Company name *</Label>
-                <Input id="lead-company" placeholder="Company name" value={formData.company} onChange={e => handleInputChange("company", e.target.value)} required />
-              </div>
-
-              <div>
-                <Label htmlFor="lead-notes">What do you want help with?</Label>
-                <Textarea id="lead-notes" placeholder="What do you want help with?" value={formData.notes} onChange={e => handleInputChange("notes", e.target.value)} className="min-h-[100px]" />
-              </div>
-
-              <label className="flex items-start space-x-3 text-sm text-muted-foreground">
-                <input
-                  type="checkbox"
-                  required
-                  className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                <Input 
+                  id="lead-name" 
+                  placeholder="Your name" 
+                  value={formData.name} 
+                  onChange={e => handleInputChange("name", e.target.value)} 
+                  required 
+                  className="transition-all duration-300 focus:scale-105"
                 />
-                <span>
-                  I agree to get emails about setup and updates. Unsubscribe anytime.
-                  By submitting, you agree to our{" "}
-                  <a href="/terms" className="text-primary hover:underline">Terms of Service</a> and{" "}
-                  <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.
-                </span>
-              </label>
+              </div>
 
-              <Button type="submit" size="lg" variant={ctaVariant} className="w-full shadow-lg" disabled={isSubmitting}>
-                {isSubmitting ? <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Processing...
-                  </> : <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Grow now
-                  </>}
-              </Button>
+              <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+                <Label htmlFor="lead-email">Work email *</Label>
+                <Input 
+                  id="lead-email" 
+                  type="email" 
+                  placeholder="Work email" 
+                  value={formData.email} 
+                  onChange={e => handleInputChange("email", e.target.value)} 
+                  required 
+                  className="transition-all duration-300 focus:scale-105"
+                />
+              </div>
+
+              <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+                <Label htmlFor="lead-phone">Best number</Label>
+                <Input 
+                  id="lead-phone" 
+                  type="tel" 
+                  placeholder="Best number" 
+                  value={formData.phone || ""} 
+                  onChange={e => handleInputChange("phone" as keyof LeadFormData, e.target.value)} 
+                  className="transition-all duration-300 focus:scale-105"
+                />
+              </div>
+
+              <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+                <Label htmlFor="lead-company">Company name *</Label>
+                <Input 
+                  id="lead-company" 
+                  placeholder="Company name" 
+                  value={formData.company} 
+                  onChange={e => handleInputChange("company", e.target.value)} 
+                  required 
+                  className="transition-all duration-300 focus:scale-105"
+                />
+              </div>
+
+              <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
+                <Label htmlFor="lead-notes">What do you want help with?</Label>
+                <Textarea 
+                  id="lead-notes" 
+                  placeholder="What do you want help with?" 
+                  value={formData.notes} 
+                  onChange={e => handleInputChange("notes", e.target.value)} 
+                  className="min-h-[100px] transition-all duration-300 focus:scale-105" 
+                />
+              </div>
+
+              <div className="animate-fade-in" style={{ animationDelay: '600ms' }}>
+                <label className="flex items-start space-x-3 text-sm text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    required
+                    className="mt-1 rounded border-gray-300 text-primary focus:ring-primary transition-all duration-200"
+                  />
+                  <span>
+                    I agree to get emails about setup and updates. Unsubscribe anytime.
+                    By submitting, you agree to our{" "}
+                    <a href="/terms" className="text-primary hover:underline story-link">Terms of Service</a> and{" "}
+                    <a href="/privacy" className="text-primary hover:underline story-link">Privacy Policy</a>.
+                  </span>
+                </label>
+              </div>
+
+              <div className="animate-fade-in" style={{ animationDelay: '700ms' }}>
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  variant={ctaVariant} 
+                  className="w-full shadow-lg hover:shadow-xl transition-all duration-300 hover-scale" 
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Processing...
+                    </> : <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Grow now
+                    </>}
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
