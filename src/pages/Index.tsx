@@ -68,65 +68,80 @@ const Index = () => {
         </div>
       </div>
       
-      {/* TL247 MiniBot — left-side trial chat (3 prompts) */}
-      <aside id="tl-mini-bot" aria-label="Try our AI receptionist" data-state="open">
-        <div className="tl-bot-head">
-          <div className="tl-bot-avatar" aria-hidden="true">
-            {/* Cute inline SVG robot (no external deps) */}
-            <svg viewBox="0 0 120 120" className="tl-robot">
-              <defs>
-                <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0" stopColor="#9EEAF9"/>
-                  <stop offset="1" stopColor="#35C2F2"/>
-                </linearGradient>
-              </defs>
-              <rect x="20" y="30" rx="12" ry="12" width="80" height="60" fill="url(#g)" stroke="#1B9ED8" strokeWidth="3"/>
-              <circle cx="45" cy="60" r="8" fill="#fff"/>
-              <circle cx="45" cy="60" r="4" fill="#35C2F2"/>
-              <circle cx="75" cy="60" r="8" fill="#fff"/>
-              <circle cx="75" cy="60" r="4" fill="#35C2F2"/>
-              <rect x="40" y="78" width="40" height="6" rx="3" fill="#1B9ED8" opacity="0.35"/>
-              <rect x="56" y="18" rx="3" ry="3" width="8" height="12" fill="#1B9ED8"/>
-              <circle cx="60" cy="16" r="5" fill="#35C2F2" stroke="#1B9ED8" strokeWidth="2"/>
-            </svg>
+      {/* TL247 MiniBot — Accessible Chat Dialog */}
+      <button id="chat-launcher" type="button"
+              className="chat-fab"
+              aria-controls="chat-panel"
+              aria-expanded="false"
+              aria-label="Open chat">Chat</button>
+
+      <aside id="chat-panel"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="chat-title"
+             hidden>
+        <h2 id="chat-title" className="sr-only">Chat</h2>
+        <button type="button" id="chat-close" className="chat-close" aria-label="Close chat">×</button>
+        <div id="chat-content">
+          <div className="tl-bot-head">
+            <div className="tl-bot-avatar" aria-hidden="true">
+              {/* Cute inline SVG robot (no external deps) */}
+              <svg viewBox="0 0 120 120" className="tl-robot">
+                <defs>
+                  <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stopColor="#9EEAF9"/>
+                    <stop offset="1" stopColor="#35C2F2"/>
+                  </linearGradient>
+                </defs>
+                <rect x="20" y="30" rx="12" ry="12" width="80" height="60" fill="url(#g)" stroke="#1B9ED8" strokeWidth="3"/>
+                <circle cx="45" cy="60" r="8" fill="#fff"/>
+                <circle cx="45" cy="60" r="4" fill="#35C2F2"/>
+                <circle cx="75" cy="60" r="8" fill="#fff"/>
+                <circle cx="75" cy="60" r="4" fill="#35C2F2"/>
+                <rect x="40" y="78" width="40" height="6" rx="3" fill="#1B9ED8" opacity="0.35"/>
+                <rect x="56" y="18" rx="3" ry="3" width="8" height="12" fill="#1B9ED8"/>
+                <circle cx="60" cy="16" r="5" fill="#35C2F2" stroke="#1B9ED8" strokeWidth="2"/>
+              </svg>
+            </div>
+            <div className="tl-bot-title">
+              <strong>Meet TrAdeleine</strong>
+              <span className="tl-bot-sub">Ask up to <b>3</b> quick questions</span>
+            </div>
           </div>
-          <div className="tl-bot-title">
-            <strong>Meet TrAdeleine</strong>
-            <span className="tl-bot-sub">Ask up to <b>3</b> quick questions</span>
+
+          <div className="tl-bot-body">
+            <div className="tl-bot-msgs" id="tlMsgs" role="log" aria-live="polite"></div>
+
+            <form id="tlForm" className="tl-bot-form" autoComplete="off">
+              <input 
+                id="tlInput" 
+                name="q" 
+                type="text" 
+                inputMode="text" 
+                minLength={1}
+                placeholder="Try: How do transcripts work?"
+                aria-label="Type your question" 
+                required 
+              />
+              <button className="tl-send" type="submit" aria-label="Send">↩︎</button>
+            </form>
+
+            <div className="tl-bot-limit" id="tlLimit">3 / 3 prompts left</div>
+            <a className="tl-bot-cta" href="#signup">Start free trial</a>
           </div>
-          <button className="tl-bot-toggle" aria-label="Hide mini chat" title="Hide">–</button>
-        </div>
-
-        <div className="tl-bot-body">
-          <div className="tl-bot-msgs" id="tlMsgs" role="log" aria-live="polite"></div>
-
-          <form id="tlForm" className="tl-bot-form" autoComplete="off">
-            <input 
-              id="tlInput" 
-              name="q" 
-              type="text" 
-              inputMode="text" 
-              minLength={1}
-              placeholder="Try: How do transcripts work?"
-              aria-label="Type your question" 
-              required 
-            />
-            <button className="tl-send" type="submit" aria-label="Send">↩︎</button>
-          </form>
-
-          <div className="tl-bot-limit" id="tlLimit">3 / 3 prompts left</div>
-          <a className="tl-bot-cta" href="#signup">Start free trial</a>
         </div>
       </aside>
 
       <style>{`
-        /* Layout: left sticky on desktop, docked on mobile */
-        #tl-mini-bot{position:sticky;top:16px;left:0;max-width:320px;width:clamp(260px,27vw,320px);
-          background:#fff;border:1px solid #e6e6e6;border-radius:16px;box-shadow:0 6px 22px rgba(0,0,0,.06);
-          font:14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;color:#1a1a1a;z-index:30}
-        @media (max-width: 960px){
-          #tl-mini-bot{position:fixed;bottom:12px;left:12px;right:12px;top:auto;width:auto;max-width:none}
-        }
+        /* Minimal CSS for layering only */
+        #chat-launcher{position:fixed;right:16px;bottom:16px;z-index:40;
+          padding:12px 16px;background:#1b9ed8;color:#fff;border:none;border-radius:24px;
+          cursor:pointer;font:14px system-ui;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+        #chat-panel{position:fixed;right:16px;bottom:72px;max-width:min(92vw,380px);width:360px;
+          background:#fff;border:1px solid #e6e6e6;border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.18);
+          z-index:41;font:14px/1.4 system-ui;color:#1a1a1a}
+        .chat-close{position:absolute;top:8px;right:8px;border:none;background:transparent;font-size:20px;line-height:1;
+          cursor:pointer;color:#999;padding:6px}
         .tl-bot-head{display:flex;gap:10px;align-items:center;padding:12px 12px 8px}
         .tl-bot-avatar{width:40px;height:40px}
         .tl-robot{width:40px;height:40px;animation:tlBlink 4s infinite ease-in-out}
@@ -134,7 +149,6 @@ const Index = () => {
         .tl-bot-title{flex:1;display:flex;flex-direction:column}
         .tl-bot-title strong{font-weight:700}
         .tl-bot-sub{font-size:12px;color:#666}
-        .tl-bot-toggle{border:none;background:transparent;font-size:18px;line-height:1;padding:6px;cursor:pointer;color:#999}
         .tl-bot-body{padding:8px 12px 12px;display:grid;gap:10px}
         .tl-bot-msgs{max-height:320px;overflow:auto;padding-right:4px;display:grid;gap:8px}
         .tl-msg{padding:8px 10px;border-radius:12px;max-width:90%}
@@ -147,19 +161,24 @@ const Index = () => {
         .tl-bot-limit{font-size:12px;color:#666}
         .tl-bot-cta{display:inline-block;text-align:center;background:#1b9ed8;color:#fff;
           padding:10px 14px;border-radius:10px;text-decoration:none}
-        /* collapsed */
-        #tl-mini-bot[data-state="closed"] .tl-bot-body{display:none}
+        .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+        @media (prefers-reduced-motion: reduce){ #chat-panel{transition:none} }
       `}</style>
 
       <script dangerouslySetInnerHTML={{
         __html: `
 (() => {
-  const el = document.getElementById('tl-mini-bot');
+  const btn = document.getElementById('chat-launcher');
+  const panel = document.getElementById('chat-panel');
+  const closeBtn = document.getElementById('chat-close');
   const msgs = document.getElementById('tlMsgs');
   const form = document.getElementById('tlForm');
   const input = document.getElementById('tlInput');
   const limit = document.getElementById('tlLimit');
-  const toggle = el.querySelector('.tl-bot-toggle');
+  
+  if(!btn || !panel || !closeBtn) return;
+
+  let lastFocus = null;
 
   // 3-prompt session cap
   const CAP = 3;
@@ -184,6 +203,24 @@ const Index = () => {
     msgs.scrollTop = msgs.scrollHeight;
   }
 
+  function openChat(){
+    lastFocus = document.activeElement;
+    panel.hidden = false;
+    btn.setAttribute('aria-expanded','true');
+    document.body.inert = true;     // disable background focus/clicks
+    panel.setAttribute('tabindex','-1');
+    panel.focus();
+    btn.setAttribute('aria-label','Hide chat');
+  }
+  
+  function closeChat(){
+    panel.hidden = true;
+    btn.setAttribute('aria-expanded','false');
+    document.body.inert = false;
+    (lastFocus || btn).focus();
+    btn.setAttribute('aria-label','Open chat');
+  }
+
   // greet once
   if(!sessionStorage.getItem('tl-mini-greet')){
     pushMsg("Hi! I'm TrAdeleine 🤖 — ask me up to 3 quick questions about TradeLine 24/7.");
@@ -191,10 +228,19 @@ const Index = () => {
   }
   updateLimit();
 
-  toggle.addEventListener('click', () => {
-    const s = el.getAttribute('data-state') === 'open' ? 'closed' : 'open';
-    el.setAttribute('data-state', s);
-    toggle.textContent = (s==='open') ? '–' : '+';
+  btn.addEventListener('click', () => panel.hidden ? openChat() : closeChat());
+  closeBtn.addEventListener('click', closeChat);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !panel.hidden) closeChat(); });
+
+  // basic focus trap
+  panel.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const f = panel.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    const list = Array.from(f).filter(el => !el.disabled && el.offsetParent !== null);
+    if (!list.length) return;
+    const first = list[0], last = list[list.length - 1];
+    if (e.shiftKey && document.activeElement === first){ last.focus(); e.preventDefault(); }
+    else if (!e.shiftKey && document.activeElement === last){ first.focus(); e.preventDefault(); }
   });
 
   form.addEventListener('submit', async (e) => {
@@ -210,7 +256,7 @@ const Index = () => {
     typing(true);
 
     try{
-      const res = await fetch('${window.location.origin}/functions/v1/chat-lite', {
+      const res = await fetch(window.location.origin + '/functions/v1/chat-lite', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ message: q })
