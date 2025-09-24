@@ -38,18 +38,25 @@
   "categories": ["business", "productivity", "utilities"],
   "shortcuts": [
     {
+      "name": "New Lead",
+      "short_name": "New Lead",
+      "description": "Quick access to lead capture form",
+      "url": "/#lead",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "96x96" }]
+    },
+    {
       "name": "Dashboard",
       "short_name": "Dashboard", 
       "description": "Access your AI receptionist dashboard",
       "url": "/dashboard",
-      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "96x96" }]
     },
     {
       "name": "Features",
       "short_name": "Features",
       "description": "Explore TradeLine 24/7 features", 
       "url": "/features",
-      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "96x96" }]
     }
   ]
 }

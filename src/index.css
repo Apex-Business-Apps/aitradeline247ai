@@ -161,3 +161,44 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Performance optimizations */
+.section-heavy { 
+  content-visibility: auto; 
+  contain-intrinsic-size: 1000px 800px; 
+}
+
+/* Accessibility improvements */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 16px;
+  padding: 0.5rem 0.75rem;
+  background: #000;
+  color: #fff;
+  border-radius: 0.5rem;
+  z-index: 10000;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 16px;
+}
+
+:where(:focus-visible) {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+:where(a, button, [role="button"], input, select, textarea) {
+  min-height: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

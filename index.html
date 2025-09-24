@@ -55,11 +55,112 @@
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "TradeLine 24/7",
+          "alternateName": "TL247",
+          "url": "https://tradeline247.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://tradeline247.com/pwa-512x512.png",
+            "width": 512,
+            "height": 512
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "Canada"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": "info@tradeline247.com",
+            "availableLanguage": ["English"],
+            "hoursAvailable": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "opens": "00:00",
+              "closes": "23:59"
+            }
+          },
+          "foundingDate": "2024",
+          "keywords": "AI receptionist, customer service automation, business phone answering, lead capture, CRM integration",
+          "serviceType": "AI Customer Service Solutions"
+        },
+        {
+          "@type": "WebSite",
+          "url": "https://tradeline247.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://tradeline247.com/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Do you record calls?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes—with notice and consent. You can decline or hang up."
+              }
+            },
+            {
+              "@type": "Question", 
+              "name": "Are emails CASL-compliant?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes—every message includes identification and a one-click unsubscribe."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
 
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Web Vitals Telemetry -->
+    <script>
+    (function(){
+      if(!('PerformanceObserver' in window)) return;
+
+      function send(type, data){
+        navigator.sendBeacon && navigator.sendBeacon('/api/vitals', JSON.stringify({type, ...data}));
+      }
+
+      // LCP
+      try{
+        const po = new PerformanceObserver((list)=>{
+          for(const e of list.getEntries()){
+            send('LCP', { value: e.renderTime || e.loadTime || 0, url: location.pathname });
+          }
+        });
+        po.observe({type:'largest-contentful-paint', buffered:true});
+      }catch{}
+
+      // INP (supported in modern browsers)
+      try{
+        const po2 = new PerformanceObserver((list)=>{
+          const last = list.getEntries().pop();
+          if(last) send('INP', { value: last.duration, url: location.pathname });
+        });
+        po2.observe({ type: 'event', buffered:true, durationThreshold: 16 });
+      }catch{}
+    })();
+    </script>
     
     <!-- PWA Service Worker Registration -->
     <script>

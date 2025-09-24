@@ -41,8 +41,9 @@ export const Header: React.FC = () => {
         <Logo variant="full" size={isScrolled ? 'sm' : 'md'} />
 
         {/* Desktop Navigation */}
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
+        <nav aria-label="Primary" className="hidden md:flex">
+          <NavigationMenu>
+            <NavigationMenuList>
             {navigationItems.map((item) => (
               <NavigationMenuItem key={item.name}>
                 <NavigationMenuLink asChild>
@@ -57,6 +58,7 @@ export const Header: React.FC = () => {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
+        </nav>
 
         {/* CTA Button & Mobile Menu */}
         <div className="flex items-center gap-2">

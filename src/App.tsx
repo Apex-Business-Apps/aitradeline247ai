@@ -42,25 +42,25 @@ const AppWithMonitoring = () => {
       <AnalyticsTracker />
       <WebVitalsTracker />
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/features" element={<Features />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/design-tokens" element={<DesignTokens />} />
-        <Route path="/dashboard" element={<ClientDashboard />} />
-        <Route path="/dashboard/integrations/crm" element={<CRMIntegration />} />
-        <Route path="/dashboard/integrations/email" element={<EmailIntegration />} />
-        <Route path="/dashboard/integrations/phone" element={<PhoneIntegration />} />
-        <Route path="/dashboard/integrations/messaging" element={<MessagingIntegration />} />
-        <Route path="/dashboard/integrations/mobile" element={<MobileIntegration />} />
-        <Route path="/dashboard/integrations/automation" element={<AutomationIntegration />} />
-        <Route path="/components" element={<ComponentShowcase />} />
+        <Route path="/" element={<main id="main"><Index /></main>} />
+        <Route path="/auth" element={<main id="main"><Auth /></main>} />
+        <Route path="/features" element={<main id="main"><Features /></main>} />
+        <Route path="/pricing" element={<main id="main"><Pricing /></main>} />
+        <Route path="/faq" element={<main id="main"><FAQ /></main>} />
+        <Route path="/contact" element={<main id="main"><Contact /></main>} />
+        <Route path="/privacy" element={<main id="main"><Privacy /></main>} />
+        <Route path="/terms" element={<main id="main"><Terms /></main>} />
+        <Route path="/design-tokens" element={<main id="main"><DesignTokens /></main>} />
+        <Route path="/dashboard" element={<main id="main"><ClientDashboard /></main>} />
+        <Route path="/dashboard/integrations/crm" element={<main id="main"><CRMIntegration /></main>} />
+        <Route path="/dashboard/integrations/email" element={<main id="main"><EmailIntegration /></main>} />
+        <Route path="/dashboard/integrations/phone" element={<main id="main"><PhoneIntegration /></main>} />
+        <Route path="/dashboard/integrations/messaging" element={<main id="main"><MessagingIntegration /></main>} />
+        <Route path="/dashboard/integrations/mobile" element={<main id="main"><MobileIntegration /></main>} />
+        <Route path="/dashboard/integrations/automation" element={<main id="main"><AutomationIntegration /></main>} />
+        <Route path="/components" element={<main id="main"><ComponentShowcase /></main>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>
     </>
   );

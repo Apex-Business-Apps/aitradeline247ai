@@ -26,16 +26,26 @@ const plans = [{
   popular: false
 }];
 export const PricingHero = () => {
-  return <section className="py-20 bg-gradient-orange-subtle">
+  return <section className="py-20 bg-gradient-orange-subtle section-heavy">
       <div className="container">
         {/* Hero Content */}
         <div className="text-center mb-16">
           {/* Hero Logo */}
           <div className="mb-2">
-            <img src={officialLogo} alt="TradeLine AI - 24/7 AI Receptionist" className="h-44 md:h-[16.5rem] lg:h-[19.8rem] w-auto mx-auto drop-shadow-2xl -mt-8" />
+            <img 
+              src={officialLogo} 
+              alt="TradeLine AI - 24/7 AI Receptionist" 
+              className="h-44 md:h-[16.5rem] lg:h-[19.8rem] w-auto mx-auto drop-shadow-2xl -mt-8"
+              width="420"
+              height="120"
+              fetchPriority="high"
+            />
           </div>
           
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+          <h1 
+            id="hero-h1"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent"
+          >
             Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b]">
