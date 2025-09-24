@@ -65,7 +65,7 @@ export const PricingHero = () => {
             Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Never miss a call. Our intelligent receptionist handles calls, schedules appointments, and qualifies prospects around the clock.
+            Never miss a call. Your Ai Receptionist answers all calls, books jobs and schedules your appointments. Work while you sleep
           </p>
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-12 py-6 rounded-full shadow-2xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105 mb-2">
             Start Free Trial
