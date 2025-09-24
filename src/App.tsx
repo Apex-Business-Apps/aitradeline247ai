@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HelmetProvider } from 'react-helmet-async';
+import StartupSplash from "@/components/StartupSplash";
 import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
 import ClientDashboard from "./pages/ClientDashboard";
@@ -34,6 +35,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        {import.meta.env.VITE_SPLASH_ENABLED !== "false" && <StartupSplash />}
         <BrowserRouter>
           <AnalyticsTracker />
           <Routes>
