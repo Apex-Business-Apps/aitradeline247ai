@@ -202,42 +202,7 @@ export type Database = {
       }
     }
     Views: {
-      analytics_events_public: {
-        Row: {
-          created_at: string | null
-          event_data: Json | null
-          event_type: string | null
-          id: string | null
-          ip_address: string | null
-          page_url: string | null
-          user_agent: string | null
-          user_id: string | null
-          user_session: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          event_data?: Json | null
-          event_type?: string | null
-          id?: string | null
-          ip_address?: never
-          page_url?: string | null
-          user_agent?: never
-          user_id?: string | null
-          user_session?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          event_data?: Json | null
-          event_type?: string | null
-          id?: string | null
-          ip_address?: never
-          page_url?: string | null
-          user_agent?: never
-          user_id?: string | null
-          user_session?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       calculate_lead_score: {
