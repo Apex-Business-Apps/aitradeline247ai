@@ -5,8 +5,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
+import { WebVitalsTracker } from "@/components/monitoring/WebVitalsTracker";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HelmetProvider } from 'react-helmet-async';
+import { useErrorTracking } from "@/hooks/useErrorTracking";
+import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
 import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
@@ -29,6 +32,40 @@ import ComponentShowcase from "./pages/ComponentShowcase";
 
 const queryClient = new QueryClient();
 
+// App monitoring wrapper component
+const AppWithMonitoring = () => {
+  // Initialize error tracking
+  useErrorTracking();
+
+  return (
+    <>
+      <AnalyticsTracker />
+      <WebVitalsTracker />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/design-tokens" element={<DesignTokens />} />
+        <Route path="/dashboard" element={<ClientDashboard />} />
+        <Route path="/dashboard/integrations/crm" element={<CRMIntegration />} />
+        <Route path="/dashboard/integrations/email" element={<EmailIntegration />} />
+        <Route path="/dashboard/integrations/phone" element={<PhoneIntegration />} />
+        <Route path="/dashboard/integrations/messaging" element={<MessagingIntegration />} />
+        <Route path="/dashboard/integrations/mobile" element={<MobileIntegration />} />
+        <Route path="/dashboard/integrations/automation" element={<AutomationIntegration />} />
+        <Route path="/components" element={<ComponentShowcase />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
+  );
+};
+
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
@@ -37,28 +74,7 @@ const App = () => (
         <Sonner />
         {import.meta.env.VITE_SPLASH_ENABLED !== "false" && <StartupSplash />}
         <BrowserRouter>
-          <AnalyticsTracker />
-          <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/design-tokens" element={<DesignTokens />} />
-          <Route path="/dashboard" element={<ClientDashboard />} />
-          <Route path="/dashboard/integrations/crm" element={<CRMIntegration />} />
-          <Route path="/dashboard/integrations/email" element={<EmailIntegration />} />
-          <Route path="/dashboard/integrations/phone" element={<PhoneIntegration />} />
-          <Route path="/dashboard/integrations/messaging" element={<MessagingIntegration />} />
-          <Route path="/dashboard/integrations/mobile" element={<MobileIntegration />} />
-          <Route path="/dashboard/integrations/automation" element={<AutomationIntegration />} />
-          <Route path="/components" element={<ComponentShowcase />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppWithMonitoring />
           <InstallPrompt />
         </BrowserRouter>
       </TooltipProvider>

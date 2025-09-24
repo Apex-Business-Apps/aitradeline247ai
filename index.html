@@ -14,10 +14,19 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tradeline247.com" />
     
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy-Report-Only" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https: wss:; font-src 'self' https://fonts.gstatic.com; base-uri 'self'; frame-ancestors 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
     <!-- Performance Optimization -->
     <link rel="preload" href="/assets/fonts/BrandFont.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/src/assets/official-logo.svg" as="image" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://jbcxceojrztklnvwgyrq.supabase.co">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />

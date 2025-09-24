@@ -11,6 +11,9 @@ export const HeroSection = () => {
             src={officialLogo} 
             alt="TradeLine AI - 24/7 AI Receptionist" 
             className="h-44 md:h-[16.5rem] lg:h-[19.8rem] w-auto mx-auto drop-shadow-2xl"
+            fetchPriority="high"
+            decoding="async"
+            loading="eager"
           />
         </div>
         
