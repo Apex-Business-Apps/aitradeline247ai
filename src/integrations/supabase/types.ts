@@ -14,6 +14,141 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_test_assignments: {
+        Row: {
+          converted: boolean | null
+          created_at: string
+          id: string
+          test_name: string
+          user_session: string
+          variant: string
+        }
+        Insert: {
+          converted?: boolean | null
+          created_at?: string
+          id?: string
+          test_name: string
+          user_session: string
+          variant: string
+        }
+        Update: {
+          converted?: boolean | null
+          created_at?: string
+          id?: string
+          test_name?: string
+          user_session?: string
+          variant?: string
+        }
+        Relationships: []
+      }
+      ab_tests: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          end_date: string | null
+          id: string
+          start_date: string | null
+          test_name: string
+          traffic_split: Json | null
+          variants: Json
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          test_name: string
+          traffic_split?: Json | null
+          variants: Json
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          test_name?: string
+          traffic_split?: Json | null
+          variants?: Json
+        }
+        Relationships: []
+      }
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          page_url: string | null
+          user_agent: string | null
+          user_session: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          page_url?: string | null
+          user_agent?: string | null
+          user_session?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          page_url?: string | null
+          user_agent?: string | null
+          user_session?: string | null
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          assigned_to: string | null
+          company: string
+          created_at: string
+          email: string
+          id: string
+          lead_score: number | null
+          name: string
+          notes: string | null
+          source: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          company: string
+          created_at?: string
+          email: string
+          id?: string
+          lead_score?: number | null
+          name: string
+          notes?: string | null
+          source?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          company?: string
+          created_at?: string
+          email?: string
+          id?: string
+          lead_score?: number | null
+          name?: string
+          notes?: string | null
+          source?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -67,6 +202,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_lead_score: {
+        Args: {
+          company_name: string
+          email_domain: string
+          notes_content: string
+        }
+        Returns: number
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
