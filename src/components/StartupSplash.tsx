@@ -23,28 +23,45 @@ export default function StartupSplash() {
 
   return (
     <div role="dialog" aria-label="Welcome to TradeLine 24/7" aria-modal="true"
-         className="tl-splash" onClick={dismiss}>
-      <div className="tl-splash-card" role="document">
-        <img className="tl-logo" src="/assets/brand/OFFICIAL_LOGO.svg" alt="TradeLine 24/7 logo"/>
-        <h1>Your 24/7 Ai Receptionist!</h1>
-        <p>Never miss a call. Work while you sleep.</p>
-        <small>Apex Business Systems • Edmonton, Alberta • Built Canadian</small>
+         className="fixed inset-0 z-50 grid place-items-center bg-black/20 backdrop-blur-sm animate-fade-in">
+      <div className="bg-card/95 border border-border rounded-3xl p-7 max-w-2xl w-full mx-4 text-center animate-scale-in"
+           style={{ 
+             boxShadow: 'var(--premium-shadow-strong)',
+             background: 'linear-gradient(135deg, hsl(var(--card) / 0.98) 0%, hsl(var(--card) / 0.95) 100%)'
+           }}
+           role="document"
+           onClick={dismiss}>
+        <img 
+          className="w-64 h-auto mx-auto mb-3 block animate-scale-in hover-scale transition-transform duration-300" 
+          src="/assets/brand/TRADELEINE_ROBOT_V2.svg" 
+          alt="TradeLine 24/7 logo"
+          fetchPriority="high"
+          loading="eager"
+        />
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 text-foreground bg-gradient-to-r from-brand-orange-primary to-brand-orange-light bg-clip-text text-transparent">
+          Your 24/7 AI Receptionist!
+        </h1>
+        <p className="text-lg text-muted-foreground mb-3 leading-relaxed">
+          Never miss a call. Work while you sleep.
+        </p>
+        <small className="text-sm text-muted-foreground/80 tracking-wide">
+          TradeLine 24/7 • Built with Canadian Excellence
+        </small>
       </div>
+      
       <style>{`
-        .tl-splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
-          background:rgba(20,20,20,.18);backdrop-filter:blur(2px)}
-        .tl-splash-card{background:rgba(255,255,255,.86);border:1px solid #eee;border-radius:24px;
-          padding:28px 28px 22px;max-width:720px;width:clamp(280px,80vw,720px);text-align:center;
-          box-shadow:0 12px 40px rgba(0,0,0,.12)}
-        .tl-logo{width:min(260px,60vw);height:auto;margin:0 auto 10px;display:block;animation:pop .5s ease}
-        h1{margin:4px 0 6px;font-size:clamp(22px,4vw,34px);line-height:1.1}
-        p{margin:0 0 12px;font-size:clamp(14px,2.6vw,18px);opacity:.9}
-        small{opacity:.8}
-        @keyframes pop{0%{transform:scale(.96);opacity:.0}100%{transform:scale(1);opacity:1}}
         /* Respect reduced motion: no animations for users who prefer less motion */
-        @media (prefers-reduced-motion: reduce){
-          .tl-logo{animation:none}
-          .tl-splash{backdrop-filter:none}
+        @media (prefers-reduced-motion: reduce) {
+          .animate-fade-in, 
+          .animate-scale-in, 
+          .hover-scale { 
+            animation: none !important; 
+            transition: none !important;
+            transform: none !important;
+          }
+          .backdrop-blur-sm { 
+            backdrop-filter: none !important; 
+          }
         }
       `}</style>
     </div>
