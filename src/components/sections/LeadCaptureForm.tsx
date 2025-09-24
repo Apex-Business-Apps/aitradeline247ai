@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAnalytics } from "@/hooks/useAnalytics";
-import { useABTest } from "@/hooks/useABTest";
+import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
+import { useSecureABTest } from "@/hooks/useSecureABTest";
 
 interface LeadFormData {
   name: string;
@@ -27,8 +27,8 @@ export const LeadCaptureForm = () => {
     notes: ""
   });
   const { toast } = useToast();
-  const { trackFormSubmission, trackConversion, trackButtonClick } = useAnalytics();
-  const { variant, variantData, convert } = useABTest('hero_cta_test');
+  const { trackFormSubmission, trackConversion, trackButtonClick } = useSecureAnalytics();
+  const { variant, variantData, convert } = useSecureABTest('hero_cta_test');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

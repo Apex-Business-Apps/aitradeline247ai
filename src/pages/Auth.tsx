@@ -11,6 +11,7 @@ import { Loader2 } from 'lucide-react';
 import { Session, User } from '@supabase/supabase-js';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { usePasswordSecurity } from '@/hooks/usePasswordSecurity';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -22,7 +23,10 @@ const Auth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [passwordStrength, setPasswordStrength] = useState<string>('');
+  const [passwordCheckLoading, setPasswordCheckLoading] = useState(false);
+  const [passwordBreached, setPasswordBreached] = useState(false);
   const navigate = useNavigate();
+  const { validatePassword: secureValidatePassword } = usePasswordSecurity();
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -76,16 +80,46 @@ const Auth = () => {
     return { isValid: true, strength };
   };
 
-  const handlePasswordChange = (newPassword: string) => {
+  const handlePasswordChange = async (newPassword: string) => {
     setPassword(newPassword);
-    const validation = validatePassword(newPassword);
-    setPasswordStrength(validation.strength);
+    setPasswordCheckLoading(true);
+    setPasswordBreached(false);
+    
+    try {
+      // Quick client-side validation first
+      const basicValidation = validatePassword(newPassword);
+      setPasswordStrength(basicValidation.strength);
+      
+      // If password meets basic requirements, check for breaches
+      if (basicValidation.isValid && newPassword.length >= 8) {
+        const secureValidation = await secureValidatePassword(newPassword);
+        setPasswordStrength(secureValidation.strength);
+        setPasswordBreached(secureValidation.isBreached);
+        
+        if (secureValidation.isBreached) {
+          setError(secureValidation.message || 'This password appears in known data breaches');
+        } else {
+          setError(null);
+        }
+      }
+    } catch (error) {
+      console.error('Password validation error:', error);
+      // Don't block user if validation fails
+    } finally {
+      setPasswordCheckLoading(false);
+    }
   };
 
   const signUp = async (email: string, password: string, displayName: string) => {
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      throw new Error(passwordValidation.message || 'Password does not meet requirements');
+    // Check password security (both strength and breach status)
+    const secureValidation = await secureValidatePassword(password);
+    
+    if (!secureValidation.isValid) {
+      throw new Error(secureValidation.message || 'Password does not meet security requirements');
+    }
+    
+    if (secureValidation.isBreached) {
+      throw new Error('This password appears in known data breaches. Please choose a different password.');
     }
 
     const redirectUrl = `${window.location.origin}/`;
@@ -264,23 +298,39 @@ const Auth = () => {
                        required
                        minLength={8}
                      />
-                     {password && (
-                       <div className="text-sm">
-                         <span className="text-muted-foreground">Strength: </span>
-                         <span className={`font-medium ${
-                           passwordStrength === 'Strong' ? 'text-green-600' :
-                           passwordStrength === 'Good' ? 'text-yellow-600' :
-                           'text-red-600'
-                         }`}>
-                           {passwordStrength}
-                         </span>
-                         {passwordStrength !== 'Strong' && (
-                           <div className="text-xs text-muted-foreground mt-1">
-                             Use 8+ characters with uppercase, lowercase, numbers, and symbols
-                           </div>
-                         )}
-                       </div>
-                     )}
+                      {password && (
+                        <div className="text-sm space-y-2">
+                          <div>
+                            <span className="text-muted-foreground">Strength: </span>
+                            <span className={`font-medium ${
+                              passwordStrength === 'Very strong' || passwordStrength === 'Strong' ? 'text-green-600' :
+                              passwordStrength === 'Good' ? 'text-yellow-600' :
+                              'text-red-600'
+                            }`}>
+                              {passwordStrength}
+                              {passwordCheckLoading && <Loader2 className="inline w-3 h-3 ml-1 animate-spin" />}
+                            </span>
+                          </div>
+                          
+                          {passwordBreached && (
+                            <div className="text-xs text-red-600 font-medium">
+                              ⚠️ This password appears in known data breaches. Please choose a different password.
+                            </div>
+                          )}
+                          
+                          {password.length >= 8 && !passwordBreached && passwordStrength !== 'Too short' && (
+                            <div className="text-xs text-green-600">
+                              ✓ Password meets security requirements
+                            </div>
+                          )}
+                          
+                          {(passwordStrength === 'Too short' || passwordStrength === 'Weak' || passwordStrength === 'Too weak') && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              Use 8+ characters with uppercase, lowercase, numbers, and symbols
+                            </div>
+                          )}
+                        </div>
+                      )}
                    </div>
                   
                   <Button 

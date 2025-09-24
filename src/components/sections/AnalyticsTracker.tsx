@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAnalytics } from '@/hooks/useAnalytics';
+import { useSecureAnalytics } from '@/hooks/useSecureAnalytics';
 
 export const AnalyticsTracker = () => {
   const location = useLocation();
-  const { trackPageView } = useAnalytics();
+  const { trackPageView } = useSecureAnalytics();
 
   useEffect(() => {
     // Extract page name from pathname
