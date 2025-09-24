@@ -98,7 +98,7 @@ serve(async (req) => {
           }
         }
 
-        // Save assignment to database
+        // Save assignment to database with conflict resolution
         const { error } = await supabase.from('ab_test_assignments').insert({
           test_name: testName,
           user_session: anonymousId,
@@ -106,7 +106,23 @@ serve(async (req) => {
         });
 
         if (error) {
-          console.error('Error saving assignment:', error);
+          // Handle duplicate key constraint violation (race condition)
+          if (error.code === '23505') {
+            console.log('Assignment already exists due to race condition, fetching existing');
+            const { data: existingRaceAssignment } = await supabase
+              .from('ab_test_assignments')
+              .select('variant')
+              .eq('test_name', testName)
+              .eq('user_session', anonymousId)
+              .maybeSingle();
+            
+            if (existingRaceAssignment) {
+              assignedVariant = existingRaceAssignment.variant;
+              console.log(`Using existing race assignment: ${assignedVariant}`);
+            }
+          } else {
+            console.error('Error saving assignment:', error);
+          }
         } else {
           console.log(`New assignment saved: ${testName} -> ${assignedVariant}`);
         }

@@ -1,9 +1,33 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+// Import Resend via ESM
+const resendApiKey = Deno.env.get("RESEND_API_KEY");
+
+// Resend email sending function
+const sendEmail = async (to: string, subject: string, html: string, from: string) => {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      subject,
+      html,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to send email: ${response.status} ${errorText}`);
+  }
+
+  return await response.json();
+};
 
 // Initialize Supabase client for the edge function
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -102,11 +126,11 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Additional business email validation
-    const emailDomain = email.split('@')[1];
-    const isBusinessEmail = !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com'].includes(emailDomain.toLowerCase());
+    const leadEmailDomain = email.split('@')[1];
+    const isBusinessEmail = !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com'].includes(leadEmailDomain.toLowerCase());
     
     if (!isBusinessEmail) {
-      console.log(`Personal email domain detected: ${emailDomain}`);
+      console.log(`Personal email domain detected: ${leadEmailDomain}`);
     }
 
     // Store lead in database with automatic lead scoring
@@ -128,9 +152,9 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const leadScore = leadData?.lead_score || 50;
-    const emailDomain = email.split('@')[1];
+    const scoreEmailDomain = email.split('@')[1];
 
-    console.log(`Lead scored: ${leadScore}/100 for ${company} (${emailDomain})`);
+    console.log(`Lead scored: ${leadScore}/100 for ${company} (${scoreEmailDomain})`);
 
     // Determine lead priority and urgency
     const isHighValue = leadScore >= 70;
@@ -138,13 +162,10 @@ const handler = async (req: Request): Promise<Response> => {
     const urgencyText = isHighValue ? 'URGENT: High-value lead detected!' : 'New lead captured';
 
     // Send notification email to TradeLine 24/7 team
-    const notificationEmail = await resend.emails.send({
-      from: "TradeLine 24/7 <leads@tradeline247ai.com>",
-      to: ["info@tradeline247ai.com"],
-      reply_to: email,
-      subject: `🚀 ${priorityEmoji}: ${company} - ${name} (Score: ${leadScore}/100)`,
-      html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    const notificationEmail = await sendEmail(
+      "info@tradeline247ai.com",
+      `🚀 ${priorityEmoji}: ${company} - ${name} (Score: ${leadScore}/100)`,
+      `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #ff6b35, #ff8c5f); padding: 30px; border-radius: 12px; color: white; text-align: center; margin-bottom: 30px;">
             <h1 style="margin: 0; font-size: 28px; font-weight: bold;">${priorityEmoji}</h1>
             <p style="margin: 10px 0 0 0; opacity: 0.9;">${urgencyText}</p>
@@ -152,9 +173,13 @@ const handler = async (req: Request): Promise<Response> => {
               <p style="margin: 0; font-size: 18px; font-weight: bold;">Lead Score: ${leadScore}/100</p>
             </div>
           </div>
-          
-          <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
-            <h2 style="color: #333; margin-top: 0;">Lead Information</h2>
+          <p><strong>Company:</strong> ${company}</p>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Notes:</strong> ${notes || 'None provided'}</p>
+        </div>`,
+      "TradeLine 24/7 <leads@tradeline247ai.com>"
+    );
               <tr>
                 <td style="padding: 8px 0; font-weight: bold; color: #666;">Lead Score:</td>
                 <td style="padding: 8px 0; color: #333;"><strong style="color: ${isHighValue ? '#e74c3c' : '#27ae60'};">${leadScore}/100</strong> ${isHighValue ? '(High Priority!)' : '(Standard)'}</td>
