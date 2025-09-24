@@ -48,7 +48,7 @@ const plans = [
 
 export const PricingHero = () => {
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 bg-gradient-orange-subtle">
       <div className="container">
         {/* Hero Content */}
         <div className="text-center mb-16">
