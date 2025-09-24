@@ -3,13 +3,13 @@ import officialLogo from '@/assets/official-logo.svg';
 
 export const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-orange-subtle pt-2 pb-32 text-center overflow-hidden">
-      {/* Multi-layered Background System */}
+    <section className="relative pt-2 pb-32 text-center overflow-hidden" style={{background: 'var(--gradient-orange-subtle)'}}>
+      {/* Multi-layered Background System for Premium Translucency */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/20 via-brand-orange-light/15 to-brand-orange/10"></div>
       <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-background/20"></div>
       <div className="absolute inset-0" style={{background: 'var(--gradient-premium)'}}></div>
       
-      {/* Glowing Orbs for Depth */}
+      {/* Glowing Orbs for Visual Depth */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/20 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-brand-orange-light/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
       
