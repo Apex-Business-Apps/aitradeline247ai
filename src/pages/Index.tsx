@@ -139,9 +139,13 @@ const Index = () => {
           cursor:pointer;font:14px system-ui;box-shadow:0 4px 12px rgba(0,0,0,.15)}
         #chat-panel{position:fixed;right:16px;bottom:72px;max-width:min(92vw,380px);width:360px;
           background:#fff;border:1px solid #e6e6e6;border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.18);
-          z-index:41;font:14px/1.4 system-ui;color:#1a1a1a}
+          z-index:41}
         .chat-close{position:absolute;top:8px;right:8px;border:none;background:transparent;font-size:20px;line-height:1;
           cursor:pointer;color:#999;padding:6px}
+        @media (prefers-reduced-motion: reduce){ #chat-panel{transition:none} }
+        
+        /* TrAdeleine widget styles */
+        #chat-panel{font:14px/1.4 system-ui;color:#1a1a1a}
         .tl-bot-head{display:flex;gap:10px;align-items:center;padding:12px 12px 8px}
         .tl-bot-avatar{width:40px;height:40px}
         .tl-robot{width:40px;height:40px;animation:tlBlink 4s infinite ease-in-out}
@@ -162,7 +166,6 @@ const Index = () => {
         .tl-bot-cta{display:inline-block;text-align:center;background:#1b9ed8;color:#fff;
           padding:10px 14px;border-radius:10px;text-decoration:none}
         .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
-        @media (prefers-reduced-motion: reduce){ #chat-panel{transition:none} }
       `}</style>
 
       <script dangerouslySetInnerHTML={{
@@ -171,14 +174,49 @@ const Index = () => {
   const btn = document.getElementById('chat-launcher');
   const panel = document.getElementById('chat-panel');
   const closeBtn = document.getElementById('chat-close');
+  if(!btn || !panel || !closeBtn) return;
+
+  let lastFocus = null;
+
+  function openChat(){
+    lastFocus = document.activeElement;
+    panel.hidden = false;
+    btn.setAttribute('aria-expanded','true');
+    document.body.inert = true;     // disable background focus/clicks
+    panel.setAttribute('tabindex','-1');
+    panel.focus();
+    btn.setAttribute('aria-label','Hide chat');
+  }
+  function closeChat(){
+    panel.hidden = true;
+    btn.setAttribute('aria-expanded','false');
+    document.body.inert = false;
+    (lastFocus || btn).focus();
+    btn.setAttribute('aria-label','Open chat');
+  }
+
+  btn.addEventListener('click', () => panel.hidden ? openChat() : closeChat());
+  closeBtn.addEventListener('click', closeChat);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !panel.hidden) closeChat(); });
+
+  // basic focus trap
+  panel.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const f = panel.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    const list = Array.from(f).filter(el => !el.disabled && el.offsetParent !== null);
+    if (!list.length) return;
+    const first = list[0], last = list[list.length - 1];
+    if (e.shiftKey && document.activeElement === first){ last.focus(); e.preventDefault(); }
+    else if (!e.shiftKey && document.activeElement === last){ first.focus(); e.preventDefault(); }
+  });
+
+  // TrAdeleine chat functionality
   const msgs = document.getElementById('tlMsgs');
   const form = document.getElementById('tlForm');
   const input = document.getElementById('tlInput');
   const limit = document.getElementById('tlLimit');
   
-  if(!btn || !panel || !closeBtn) return;
-
-  let lastFocus = null;
+  if(!msgs || !form || !input || !limit) return;
 
   // 3-prompt session cap
   const CAP = 3;
@@ -203,45 +241,12 @@ const Index = () => {
     msgs.scrollTop = msgs.scrollHeight;
   }
 
-  function openChat(){
-    lastFocus = document.activeElement;
-    panel.hidden = false;
-    btn.setAttribute('aria-expanded','true');
-    document.body.inert = true;     // disable background focus/clicks
-    panel.setAttribute('tabindex','-1');
-    panel.focus();
-    btn.setAttribute('aria-label','Hide chat');
-  }
-  
-  function closeChat(){
-    panel.hidden = true;
-    btn.setAttribute('aria-expanded','false');
-    document.body.inert = false;
-    (lastFocus || btn).focus();
-    btn.setAttribute('aria-label','Open chat');
-  }
-
   // greet once
   if(!sessionStorage.getItem('tl-mini-greet')){
     pushMsg("Hi! I'm TrAdeleine 🤖 — ask me up to 3 quick questions about TradeLine 24/7.");
     sessionStorage.setItem('tl-mini-greet','1');
   }
   updateLimit();
-
-  btn.addEventListener('click', () => panel.hidden ? openChat() : closeChat());
-  closeBtn.addEventListener('click', closeChat);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !panel.hidden) closeChat(); });
-
-  // basic focus trap
-  panel.addEventListener('keydown', (e) => {
-    if (e.key !== 'Tab') return;
-    const f = panel.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
-    const list = Array.from(f).filter(el => !el.disabled && el.offsetParent !== null);
-    if (!list.length) return;
-    const first = list[0], last = list[list.length - 1];
-    if (e.shiftKey && document.activeElement === first){ last.focus(); e.preventDefault(); }
-    else if (!e.shiftKey && document.activeElement === last){ first.focus(); e.preventDefault(); }
-  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
