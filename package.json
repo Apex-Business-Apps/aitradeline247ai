@@ -63,6 +63,7 @@
     "swr": "^2.3.6",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "twilio": "^5.9.0",
     "vaul": "^0.9.9",
     "zod": "^3.25.76"
   },

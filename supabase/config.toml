@@ -40,3 +40,9 @@ verify_jwt = false
 
 [functions.ab-convert]
 verify_jwt = false
+
+[functions.voice-answer]
+verify_jwt = false
+
+[functions.voice-status]
+verify_jwt = false
