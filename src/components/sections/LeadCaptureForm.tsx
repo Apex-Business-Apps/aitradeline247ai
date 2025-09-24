@@ -9,6 +9,31 @@ import { Loader2, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useABTest } from "@/hooks/useABTest";
+import { useSecureFormSubmission } from "@/hooks/useSecureFormSubmission";
+import { z } from "zod";
+// Client-side validation schema matching server-side
+const leadFormSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters")
+    .regex(/^[a-zA-Z\s\-'\.]+$/, "Name contains invalid characters"),
+  email: z.string()
+    .trim()
+    .email("Invalid email address")
+    .max(255, "Email must be less than 255 characters"),
+  company: z.string()
+    .trim()
+    .min(1, "Company name is required")
+    .max(200, "Company name must be less than 200 characters")
+    .regex(/^[a-zA-Z0-9\s\-&.,()]+$/, "Company name contains invalid characters"),
+  notes: z.string()
+    .trim()
+    .max(2000, "Notes must be less than 2000 characters")
+    .optional()
+    .default("")
+});
+
 interface LeadFormData {
   name: string;
   email: string;
@@ -32,24 +57,36 @@ export const LeadCaptureForm = () => {
     trackConversion,
     trackButtonClick
   } = useAnalytics();
-  const {
-    variant,
-    variantData,
-    convert
-  } = useABTest('hero_cta_test');
+  const { variant, variantData, convert } = useABTest('hero_cta_test');
+  const { secureSubmit, getRemainingAttempts } = useSecureFormSubmission({
+    rateLimitKey: 'lead_form_submit',
+    maxAttemptsPerHour: 3
+  });
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate required fields
-    if (!formData.name || !formData.email || !formData.company) {
+    // Client-side validation with Zod
+    const validationResult = leadFormSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Please check your input";
       toast({
-        title: "Missing Information",
-        description: "Please fill in your name, email, and company name.",
+        title: "Invalid Information",
+        description: errorMessage,
         variant: "destructive"
       });
       trackFormSubmission('lead_capture', false, {
-        error: 'missing_required_fields',
+        error: 'validation_failed',
         variant: variant
+      });
+      return;
+    }
+
+    // Check rate limiting
+    if (getRemainingAttempts() <= 0) {
+      toast({
+        title: "Too Many Attempts",
+        description: "Please wait before submitting another lead form.",
+        variant: "destructive"
       });
       return;
     }

@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -11,8 +12,36 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-csrf-token",
+  "Content-Security-Policy": "default-src 'self'",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
 };
+
+// Enhanced validation schema with security constraints
+const leadSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters")
+    .regex(/^[a-zA-Z\s\-'\.]+$/, "Name contains invalid characters"),
+  email: z.string()
+    .trim()
+    .email("Invalid email address")
+    .max(255, "Email must be less than 255 characters")
+    .toLowerCase(),
+  company: z.string()
+    .trim()
+    .min(1, "Company name is required")
+    .max(200, "Company name must be less than 200 characters")
+    .regex(/^[a-zA-Z0-9\s\-&.,()]+$/, "Company name contains invalid characters"),
+  notes: z.string()
+    .trim()
+    .max(2000, "Notes must be less than 2000 characters")
+    .optional()
+    .default("")
+});
 
 interface LeadSubmissionRequest {
   name: string;
@@ -28,19 +57,56 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { name, email, company, notes }: LeadSubmissionRequest = await req.json();
-
-    console.log("Processing lead submission:", { name, email, company });
-
-    // Validate required fields
-    if (!name || !email || !company) {
+    const requestBody = await req.json();
+    
+    // Validate input with Zod schema
+    const validationResult = leadSchema.safeParse(requestBody);
+    if (!validationResult.success) {
+      console.log("Validation failed:", validationResult.error.errors);
       return new Response(
-        JSON.stringify({ error: "Missing required fields: name, email, and company are required" }),
+        JSON.stringify({ 
+          error: "Invalid input data", 
+          details: validationResult.error.errors.map(e => ({
+            field: e.path.join('.'),
+            message: e.message
+          }))
+        }),
         {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
+    }
+
+    const { name, email, company, notes } = validationResult.data;
+    const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || 'unknown';
+    
+    console.log("Processing lead submission:", { name, email, company, ip: clientIP });
+
+    // Rate limiting check - prevent spam submissions
+    const { data: recentSubmissions } = await supabase
+      .from('leads')
+      .select('created_at')
+      .eq('email', email)
+      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()); // Last 24 hours
+
+    if (recentSubmissions && recentSubmissions.length >= 3) {
+      console.log(`Rate limit exceeded for email: ${email}`);
+      return new Response(
+        JSON.stringify({ error: "Too many submissions from this email. Please wait 24 hours before submitting again." }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Additional business email validation
+    const emailDomain = email.split('@')[1];
+    const isBusinessEmail = !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com'].includes(emailDomain.toLowerCase());
+    
+    if (!isBusinessEmail) {
+      console.log(`Personal email domain detected: ${emailDomain}`);
     }
 
     // Store lead in database with automatic lead scoring
