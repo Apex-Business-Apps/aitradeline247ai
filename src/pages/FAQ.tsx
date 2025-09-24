@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const faqs = [
   {
@@ -50,6 +51,13 @@ const faqs = [
 const FAQ = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="FAQ - TradeLine 24/7 AI Receptionist Questions"
+        description="Get answers to common questions about TradeLine 24/7 AI receptionist service. Learn about setup, integrations, pricing, security and more."
+        keywords="AI receptionist FAQ, customer service automation questions, business phone answering help"
+        canonical="https://tradeline247.com/faq"
+      />
+      
       <Header />
       
       <main className="flex-1">

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const contactMethods = [
   {
@@ -47,6 +48,13 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="Contact Us - TradeLine 24/7 AI Receptionist"
+        description="Get in touch with TradeLine 24/7 for AI receptionist services. Contact sales, support, or request a demo of our 24/7 customer service automation."
+        keywords="contact TradeLine 24/7, AI receptionist support, business automation contact, customer service demo"
+        canonical="https://tradeline247.com/contact"
+      />
+      
       <Header />
       
       <main className="flex-1">
