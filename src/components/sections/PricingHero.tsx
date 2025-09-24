@@ -61,7 +61,7 @@ export const PricingHero = () => {
             />
           </div>
           
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-brand-orange">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-brand-orange-dark">
             Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
