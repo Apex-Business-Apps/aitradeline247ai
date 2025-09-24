@@ -1,0 +1,41 @@
+{
+  "welcome": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon", 
+    "evening": "Good evening",
+    "subtitle": "Your AI receptionist is working hard for you today",
+    "status_active": "AI receptionist is active"
+  },
+  "wins": {
+    "section_title": "Your wins this month",
+    "section_subtitle": "Here's how your AI receptionist is growing your business",
+    "revenue_title": "Money earned this month",
+    "revenue_subtitle": "from appointments booked",
+    "bookings_title": "New appointments booked", 
+    "bookings_subtitle": "this week",
+    "time_saved_title": "Time saved for you",
+    "time_saved_subtitle": "no more missed calls",
+    "conversion_title": "Visitors becoming customers",
+    "conversion_subtitle": "conversion rate"
+  },
+  "next_actions": {
+    "title": "What's next for you",
+    "subtitle": "Simple actions to keep your business growing",
+    "missed_calls": "Follow up on missed calls",
+    "missed_calls_desc": "potential customers called after hours",
+    "review_conversations": "Check conversation summaries", 
+    "review_conversations_desc": "new conversations from this week",
+    "update_availability": "Update your availability",
+    "update_availability_desc": "Holiday schedule for next month",
+    "actions": {
+      "review_callback": "Review & call back",
+      "review_summaries": "Review summaries",
+      "set_schedule": "Set schedule"
+    }
+  },
+  "recent_wins": {
+    "title": "Recent wins",
+    "subtitle": "Good things happening with your AI receptionist",
+    "view_all": "View all activity"
+  }
+}

@@ -7,6 +7,7 @@ import { QuickActions } from '@/components/dashboard/QuickActions';
 import { CallSummary } from '@/components/dashboard/CallSummary';
 import { IntegrationsGrid } from '@/components/dashboard/IntegrationsGrid';
 import { AnalyticsDashboard } from '@/components/analytics/AnalyticsDashboard';
+import { NewDashboard } from '@/components/dashboard/NewDashboard';
 import { Button } from '@/components/ui/button';
 import { Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +15,8 @@ import { useNavigate } from 'react-router-dom';
 const ClientDashboard = () => {
   const navigate = useNavigate();
 
-  return (
+  // Original dashboard wrapped by NewDashboard with feature flag logic
+  const OriginalDashboard = (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
@@ -63,6 +65,12 @@ const ClientDashboard = () => {
       
       <Footer />
     </div>
+  );
+
+  return (
+    <NewDashboard>
+      {OriginalDashboard}
+    </NewDashboard>
   );
 };
 
