@@ -11,36 +11,40 @@ const kpiData = [
     subtitle: 'new appointments',
     icon: Calendar,
     color: 'text-blue-600 dark:text-blue-400',
-    bgColor: 'bg-blue-50 dark:bg-blue-900/20'
+    bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+    ariaLabel: '47 bookings this week, up 12%'
   },
   {
     id: 'payout',
-    title: 'Projected payout',
+    title: 'Expected payout',
     value: '$3,240',
     subtitle: 'Paid out on Dec 15',
     icon: DollarSign,
     color: 'text-green-600 dark:text-green-400',
-    bgColor: 'bg-green-50 dark:bg-green-900/20'
+    bgColor: 'bg-green-50 dark:bg-green-900/20',
+    ariaLabel: 'Expected payout $3,240, paid out on December 15th'
   },
   {
     id: 'answered',
-    title: 'Calls answered',
+    title: 'Calls we caught',
     value: '94%',
     trend: 'Up vs last week +8%',
     subtitle: 'response rate',
     icon: Phone,
     color: 'text-primary',
-    bgColor: 'bg-primary/10'
+    bgColor: 'bg-primary/10',
+    ariaLabel: '94% calls we caught, up 8% vs last week'
   },
   {
     id: 'rescued',
-    title: 'Missed → rescued',
+    title: 'Missed but saved',
     value: '8',
     badge: 'rescued',
     subtitle: 'became bookings',
     icon: TrendingUp,
     color: 'text-purple-600 dark:text-purple-400',
-    bgColor: 'bg-purple-50 dark:bg-purple-900/20'
+    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+    ariaLabel: '8 missed calls but saved, became bookings'
   }
 ];
 
@@ -48,7 +52,12 @@ export const WinsSection: React.FC = () => {
   return (
     <section className="space-y-4" data-testid="kpi-section">
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        {kpiData.map((kpi) => (
+        {kpiData.length === 0 ? (
+          <div className="col-span-full text-center py-8">
+            <p className="text-muted-foreground">Quiet right now — your next one will show up here.</p>
+          </div>
+        ) : (
+          kpiData.map((kpi) => (
           <Card 
             key={kpi.id}
             className="relative overflow-hidden border-0"
@@ -57,6 +66,8 @@ export const WinsSection: React.FC = () => {
               background: 'linear-gradient(135deg, hsl(var(--card) / 0.95) 0%, hsl(var(--card) / 0.9) 100%)'
             }}
             data-testid={`kpi-card-${kpi.id}`}
+            role="article"
+            aria-label={kpi.ariaLabel}
           >
             <CardContent className="p-3">
               {/* Icon and trend/badge row */}
@@ -90,7 +101,8 @@ export const WinsSection: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );

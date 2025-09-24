@@ -57,7 +57,14 @@ export const NextActionsSection: React.FC = () => {
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
-          {todaysAppointments.map((appointment) => (
+          {todaysAppointments.length === 0 ? (
+            <div className="text-center py-6">
+              <p className="text-muted-foreground text-sm">Nothing queued right now.</p>
+            </div>
+          ) : (
+            <>
+              <p className="text-xs text-muted-foreground/80 mb-3">Tap to confirm or move an appointment.</p>
+              {todaysAppointments.map((appointment) => (
             <div 
               key={appointment.id}
               className="flex items-center gap-3 p-3 rounded-lg bg-accent/20 border border-border/50"
@@ -99,7 +106,9 @@ export const NextActionsSection: React.FC = () => {
                 ))}
               </div>
             </div>
-          ))}
+              ))}
+            </>
+          )}
         </CardContent>
       </Card>
 
@@ -121,7 +130,12 @@ export const NextActionsSection: React.FC = () => {
           </p>
         </CardHeader>
         <CardContent className="space-y-3">
-          {recentWins.map((win, index) => (
+          {recentWins.length === 0 ? (
+            <div className="text-center py-6">
+              <p className="text-muted-foreground text-sm">We'll drop new call notes here. Check back soon.</p>
+            </div>
+          ) : (
+            recentWins.map((win, index) => (
             <div 
               key={index}
               className="flex items-start gap-3 p-3 rounded-lg bg-green-50/50 dark:bg-green-900/10"
@@ -132,18 +146,21 @@ export const NextActionsSection: React.FC = () => {
                 {win}
               </p>
             </div>
-          ))}
+            ))
+          )}
           
-          <div className="pt-3 border-t border-border/50">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full text-sm hover:bg-accent"
-              data-testid="view-all-activity-button"
-            >
-              View all activity
-            </Button>
-          </div>
+          {recentWins.length > 0 && (
+            <div className="pt-3 border-t border-border/50">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full text-sm hover:bg-accent"
+                data-testid="view-all-activity-button"
+              >
+                View all activity
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </section>

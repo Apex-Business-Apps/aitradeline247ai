@@ -6,31 +6,31 @@
     "subtitle": "Your AI receptionist is working hard for you today",
     "status_active": "AI receptionist is active"
   },
-  "wins": {
-    "section_title": "Your wins this month",
-    "section_subtitle": "Here's how your AI receptionist is growing your business",
-    "revenue_title": "Money earned this month",
-    "revenue_subtitle": "from appointments booked",
-    "bookings_title": "New appointments booked", 
-    "bookings_subtitle": "this week",
-    "time_saved_title": "Time saved for you",
-    "time_saved_subtitle": "no more missed calls",
-    "conversion_title": "Visitors becoming customers",
-    "conversion_subtitle": "conversion rate"
+  "kpi": {
+    "bookings": "Bookings this week",
+    "payout": "Expected payout", 
+    "answerRate": "Calls we caught",
+    "rescued": "Missed but saved"
   },
-  "next_actions": {
-    "title": "What's next for you",
-    "subtitle": "Simple actions to keep your business growing",
-    "missed_calls": "Follow up on missed calls",
-    "missed_calls_desc": "potential customers called after hours",
-    "review_conversations": "Check conversation summaries", 
-    "review_conversations_desc": "new conversations from this week",
-    "update_availability": "Update your availability",
-    "update_availability_desc": "Holiday schedule for next month",
+  "insights": {
+    "up": "You're trending up this week. Nice work.",
+    "down": "A little quieter — want reminders turned on?"
+  },
+  "empty": {
+    "next": "Nothing queued right now.",
+    "inbox": "We'll drop new call notes here. Check back soon.",
+    "kpi": "Quiet right now — your next one will show up here."
+  },
+  "actions": {
+    "hint": "Tap to confirm or move an appointment."
+  },
+  "appointments": {
+    "title": "Today's appointments",
+    "subtitle": "Upcoming calls and meetings",
     "actions": {
-      "review_callback": "Review & call back",
-      "review_summaries": "Review summaries",
-      "set_schedule": "Set schedule"
+      "confirm": "Confirm",
+      "reschedule": "Reschedule", 
+      "add_note": "Add note"
     }
   },
   "recent_wins": {
