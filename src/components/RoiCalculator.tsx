@@ -74,7 +74,7 @@ const RoiCalculator = () => {
       bestPlan
     });
   }, [calls, currentAnswer, conv, value, tlCapture]);
-  return <Card className="w-full max-w-4xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+  return <Card className="w-full max-w-[520px] mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-2xl md:text-3xl text-foreground mb-1">
           Calculate Your ROI
@@ -85,9 +85,9 @@ const RoiCalculator = () => {
       </CardHeader>
       
       <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {/* Left Column: Inputs */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h3 className="text-lg font-semibold text-foreground mb-3">Your Business</h3>
             
             <div className="space-y-3">
@@ -129,7 +129,7 @@ const RoiCalculator = () => {
           </div>
 
           {/* Right Column: Results */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h3 className="text-lg font-semibold text-foreground mb-3">Your Results</h3>
             
             <div className="space-y-3" aria-live="polite" aria-label="ROI calculation results">

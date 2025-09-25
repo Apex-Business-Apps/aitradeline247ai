@@ -1,4 +1,6 @@
 import RoiCalculator from "@/components/RoiCalculator";
+import { LeadCaptureForm } from "@/components/sections/LeadCaptureForm";
+
 export const PricingHero = () => {
   return (
     <section className="py-20 bg-gradient-orange-subtle section-heavy">
@@ -12,8 +14,15 @@ export const PricingHero = () => {
             Never miss a call. Work while you sleep.
           </p>
           
-          {/* ROI Calculator */}
-          <RoiCalculator />
+          {/* Two-column layout for calculator and questionnaire */}
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-start max-w-7xl mx-auto">
+            <div className="flex justify-center">
+              <RoiCalculator />
+            </div>
+            <div className="flex justify-center">
+              <LeadCaptureForm />
+            </div>
+          </div>
         </div>
       </div>
     </section>
