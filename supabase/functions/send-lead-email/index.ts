@@ -220,7 +220,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://tradeline247.com/dashboard" 
+              <a href="https://tradeline247ai.com/dashboard" 
                  style="display: inline-block; background: #ff6b35; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">
                 🎯 Access Your Dashboard
               </a>
@@ -230,7 +230,7 @@ const handler = async (req: Request): Promise<Response> => {
               <h3 style="color: #1976D2; margin-top: 0; font-size: 16px;">💡 Quick Tip</h3>
                <p style="color: #666; margin: 0; line-height: 1.6;">
                  Have questions before our call? Reply to this email or check out our 
-                 <a href="https://tradeline247.com/faq" style="color: #ff6b35;">FAQ page</a> for instant answers.
+                 <a href="https://tradeline247ai.com/faq" style="color: #ff6b35;">FAQ page</a> for instant answers.
                </p>
             </div>
             
@@ -245,12 +245,12 @@ const handler = async (req: Request): Promise<Response> => {
              <p style="margin: 5px 0;">
                TradeLine 24/7 - Your Service That Never Sleeps
                <br>
-               <a href="https://tradeline247.com" style="color: #ff6b35;">tradeline247.com</a> | Toronto, ON, Canada
+               <a href="https://tradeline247ai.com" style="color: #ff6b35;">tradeline247ai.com</a> | Toronto, ON, Canada
              </p>
-            <p style="margin: 15px 0 5px 0;">
-              <a href="https://tradeline247.com/privacy" style="color: #999; text-decoration: none;">Privacy Policy</a> | 
-              <a href="https://tradeline247.com/terms" style="color: #999; text-decoration: none;">Terms of Service</a>
-            </p>
+           <p style="margin: 15px 0 5px 0;">
+             <a href="https://tradeline247ai.com/privacy" style="color: #999; text-decoration: none;">Privacy Policy</a> | 
+             <a href="https://tradeline247ai.com/terms" style="color: #999; text-decoration: none;">Terms of Service</a>
+           </p>
           </div>
         </div>`,
       "TradeLine 24/7 <info@tradeline247ai.com>"
