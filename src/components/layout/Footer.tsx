@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
               <span>© 2024 TradeLine 24/7. Never miss a call. We've got it.</span>
               <span>•</span>
               <span>Hosted in Canada • Apex Business Systems • Edmonton, Alberta</span>
-              <img src="/assets/brand/hosted-in-canada-badge.svg" alt="Hosted in Canada" width="130" height="32" className="ml-2" />
+              
             </div>
           </div>
           
