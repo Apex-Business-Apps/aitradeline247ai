@@ -8,7 +8,7 @@ export const PricingHero = () => {
           {/* Logo above hero text */}
           <div className="flex justify-center mb-8">
             <img src="/src/assets/official-logo.svg" alt="TradeLine 24/7 Logo" className="h-28 md:h-36 w-auto opacity-80" style={{
-            transform: 'scaleX(0.8)'
+            transform: 'scaleX(0.96)'
           }} />
           </div>
           
