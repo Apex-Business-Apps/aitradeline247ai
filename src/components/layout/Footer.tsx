@@ -10,11 +10,13 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <Logo variant="text" size="sm" />
             </div>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <address className="not-italic">
+              <strong>Apex Business Systems</strong><br />
+              Edmonton, AB, Canada<br />
+              <a href="mailto:info@tradeline247ai.com">info@tradeline247ai.com</a>
+            </address>
+            <div className="flex items-center gap-3 text-sm text-muted-foreground mt-2">
               <span>© 2024 TradeLine 24/7. Never miss a call. We've got it.</span>
-              <span>•</span>
-              <span>Hosted in Canada • Apex Business Systems • Edmonton, Alberta</span>
-              
             </div>
           </div>
           
@@ -32,10 +34,10 @@ export const Footer: React.FC = () => {
               Terms
             </a>
             <a 
-              href="mailto:contact@tradeline247.com" 
+              href="mailto:info@tradeline247ai.com" 
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              contact@tradeline247.com
+              info@tradeline247ai.com
             </a>
           </nav>
         </div>

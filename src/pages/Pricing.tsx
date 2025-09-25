@@ -65,7 +65,7 @@ const Pricing = () => {
         title="Pricing - TradeLine 24/7 AI Receptionist Plans"
         description="Simple, transparent pricing for 24/7 AI receptionist services. Starting at $49/month with 14-day free trial. Starter, Growth & Enterprise plans available."
         keywords="AI receptionist pricing, business automation cost, 24/7 customer service plans, AI phone answering pricing"
-        canonical="https://tradeline247.com/pricing"
+        canonical="https://www.tradeline247ai.com/pricing"
       />
       
       <Header />

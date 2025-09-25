@@ -245,7 +245,7 @@ const handler = async (req: Request): Promise<Response> => {
              <p style="margin: 5px 0;">
                TradeLine 24/7 - Your Service That Never Sleeps
                <br>
-               <a href="https://tradeline247ai.com" style="color: #ff6b35;">tradeline247ai.com</a> | Toronto, ON, Canada
+               <a href="https://tradeline247ai.com" style="color: #ff6b35;">tradeline247ai.com</a> | Edmonton, AB, Canada
              </p>
            <p style="margin: 15px 0 5px 0;">
              <a href="https://tradeline247ai.com/privacy" style="color: #999; text-decoration: none;">Privacy Policy</a> | 

@@ -8,10 +8,10 @@ export const OrganizationSchema: React.FC = () => {
     "name": "TradeLine 24/7",
     "alternateName": "TL247",
     "description": "Fast and reliable 24/7 customer service and receptionist solutions for businesses",
-    "url": "https://tradeline247.com",
+    "url": "https://www.tradeline247ai.com",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://tradeline247.com/pwa-512x512.png",
+      "url": "https://www.tradeline247ai.com/pwa-512x512.png",
       "width": 512,
       "height": 512
     },

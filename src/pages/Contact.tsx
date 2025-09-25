@@ -37,7 +37,7 @@ const contactMethods = [
     icon: MapPin,
     title: "Visit Us", 
     description: "Our headquarters",
-    contact: "Toronto, ON, Canada",
+    contact: "Edmonton, AB, Canada",
     action: "#"
   }
 ];
@@ -111,7 +111,7 @@ const Contact = () => {
         title="Contact Us - TradeLine 24/7 AI Receptionist"
         description="Get in touch with TradeLine 24/7 for AI receptionist services. Contact sales, support, or request a demo of our 24/7 customer service automation."
         keywords="contact TradeLine 24/7, AI receptionist support, business automation contact, customer service demo"
-        canonical="https://tradeline247.com/contact"
+        canonical="https://www.tradeline247ai.com/contact"
       />
       
       <Header />

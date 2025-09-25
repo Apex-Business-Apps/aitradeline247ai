@@ -38,7 +38,7 @@ const Index = () => {
           title="TradeLine 24/7 — Your 24/7 AI Receptionist!"
           description="Transform your business with fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
           keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
-          canonical="https://tradeline247.com"
+          canonical="https://www.tradeline247ai.com"
         />
         <OrganizationSchema />
         

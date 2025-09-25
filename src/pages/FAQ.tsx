@@ -55,7 +55,7 @@ const FAQ = () => {
         title="FAQ - TradeLine 24/7 AI Receptionist Questions"
         description="Get answers to common questions about TradeLine 24/7 AI receptionist service. Learn about setup, integrations, pricing, security and more."
         keywords="AI receptionist FAQ, customer service automation questions, business phone answering help"
-        canonical="https://tradeline247.com/faq"
+        canonical="https://www.tradeline247ai.com/faq"
       />
       
       <Header />

@@ -16,11 +16,11 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   description = "Transform your business with fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses.",
   keywords = "AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration",
   canonical,
-  ogImage = "https://tradeline247.com/og-image.jpg",
+  ogImage = "https://www.tradeline247ai.com/og-image.jpg",
   noIndex = false,
   structuredData
 }) => {
-  const currentUrl = canonical || (typeof window !== 'undefined' ? window.location.href : 'https://tradeline247.com');
+  const currentUrl = canonical || (typeof window !== 'undefined' ? window.location.href : 'https://www.tradeline247ai.com');
 
   return (
     <Helmet>

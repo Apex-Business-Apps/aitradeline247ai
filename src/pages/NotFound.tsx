@@ -15,7 +15,7 @@ const NotFound = () => {
       <SEOHead 
         title="404 - Page Not Found | TradeLine 24/7"
         description="The page you're looking for doesn't exist. Return to TradeLine 24/7 for 24/7 AI receptionist services and business automation solutions."
-        canonical="https://tradeline247.com/404"
+        canonical="https://www.tradeline247ai.com/404"
         noIndex={true}
       />
       

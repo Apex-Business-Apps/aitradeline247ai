@@ -10,7 +10,7 @@ const Privacy = () => {
         title="Privacy Policy - TradeLine 24/7"
         description="Learn how TradeLine 24/7 protects your privacy and data. SOC 2 compliant, GDPR ready with bank-level security for AI receptionist services."
         keywords="privacy policy, data protection, GDPR compliance, AI receptionist security"
-        canonical="https://tradeline247.com/privacy"
+        canonical="https://www.tradeline247ai.com/privacy"
       />
       
       <Header />
@@ -73,7 +73,7 @@ const Privacy = () => {
                     <br />
                     Email: privacy@tradeline247ai.com
                     <br />
-                    Address: Toronto, ON, Canada
+                    Address: Edmonton, AB, Canada
                   </p>
                 </section>
               </CardContent>

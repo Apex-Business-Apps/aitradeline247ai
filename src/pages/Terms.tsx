@@ -10,7 +10,7 @@ const Terms = () => {
         title="Terms of Service - TradeLine 24/7"
         description="Terms and conditions for using TradeLine 24/7 AI receptionist services. Service description, user responsibilities, and legal information."
         keywords="terms of service, legal terms, AI receptionist terms, service agreement"
-        canonical="https://tradeline247.com/terms"
+        canonical="https://www.tradeline247ai.com/terms"
       />
       
       <Header />
@@ -89,7 +89,7 @@ const Terms = () => {
                     <br />
                     Email: legal@tradeline247ai.com
                     <br />
-                    Address: Toronto, ON, Canada
+                    Address: Edmonton, AB, Canada
                   </p>
                 </section>
               </CardContent>

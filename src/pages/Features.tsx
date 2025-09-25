@@ -62,7 +62,7 @@ const Features = () => {
         title="Features — TradeLine 24/7 AI Receptionist"
         description="Discover powerful AI features: 24/7 call handling, smart routing, omnichannel messaging, CRM integration, and enterprise security. Transform your customer service today."
         keywords="AI receptionist features, call management, omnichannel messaging, CRM integration, business automation, 24/7 customer service"
-        canonical="https://tradeline247.com/features"
+        canonical="https://www.tradeline247ai.com/features"
       />
       
       <Header />
