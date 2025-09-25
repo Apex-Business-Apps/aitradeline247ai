@@ -345,6 +345,47 @@ export type Database = {
         }
         Relationships: []
       }
+      encrypted_lead_data: {
+        Row: {
+          created_at: string
+          encrypted_company: string
+          encrypted_email: string
+          encrypted_name: string
+          encrypted_notes: string | null
+          encryption_key_id: string
+          id: string
+          lead_id: string
+        }
+        Insert: {
+          created_at?: string
+          encrypted_company: string
+          encrypted_email: string
+          encrypted_name: string
+          encrypted_notes?: string | null
+          encryption_key_id?: string
+          id?: string
+          lead_id: string
+        }
+        Update: {
+          created_at?: string
+          encrypted_company?: string
+          encrypted_email?: string
+          encrypted_name?: string
+          encrypted_notes?: string | null
+          encryption_key_id?: string
+          id?: string
+          lead_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "encrypted_lead_data_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: true
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       encrypted_session_tokens: {
         Row: {
           created_at: string
@@ -987,6 +1028,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      automated_privacy_cleanup: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
@@ -1168,6 +1213,15 @@ export type Database = {
       }
       log_analytics_access_attempt: {
         Args: { access_type: string; success?: boolean; user_context?: string }
+        Returns: undefined
+      }
+      log_security_audit_event: {
+        Args: {
+          p_details?: Json
+          p_event_type: string
+          p_severity?: string
+          p_user_id?: string
+        }
         Returns: undefined
       }
       post_wallet_entry: {
