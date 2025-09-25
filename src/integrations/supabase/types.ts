@@ -110,6 +110,192 @@ export type Database = {
         }
         Relationships: []
       }
+      batch_embeddings_jobs: {
+        Row: {
+          batch_id: string
+          completed_count: number
+          created_at: string
+          failed_count: number
+          id: string
+          input_file_count: number
+          org_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          batch_id: string
+          completed_count?: number
+          created_at?: string
+          failed_count?: number
+          id?: string
+          input_file_count?: number
+          org_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          batch_id?: string
+          completed_count?: number
+          created_at?: string
+          failed_count?: number
+          id?: string
+          input_file_count?: number
+          org_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      call_summaries: {
+        Row: {
+          call_sid: string | null
+          confidence_score: number | null
+          created_at: string
+          escalated: boolean | null
+          id: string
+          model_used: string | null
+          next_actions: Json | null
+          org_id: string
+          subject: string | null
+          summary: string
+          tags: Json | null
+        }
+        Insert: {
+          call_sid?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          escalated?: boolean | null
+          id?: string
+          model_used?: string | null
+          next_actions?: Json | null
+          org_id: string
+          subject?: string | null
+          summary: string
+          tags?: Json | null
+        }
+        Update: {
+          call_sid?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          escalated?: boolean | null
+          id?: string
+          model_used?: string | null
+          next_actions?: Json | null
+          org_id?: string
+          subject?: string | null
+          summary?: string
+          tags?: Json | null
+        }
+        Relationships: []
+      }
+      consent_records: {
+        Row: {
+          consent_given: boolean
+          consent_timestamp: string | null
+          consent_type: string
+          contact_identifier: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          org_id: string
+          source: string | null
+          updated_at: string
+          withdraw_timestamp: string | null
+        }
+        Insert: {
+          consent_given?: boolean
+          consent_timestamp?: string | null
+          consent_type: string
+          contact_identifier: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          org_id: string
+          source?: string | null
+          updated_at?: string
+          withdraw_timestamp?: string | null
+        }
+        Update: {
+          consent_given?: boolean
+          consent_timestamp?: string | null
+          consent_type?: string
+          contact_identifier?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          org_id?: string
+          source?: string | null
+          updated_at?: string
+          withdraw_timestamp?: string | null
+        }
+        Relationships: []
+      }
+      kb_documents: {
+        Row: {
+          checksum: string
+          created_at: string
+          embedding: string | null
+          id: string
+          org_id: string
+          text: string
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          checksum: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          org_id: string
+          text: string
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          checksum?: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          org_id?: string
+          text?: string
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      kb_versions: {
+        Row: {
+          created_at: string
+          document_count: number
+          id: string
+          last_embedded_at: string | null
+          org_id: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          document_count?: number
+          id?: string
+          last_embedded_at?: string | null
+          org_id: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          document_count?: number
+          id?: string
+          last_embedded_at?: string | null
+          org_id?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           assigned_to: string | null
@@ -152,6 +338,36 @@ export type Database = {
         }
         Relationships: []
       }
+      operational_metrics: {
+        Row: {
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_unit: string | null
+          metric_value: number
+          org_id: string
+          recorded_at: string
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_unit?: string | null
+          metric_value: number
+          org_id: string
+          recorded_at?: string
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_unit?: string | null
+          metric_value?: number
+          org_id?: string
+          recorded_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -176,6 +392,75 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      rag_cache: {
+        Row: {
+          answer: Json
+          created_at: string
+          expires_at: string
+          id: string
+          kb_version: number
+          org_id: string
+          question_hash: string
+        }
+        Insert: {
+          answer: Json
+          created_at?: string
+          expires_at?: string
+          id?: string
+          kb_version: number
+          org_id: string
+          question_hash: string
+        }
+        Update: {
+          answer?: Json
+          created_at?: string
+          expires_at?: string
+          id?: string
+          kb_version?: number
+          org_id?: string
+          question_hash?: string
+        }
+        Relationships: []
+      }
+      ragas_evaluations: {
+        Row: {
+          answer: string
+          answer_relevance_score: number | null
+          context: Json | null
+          created_at: string
+          faithfulness_score: number | null
+          ground_truth: string | null
+          id: string
+          org_id: string
+          question: string
+          retrieval_precision: number | null
+        }
+        Insert: {
+          answer: string
+          answer_relevance_score?: number | null
+          context?: Json | null
+          created_at?: string
+          faithfulness_score?: number | null
+          ground_truth?: string | null
+          id?: string
+          org_id: string
+          question: string
+          retrieval_precision?: number | null
+        }
+        Update: {
+          answer?: string
+          answer_relevance_score?: number | null
+          context?: Json | null
+          created_at?: string
+          faithfulness_score?: number | null
+          ground_truth?: string | null
+          id?: string
+          org_id?: string
+          question?: string
+          retrieval_precision?: number | null
         }
         Relationships: []
       }
@@ -235,12 +520,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      binary_quantize: {
+        Args: { "": string } | { "": unknown }
+        Returns: unknown
+      }
       calculate_lead_score: {
         Args: {
           company_name: string
           email_domain: string
           notes_content: string
         }
+        Returns: number
+      }
+      cleanup_expired_rag_cache: {
+        Args: Record<PropertyKey, never>
         Returns: number
       }
       cleanup_expired_sessions: {
@@ -255,12 +548,104 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      halfvec_avg: {
+        Args: { "": number[] }
+        Returns: unknown
+      }
+      halfvec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      halfvec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      halfvec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      hnsw_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_sparsevec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnswhandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      increment_kb_version: {
+        Args: { target_org_id: string }
+        Returns: number
+      }
+      ivfflat_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflat_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflathandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      l2_norm: {
+        Args: { "": unknown } | { "": unknown }
+        Returns: number
+      }
+      l2_normalize: {
+        Args: { "": string } | { "": unknown } | { "": unknown }
+        Returns: string
+      }
+      sparsevec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      sparsevec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      sparsevec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
+      vector_avg: {
+        Args: { "": number[] }
+        Returns: string
+      }
+      vector_dims: {
+        Args: { "": string } | { "": unknown }
+        Returns: number
+      }
+      vector_norm: {
+        Args: { "": string }
+        Returns: number
+      }
+      vector_out: {
+        Args: { "": string }
+        Returns: unknown
+      }
+      vector_send: {
+        Args: { "": string }
+        Returns: string
+      }
+      vector_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
       }
     }
     Enums: {
