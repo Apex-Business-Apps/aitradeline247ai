@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, MessageCircle, Loader2 } from "lucide-react";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const contactMethods = [
   {
@@ -40,10 +42,66 @@ const contactMethods = [
 ];
 
 const Contact = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [contactFormData, setContactFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    company: "",
+    phone: "",
+    subject: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement form submission logic
-    console.log("Form submitted");
+    setIsSubmitting(true);
+
+    try {
+      // Combine first and last name for lead submission
+      const leadData = {
+        name: `${contactFormData.firstName} ${contactFormData.lastName}`.trim(),
+        email: contactFormData.email,
+        company: contactFormData.company,
+        notes: `Subject: ${contactFormData.subject}\n\nMessage: ${contactFormData.message}\n\nPhone: ${contactFormData.phone || 'Not provided'}`
+      };
+
+      const { error } = await supabase.functions.invoke('send-lead-email', {
+        body: leadData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setIsSuccess(true);
+      setContactFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        company: "",
+        phone: "",
+        subject: "",
+        message: ""
+      });
+
+      toast({
+        title: "Message Sent!",
+        description: "Thanks for contacting us. We'll get back to you within 24 hours.",
+      });
+
+    } catch (error: any) {
+      console.error("Contact form error:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again or call us directly.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -116,32 +174,69 @@ const Contact = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="firstName">First Name</Label>
-                          <Input id="firstName" placeholder="John" required />
+                          <Input 
+                            id="firstName" 
+                            placeholder="John" 
+                            value={contactFormData.firstName}
+                            onChange={(e) => setContactFormData(prev => ({...prev, firstName: e.target.value}))}
+                            required 
+                          />
                         </div>
                         <div>
                           <Label htmlFor="lastName">Last Name</Label>
-                          <Input id="lastName" placeholder="Smith" required />
+                          <Input 
+                            id="lastName" 
+                            placeholder="Smith" 
+                            value={contactFormData.lastName}
+                            onChange={(e) => setContactFormData(prev => ({...prev, lastName: e.target.value}))}
+                            required 
+                          />
                         </div>
                       </div>
                       
                       <div>
                         <Label htmlFor="email">Work Email</Label>
-                        <Input id="email" type="email" placeholder="john@company.com" required />
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          placeholder="john@company.com" 
+                          value={contactFormData.email}
+                          onChange={(e) => setContactFormData(prev => ({...prev, email: e.target.value}))}
+                          required 
+                        />
                       </div>
                       
                       <div>
                         <Label htmlFor="company">Company Name</Label>
-                        <Input id="company" placeholder="Your Company Inc." required />
+                        <Input 
+                          id="company" 
+                          placeholder="Your Company Inc." 
+                          value={contactFormData.company}
+                          onChange={(e) => setContactFormData(prev => ({...prev, company: e.target.value}))}
+                          required 
+                        />
                       </div>
                       
                       <div>
                         <Label htmlFor="phone">Phone Number (Optional)</Label>
-                        <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" />
+                        <Input 
+                          id="phone" 
+                          type="tel" 
+                          placeholder="+1 (555) 123-4567" 
+                          value={contactFormData.phone}
+                          onChange={(e) => setContactFormData(prev => ({...prev, phone: e.target.value}))}
+                        />
                       </div>
                       
                       <div>
                         <Label htmlFor="subject">Subject</Label>
-                        <Input id="subject" placeholder="How can we help?" required />
+                        <Input 
+                          id="subject" 
+                          placeholder="How can we help?" 
+                          value={contactFormData.subject}
+                          onChange={(e) => setContactFormData(prev => ({...prev, subject: e.target.value}))}
+                          required 
+                        />
                       </div>
                       
                       <div>
@@ -150,12 +245,21 @@ const Contact = () => {
                           id="message" 
                           placeholder="Tell us about your business and how you'd like to use TradeLine 24/7..."
                           className="min-h-[120px]"
+                          value={contactFormData.message}
+                          onChange={(e) => setContactFormData(prev => ({...prev, message: e.target.value}))}
                           required 
                         />
                       </div>
                       
-                      <Button type="submit" size="lg" className="w-full">
-                        Send Message
+                      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          "Send Message"
+                        )}
                       </Button>
                     </form>
                   </CardContent>
