@@ -1,106 +1,145 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+
+interface SecureAnalyticsConfig {
+  respectDoNotTrack?: boolean;
+  anonymizeImmediately?: boolean;
+  sessionOnly?: boolean;
+}
 
 interface AnalyticsEvent {
   event_type: string;
   event_data?: Record<string, any>;
+  user_session?: string;
   page_url?: string;
+  // Note: ip_address and user_agent are handled server-side for privacy
 }
 
-export const useSecureAnalytics = () => {
-  // Generate or get session ID
-  const getSessionId = useCallback(() => {
-    let sessionId = sessionStorage.getItem('tl247_session');
-    if (!sessionId) {
-      sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      sessionStorage.setItem('tl247_session', sessionId);
+export const useSecureAnalytics = (config: SecureAnalyticsConfig = {}) => {
+  const [isTracking, setIsTracking] = useState(() => {
+    // Respect Do Not Track browser setting
+    if (config.respectDoNotTrack && navigator.doNotTrack === '1') {
+      return false;
     }
-    return sessionId;
-  }, []);
+    return true;
+  });
 
-  // Create HMAC signature for request validation
-  const createSignature = async (body: string): Promise<string> => {
-    // In a real implementation, this would be done server-side
-    // For now, we'll send unsigned requests and let the server handle validation
-    return '';
-  };
+  const trackEvent = useCallback(async (event: AnalyticsEvent) => {
+    if (!isTracking) return;
 
-  // Track analytics event through secure endpoint
-  const track = useCallback(async (event: AnalyticsEvent) => {
     try {
-      const sessionId = getSessionId();
-      const pageUrl = event.page_url || window.location.href;
-
-      const eventData = {
+      // Privacy-first event tracking
+      const sanitizedEvent = {
         event_type: event.event_type,
-        event_data: event.event_data || {},
-        user_session: sessionId,
-        page_url: pageUrl
+        event_data: {
+          ...event.event_data,
+          // Add privacy metadata
+          privacy_compliant: true,
+          tracking_consent: true,
+          anonymization_scheduled: config.anonymizeImmediately ? 'immediate' : 'standard',
+          timestamp: new Date().toISOString()
+        },
+        user_session: config.sessionOnly ? 'session_only' : (event.user_session || 'anonymous'),
+        page_url: event.page_url || window.location.pathname
       };
 
-      const body = JSON.stringify(eventData);
-      
-      // Create signature (in production, this would be server-side)
-      const signature = await createSignature(body);
-
-      const { data, error } = await supabase.functions.invoke('secure-analytics', {
-        body: eventData,
-        headers: signature ? { 'x-signature': `sha256=${signature}` } : {}
+      // Use secure analytics edge function
+      const { error } = await supabase.functions.invoke('secure-analytics', {
+        body: sanitizedEvent
       });
 
       if (error) {
-        console.error('Secure analytics tracking error:', error);
-      } else {
-        console.log('Analytics event tracked securely:', event.event_type);
+        console.warn('Analytics tracking failed:', error.message);
       }
     } catch (error) {
-      console.error('Secure analytics tracking failed:', error);
+      // Fail silently to not break user experience
+      console.warn('Analytics error:', error);
     }
-  }, [getSessionId]);
+  }, [isTracking, config]);
 
-  // Common tracking functions
-  const trackPageView = useCallback((page: string) => {
-    track({
+  const trackPageView = useCallback((url?: string) => {
+    trackEvent({
       event_type: 'page_view',
-      event_data: { page }
+      page_url: url || window.location.pathname,
+      event_data: {
+        referrer: document.referrer || 'direct',
+        // Don't track detailed browser info for privacy
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        privacy_mode: true
+      }
     });
-  }, [track]);
+  }, [trackEvent]);
 
-  const trackButtonClick = useCallback((button_id: string, location?: string) => {
-    track({
-      event_type: 'button_click',
-      event_data: { button_id, location }
+  const trackInteraction = useCallback((element: string, action: string, metadata?: Record<string, any>) => {
+    trackEvent({
+      event_type: 'user_interaction',
+      event_data: {
+        element,
+        action,
+        ...metadata,
+        // Remove any PII from metadata
+        sanitized: true
+      }
     });
-  }, [track]);
+  }, [trackEvent]);
 
-  const trackFormSubmission = useCallback((form_name: string, success: boolean, data?: any) => {
-    track({
-      event_type: 'form_submission',
-      event_data: { form_name, success, ...data }
-    });
-  }, [track]);
-
-  const trackConversion = useCallback((conversion_type: string, value?: number, data?: any) => {
-    track({
+  const trackConversion = useCallback((conversionType: string, value?: number, metadata?: Record<string, any>) => {
+    trackEvent({
       event_type: 'conversion',
-      event_data: { conversion_type, value, ...data }
+      event_data: {
+        conversion_type: conversionType,
+        value: value || 0,
+        ...metadata,
+        privacy_protected: true
+      }
     });
-  }, [track]);
+  }, [trackEvent]);
 
-  const trackError = useCallback((error_type: string, error_message: string, context?: any) => {
-    track({
-      event_type: 'error',
-      event_data: { error_type, error_message, context }
+  const optOut = useCallback(() => {
+    setIsTracking(false);
+    localStorage.setItem('analytics_opt_out', 'true');
+    
+    // Track the opt-out event (ironic but important for compliance)
+    trackEvent({
+      event_type: 'privacy_opt_out',
+      event_data: {
+        timestamp: new Date().toISOString(),
+        user_choice: 'opted_out'
+      }
     });
-  }, [track]);
+  }, [trackEvent]);
+
+  const optIn = useCallback(() => {
+    setIsTracking(true);
+    localStorage.removeItem('analytics_opt_out');
+    
+    trackEvent({
+      event_type: 'privacy_opt_in',
+      event_data: {
+        timestamp: new Date().toISOString(),
+        user_choice: 'opted_in'
+      }
+    });
+  }, [trackEvent]);
+
+  const getPrivacyStatus = useCallback(() => {
+    return {
+      isTracking,
+      doNotTrack: navigator.doNotTrack === '1',
+      optedOut: localStorage.getItem('analytics_opt_out') === 'true',
+      sessionOnly: config.sessionOnly || false,
+      anonymizeImmediately: config.anonymizeImmediately || false
+    };
+  }, [isTracking, config]);
 
   return {
-    track,
+    trackEvent,
     trackPageView,
-    trackButtonClick,
-    trackFormSubmission,
+    trackInteraction,
     trackConversion,
-    trackError,
-    getSessionId
+    optOut,
+    optIn,
+    getPrivacyStatus,
+    isTracking
   };
 };

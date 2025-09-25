@@ -6,16 +6,29 @@ interface ABTestVariant {
   [key: string]: any;
 }
 
+// Generate secure session ID for A/B testing
+const getOrCreateSessionId = (): string => {
+  const sessionKey = 'ab_test_session_id';
+  let sessionId = sessionStorage.getItem(sessionKey);
+  
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    sessionStorage.setItem(sessionKey, sessionId);
+  }
+  
+  return sessionId;
+};
+
 export const useSecureABTest = (testName: string) => {
   const [variant, setVariant] = useState<string>('A');
   const [variantData, setVariantData] = useState<ABTestVariant>({});
   const [loading, setLoading] = useState(true);
-  const { getSessionId } = useSecureAnalytics();
+  const analytics = useSecureAnalytics();
 
   // Get user's assigned variant from secure server-side assignment
   const getSecureVariant = useCallback(async () => {
     try {
-      const sessionId = getSessionId();
+      const sessionId = getOrCreateSessionId();
       
       console.log(`Getting secure A/B test assignment for: ${testName}`);
 
@@ -39,7 +52,7 @@ export const useSecureABTest = (testName: string) => {
       console.error('Error in secure A/B test assignment:', error);
       return 'A'; // Default fallback
     }
-  }, [testName, getSessionId]);
+  }, [testName]);
 
   // Load test configuration and user assignment
   useEffect(() => {
@@ -93,6 +106,13 @@ export const useSecureABTest = (testName: string) => {
         console.error('Secure conversion error:', error);
       } else {
         console.log(`Secure A/B test conversion tracked for ${testName}, variant ${variant}`);
+        
+        // Track conversion via privacy-first analytics
+        analytics.trackConversion('ab_test_conversion', conversionValue, {
+          test_name: testName,
+          variant,
+          privacy_protected: true
+        });
       }
     } catch (error) {
       console.error('Error tracking secure A/B test conversion:', error);

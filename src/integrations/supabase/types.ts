@@ -517,6 +517,16 @@ export type Database = {
       }
     }
     Views: {
+      analytics_privacy_summary: {
+        Row: {
+          event_count: number | null
+          event_type: string | null
+          time_window: string | null
+          traffic_level: string | null
+          unique_sessions: number | null
+        }
+        Relationships: []
+      }
       secure_lead_metrics: {
         Row: {
           recent_count: number | null
@@ -645,6 +655,10 @@ export type Database = {
       l2_normalize: {
         Args: { "": string } | { "": unknown } | { "": unknown }
         Returns: string
+      }
+      log_analytics_access_attempt: {
+        Args: { access_type: string; success?: boolean; user_context?: string }
+        Returns: undefined
       }
       sparsevec_out: {
         Args: { "": unknown }
