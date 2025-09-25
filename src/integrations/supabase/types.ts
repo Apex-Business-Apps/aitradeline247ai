@@ -1266,6 +1266,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      secure_data_retention_cleanup: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       sparsevec_out: {
         Args: { "": unknown }
         Returns: unknown
