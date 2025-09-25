@@ -520,6 +520,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      anonymize_old_analytics_data: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
