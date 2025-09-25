@@ -41,7 +41,7 @@ export const HeroSection = () => {
         </p>
         
         {/* Enhanced CTA Section */}
-        <div className="space-y-4 animate-fade-in [animation-delay:600ms]">
+        <div className="space-y-4 mt-12 animate-fade-in [animation-delay:600ms]">
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
               size="lg" 
