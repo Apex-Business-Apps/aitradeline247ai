@@ -137,7 +137,7 @@ const RoiCalculator = () => {
                 <div className="bg-muted/50 p-3 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">Recovered appointments</span>
+                    <span className="font-medium text-foreground px-0 mx-0 text-xs">Recovered appointments</span>
                   </div>
                   <div className="text-2xl font-bold text-primary">
                     {Math.round(results.qualifiedAppts)}
