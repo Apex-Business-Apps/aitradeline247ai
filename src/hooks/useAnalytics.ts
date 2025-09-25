@@ -18,27 +18,26 @@ export const useAnalytics = () => {
     return sessionId;
   }, []);
 
-  // Track analytics event
+  // Track analytics event - use secure analytics function due to RLS policies
   const track = useCallback(async (event: AnalyticsEvent) => {
     try {
       const sessionId = getSessionId();
-      // Limit user agent data to reduce fingerprinting potential
-      const limitedUserAgent = navigator.userAgent.substring(0, 200);
       const pageUrl = event.page_url || window.location.href;
 
-      const { error } = await supabase.from('analytics_events').insert({
-        event_type: event.event_type,
-        event_data: event.event_data || {},
-        user_session: sessionId,
-        page_url: pageUrl,
-        user_agent: limitedUserAgent,
-        // IP anonymization is handled by the backend/edge functions
+      // Use secure analytics function that has proper permissions
+      const { error } = await supabase.functions.invoke('secure-analytics', {
+        body: {
+          event_type: event.event_type,
+          event_data: event.event_data || {},
+          user_session: sessionId,
+          page_url: pageUrl,
+        }
       });
 
       if (error) {
         console.error('Analytics tracking error:', error);
       } else {
-        console.log('Analytics event tracked:', event.event_type);
+        console.log('Analytics event tracked securely:', event.event_type);
       }
     } catch (error) {
       console.error('Analytics tracking failed:', error);

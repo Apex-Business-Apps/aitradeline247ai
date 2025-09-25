@@ -25,24 +25,24 @@ export const useABTest = (testName: string) => {
       const sessionId = getSessionId();
       
       // Check if user already has an assignment
-      const { data: existingAssignment } = await supabase
+      const { data: existingAssignment, error: assignmentError } = await supabase
         .from('ab_test_assignments')
         .select('variant')
         .eq('test_name', testName)
         .eq('user_session', sessionId)
-        .single();
+        .maybeSingle();
 
       if (existingAssignment) {
         return existingAssignment.variant;
       }
 
       // Get active test configuration
-      const { data: testConfig } = await supabase
+      const { data: testConfig, error: testError } = await supabase
         .from('ab_tests')
         .select('*')
         .eq('test_name', testName)
         .eq('active', true)
-        .single();
+        .maybeSingle();
 
       if (!testConfig) {
         console.log(`A/B Test ${testName} not found or inactive, defaulting to variant A`);
@@ -95,12 +95,12 @@ export const useABTest = (testName: string) => {
         setVariant(assignedVariant);
 
         // Get test configuration for variant data
-        const { data: testConfig } = await supabase
+        const { data: testConfig, error: configError } = await supabase
           .from('ab_tests')
           .select('variants')
           .eq('test_name', testName)
           .eq('active', true)
-          .single();
+          .maybeSingle();
 
         if (testConfig && testConfig.variants[assignedVariant]) {
           setVariantData(testConfig.variants[assignedVariant]);

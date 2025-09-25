@@ -35,7 +35,6 @@ export default function StartupSplash() {
           className="w-64 h-auto mx-auto mb-3 block animate-scale-in hover-scale transition-transform duration-300" 
           src="/assets/brand/TRADELEINE_ROBOT_V2.svg" 
           alt="TradeLine 24/7 logo"
-          fetchPriority="high"
           loading="eager"
         />
         <h1 className="text-3xl md:text-4xl font-bold mb-2 text-foreground bg-gradient-to-r from-brand-orange-primary to-brand-orange-light bg-clip-text text-transparent">
