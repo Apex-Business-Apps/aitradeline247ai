@@ -13,6 +13,7 @@ import { WebVitalsTracker } from "@/components/monitoring/WebVitalsTracker";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HelmetProvider } from 'react-helmet-async';
 import { useErrorTracking } from "@/hooks/useErrorTracking";
+import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
 import Index from "./pages/Index";
@@ -53,6 +54,7 @@ const AppWithMonitoring = () => {
     <>
       <SecurityHeaders />
       <EnhancedSecurityHeaders />
+      <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
       <Routes>
