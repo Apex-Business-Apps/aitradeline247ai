@@ -80,7 +80,7 @@ const RoiCalculator = () => {
   }, [calls, currentAnswer, conv, value, tlCapture]);
 
   return (
-    <Card className="w-full max-w-6xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+    <Card className="w-full max-w-4xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
       <CardHeader className="text-center pb-6">
         <CardTitle className="text-2xl md:text-3xl text-foreground mb-2">
           Calculate Your ROI
