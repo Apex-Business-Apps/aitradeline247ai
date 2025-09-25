@@ -1036,6 +1036,16 @@ export type Database = {
           total_leads: number
         }[]
       }
+      get_secure_lead_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          average_score: number
+          domain_diversity: number
+          recent_leads: number
+          security_events: number
+          total_leads: number
+        }[]
+      }
       get_secure_lead_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1043,6 +1053,14 @@ export type Database = {
           leads_today: number
           total_leads: number
           unique_domains: number
+        }[]
+      }
+      get_wallet_balance: {
+        Args: { p_org_id: string }
+        Returns: {
+          balance_cents: number
+          last_updated: string
+          org_id: string
         }[]
       }
       halfvec_avg: {
