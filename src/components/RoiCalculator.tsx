@@ -80,9 +80,9 @@ const RoiCalculator = () => {
   }, [calls, currentAnswer, conv, value, tlCapture]);
 
   return (
-    <Card className="w-full max-w-6xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
-      <CardHeader className="text-center pb-6">
-        <CardTitle className="text-2xl md:text-3xl text-foreground mb-2">
+    <Card className="w-full max-w-4xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="text-2xl md:text-3xl text-foreground mb-1">
           Calculate Your ROI
         </CardTitle>
         <p className="text-muted-foreground">
@@ -91,12 +91,12 @@ const RoiCalculator = () => {
       </CardHeader>
       
       <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Left Column: Inputs */}
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Your Business</h3>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-foreground mb-3">Your Business</h3>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
                 <Label htmlFor="calls" className="text-sm font-medium text-foreground">
                   Monthly inbound calls
@@ -107,7 +107,7 @@ const RoiCalculator = () => {
                   min="0"
                   value={calls}
                   onChange={(e) => setCalls(Number(e.target.value) || 0)}
-                  className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
@@ -122,7 +122,7 @@ const RoiCalculator = () => {
                   max="100"
                   value={currentAnswer}
                   onChange={(e) => setCurrentAnswer(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
-                  className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
@@ -137,7 +137,7 @@ const RoiCalculator = () => {
                   max="100"
                   value={conv}
                   onChange={(e) => setConv(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
-                  className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
@@ -151,7 +151,7 @@ const RoiCalculator = () => {
                   min="0"
                   value={value}
                   onChange={(e) => setValue(Number(e.target.value) || 0)}
-                  className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
@@ -166,23 +166,23 @@ const RoiCalculator = () => {
                   max="100"
                   value={tlCapture}
                   onChange={(e) => setTlCapture(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
-                  className="w-full mt-1 px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
             </div>
           </div>
 
           {/* Right Column: Results */}
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Your Results</h3>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-foreground mb-3">Your Results</h3>
             
             <div 
-              className="space-y-4"
+              className="space-y-3"
               aria-live="polite"
               aria-label="ROI calculation results"
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-muted/50 p-4 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-muted/50 p-3 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp className="h-4 w-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">Recovered appointments</span>
@@ -192,7 +192,7 @@ const RoiCalculator = () => {
                   </div>
                 </div>
 
-                <div className="bg-muted/50 p-4 rounded-lg">
+                <div className="bg-muted/50 p-3 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <DollarSign className="h-4 w-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">Projected revenue (CAD)</span>
@@ -203,7 +203,7 @@ const RoiCalculator = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-muted-foreground">Cost — Commission</span>
                   <span className="font-medium text-foreground">{cad.format(results.commissionCost)}</span>
@@ -229,7 +229,7 @@ const RoiCalculator = () => {
                 Best value this month: {results.bestPlan}
               </Badge>
 
-              <div className="space-y-3 pt-4">
+              <div className="space-y-2 pt-2">
                 <Button 
                   size="lg" 
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
