@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SecurityHeaders } from "@/components/security/SecurityHeaders";
 import { EnhancedSecurityHeaders } from "@/components/security/EnhancedSecurityHeaders";
 import { useSessionSecurity } from "@/hooks/useSessionSecurity";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -43,6 +44,9 @@ const AppWithMonitoring = () => {
   
   // Initialize session security monitoring
   useSessionSecurity();
+  
+  // Initialize performance optimization
+  const { measureRenderTime } = usePerformanceOptimization();
 
   return (
     <>
@@ -75,6 +79,7 @@ const AppWithMonitoring = () => {
     </>
   );
 };
+
 
 const App = () => (
   <HelmetProvider>

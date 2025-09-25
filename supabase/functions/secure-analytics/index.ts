@@ -28,11 +28,13 @@ serve(async (req) => {
     const signature = req.headers.get('x-signature');
     const origin = req.headers.get('origin') || '';
     
-    // Verify origin - only allow from our domain
+    // Enhanced origin verification for production and development
     const allowedOrigins = [
       /^https:\/\/(www\.)?tradeline247ai\.com$/i,
       /^http:\/\/localhost(:\d+)?$/i, // Allow localhost for development
-      /^https:\/\/.*\.lovableproject\.com$/i // Allow Lovable preview
+      /^https:\/\/.*\.lovableproject\.com$/i, // Allow Lovable preview
+      /^https:\/\/.*\.lovable\.app$/i, // Allow Lovable staging
+      /^https:\/\/id-preview.*\.lovable\.app$/i // Allow specific preview URLs
     ];
     
     const isAllowedOrigin = allowedOrigins.some(pattern => pattern.test(origin));

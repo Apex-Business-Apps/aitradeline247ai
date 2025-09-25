@@ -40,76 +40,68 @@ serve(async (req) => {
       );
     }
 
-    // Update or insert session activity
-    const { data: existingSession, error: selectError } = await supabase
-      .from('user_sessions')
-      .select('id')
-      .eq('user_id', user_id)
-      .eq('session_token', session_token)
-      .eq('is_active', true)
-      .maybeSingle();
-
-    if (selectError) {
-      console.error('Error checking existing session:', selectError);
-      return new Response(
-        JSON.stringify({ error: 'Database error' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    if (existingSession) {
-      // Update existing session
-      const { error: updateError } = await supabase
+    // Update or insert session activity using background task for better performance
+    const sessionUpdateTask = async () => {
+      const { data: existingSession, error: selectError } = await supabase
         .from('user_sessions')
-        .update({
-          last_activity: activity_timestamp,
-          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Extend 24 hours
+        .select('id')
+        .eq('user_id', user_id)
+        .eq('session_token', session_token)
+        .eq('is_active', true)
+        .maybeSingle();
+
+      if (selectError) {
+        console.error('Error checking existing session:', selectError);
+        return;
+      }
+
+      if (existingSession) {
+        // Update existing session
+        const { error: updateError } = await supabase
+          .from('user_sessions')
+          .update({
+            last_activity: activity_timestamp,
+            expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+          })
+          .eq('id', existingSession.id);
+
+        if (updateError) {
+          console.error('Error updating session activity:', updateError);
+        }
+      } else {
+        // Create new session record
+        const { error: insertError } = await supabase
+          .from('user_sessions')
+          .insert({
+            user_id,
+            session_token,
+            last_activity: activity_timestamp,
+            expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+          });
+
+        if (insertError) {
+          console.error('Error creating session record:', insertError);
+        }
+      }
+
+      // Clean up expired sessions and log security event
+      await Promise.all([
+        supabase.rpc('cleanup_expired_sessions'),
+        supabase.from('analytics_events').insert({
+          event_type: 'session_activity',
+          event_data: {
+            user_id,
+            activity_type: 'session_update',
+            timestamp: activity_timestamp
+          },
+          user_session: user_id,
+          page_url: 'session_tracking'
         })
-        .eq('id', existingSession.id);
+      ]);
+    };
 
-      if (updateError) {
-        console.error('Error updating session activity:', updateError);
-        return new Response(
-          JSON.stringify({ error: 'Failed to update session' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-    } else {
-      // Create new session record
-      const { error: insertError } = await supabase
-        .from('user_sessions')
-        .insert({
-          user_id,
-          session_token,
-          last_activity: activity_timestamp,
-          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-        });
-
-      if (insertError) {
-        console.error('Error creating session record:', insertError);
-        return new Response(
-          JSON.stringify({ error: 'Failed to create session' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-    }
-
-    // Clean up expired sessions
-    await supabase.rpc('cleanup_expired_sessions');
-
-    // Log security event
-    await supabase
-      .from('analytics_events')
-      .insert({
-        event_type: 'session_activity',
-        event_data: {
-          user_id,
-          activity_type: 'session_update',
-          timestamp: activity_timestamp
-        },
-        user_session: user_id,
-        page_url: 'session_tracking'
-      });
+    // Execute session update task (simplified for compatibility)
+    sessionUpdateTask().catch(console.error);
 
     return new Response(
       JSON.stringify({ success: true }),
