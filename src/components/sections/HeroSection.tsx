@@ -10,12 +10,12 @@ export const HeroSection = () => {
       {/* Soft background fade (reduced opacity further) */}
       <div className="absolute inset-0 bg-gradient-to-t from-background/12 via-transparent to-background/8"></div>
       {/* Saturated orange wash (top of background layers) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/50 via-brand-orange-light/35 to-brand-orange/25"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/25 via-brand-orange-light/20 to-brand-orange/15"></div>
       
       {/* Enhanced Glowing Orbs with Animation */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/40 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-brand-orange-light/28 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 right-1/6 w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/20 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-brand-orange-light/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      <div className="absolute top-1/2 right-1/6 w-64 h-64 bg-primary/10 rounded-full blur-2xl animate-pulse delay-500"></div>
       
       <div className="container relative z-10">
         {/* Hero Logo - Prominent with Enhanced Animation */}
