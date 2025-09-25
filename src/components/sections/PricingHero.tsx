@@ -6,8 +6,8 @@ export const PricingHero = () => {
         {/* Hero Content */}
         <div className="text-center mb-16">
           {/* Logo above hero text */}
-          <div className="flex justify-center mb-8 min-h-[8.75rem] md:min-h-[11.25rem] items-center">
-            <img src="/src/assets/official-logo.svg" alt="TradeLine 24/7 Logo" className="h-35 md:h-45 w-auto opacity-80" />
+          <div className="flex justify-center mb-8 min-h-[10.9375rem] md:min-h-[14.0625rem] items-center">
+            <img src="/src/assets/official-logo.svg" alt="TradeLine 24/7 Logo" className="h-[8.75rem] md:h-[11.25rem] w-auto opacity-80" />
           </div>
           
           <h1 id="hero-h1" className="text-4xl md:text-6xl mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-extrabold lg:text-7xl">
