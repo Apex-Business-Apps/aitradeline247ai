@@ -1,5 +1,5 @@
 import RoiCalculator from "@/components/RoiCalculator";
-import { LeadCaptureForm } from "@/components/sections/LeadCaptureForm";
+import { LeadCaptureCard } from "@/components/sections/LeadCaptureCard";
 
 export const PricingHero = () => {
   return (
@@ -20,7 +20,7 @@ export const PricingHero = () => {
               <RoiCalculator />
             </div>
             <div className="flex justify-center">
-              <LeadCaptureForm />
+              <LeadCaptureCard />
             </div>
           </div>
         </div>
