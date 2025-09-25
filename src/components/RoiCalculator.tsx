@@ -4,7 +4,6 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Clock, DollarSign } from 'lucide-react';
-
 const RoiCalculator = () => {
   // Input states with sane defaults
   const [calls, setCalls] = useState(120);
@@ -27,45 +26,42 @@ const RoiCalculator = () => {
   });
 
   // Currency formatter (en-CA)
-  const cad = new Intl.NumberFormat('en-CA', { 
-    style: 'currency', 
-    currency: 'CAD', 
-    maximumFractionDigits: 0 
+  const cad = new Intl.NumberFormat('en-CA', {
+    style: 'currency',
+    currency: 'CAD',
+    maximumFractionDigits: 0
   });
 
   // Calculations (with formulas in comments)
   useEffect(() => {
     // answeredNow = calls * (currentAnswer/100)
     const answeredNow = calls * (currentAnswer / 100);
-    
+
     // missedNow = calls - answeredNow
     const missedNow = calls - answeredNow;
-    
+
     // recoveredByTL = missedNow * (tlCapture/100)
     const recoveredByTL = missedNow * (tlCapture / 100);
-    
+
     // qualifiedAppts = recoveredByTL * (conv/100)
     const qualifiedAppts = recoveredByTL * (conv / 100);
-    
+
     // Commission cost = qualifiedAppts * 149
     const commissionCost = qualifiedAppts * 149;
-    
+
     // Monthly revenue gained = qualifiedAppts * value
     const monthlyRevenue = qualifiedAppts * value;
-    
+
     // ROI (Commission) = (revenue - commissionCost) / max(commissionCost,1)
     const roiCommission = (monthlyRevenue - commissionCost) / Math.max(commissionCost, 1);
-    
+
     // ROI (Predictable) = (revenue - 249) / 249
     const roiPredictable = (monthlyRevenue - 249) / 249;
 
     // Best value logic
     const netCommission = monthlyRevenue - commissionCost;
     const netPredictable = monthlyRevenue - 249;
-    const bestPlan = netCommission === netPredictable
-      ? "Predictable"
-      : (netCommission > netPredictable ? "Commission" : "Predictable");
-
+    const bestPlan = netCommission === netPredictable ? "Predictable" : netCommission > netPredictable ? "Commission" : "Predictable";
     setResults({
       answeredNow,
       missedNow,
@@ -78,9 +74,7 @@ const RoiCalculator = () => {
       bestPlan
     });
   }, [calls, currentAnswer, conv, value, tlCapture]);
-
-  return (
-    <Card className="w-full max-w-4xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+  return <Card className="w-full max-w-4xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-2xl md:text-3xl text-foreground mb-1">
           Calculate Your ROI
@@ -101,73 +95,35 @@ const RoiCalculator = () => {
                 <Label htmlFor="calls" className="text-sm font-medium text-foreground">
                   Monthly inbound calls
                 </Label>
-                <input
-                  id="calls"
-                  type="number"
-                  min="0"
-                  value={calls}
-                  onChange={(e) => setCalls(Number(e.target.value) || 0)}
-                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
+                <input id="calls" type="number" min="0" value={calls} onChange={e => setCalls(Number(e.target.value) || 0)} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
                 <Label htmlFor="currentAnswer" className="text-sm font-medium text-foreground">
                   Current answer rate (%)
                 </Label>
-                <input
-                  id="currentAnswer"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={currentAnswer}
-                  onChange={(e) => setCurrentAnswer(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
-                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
+                <input id="currentAnswer" type="number" min="0" max="100" value={currentAnswer} onChange={e => setCurrentAnswer(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
                 <Label htmlFor="conv" className="text-sm font-medium text-foreground">
                   Appointment conversion when answered (%)
                 </Label>
-                <input
-                  id="conv"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={conv}
-                  onChange={(e) => setConv(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
-                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
+                <input id="conv" type="number" min="0" max="100" value={conv} onChange={e => setConv(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
                 <Label htmlFor="value" className="text-sm font-medium text-foreground">
                   Avg revenue per appointment (CAD)
                 </Label>
-                <input
-                  id="value"
-                  type="number"
-                  min="0"
-                  value={value}
-                  onChange={(e) => setValue(Number(e.target.value) || 0)}
-                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
+                <input id="value" type="number" min="0" value={value} onChange={e => setValue(Number(e.target.value) || 0)} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
                 <Label htmlFor="tlCapture" className="text-sm font-medium text-foreground">
                   Our after-hours capture (%)
                 </Label>
-                <input
-                  id="tlCapture"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={tlCapture}
-                  onChange={(e) => setTlCapture(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
-                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
+                <input id="tlCapture" type="number" min="0" max="100" value={tlCapture} onChange={e => setTlCapture(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
             </div>
           </div>
@@ -176,11 +132,7 @@ const RoiCalculator = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground mb-3">Your Results</h3>
             
-            <div 
-              className="space-y-3"
-              aria-live="polite"
-              aria-label="ROI calculation results"
-            >
+            <div className="space-y-3" aria-live="polite" aria-label="ROI calculation results">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="bg-muted/50 p-3 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
@@ -230,20 +182,9 @@ const RoiCalculator = () => {
               </Badge>
 
               <div className="space-y-2 pt-2">
-                <Button 
-                  size="lg" 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                  onClick={() => window.location.href = '/signup?plan=commission'}
-                >
-                  Start Commission-Only
-                </Button>
+                <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => window.location.href = '/signup?plan=commission'}>Start Zero-Monthly</Button>
                 
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                  onClick={() => window.location.href = '/signup?plan=core'}
-                >
+                <Button size="lg" variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={() => window.location.href = '/signup?plan=core'}>
                   Choose Predictable
                 </Button>
               </div>
@@ -251,8 +192,6 @@ const RoiCalculator = () => {
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default RoiCalculator;
