@@ -957,6 +957,22 @@ export type Database = {
           },
         ]
       }
+      wallet_minimum_flags: {
+        Row: {
+          balance_cents: number | null
+          below_minimum: boolean | null
+          org_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_ledger_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       anonymize_old_analytics_data: {
@@ -978,6 +994,17 @@ export type Database = {
           notes_content: string
         }
         Returns: number
+      }
+      charge_commission: {
+        Args: {
+          p_amount_cents: number
+          p_call_id: string
+          p_call_sid: string
+          p_idempotency_key: string
+          p_org_id: string
+          p_rules: Json
+        }
+        Returns: string
       }
       cleanup_expired_rag_cache: {
         Args: Record<PropertyKey, never>
@@ -1085,6 +1112,22 @@ export type Database = {
         Args: { access_type: string; success?: boolean; user_context?: string }
         Returns: undefined
       }
+      post_wallet_entry: {
+        Args: {
+          p_amount_cents: number
+          p_idempotency_key: string
+          p_memo?: string
+          p_org_id: string
+          p_related_id: string
+          p_related_type: string
+          p_type: Database["public"]["Enums"]["ledger_entry_type"]
+        }
+        Returns: string
+      }
+      refresh_wallet_balances: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       sparsevec_out: {
         Args: { "": unknown }
         Returns: unknown
@@ -1120,6 +1163,16 @@ export type Database = {
       vector_typmod_in: {
         Args: { "": unknown[] }
         Returns: number
+      }
+      wallet_top_up: {
+        Args: {
+          p_amount_cents: number
+          p_idempotency_key: string
+          p_org_id: string
+          p_provider: string
+          p_provider_id: string
+        }
+        Returns: string
       }
     }
     Enums: {
