@@ -242,7 +242,7 @@ export const LeadCaptureForm = () => {
               </CardDescription>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="-mt-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
                 <Label htmlFor="lead-name">Your name *</Label>
