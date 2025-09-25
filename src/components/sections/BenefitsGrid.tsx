@@ -27,7 +27,7 @@ export const BenefitsGrid = () => {
       <div className="container">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            What makes us different
+            The TradeLine 24/7 Difference
           </h2>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed text-[#1e556b]">
             Three ways we keep your business moving
