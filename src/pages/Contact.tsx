@@ -23,8 +23,8 @@ const contactMethods = [
     icon: Phone, 
     title: "Call Us",
     description: "Speak with our team",
-    contact: "+1 (555) 247-0247",
-    action: "tel:+15552470247"
+    contact: "+15877428885",
+    action: "tel:+15877428885"
   },
   {
     icon: MessageCircle,
