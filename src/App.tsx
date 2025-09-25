@@ -1,6 +1,8 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { SecurityHeaders } from "@/components/security/SecurityHeaders";
+import { EnhancedSecurityHeaders } from "@/components/security/EnhancedSecurityHeaders";
+import { useSessionSecurity } from "@/hooks/useSessionSecurity";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -38,10 +40,14 @@ const queryClient = new QueryClient();
 const AppWithMonitoring = () => {
   // Initialize error tracking
   useErrorTracking();
+  
+  // Initialize session security monitoring
+  useSessionSecurity();
 
   return (
     <>
       <SecurityHeaders />
+      <EnhancedSecurityHeaders />
       <AnalyticsTracker />
       <WebVitalsTracker />
       <Routes>

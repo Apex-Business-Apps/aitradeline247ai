@@ -200,6 +200,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          is_active: boolean
+          last_activity: string
+          session_token: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          last_activity?: string
+          session_token: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          last_activity?: string
+          session_token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -212,6 +242,14 @@ export type Database = {
           notes_content: string
         }
         Returns: number
+      }
+      cleanup_expired_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_analytics_data: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
