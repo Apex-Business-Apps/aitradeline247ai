@@ -230,7 +230,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         </>
       )}
 
-      <Card className="max-w-lg mx-auto shadow-2xl border-0 bg-background/95 backdrop-blur-sm">
+      <Card className="w-full max-w-[480px] h-full mx-auto shadow-2xl border-0 bg-background/95 backdrop-blur-sm">
         <CardHeader className="text-center space-y-4">
           <div className="animate-fade-in">
             <CardTitle className="text-2xl flex items-center justify-center gap-2">
