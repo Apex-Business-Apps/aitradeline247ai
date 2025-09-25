@@ -517,6 +517,16 @@ export type Database = {
       }
     }
     Views: {
+      lead_security_dashboard: {
+        Row: {
+          activity_level: string | null
+          avg_lead_score: number | null
+          submission_count: number | null
+          time_period: string | null
+          unique_domains: number | null
+        }
+        Relationships: []
+      }
       lead_security_summary: {
         Row: {
           avg_score: number | null
@@ -563,6 +573,16 @@ export type Database = {
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
+      }
+      get_lead_security_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          average_score: number
+          domain_diversity: number
+          recent_leads: number
+          security_events: number
+          total_leads: number
+        }[]
       }
       get_secure_lead_stats: {
         Args: Record<PropertyKey, never>
