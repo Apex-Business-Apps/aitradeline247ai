@@ -20,7 +20,7 @@ export const PricingHero = () => {
               <RoiCalculator />
             </div>
             <div className="flex justify-center">
-              <LeadCaptureCard />
+              <LeadCaptureCard compact />
             </div>
           </div>
         </div>

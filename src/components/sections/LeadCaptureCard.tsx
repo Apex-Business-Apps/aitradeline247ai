@@ -43,7 +43,8 @@ interface LeadFormData {
   notes: string;
 }
 
-export const LeadCaptureCard = () => {
+interface LeadCaptureCardProps { compact?: boolean }
+export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState<LeadFormData>({
@@ -217,13 +218,17 @@ export const LeadCaptureCard = () => {
   }
 
   return (
-    <div className="text-center mb-8">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">
-        Tell us a bit about you
-      </h2>
-      <p className="text-lg mb-8 text-[#1e556b]">
-        Get started with your free trial today.
-      </p>
+    <div className={"text-center " + (compact ? "" : "mb-8") }>
+      {!compact && (
+        <>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Tell us a bit about you
+          </h2>
+          <p className="text-lg mb-8 text-[#1e556b]">
+            Get started with your free trial today.
+          </p>
+        </>
+      )}
 
       <Card className="max-w-lg mx-auto shadow-2xl border-0 bg-background/95 backdrop-blur-sm">
         <CardHeader className="text-center space-y-4">
