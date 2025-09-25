@@ -5,16 +5,8 @@ export const PricingHero = () => {
       <div className="container">
         {/* Hero Content */}
         <div className="text-center mb-16">
-          <h1 id="hero-h1" className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-            Your 24/7 A<span className="text-primary">i</span> Receptionist
-          </h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b] md:text-4xl">
-            Never miss a call. Work while you sleep.
-          </p>
-          
-          
-          {/* Logo above Help us help you */}
-          <div className="flex justify-center mt-[120px] mb-8">
+          {/* Logo above hero text */}
+          <div className="flex justify-center mb-8">
             <img 
               src="/src/assets/official-logo.svg" 
               alt="TradeLine 24/7 Logo" 
@@ -23,7 +15,14 @@ export const PricingHero = () => {
             />
           </div>
           
-          <h2 className="text-2xl font-semibold text-[#1e556b] mb-2 mt-0 text-center my-0 py-0 md:text-4xl">
+          <h1 id="hero-h1" className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+            Your 24/7 A<span className="text-primary">i</span> Receptionist
+          </h1>
+          <p className="text-xl mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b] md:text-4xl">
+            Never miss a call. Work while you sleep.
+          </p>
+          
+          <h2 className="text-2xl font-semibold text-[#1e556b] mb-2 mt-[120px] text-center my-0 py-0 md:text-4xl">
             Help us help you
           </h2>
           
