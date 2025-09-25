@@ -8,53 +8,32 @@ import { SEOHead } from "@/components/seo/SEOHead";
 
 const plans = [
   {
-    name: "Starter",
-    price: 49,
-    description: "Perfect for small businesses getting started",
+    name: "No Monthly. Pay per appointment.",
+    price: "$149 / Qualified Appointment",
+    description: "Pay only for results — no monthly fees",
     features: [
-      "Up to 100 calls/month",
-      "Basic AI responses",
-      "Email integration",
-      "Standard support",
-      "Call transcription",
-      "Basic analytics"
+      "Prepaid wallet: $200 minimum (auto-recharge)",
+      "Qualified = unique caller • >60s talk time • in service area • not duplicate (30d) • real intent",
+      "Transcript emailed every time"
     ],
-    cta: "Start Free Trial",
-    popular: false
+    cta: "Start with $200 wallet",
+    popular: false,
+    id: "no-monthly",
+    link: "/signup?plan=commission"
   },
   {
-    name: "Growth", 
-    price: 149,
-    description: "Ideal for growing businesses with higher volume",
+    name: "Predictable Plan — Core",
+    price: "$249 / month", 
+    description: "Fixed monthly pricing with transparent overages",
     features: [
-      "Up to 1,000 calls/month",
-      "Advanced AI capabilities",
-      "CRM integration",
-      "Priority support",
-      "Advanced analytics", 
-      "Custom workflows",
-      "WhatsApp integration",
-      "Multi-language support"
+      "Includes AI minutes & routed calls",
+      "Simple overage pricing",  
+      "Add-ons: bilingual, human fallback, CRM push"
     ],
-    cta: "Grow Now",
-    popular: true
-  },
-  {
-    name: "Enterprise",
-    price: 499,
-    description: "Custom solutions for large organizations",
-    features: [
-      "Unlimited calls",
-      "Custom AI training",
-      "Full API access",
-      "Dedicated support",
-      "Advanced security",
-      "Custom integrations",
-      "White-label options", 
-      "SLA guarantees"
-    ],
-    cta: "Contact Sales",
-    popular: false
+    cta: "Choose Core",
+    popular: true,
+    id: "monthly-core",
+    link: "/signup?plan=core"
   }
 ];
 
@@ -63,9 +42,49 @@ const Pricing = () => {
     <div className="min-h-screen flex flex-col">
       <SEOHead 
         title="Pricing - TradeLine 24/7 AI Receptionist Plans"
-        description="Simple, transparent pricing for 24/7 AI receptionist services. Starting at $49/month with 14-day free trial. Starter, Growth & Enterprise plans available."
-        keywords="AI receptionist pricing, business automation cost, 24/7 customer service plans, AI phone answering pricing"
+        description="Simple, transparent pricing for 24/7 AI receptionist services. Commission-only or $249/month plans. No setup fees. Edmonton, AB business."
+        keywords="AI receptionist pricing, business automation cost, 24/7 customer service plans, AI phone answering pricing, Edmonton business"
         canonical="https://www.tradeline247ai.com/pricing"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "TradeLine 24/7 AI Receptionist Service",
+          "description": "24/7 AI receptionist and customer service automation for businesses",
+          "brand": {
+            "@type": "Organization",
+            "name": "Apex Business Systems"
+          },
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "No Monthly. Pay per appointment.",
+              "price": "149",
+              "priceCurrency": "CAD",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "149",
+                "priceCurrency": "CAD",
+                "unitText": "per qualified appointment"
+              },
+              "description": "Pay only for results — no monthly fees",
+              "url": "https://www.tradeline247ai.com/signup?plan=commission"
+            },
+            {
+              "@type": "Offer", 
+              "name": "Predictable Plan — Core",
+              "price": "249",
+              "priceCurrency": "CAD",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "249",
+                "priceCurrency": "CAD",
+                "unitText": "per month"
+              },
+              "description": "Fixed monthly pricing with transparent overages",
+              "url": "https://www.tradeline247ai.com/signup?plan=core"
+            }
+          ]
+        }}
       />
       
       <Header />
@@ -86,9 +105,9 @@ const Pricing = () => {
         {/* Pricing Cards */}
         <section className="py-20">
           <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {plans.map((plan, index) => (
-                <Card key={index} className={`relative ${plan.popular ? 'ring-2 ring-primary shadow-xl scale-105' : ''}`}>
+                <Card key={index} id={plan.id} className={`relative ${plan.popular ? 'ring-2 ring-primary shadow-xl scale-105' : ''}`}>
                   {plan.popular && (
                     <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground">
                       <Star className="w-4 h-4 mr-1" />
@@ -101,15 +120,14 @@ const Pricing = () => {
                       {plan.description}
                     </CardDescription>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold">${plan.price}</span>
-                      <span className="text-muted-foreground">/month</span>
+                      <span className="text-4xl font-bold">{plan.price}</span>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <ul className="space-y-3">
                       {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-3">
-                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                        <li key={idx} className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                           <span className="text-sm">{feature}</span>
                         </li>
                       ))}
@@ -118,6 +136,7 @@ const Pricing = () => {
                       className="w-full" 
                       variant={plan.popular ? "default" : "outline"}
                       size="lg"
+                      onClick={() => window.location.href = plan.link}
                     >
                       {plan.cta}
                     </Button>

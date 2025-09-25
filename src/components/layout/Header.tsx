@@ -9,7 +9,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 const navigationItems = [
   { name: 'Features', href: '/features' },
-  { name: 'Pricing', href: '/pricing' },
+  { name: 'Pricing', href: '/pricing#no-monthly' },
   { name: 'FAQ', href: '/faq' },
   { name: 'Contact', href: '/contact' }
 ];
