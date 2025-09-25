@@ -219,7 +219,7 @@ export const LeadCaptureForm = () => {
         </div>
       </section>;
   }
-  return <section className="py-20 bg-gradient-to-br from-primary/10 to-accent/10">
+  return <section className="py-20 pb-32 bg-gradient-to-br from-primary/10 to-accent/10">
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
