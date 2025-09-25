@@ -524,6 +524,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      anonymize_old_leads: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
