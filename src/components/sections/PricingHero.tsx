@@ -12,7 +12,18 @@ export const PricingHero = () => {
             Never miss a call. Work while you sleep.
           </p>
           
-          <h2 className="text-2xl font-semibold text-[#1e556b] mb-2 mt-[76px] text-center my-0 py-0 md:text-4xl">
+          
+          {/* Logo above Help us help you */}
+          <div className="flex justify-center mt-[120px] mb-8">
+            <img 
+              src="/src/assets/official-logo.svg" 
+              alt="TradeLine 24/7 Logo" 
+              className="h-24 md:h-32 w-auto opacity-80"
+              style={{transform: 'scaleX(0.8)'}}
+            />
+          </div>
+          
+          <h2 className="text-2xl font-semibold text-[#1e556b] mb-2 mt-0 text-center my-0 py-0 md:text-4xl">
             Help us help you
           </h2>
           
