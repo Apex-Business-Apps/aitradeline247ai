@@ -73,15 +73,18 @@ export const EnhancedSecurityHeaders = () => {
 
     // Enhanced security monitoring
     const securityMonitor = () => {
-      // Monitor for console tampering
+      // Store original console reference to avoid recursion
+      const originalConsole = window.console;
       let consoleWarned = false;
-      Object.defineProperty(window, 'console', {
-        get() {
-          if (!consoleWarned) {
-            console.warn('🚨 Security Warning: Console access detected. This may indicate malicious activity.');
+      
+      // Monitor for console tampering without recursion
+      const consoleProxy = new Proxy(originalConsole, {
+        get(target, prop) {
+          if (!consoleWarned && typeof target[prop] === 'function') {
+            originalConsole.warn('🚨 Security Warning: Console access detected. This may indicate malicious activity.');
             consoleWarned = true;
           }
-          return console;
+          return target[prop];
         }
       });
 
