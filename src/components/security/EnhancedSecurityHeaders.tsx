@@ -73,20 +73,27 @@ export const EnhancedSecurityHeaders = () => {
 
     // Enhanced security monitoring
     const securityMonitor = () => {
-      // Store original console reference to avoid recursion
-      const originalConsole = window.console;
-      let consoleWarned = false;
+      // Simple console access detection without proxying to avoid recursion
+      let consoleAccessDetected = false;
       
-      // Monitor for console tampering without recursion
-      const consoleProxy = new Proxy(originalConsole, {
-        get(target, prop) {
-          if (!consoleWarned && typeof target[prop] === 'function') {
-            originalConsole.warn('🚨 Security Warning: Console access detected. This may indicate malicious activity.');
-            consoleWarned = true;
-          }
-          return target[prop];
+      const detectConsoleAccess = () => {
+        if (!consoleAccessDetected) {
+          console.warn('🚨 Security Warning: Console access detected. This may indicate malicious activity.');
+          consoleAccessDetected = true;
         }
-      });
+      };
+      
+      // Monitor for developer tools opening (simplified approach)
+      const checkDevTools = () => {
+        const widthThreshold = window.outerWidth - window.innerWidth > 200;
+        const heightThreshold = window.outerHeight - window.innerHeight > 200;
+        
+        if ((widthThreshold || heightThreshold) && !consoleAccessDetected) {
+          detectConsoleAccess();
+        }
+      };
+      
+      const devToolsInterval = setInterval(checkDevTools, 1000);
 
       // Monitor for XSS attempts
       const observer = new MutationObserver((mutations) => {
@@ -108,7 +115,10 @@ export const EnhancedSecurityHeaders = () => {
         subtree: true
       });
 
-      return () => observer.disconnect();
+      return () => {
+        clearInterval(devToolsInterval);
+        observer.disconnect();
+      };
     };
 
     const cleanupMonitor = securityMonitor();
