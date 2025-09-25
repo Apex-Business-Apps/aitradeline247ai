@@ -302,19 +302,18 @@ const Contact = () => {
                 </div>
 
                 <div className="mt-8 p-6 bg-muted/30 rounded-lg">
-                  <h3 className="font-semibold mb-3">Office Hours</h3>
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <div className="flex justify-between">
-                      <span>Monday - Friday:</span>
-                      <span>9:00 AM - 6:00 PM EST</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Saturday:</span>
-                      <span>10:00 AM - 4:00 PM EST</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Sunday:</span>
-                      <span>Closed (AI Support Only)</span>
+                  <div data-guard="canada-badge" className="flex items-start gap-3">
+                    <img
+                      src="/assets/brand/badges/built-in-canada.svg"
+                      width="24"
+                      height="24"
+                      alt="Built in Canada"
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <h3 className="font-semibold">Built in Canada</h3>
+                      <p className="opacity-80">CanAdian-hosted. Privacy-by-design.</p>
+                      <p className="opacity-80">Made here. Trusted here.</p>
                     </div>
                   </div>
                 </div>
