@@ -32,24 +32,13 @@ export const PricingHero = () => {
         <div className="text-center mb-16">
           {/* Hero Logo */}
           <div className="mb-2">
-            <img 
-              src={officialLogo} 
-              alt="TradeLine AI - 24/7 AI Receptionist" 
-              className="h-48 md:h-[18.15rem] lg:h-[21.78rem] w-[46.2rem] md:w-[69.875rem] lg:w-[83.85rem] mx-auto drop-shadow-2xl -mt-12"
-              width="420"
-              height="120"
-            />
+            <img src={officialLogo} alt="TradeLine AI - 24/7 AI Receptionist" className="h-48 md:h-[18.15rem] lg:h-[21.78rem] w-[46.2rem] md:w-[69.875rem] lg:w-[83.85rem] mx-auto drop-shadow-2xl -mt-12" width="420" height="120" />
           </div>
           
-          <h1 
-            id="hero-h1"
-            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent"
-          >
+          <h1 id="hero-h1" className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
             Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b]">
-            Never miss a call. Our intelligent receptionist handles calls, schedules appointments, and qualifies prospects around the clock.
-          </p>
+          <p className="text-xl mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b] md:text-xl">Never miss a call. Our 24/7 Ai Receptionists answers calls, books jobs, and organizes your business so you can work while you sleep.</p>
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-12 py-6 rounded-full shadow-2xl hover:shadow-primary/25 transition-all duration-300 transform hover:scale-105 mb-2">
             Start Free Trial
           </Button>
