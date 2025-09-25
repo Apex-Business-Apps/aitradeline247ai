@@ -188,6 +188,121 @@ export type Database = {
         }
         Relationships: []
       }
+      commission_charges: {
+        Row: {
+          amount_cents: number
+          call_id: string | null
+          call_sid: string | null
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
+          id: string
+          idempotency_key: string | null
+          invoice_id: string | null
+          ledger_entry_id: string | null
+          org_id: string
+          qualified: boolean
+          rules_snapshot: Json
+        }
+        Insert: {
+          amount_cents: number
+          call_id?: string | null
+          call_sid?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          idempotency_key?: string | null
+          invoice_id?: string | null
+          ledger_entry_id?: string | null
+          org_id: string
+          qualified?: boolean
+          rules_snapshot?: Json
+        }
+        Update: {
+          amount_cents?: number
+          call_id?: string | null
+          call_sid?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          idempotency_key?: string | null
+          invoice_id?: string | null
+          ledger_entry_id?: string | null
+          org_id?: string
+          qualified?: boolean
+          rules_snapshot?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_charges_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_charges_ledger_entry_id_fkey"
+            columns: ["ledger_entry_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_ledger"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_charges_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commission_disputes: {
+        Row: {
+          charge_id: string
+          created_at: string
+          decided_at: string | null
+          decision_memo: string | null
+          id: string
+          org_id: string
+          reason: string
+          status: string
+        }
+        Insert: {
+          charge_id: string
+          created_at?: string
+          decided_at?: string | null
+          decision_memo?: string | null
+          id?: string
+          org_id: string
+          reason: string
+          status?: string
+        }
+        Update: {
+          charge_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decision_memo?: string | null
+          id?: string
+          org_id?: string
+          reason?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_disputes_charge_id_fkey"
+            columns: ["charge_id"]
+            isOneToOne: false
+            referencedRelation: "commission_charges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_disputes_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consent_records: {
         Row: {
           consent_given: boolean
@@ -229,6 +344,68 @@ export type Database = {
           withdraw_timestamp?: string | null
         }
         Relationships: []
+      }
+      invoices: {
+        Row: {
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
+          id: string
+          meta: Json
+          number: string | null
+          org_id: string
+          period_end: string | null
+          period_start: string | null
+          provider: string | null
+          provider_id: string | null
+          status: Database["public"]["Enums"]["invoice_status"]
+          subtotal_cents: number
+          tax_cents: number
+          total_cents: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          meta?: Json
+          number?: string | null
+          org_id: string
+          period_end?: string | null
+          period_start?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal_cents?: number
+          tax_cents?: number
+          total_cents?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          meta?: Json
+          number?: string | null
+          org_id?: string
+          period_end?: string | null
+          period_start?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal_cents?: number
+          tax_cents?: number
+          total_cents?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       kb_documents: {
         Row: {
@@ -368,12 +545,140 @@ export type Database = {
         }
         Relationships: []
       }
+      organizations: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      outbox_messages: {
+        Row: {
+          attempts: number
+          body_html: string | null
+          body_text: string | null
+          created_at: string
+          id: string
+          kind: string
+          last_error: string | null
+          org_id: string
+          sent_at: string | null
+          status: string
+          subject: string
+          to_email: string
+        }
+        Insert: {
+          attempts?: number
+          body_html?: string | null
+          body_text?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          last_error?: string | null
+          org_id: string
+          sent_at?: string | null
+          status?: string
+          subject: string
+          to_email: string
+        }
+        Update: {
+          attempts?: number
+          body_html?: string | null
+          body_text?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          last_error?: string | null
+          org_id?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          to_email?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outbox_messages_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_intents: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
+          id: string
+          idempotency_key: string | null
+          intent_type: Database["public"]["Enums"]["txn_type"]
+          metadata: Json
+          org_id: string
+          provider: string | null
+          provider_id: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          idempotency_key?: string | null
+          intent_type: Database["public"]["Enums"]["txn_type"]
+          metadata?: Json
+          org_id: string
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          idempotency_key?: string | null
+          intent_type?: Database["public"]["Enums"]["txn_type"]
+          metadata?: Json
+          org_id?: string
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_intents_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
           display_name: string | null
           id: string
+          organization_id: string | null
           updated_at: string
           user_id: string
         }
@@ -382,6 +687,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          organization_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -390,10 +696,19 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          organization_id?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rag_cache: {
         Row: {
@@ -515,6 +830,97 @@ export type Database = {
         }
         Relationships: []
       }
+      wallet_ledger: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          created_by: string | null
+          currency: Database["public"]["Enums"]["currency_code"]
+          entry_type: Database["public"]["Enums"]["ledger_entry_type"]
+          id: string
+          idempotency_key: string | null
+          memo: string | null
+          org_id: string
+          related_id: string | null
+          related_type: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          created_by?: string | null
+          currency?: Database["public"]["Enums"]["currency_code"]
+          entry_type: Database["public"]["Enums"]["ledger_entry_type"]
+          id?: string
+          idempotency_key?: string | null
+          memo?: string | null
+          org_id: string
+          related_id?: string | null
+          related_type?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: Database["public"]["Enums"]["currency_code"]
+          entry_type?: Database["public"]["Enums"]["ledger_entry_type"]
+          id?: string
+          idempotency_key?: string | null
+          memo?: string | null
+          org_id?: string
+          related_id?: string | null
+          related_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_ledger_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhook_events: {
+        Row: {
+          dedupe_key: string | null
+          event_type: string
+          id: string
+          org_id: string | null
+          payload: Json
+          processed_at: string | null
+          provider: string
+          received_at: string
+        }
+        Insert: {
+          dedupe_key?: string | null
+          event_type: string
+          id?: string
+          org_id?: string | null
+          payload: Json
+          processed_at?: string | null
+          provider: string
+          received_at?: string
+        }
+        Update: {
+          dedupe_key?: string | null
+          event_type?: string
+          id?: string
+          org_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          provider?: string
+          received_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_events_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       analytics_privacy_summary: {
@@ -535,6 +941,21 @@ export type Database = {
           weekly_count: number | null
         }
         Relationships: []
+      }
+      wallet_balances: {
+        Row: {
+          balance_cents: number | null
+          org_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_ledger_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
@@ -699,6 +1120,32 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      currency_code: "CAD"
+      invoice_status:
+        | "draft"
+        | "open"
+        | "paid"
+        | "uncollectible"
+        | "void"
+        | "refunded"
+      ledger_entry_type:
+        | "top_up"
+        | "authorization"
+        | "capture"
+        | "refund"
+        | "adjustment"
+      payment_status:
+        | "requires_payment"
+        | "processing"
+        | "succeeded"
+        | "canceled"
+        | "requires_action"
+        | "failed"
+      txn_type:
+        | "wallet_top_up"
+        | "commission_charge"
+        | "subscription_invoice"
+        | "refund"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -827,6 +1274,36 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      currency_code: ["CAD"],
+      invoice_status: [
+        "draft",
+        "open",
+        "paid",
+        "uncollectible",
+        "void",
+        "refunded",
+      ],
+      ledger_entry_type: [
+        "top_up",
+        "authorization",
+        "capture",
+        "refund",
+        "adjustment",
+      ],
+      payment_status: [
+        "requires_payment",
+        "processing",
+        "succeeded",
+        "canceled",
+        "requires_action",
+        "failed",
+      ],
+      txn_type: [
+        "wallet_top_up",
+        "commission_charge",
+        "subscription_invoice",
+        "refund",
+      ],
     },
   },
 } as const
