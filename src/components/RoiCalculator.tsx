@@ -80,12 +80,12 @@ const RoiCalculator = () => {
   }, [calls, currentAnswer, conv, value, tlCapture]);
 
   return (
-    <Card className="w-full max-w-4xl mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
-      <CardHeader className="text-center pb-6">
-        <CardTitle className="text-2xl md:text-3xl text-foreground mb-2">
+    <Card className="w-full max-w-4xl mx-auto bg-card border shadow-xl">
+      <CardHeader className="text-center pb-8">
+        <CardTitle className="text-2xl md:text-3xl text-foreground mb-3">
           Calculate Your ROI
         </CardTitle>
-        <p className="text-muted-foreground">
+        <p className="text-lg text-muted-foreground">
           See how much revenue you could recover with TradeLine 24/7
         </p>
       </CardHeader>

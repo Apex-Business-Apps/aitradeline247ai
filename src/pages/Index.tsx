@@ -20,106 +20,90 @@ const Index = () => {
   }, [trackPageView]);
 
   return (
-    <div className="min-h-screen flex flex-col relative">
-      {/* Background Image Layer */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: 'var(--bg-pattern-1)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+    <div className="min-h-screen flex flex-col bg-background">
+      <SEOHead 
+        title="TradeLine 24/7 — Your 24/7 AI Receptionist!"
+        description="Transform your business with fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
+        keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
+        canonical="https://www.tradeline247ai.com"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "TradeLine 24/7",
+          "alternateName": "Apex Business Systems",
+          "description": "Fast and reliable 24/7 customer service and receptionist solutions for businesses",
+          "url": "https://www.tradeline247ai.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.tradeline247ai.com/pwa-512x512.png",
+            "width": 512,
+            "height": 512
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "telephone": "+1-587-742-8885",
+            "email": "info@tradeline247ai.com",
+            "availableLanguage": ["English"],
+            "hoursAvailable": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "opens": "00:00",
+              "closes": "23:59"
+            }
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Edmonton",
+            "addressRegion": "AB",
+            "addressCountry": "Canada"
+          },
+          "sameAs": [],
+          "foundingDate": "2024",
+          "keywords": "AI receptionist, customer service automation, business phone answering, lead capture, CRM integration",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Canada"
+          },
+          "serviceType": "AI Customer Service Solutions",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.tradeline247ai.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
         }}
       />
+      <OrganizationSchema />
       
-      {/* Content with translucency */}
-      <div className="relative z-10">
-        <SEOHead 
-          title="TradeLine 24/7 — Your 24/7 AI Receptionist!"
-          description="Transform your business with fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
-          keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
-          canonical="https://www.tradeline247ai.com"
-          structuredData={{
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "TradeLine 24/7",
-            "alternateName": "Apex Business Systems",
-            "description": "Fast and reliable 24/7 customer service and receptionist solutions for businesses",
-            "url": "https://www.tradeline247ai.com",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://www.tradeline247ai.com/pwa-512x512.png",
-              "width": 512,
-              "height": 512
-            },
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "contactType": "customer service",
-              "telephone": "+1-587-742-8885",
-              "email": "info@tradeline247ai.com",
-              "availableLanguage": ["English"],
-              "hoursAvailable": {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                "opens": "00:00",
-                "closes": "23:59"
-              }
-            },
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Edmonton",
-              "addressRegion": "AB",
-              "addressCountry": "Canada"
-            },
-            "sameAs": [],
-            "foundingDate": "2024",
-            "keywords": "AI receptionist, customer service automation, business phone answering, lead capture, CRM integration",
-            "areaServed": {
-              "@type": "Country",
-              "name": "Canada"
-            },
-            "serviceType": "AI Customer Service Solutions",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://www.tradeline247ai.com/search?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          }}
-        />
-        <OrganizationSchema />
+      <Header />
+      
+      <main className="flex-1">
+        <PricingHero />
         
-        <div className="backdrop-blur-sm bg-background/80">
-          <Header />
+        <div className="py-16">
+          <BenefitsGrid />
         </div>
         
-        <main className="flex-1">
-          <div className="backdrop-blur-sm bg-background/75">
-            <PricingHero />
-          </div>
-          <div className="backdrop-blur-sm bg-background/75">
-            <BenefitsGrid />
-          </div>
-        <div className="backdrop-blur-sm bg-background/70">
+        <div className="py-8 bg-muted/30">
           <ImpactStrip />
         </div>
-        <div className="backdrop-blur-sm bg-background/70">
+        
+        <div className="py-16">
           <HowItWorks />
         </div>
-        <div className="backdrop-blur-sm bg-background/75">
+        
+        <div className="py-16 bg-muted/20">
           <LeadCaptureForm />
-          </div>
-        </main>
-        
-        <div className="backdrop-blur-sm bg-background/70">
-          <TrustBadgesSlim />
         </div>
-        
-        <div className="backdrop-blur-sm bg-background/80">
-          <Footer />
-        </div>
-        
-        <NoAIHypeFooter />
+      </main>
+      
+      <div className="py-8">
+        <TrustBadgesSlim />
       </div>
+      
+      <Footer />
+      
+      <NoAIHypeFooter />
       
       {/* TL247 MiniBot — Accessible Chat Dialog */}
       <button id="chat-launcher" type="button"
