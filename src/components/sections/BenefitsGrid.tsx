@@ -23,18 +23,18 @@ export const BenefitsGrid = () => {
   }];
 
   return (
-    <section className="py-24 bg-muted/30">
+    <section className="py-16 bg-muted/30">
       <div className="container">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+        <div className="text-center mb-12 animate-fade-in">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
             The TradeLine 24/7 Difference
           </h2>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed text-[#1e556b]">
+          <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-[#1e556b]">
             Three ways we keep your business moving
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
@@ -43,16 +43,16 @@ export const BenefitsGrid = () => {
                 className={`group border-border bg-card/80 backdrop-blur-sm hover:bg-card transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover-scale cursor-pointer animate-fade-in`}
                 style={{ animationDelay: `${index * 200}ms` }}
               >
-                <CardHeader className="text-center pb-6">
-                  <div className={`mx-auto w-20 h-20 bg-gradient-to-br ${benefit.gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-lg group-hover:shadow-current/20 transition-all duration-300 hover-scale`}>
-                    <Icon className={`h-10 w-10 ${benefit.color} transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`} />
+                <CardHeader className="text-center pb-4">
+                  <div className={`mx-auto w-16 h-16 bg-gradient-to-br ${benefit.gradient} rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-lg group-hover:shadow-current/20 transition-all duration-300 hover-scale`}>
+                    <Icon className={`h-8 w-8 ${benefit.color} transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`} />
                   </div>
-                  <CardTitle className="text-2xl text-card-foreground mb-3 group-hover:text-primary transition-colors duration-300">
+                  <CardTitle className="text-xl text-card-foreground mb-2 group-hover:text-primary transition-colors duration-300">
                     {benefit.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <CardDescription className="text-center leading-relaxed text-lg text-[#1e556b] group-hover:text-foreground transition-colors duration-300">
+                  <CardDescription className="text-center leading-relaxed text-base text-[#1e556b] group-hover:text-foreground transition-colors duration-300">
                     {benefit.description}
                   </CardDescription>
                 </CardContent>
