@@ -32,13 +32,6 @@ const contactMethods = [
     description: "Chat with support",
     contact: "Available 24/7",
     action: "#"
-  },
-  {
-    icon: MapPin,
-    title: "Visit Us", 
-    description: "Our headquarters",
-    contact: "Edmonton, AB, Canada",
-    action: "#"
   }
 ];
 
@@ -132,7 +125,7 @@ const Contact = () => {
         {/* Contact Methods */}
         <section className="py-20">
           <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
               {contactMethods.map((method, index) => (
                 <Card key={index} className="text-center hover:shadow-lg transition-shadow group">
                   <CardHeader>
