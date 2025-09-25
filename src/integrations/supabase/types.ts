@@ -923,34 +923,9 @@ export type Database = {
       }
     }
     Views: {
-      secure_lead_metrics: {
-        Row: {
-          recent_count: number | null
-          report_type: string | null
-          total_count: number | null
-          weekly_count: number | null
-        }
-        Relationships: []
-      }
       wallet_balances: {
         Row: {
           balance_cents: number | null
-          org_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "wallet_ledger_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      wallet_minimum_flags: {
-        Row: {
-          balance_cents: number | null
-          below_minimum: boolean | null
           org_id: string | null
         }
         Relationships: [
@@ -1055,11 +1030,28 @@ export type Database = {
           unique_domains: number
         }[]
       }
+      get_security_status: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          component: string
+          details: Json
+          last_check: string
+          status: string
+        }[]
+      }
       get_wallet_balance: {
         Args: { p_org_id: string }
         Returns: {
           balance_cents: number
           last_updated: string
+          org_id: string
+        }[]
+      }
+      get_wallet_minimum_flags: {
+        Args: { p_org_id?: string }
+        Returns: {
+          balance_cents: number
+          below_minimum: boolean
           org_id: string
         }[]
       }
