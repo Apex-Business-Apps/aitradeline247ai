@@ -345,6 +345,45 @@ export type Database = {
         }
         Relationships: []
       }
+      encrypted_session_tokens: {
+        Row: {
+          created_at: string
+          device_fingerprint: string | null
+          encrypted_token: string
+          expires_at: string
+          id: string
+          ip_address_hash: string | null
+          is_revoked: boolean
+          last_used: string
+          token_hash: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint?: string | null
+          encrypted_token: string
+          expires_at?: string
+          id?: string
+          ip_address_hash?: string | null
+          is_revoked?: boolean
+          last_used?: string
+          token_hash: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string | null
+          encrypted_token?: string
+          expires_at?: string
+          id?: string
+          ip_address_hash?: string | null
+          is_revoked?: boolean
+          last_used?: string
+          token_hash?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       invoices: {
         Row: {
           created_at: string
@@ -983,6 +1022,15 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      create_encrypted_session_token: {
+        Args: {
+          p_device_fingerprint?: string
+          p_ip_address?: string
+          p_raw_token: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       current_org_id: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -1148,6 +1196,17 @@ export type Database = {
           p_user_session?: string
         }
         Returns: undefined
+      }
+      safe_analytics_insert_with_circuit_breaker: {
+        Args: {
+          p_event_data?: Json
+          p_event_type: string
+          p_ip_address?: string
+          p_page_url?: string
+          p_user_agent?: string
+          p_user_session?: string
+        }
+        Returns: string
       }
       safe_refresh_wallet_balances: {
         Args: Record<PropertyKey, never>

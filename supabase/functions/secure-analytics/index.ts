@@ -121,14 +121,35 @@ serve(async (req) => {
       return new Response('Rate limit exceeded', { status: 429, headers: corsHeaders });
     }
 
-    // Insert sanitized event
-    const { error } = await supabase
-      .from('analytics_events')
-      .insert(sanitizedEvent);
+    // Get the real IP from headers (CF-Connecting-IP for Cloudflare, X-Forwarded-For for others)
+    const headers = req.headers;
+    const clientIP = headers.get('cf-connecting-ip') || 
+                    headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+                    headers.get('x-real-ip') || 
+                    null;
 
-    if (error) {
-      console.error('Analytics insert error:', error);
-      return new Response('Error saving event', { status: 500, headers: corsHeaders });
+    // Use the new safe analytics insertion function to prevent recursion
+    const { data: insertResult, error: insertError } = await supabase
+      .rpc('safe_analytics_insert_with_circuit_breaker', {
+        p_event_type: sanitizedEvent.event_type,
+        p_event_data: sanitizedEvent.event_data,
+        p_user_session: sanitizedEvent.user_session,
+        p_page_url: sanitizedEvent.page_url,
+        p_ip_address: clientIP,
+        p_user_agent: sanitizedEvent.user_agent
+      });
+
+    if (insertError) {
+      console.error('Analytics insert error:', insertError);
+      return new Response(JSON.stringify({ error: 'Database error' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // If insertResult is null, it means the circuit breaker prevented insertion (recursion detected)
+    if (insertResult === null) {
+      console.warn('Analytics insertion prevented by circuit breaker - recursion detected');
     }
 
     console.log(`Analytics event tracked: ${sanitizedEvent.event_type}`);
