@@ -11,7 +11,7 @@ export const PricingHero = () => {
               src="/src/assets/official-logo.svg" 
               alt="TradeLine 24/7 Logo" 
               className="h-32 md:h-44 w-auto opacity-80"
-              style={{transform: 'scaleX(0.8)'}}
+              style={{transform: 'scaleX(0.96)'}}
             />
           </div>
           
