@@ -517,7 +517,15 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      lead_security_summary: {
+        Row: {
+          avg_score: number | null
+          daily_submissions: number | null
+          date: string | null
+          unique_domains: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       anonymize_old_analytics_data: {
@@ -555,6 +563,15 @@ export type Database = {
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
+      }
+      get_secure_lead_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          avg_score: number
+          leads_today: number
+          total_leads: number
+          unique_domains: number
+        }[]
       }
       halfvec_avg: {
         Args: { "": number[] }
