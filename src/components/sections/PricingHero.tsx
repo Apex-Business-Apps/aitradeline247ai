@@ -12,12 +12,12 @@ export const PricingHero = () => {
             Never miss a call. Work while you sleep.
           </p>
           
-          <h2 className="text-2xl md:text-3xl font-semibold text-[#1e556b] mb-6 mt-20 text-center">
+          <h2 className="text-2xl md:text-3xl font-semibold text-[#1e556b] mb-6 mt-10 text-center">
             Help us help you
           </h2>
           
           {/* Two-column layout for calculator and questionnaire */}
-          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-start max-w-7xl mx-auto mt-[160px]">
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-start max-w-7xl mx-auto mt-[120px]">
             <div className="flex justify-center">
               <RoiCalculator />
             </div>
