@@ -147,7 +147,7 @@ export const LeadCaptureForm = () => {
       setIsSuccess(true);
       toast({
         title: "🚀 Welcome to TradeLine 24/7!",
-        description: "We've sent you an email with next steps. Our team will contact you within 2 hours."
+        description: "Thanks—check your email. We'll follow up within 2 hours."
       });
 
       // Reset form after success
@@ -169,7 +169,7 @@ export const LeadCaptureForm = () => {
       });
       toast({
         title: "Oops! Something went wrong",
-        description: error.message || "Please try again or contact us directly at info@tradeline247ai.com",
+        description: "Something went wrong. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -312,10 +312,7 @@ export const LeadCaptureForm = () => {
                     className="mt-1 rounded border-gray-300 text-primary focus:ring-primary transition-all duration-200"
                   />
                   <span>
-                    I agree to get emails about setup and updates. Unsubscribe anytime.
-                    By submitting, you agree to our{" "}
-                    <a href="/terms" className="text-primary hover:underline story-link">Terms of Service</a> and{" "}
-                    <a href="/privacy" className="text-primary hover:underline story-link">Privacy Policy</a>.
+                I agree to get emails about setup and updates. Unsubscribe anytime.
                   </span>
                 </label>
               </div>
