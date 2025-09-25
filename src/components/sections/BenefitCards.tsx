@@ -16,8 +16,7 @@ export const BenefitCards = () => {
         <div className="max-w-4xl mx-auto">
           <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
             <VideoPlayer
-              src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-              poster="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=450&fit=crop"
+              src="/assets/TradeLine247_Teaser.mp4"
               title="TradeLine 24/7 Demo"
               className="w-full aspect-video"
             />
