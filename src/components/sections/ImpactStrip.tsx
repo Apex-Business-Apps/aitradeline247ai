@@ -1,5 +1,6 @@
 import { TrendingUp, Clock, DollarSign } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { VideoPlayer } from "@/components/ui/VideoPlayer";
 
 export const ImpactStrip = () => {
   const impacts = [{
@@ -26,6 +27,16 @@ export const ImpactStrip = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             What changes when no call is missed
           </h2>
+        </div>
+        
+        <div className="max-w-4xl mx-auto mb-16">
+          <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+            <VideoPlayer
+              src="/assets/TradeLine247_Teaser.mp4"
+              title="TradeLine 24/7 Demo"
+              className="w-full aspect-video"
+            />
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
