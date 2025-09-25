@@ -34,6 +34,7 @@ import MobileIntegration from "./pages/integrations/MobileIntegration";
 import AutomationIntegration from "./pages/integrations/AutomationIntegration";
 import ComponentShowcase from "./pages/ComponentShowcase";
 import CallCenter from "./pages/CallCenter";
+import AdminKB from "./pages/AdminKB";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const AppWithMonitoring = () => {
         <Route path="/dashboard/integrations/automation" element={<main id="main"><AutomationIntegration /></main>} />
         <Route path="/call-center" element={<main id="main"><CallCenter /></main>} />
         <Route path="/components" element={<main id="main"><ComponentShowcase /></main>} />
+        <Route path="/admin/kb" element={<main id="main"><AdminKB /></main>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>
