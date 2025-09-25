@@ -19,7 +19,7 @@ export const HeroSection = () => {
       
       <div className="container relative z-10">
         {/* Hero Logo - Prominent with Enhanced Animation */}
-        <div className="mb-2 -mt-[1.5cm] animate-fade-in">
+        <div className="mt-6 mb-6 animate-fade-in">
           <img 
             src={officialLogo} 
             alt="TradeLine AI - 24/7 AI Receptionist" 

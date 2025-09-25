@@ -16,10 +16,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    sourcemap: mode === "development",
     rollupOptions: {
       output: {
-        // Security: Remove source maps in production
-        sourcemap: mode === "development",
       },
     },
   },
