@@ -12,7 +12,7 @@ export const PricingHero = () => {
             Never miss a call. Work while you sleep.
           </p>
           
-          <h2 className="text-2xl font-semibold text-[#1e556b] mb-6 mt-[52px] text-center md:text-3xl">
+          <h2 className="text-2xl font-semibold text-[#1e556b] mb-6 mt-[52px] text-center my-0 py-0 md:text-4xl">
             Help us help you
           </h2>
           
