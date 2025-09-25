@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { PricingHero } from "@/components/sections/PricingHero";
+import { HeroSection } from "@/components/sections/HeroSection";
 import { TrustBadgesSlim } from "@/components/sections/TrustBadgesSlim";
 import { BenefitsGrid } from "@/components/sections/BenefitsGrid";
 import { ImpactStrip } from "@/components/sections/ImpactStrip";
@@ -78,7 +78,7 @@ const Index = () => {
       <Header />
       
       <main className="flex-1">
-        <PricingHero />
+        <HeroSection />
         
         <div className="py-16">
           <BenefitsGrid />
