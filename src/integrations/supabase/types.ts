@@ -517,22 +517,12 @@ export type Database = {
       }
     }
     Views: {
-      lead_security_dashboard: {
+      secure_lead_metrics: {
         Row: {
-          activity_level: string | null
-          avg_lead_score: number | null
-          submission_count: number | null
-          time_period: string | null
-          unique_domains: number | null
-        }
-        Relationships: []
-      }
-      lead_security_summary: {
-        Row: {
-          avg_score: number | null
-          daily_submissions: number | null
-          date: string | null
-          unique_domains: number | null
+          recent_count: number | null
+          report_type: string | null
+          total_count: number | null
+          weekly_count: number | null
         }
         Relationships: []
       }
