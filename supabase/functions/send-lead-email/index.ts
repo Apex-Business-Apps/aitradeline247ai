@@ -178,7 +178,7 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Notes:</strong> ${notes || 'None provided'}</p>
         </div>`,
-      "TradeLine 24/7 <leads@tradeline247ai.com>"
+      "TradeLine 24/7 <info@tradeline247ai.com>"
     );
 
     console.log("Notification email sent:", notificationEmail);
@@ -253,7 +253,7 @@ const handler = async (req: Request): Promise<Response> => {
             </p>
           </div>
         </div>`,
-      "TradeLine 24/7 <welcome@tradeline247ai.com>"
+      "TradeLine 24/7 <info@tradeline247ai.com>"
     );
 
     console.log("Confirmation email sent:", confirmationEmail);
