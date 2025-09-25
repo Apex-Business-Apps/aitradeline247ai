@@ -25,10 +25,10 @@ export const PricingHero = () => {
           
           {/* Two-column layout for calculator and questionnaire */}
           <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-stretch max-w-7xl mx-auto mt-[120px]">
-            <div className="flex h-full">
+            <div className="flex justify-center">
               <RoiCalculator />
             </div>
-            <div className="flex h-full">
+            <div className="flex justify-center">
               <LeadCaptureCard compact />
             </div>
           </div>

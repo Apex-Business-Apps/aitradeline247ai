@@ -74,7 +74,7 @@ const RoiCalculator = () => {
       bestPlan
     });
   }, [calls, currentAnswer, conv, value, tlCapture]);
-  return <Card className="w-full max-w-[480px] h-full mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+  return <Card className="w-full max-w-[420px] mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
       <CardHeader className="text-center pb-2">
         <CardTitle className="text-lg md:text-xl text-foreground mb-1">
           Calculate Your ROI
@@ -85,69 +85,69 @@ const RoiCalculator = () => {
       </CardHeader>
       
       <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {/* Left Column: Inputs */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Your Business</h3>
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-foreground mb-3">Your Business</h3>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
-                <Label htmlFor="calls" className="text-sm font-medium text-foreground mb-2 block">
+                <Label htmlFor="calls" className="text-sm font-medium text-foreground">
                   Monthly inbound calls
                 </Label>
-                <input id="calls" type="number" min="0" value={calls} onChange={e => setCalls(Number(e.target.value) || 0)} className="w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input id="calls" type="number" min="0" value={calls} onChange={e => setCalls(Number(e.target.value) || 0)} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
-                <Label htmlFor="currentAnswer" className="text-sm font-medium text-foreground mb-2 block">
+                <Label htmlFor="currentAnswer" className="text-sm font-medium text-foreground">
                   Current answer rate (%)
                 </Label>
-                <input id="currentAnswer" type="number" min="0" max="100" value={currentAnswer} onChange={e => setCurrentAnswer(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input id="currentAnswer" type="number" min="0" max="100" value={currentAnswer} onChange={e => setCurrentAnswer(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
-                <Label htmlFor="conv" className="text-sm font-medium text-foreground mb-2 block">
+                <Label htmlFor="conv" className="text-sm font-medium text-foreground">
                   Appointment conversion when answered (%)
                 </Label>
-                <input id="conv" type="number" min="0" max="100" value={conv} onChange={e => setConv(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input id="conv" type="number" min="0" max="100" value={conv} onChange={e => setConv(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
-                <Label htmlFor="value" className="text-sm font-medium text-foreground mb-2 block">
+                <Label htmlFor="value" className="text-sm font-medium text-foreground">
                   Avg revenue per appointment (CAD)
                 </Label>
-                <input id="value" type="number" min="0" value={value} onChange={e => setValue(Number(e.target.value) || 0)} className="w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input id="value" type="number" min="0" value={value} onChange={e => setValue(Number(e.target.value) || 0)} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
 
               <div>
-                <Label htmlFor="tlCapture" className="text-sm font-medium text-foreground mb-2 block">
+                <Label htmlFor="tlCapture" className="text-sm font-medium text-foreground">
                   Our after-hours capture (%)
                 </Label>
-                <input id="tlCapture" type="number" min="0" max="100" value={tlCapture} onChange={e => setTlCapture(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full px-3 py-2 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input id="tlCapture" type="number" min="0" max="100" value={tlCapture} onChange={e => setTlCapture(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
               </div>
             </div>
           </div>
 
           {/* Right Column: Results */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Your Results</h3>
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-foreground mb-3">Your Results</h3>
             
-            <div className="space-y-4" aria-live="polite" aria-label="ROI calculation results">
-              <div className="grid grid-cols-1 gap-4">
-                <div className="bg-muted/50 p-4 rounded-lg">
-                  <div className="flex items-center gap-2 mb-3">
-                    <TrendingUp className="h-4 w-4 text-primary flex-shrink-0" />
-                    <span className="text-sm font-medium text-foreground leading-tight whitespace-nowrap">Recovered appointments</span>
+            <div className="space-y-3" aria-live="polite" aria-label="ROI calculation results">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-muted/50 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">Recovered appointments</span>
                   </div>
                   <div className="text-2xl font-bold text-primary">
                     {Math.round(results.qualifiedAppts)}
                   </div>
                 </div>
 
-                <div className="bg-muted/50 p-4 rounded-lg">
-                  <div className="flex items-center gap-2 mb-3">
-                    <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
-                    <span className="text-sm font-medium text-foreground leading-tight">Projected revenue (CAD)</span>
+                <div className="bg-muted/50 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">Projected revenue (CAD)</span>
                   </div>
                   <div className="text-2xl font-bold text-primary">
                     {cad.format(results.monthlyRevenue)}
@@ -155,33 +155,33 @@ const RoiCalculator = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-3 border-b border-border">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-muted-foreground">Cost — Commission</span>
                   <span className="font-medium text-foreground">{cad.format(results.commissionCost)}</span>
                 </div>
 
-                <div className="flex justify-between items-center py-3 border-b border-border">
+                <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-muted-foreground">Cost — Predictable</span>
                   <span className="font-medium text-foreground">{cad.format(249)}</span>
                 </div>
 
-                <div className="flex justify-between items-center py-3 border-b border-border">
+                <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-muted-foreground">ROI — Commission</span>
                   <span className="font-medium text-primary">{Math.round(results.roiCommission * 100)}%</span>
                 </div>
 
-                <div className="flex justify-between items-center py-3 border-b border-border">
+                <div className="flex justify-between items-center py-2 border-b border-border">
                   <span className="text-sm text-muted-foreground">ROI — Predictable</span>
                   <span className="font-medium text-primary">{Math.round(results.roiPredictable * 100)}%</span>
                 </div>
               </div>
 
-              <Badge className="w-full justify-center py-3 bg-primary text-primary-foreground mt-4">
+              <Badge className="w-full justify-center py-2 bg-primary text-primary-foreground">
                 Best value this month: {results.bestPlan}
               </Badge>
 
-              <div className="space-y-3 pt-4">
+              <div className="space-y-2 pt-2">
                 <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => window.location.href = '/signup?plan=commission'}>Start Zero-Monthly</Button>
                 
                 <Button size="lg" variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={() => window.location.href = '/signup?plan=core'}>
