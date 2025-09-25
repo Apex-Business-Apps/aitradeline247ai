@@ -70,10 +70,10 @@ function generateAnswerTwiML(): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="Polly.Lucia">Hello. This call may be recorded to deliver your message and improve service. To continue, please stay on the line.</Say>
-  <Dial timeout="25" answerOnBridge="true">
+  <Dial timeout="25" answerOnBridge="true" statusCallback="${BASE_URL}/voice-status" statusCallbackEvent="initiated ringing answered completed">
     <Number>${FORWARD_TARGET_E164}</Number>
   </Dial>
-  <Redirect method="POST">${BASE_URL}/voice-status</Redirect>
+  <Say voice="Polly.Lucia">We're unable to connect your call right now. Please try again later.</Say>
 </Response>`;
 }
 
@@ -196,9 +196,10 @@ serve(async (req) => {
     const fallbackTwiML = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="Polly.Lucia">Please hold while we connect you.</Say>
-  <Dial timeout="25" answerOnBridge="true">
+  <Dial timeout="25" answerOnBridge="true" statusCallback="${BASE_URL}/voice-status" statusCallbackEvent="initiated ringing answered completed">
     <Number>${FORWARD_TARGET_E164}</Number>
   </Dial>
+  <Say voice="Polly.Lucia">We're unable to connect your call right now. Please try again later.</Say>
 </Response>`;
 
     return new Response(fallbackTwiML, {

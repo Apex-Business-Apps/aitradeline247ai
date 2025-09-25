@@ -11,28 +11,28 @@
   "lang": "en",
   "icons": [
     {
-      "src": "/pwa-192x192.png",
+      "src": "/assets/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/pwa-512x512.png", 
+      "src": "/assets/pwa-512x512.png", 
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/pwa-192x192.png",
+      "src": "/assets/pwa-192x192.png",
       "sizes": "192x192", 
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/pwa-512x512.png",
+      "src": "/assets/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png", 
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "categories": ["business", "productivity", "utilities"],
@@ -42,21 +42,21 @@
       "short_name": "New Lead",
       "description": "Quick access to lead capture form",
       "url": "/#lead",
-      "icons": [{ "src": "/pwa-192x192.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/assets/pwa-192x192.png", "sizes": "96x96" }]
     },
     {
       "name": "Dashboard",
       "short_name": "Dashboard", 
       "description": "Access your AI receptionist dashboard",
       "url": "/dashboard",
-      "icons": [{ "src": "/pwa-192x192.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/assets/pwa-192x192.png", "sizes": "96x96" }]
     },
     {
       "name": "Features",
       "short_name": "Features",
       "description": "Explore TradeLine 24/7 features", 
       "url": "/features",
-      "icons": [{ "src": "/pwa-192x192.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/assets/pwa-192x192.png", "sizes": "96x96" }]
     }
   ]
 }
