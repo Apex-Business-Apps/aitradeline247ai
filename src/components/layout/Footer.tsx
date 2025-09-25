@@ -3,8 +3,8 @@ import { Logo } from '@/components/ui/logo';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t bg-background mt-auto sticky bottom-0">
-      <div className="container py-8">
+    <footer className="border-t bg-background fixed bottom-0 left-0 right-0 z-50">
+      <div className="container py-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-center md:text-left">
             <div className="flex items-center gap-2 mb-2">
