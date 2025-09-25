@@ -25,7 +25,7 @@ export const ImpactStrip = () => {
       <div className="container">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            What changes when no call is missed
+            Let Ai Grow you, not replace you.
           </h2>
         </div>
         
