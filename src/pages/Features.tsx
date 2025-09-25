@@ -10,7 +10,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 const features = [
   {
     icon: Brain,
-    title: "AI-Powered Reception",
+    title: "Fast and Reliable Reception",
     description: "Smart AI that handles calls, messages, and inquiries 24/7 with human-like responses",
     benefits: ["Natural conversation flow", "Multi-language support", "Learning capabilities", "Context awareness"]
   },
@@ -76,7 +76,7 @@ const Features = () => {
                 Powerful Features
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8">
-                Everything you need to transform customer interactions with AI-powered automation
+                Everything you need to transform customer interactions with fast and reliable automation
               </p>
               <Button size="lg" className="shadow-lg" onClick={handleCTAClick}>
                 Start Free Trial

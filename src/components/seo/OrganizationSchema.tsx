@@ -7,7 +7,7 @@ export const OrganizationSchema: React.FC = () => {
     "@type": "Organization",
     "name": "TradeLine 24/7",
     "alternateName": "TL247",
-    "description": "AI-powered 24/7 customer service and receptionist solutions for businesses",
+    "description": "Fast and reliable 24/7 customer service and receptionist solutions for businesses",
     "url": "https://tradeline247.com",
     "logo": {
       "@type": "ImageObject",

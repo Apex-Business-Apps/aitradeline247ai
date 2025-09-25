@@ -41,7 +41,7 @@ const Terms = () => {
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Service Description</h2>
                   <p className="text-muted-foreground">
-                    TradeLine 24/7 provides AI-powered receptionist services including call handling, message processing, 
+                    TradeLine 24/7 provides fast and reliable receptionist services including call handling, message processing, 
                     appointment scheduling, and customer inquiry management. Service availability and features may vary by plan.
                   </p>
                 </section>

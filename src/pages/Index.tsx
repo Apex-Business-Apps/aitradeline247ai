@@ -3,7 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PricingHero } from "@/components/sections/PricingHero";
 import { TrustBadgesSlim } from "@/components/sections/TrustBadgesSlim";
-import { BenefitCards } from "@/components/sections/BenefitCards";
+import { BenefitsGrid } from "@/components/sections/BenefitsGrid";
 import { ImpactStrip } from "@/components/sections/ImpactStrip";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { LeadCaptureForm } from "@/components/sections/LeadCaptureForm";
@@ -36,7 +36,7 @@ const Index = () => {
       <div className="relative z-10">
         <SEOHead 
           title="TradeLine 24/7 — Your 24/7 AI Receptionist!"
-          description="Transform your business with AI-powered customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
+          description="Transform your business with fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
           keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
           canonical="https://tradeline247.com"
         />
@@ -51,8 +51,8 @@ const Index = () => {
             <PricingHero />
           </div>
           <div className="backdrop-blur-sm bg-background/75">
-          <BenefitCards />
-        </div>
+            <BenefitsGrid />
+          </div>
         <div className="backdrop-blur-sm bg-background/70">
           <ImpactStrip />
         </div>
@@ -243,7 +243,7 @@ const Index = () => {
 
   function typing(on=true){
     let t = msgs.querySelector('.tl-typing');
-    if(on && !t){ t = document.createElement('div'); t.className = 'tl-msg tl-bot tl-typing'; t.textContent = 'TrAdeleine is typing…'; msgs.appendChild(t); }
+    if(on && !t){ t = document.createElement('div'); t.className = 'tl-msg tl-bot tl-typing'; t.textContent = 'One sec—pulling that up…'; msgs.appendChild(t); }
     if(!on && t){ t.remove(); }
     msgs.scrollTop = msgs.scrollHeight;
   }
