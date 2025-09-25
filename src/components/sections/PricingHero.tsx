@@ -6,16 +6,13 @@ export const PricingHero = () => {
         {/* Hero Content */}
         <div className="text-center mb-16">
           {/* Logo above hero text */}
-          <div className="flex justify-center mb-8 -mt-6">
-            <img 
-              src="/src/assets/official-logo.svg" 
-              alt="TradeLine 24/7 Logo" 
-              className="h-36 md:h-48 w-auto opacity-80"
-              style={{transform: 'scaleX(0.96)'}}
-            />
+          <div className="flex justify-center mb-8">
+            <img src="/src/assets/official-logo.svg" alt="TradeLine 24/7 Logo" className="h-24 md:h-32 w-auto opacity-80" style={{
+            transform: 'scaleX(0.8)'
+          }} />
           </div>
           
-          <h1 id="hero-h1" className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+          <h1 id="hero-h1" className="text-4xl md:text-6xl mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-extrabold lg:text-7xl">
             Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b] md:text-4xl">
