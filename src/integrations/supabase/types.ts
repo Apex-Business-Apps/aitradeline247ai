@@ -923,16 +923,6 @@ export type Database = {
       }
     }
     Views: {
-      analytics_privacy_summary: {
-        Row: {
-          event_count: number | null
-          event_type: string | null
-          time_window: string | null
-          traffic_level: string | null
-          unique_sessions: number | null
-        }
-        Relationships: []
-      }
       secure_lead_metrics: {
         Row: {
           recent_count: number | null
@@ -1021,6 +1011,16 @@ export type Database = {
       current_org_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_analytics_privacy_summary: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          event_count: number
+          event_type: string
+          time_window: string
+          traffic_level: string
+          unique_sessions: number
+        }[]
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
@@ -1125,6 +1125,21 @@ export type Database = {
         Returns: string
       }
       refresh_wallet_balances: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      safe_analytics_insert: {
+        Args: {
+          p_event_data?: Json
+          p_event_type: string
+          p_ip_address?: string
+          p_page_url?: string
+          p_user_agent?: string
+          p_user_session?: string
+        }
+        Returns: undefined
+      }
+      safe_refresh_wallet_balances: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
