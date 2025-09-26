@@ -1,0 +1,39 @@
+/* LOVABLE-GUARD: Only edit inside this file. */
+:root {
+  --duo-max: 1120px;   /* compressed content width */
+  --duo-gap: 16px;
+  --duo-pad: 16px;
+}
+
+.hero-roi__container {
+  max-width: var(--duo-max);
+  margin: 0 auto;
+  padding: var(--duo-pad);
+}
+
+.hero-roi__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* equal columns */
+  gap: var(--duo-gap);
+  align-items: stretch;             /* equal height via stretch */
+}
+
+.hero-roi__card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* Ensure internal tables/cards behave predictably */
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.hero-roi__card table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .hero-roi__grid {
+    grid-template-columns: 1fr;     /* stack on small screens */
+  }
+}
