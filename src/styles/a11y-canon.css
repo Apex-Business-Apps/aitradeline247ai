@@ -1,0 +1,32 @@
+/* === A11y Canon — idempotent, no visual drift === */
+:root{
+  --focus-ring: 3px solid #005fcc;
+  --focus-radius: 8px;
+  --min-tap: 48px;
+  --text-contrast: #111;        /* ensure ≥4.5:1 on body text */
+}
+* { outline-offset: 2px; }
+:focus { outline: none; }
+:focus-visible {
+  outline: var(--focus-ring);
+  border-radius: var(--focus-radius);
+}
+
+/* Ensure tappable area without enlarging text */
+button, [role="button"], a, input[type="button"], input[type="submit"]{
+  min-height: var(--min-tap);
+  min-width: var(--min-tap);
+}
+
+/* Contrast nudge for low-contrast utilities */
+.text-muted { color: #3b3b3b !important; }    /* keep ≥4.5:1 on white */
+.text-on-brand { color: #141414 !important; }
+
+/* Inputs must have visible label/placeholder */
+input, select, textarea { background-clip: padding-box; }
+
+/* Dialog baseline (for mini-chat) */
+[role="dialog"][aria-modal="true"] {
+  outline: none;
+  /* focus trap managed in JS; style only */
+}

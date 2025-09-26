@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "./styles/a11y-canon.css";
 import "./styles/roi-table.css";
 import { wireSpaRouter } from "./lib/klaviyo";
 import { watchRoiTableCanon } from "./lib/roiTableFix";
