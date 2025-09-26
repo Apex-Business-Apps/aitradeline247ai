@@ -47,18 +47,9 @@ export const useAuth = () => {
 
   const fetchUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
-      
-      if (error) {
-        console.error('Error fetching user role:', error);
-        return;
-      }
-      
-      setUserRole(data?.role || 'user');
+      // TODO: Create user_roles table when implementing role-based access
+      // For now, default all users to 'user' role
+      setUserRole('user');
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole('user');

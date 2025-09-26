@@ -13,43 +13,30 @@ export const useEnhancedSecurityMonitoring = () => {
   const [securityAlerts, setSecurityAlerts] = useState<SecurityEvent[]>([]);
   const [sessionTimeoutWarning, setSessionTimeoutWarning] = useState(false);
 
-  // Enhanced session token creation with encryption
+  // Enhanced session token creation (simplified without database functions)
   const createSecureSession = useCallback(async (deviceFingerprint?: string) => {
     if (!user || !session) return null;
 
     try {
-      const { data, error } = await supabase.rpc('create_encrypted_session_token', {
-        p_user_id: user.id,
-        p_raw_token: session.access_token,
-        p_device_fingerprint: deviceFingerprint,
-        p_ip_address: null // Let the function handle IP detection
-      });
-
-      if (error) {
-        console.error('Failed to create secure session:', error);
-        return null;
-      }
-
-      return data;
+      // TODO: Create database functions when implementing enhanced security
+      // For now, just return a simple session identifier
+      return `session_${user.id}_${Date.now()}`;
     } catch (error) {
       console.error('Secure session creation error:', error);
       return null;
     }
   }, [user, session]);
 
-  // Enhanced security event logging
+  // Enhanced security event logging (simplified without database functions)
   const logSecurityEvent = useCallback(async (
     eventType: string,
     severity: 'low' | 'medium' | 'high' | 'critical' = 'medium',
     details?: Record<string, any>
   ) => {
     try {
-      await supabase.rpc('log_security_audit_event', {
-        p_event_type: eventType,
-        p_severity: severity,
-        p_user_id: user?.id,
-        p_details: details || {}
-      });
+      // TODO: Create database functions when implementing security logging
+      // For now, just log to console
+      console.log(`Security Event: ${eventType} (${severity})`, details);
 
       // Add to local alerts for immediate user feedback
       const newAlert: SecurityEvent = { event_type: eventType, severity, details };

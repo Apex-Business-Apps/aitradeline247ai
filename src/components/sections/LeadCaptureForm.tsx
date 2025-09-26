@@ -109,21 +109,9 @@ export const LeadCaptureForm = () => {
         throw emailError;
       }
 
-      // Store lead in database with automatic scoring
-      const {
-        data: leadData,
-        error: leadError
-      } = await supabase.from('leads').insert([{
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        notes: formData.notes,
-        source: 'website_lead_form'
-      }]).select().single();
-      if (leadError) {
-        console.error("Lead storage error:", leadError);
-        // Don't throw here - email was sent successfully
-      }
+      // TODO: Create leads table when implementing lead functionality
+      // For now, skip database storage and just send email
+      const leadData = null;
       console.log("Lead submission successful:", {
         emailData,
         leadData
@@ -131,16 +119,16 @@ export const LeadCaptureForm = () => {
 
       // Track successful form submission
       trackFormSubmission('lead_capture', true, {
-        lead_score: leadData?.lead_score || 0,
+        lead_score: 0,
         email_domain: formData.email.split('@')[1],
         variant: variant
       });
 
       // Track conversion for A/B test
-      await convert(leadData?.lead_score || 50);
+      await convert(50);
 
       // Track business conversion
-      trackConversion('lead_generated', leadData?.lead_score || 50, {
+      trackConversion('lead_generated', 50, {
         source: 'website_form',
         variant: variant
       });

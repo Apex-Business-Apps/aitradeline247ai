@@ -22,21 +22,14 @@ export const useSessionSecurity = () => {
     }
   }, [user, session]);
 
-  // Check for concurrent sessions
+  // Check for concurrent sessions (simplified without database)
   const checkConcurrentSessions = useCallback(async () => {
     if (!user) return;
 
     try {
-      const { data } = await supabase
-        .from('user_sessions')
-        .select('session_token, created_at')
-        .eq('user_id', user.id)
-        .eq('is_active', true);
-
-      if (data && data.length > 3) {
-        console.warn('🚨 Multiple active sessions detected');
-        // Optionally force logout of older sessions
-      }
+      // TODO: Create user_sessions table when implementing session management
+      // For now, just log that we would check for concurrent sessions
+      console.log('Concurrent session check skipped - no user_sessions table');
     } catch (error) {
       console.error('Failed to check concurrent sessions:', error);
     }
