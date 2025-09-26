@@ -1,0 +1,59 @@
+name: Twilio Synthetic Call
+on:
+  schedule: [{ cron: "13 6 * * *" }]   # daily 06:13 UTC
+  workflow_dispatch:
+    inputs:
+      base:
+        description: "Prod base (answer/status live there)"
+        required: true
+        default: "https://www.tradeline247ai.com"
+jobs:
+  call:
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: ${{ github.event.inputs.base }}
+      TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+      TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+      TO_E164: ${{ secrets.TO_E164 }}
+      FROM_E164: ${{ secrets.FROM_E164 }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Health precheck
+        run: |
+          set -e
+          curl -fsS "$BASE_URL/healthz" >/dev/null
+      - name: Place call
+        id: call
+        run: |
+          set -e
+          SID=$(curl -sS -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" \
+            -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/Calls.json" \
+            --data-urlencode "To=$TO_E164" \
+            --data-urlencode "From=$FROM_E164" \
+            --data-urlencode "Url=$BASE_URL/voice/answer" | jq -r .sid)
+          echo "sid=$SID" >> $GITHUB_OUTPUT
+          echo "Placed SID: $SID" >> $GITHUB_STEP_SUMMARY
+      - name: Poll status
+        id: poll
+        run: |
+          set -e
+          SID='${{ steps.call.outputs.sid }}'
+          STATUS="unknown"
+          for i in {1..20}; do
+            STATUS=$(curl -sS -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" \
+              "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/Calls/$SID.json" | jq -r .status)
+            echo "[$i] $STATUS"
+            [[ "$STATUS" =~ ^(completed|busy|no-answer|failed|canceled)$ ]] && break
+            sleep 3
+          done
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+      - name: Slack summary
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_COLOR: ${{ steps.poll.outputs.status == 'completed' && '#2EB886' || '#CC0000' }}
+          SLACK_TITLE: 'Twilio Synthetic Call: ${{ steps.poll.outputs.status }}'
+          SLACK_MESSAGE: |
+            SID: ${{ steps.call.outputs.sid }}
+            To: ${{ secrets.TO_E164 }} • From: ${{ secrets.FROM_E164 }}
+            Base: ${{ env.BASE_URL }}

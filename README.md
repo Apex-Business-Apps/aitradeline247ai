@@ -71,3 +71,9 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Ops (SPA-only)
+- Uptime/content monitor: GitHub → Actions → Prod Monitor (runs every 5m; Slack on fail).
+- Synthetic call: GitHub → Actions → Twilio Synthetic Call (daily + on-demand).
+- In-app checks: /qa/dashboard
+Secrets required: SLACK_WEBHOOK_URL, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TO_E164, FROM_E164.
