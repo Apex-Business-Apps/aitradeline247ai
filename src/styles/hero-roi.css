@@ -1,39 +1,48 @@
-/* LOVABLE-GUARD: Only edit inside this file. */
+/* ROI Duo Canon Fix — do not edit outside this block */
 :root {
-  --duo-max: 1120px;   /* compressed content width */
   --duo-gap: 16px;
-  --duo-pad: 16px;
+  --duo-max: 1200px;           /* wide enough for two healthy columns */
 }
 
+/* Center + sensible width; prevent "sardine" */
 .hero-roi__container {
-  max-width: var(--duo-max);
-  margin: 0 auto;
-  padding: var(--duo-pad);
+  max-width: clamp(960px, 90vw, var(--duo-max));
+  margin-inline: auto;         /* center the container */
+  padding-inline: 16px;
 }
 
+/* Two equal, tall columns on desktop */
 .hero-roi__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;   /* equal columns */
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(440px, 1fr));
   gap: var(--duo-gap);
-  align-items: stretch;             /* equal height via stretch */
+  align-items: stretch;        /* equal heights */
 }
 
-.hero-roi__card {
+/* Make sure inner content can actually fill the column */
+.hero-roi__container,
+.hero-roi__container * {
+  box-sizing: border-box;      /* padding/border won't collapse width */
+}
+
+/* Kill stray transforms/positioning that break alignment */
+#start-trial-hero,
+#roi-calculator {
+  position: static !important;
+  transform: none !important;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  /* Ensure internal tables/cards behave predictably */
-  overflow: hidden;
-  border-radius: 12px;
+  max-width: 100% !important;
 }
 
-.hero-roi__card table {
-  table-layout: fixed;
-  width: 100%;
+#start-trial-hero * ,
+#roi-calculator * {
+  max-width: 100%;
 }
 
+/* Stack cleanly on tablets/phones */
 @media (max-width: 1024px) {
-  .hero-roi__grid {
-    grid-template-columns: 1fr;     /* stack on small screens */
-  }
+  .hero-roi__grid { grid-template-columns: 1fr; }
+  .hero-roi__container { max-width: 680px; }
 }
