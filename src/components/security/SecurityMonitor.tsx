@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useEnhancedSessionSecurity } from '@/hooks/useEnhancedSessionSecurity';
 import { usePrivacyAnalytics } from '@/hooks/usePrivacyAnalytics';
 import { usePasswordSecurity } from '@/hooks/usePasswordSecurity';
+import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Comprehensive Security Monitor Component
@@ -11,6 +12,7 @@ import { usePasswordSecurity } from '@/hooks/usePasswordSecurity';
  * - Privacy-focused analytics tracking
  * - Client-side security headers
  * - Automated threat detection
+ * - Security event logging to analytics_events table
  * 
  * Should be mounted at the app root level
  */
@@ -18,7 +20,28 @@ export const SecurityMonitor = () => {
   const { sessionTimeoutWarning } = useEnhancedSessionSecurity();
   const { trackPrivacyPageView, trackPrivacyError } = usePrivacyAnalytics();
 
+  // Enhanced security event logging
+  const logSecurityEvent = async (eventType: string, data?: any, severity: 'info' | 'warning' | 'error' | 'critical' = 'info') => {
+    try {
+      await supabase.functions.invoke('secure-analytics', {
+        body: {
+          event_type: eventType,
+          event_data: data || {},
+          severity,
+          session_id: sessionStorage.getItem('session_id') || undefined
+        }
+      });
+    } catch (error) {
+      console.error('Failed to log security event:', error);
+    }
+  };
+
   useEffect(() => {
+    // Generate session ID for tracking if not exists
+    if (!sessionStorage.getItem('session_id')) {
+      sessionStorage.setItem('session_id', crypto.randomUUID());
+    }
+
     // Set enhanced security headers
     const setSecurityHeaders = () => {
       // Content Security Policy for production
@@ -40,6 +63,11 @@ export const SecurityMonitor = () => {
           "upgrade-insecure-requests"
         ].join('; ');
         document.head.appendChild(meta);
+        
+        logSecurityEvent('csp_headers_applied', { 
+          hostname: window.location.hostname,
+          csp_directives: meta.content.split('; ').length 
+        });
       }
 
       // Additional security headers
@@ -60,6 +88,8 @@ export const SecurityMonitor = () => {
         }
         (meta as HTMLMetaElement).content = content;
       });
+
+      logSecurityEvent('security_headers_applied', { headers_count: headers.length });
     };
 
     // Enhanced error monitoring with privacy protection
@@ -70,7 +100,15 @@ export const SecurityMonitor = () => {
         const errorMessage = args.join(' ');
         if (errorMessage.toLowerCase().includes('security') || 
             errorMessage.toLowerCase().includes('auth') ||
-            errorMessage.toLowerCase().includes('unauthorized')) {
+            errorMessage.toLowerCase().includes('unauthorized') ||
+            errorMessage.toLowerCase().includes('csp') ||
+            errorMessage.toLowerCase().includes('cors')) {
+          
+          logSecurityEvent('security_error_detected', {
+            error_type: 'console_error',
+            message: errorMessage.substring(0, 500) // Limit message length
+          }, 'warning');
+          
           trackPrivacyError('security_error', errorMessage);
         }
         originalError.apply(console, args);
@@ -80,7 +118,16 @@ export const SecurityMonitor = () => {
       window.addEventListener('error', (event) => {
         if (event.error?.name === 'SecurityError' || 
             event.message?.includes('security') ||
-            event.message?.includes('auth')) {
+            event.message?.includes('auth') ||
+            event.message?.includes('Content Security Policy')) {
+          
+          logSecurityEvent('global_error_detected', {
+            error_name: event.error?.name,
+            message: event.message?.substring(0, 500),
+            filename: event.filename?.substring(event.filename.lastIndexOf('/') + 1),
+            line: event.lineno
+          }, 'error');
+          
           trackPrivacyError('global_error', event.message || 'Unknown security error', {
             filename: event.filename?.substring(event.filename.lastIndexOf('/') + 1), // Only filename for privacy
             lineno: event.lineno
@@ -92,7 +139,13 @@ export const SecurityMonitor = () => {
       window.addEventListener('unhandledrejection', (event) => {
         const reason = event.reason?.toString() || 'Unknown rejection';
         if (reason.toLowerCase().includes('security') || 
-            reason.toLowerCase().includes('auth')) {
+            reason.toLowerCase().includes('auth') ||
+            reason.toLowerCase().includes('unauthorized')) {
+          
+          logSecurityEvent('unhandled_rejection_detected', {
+            reason: reason.substring(0, 500)
+          }, 'warning');
+          
           trackPrivacyError('unhandled_rejection', reason);
         }
       });
@@ -100,8 +153,8 @@ export const SecurityMonitor = () => {
 
     // Device and browser security monitoring
     const monitorDeviceSecurity = () => {
-      // Check for developer tools (basic detection)
       let devToolsOpen = false;
+      let suspiciousActivityCount = 0;
       const threshold = 160;
       
       const checkDevTools = () => {
@@ -109,6 +162,10 @@ export const SecurityMonitor = () => {
             window.outerWidth - window.innerWidth > threshold) {
           if (!devToolsOpen) {
             devToolsOpen = true;
+            logSecurityEvent('devtools_opened', {
+              screen_resolution: `${window.screen.width}x${window.screen.height}`,
+              window_size: `${window.innerWidth}x${window.innerHeight}`
+            });
             trackPrivacyError('security_alert', 'Developer tools potentially opened');
           }
         } else {
@@ -118,13 +175,47 @@ export const SecurityMonitor = () => {
 
       const devToolsInterval = setInterval(checkDevTools, 5000);
 
-      // Monitor for suspicious browser extensions
+      // Enhanced suspicious extension detection
       const checkExtensions = () => {
+        const suspiciousKeywords = ['wallet', 'crypto', 'password', 'autofill', 'inject'];
+        const scripts = Array.from(document.querySelectorAll('script'));
+        
+        scripts.forEach(script => {
+          if (script.src && suspiciousKeywords.some(keyword => 
+            script.src.toLowerCase().includes(keyword))) {
+            suspiciousActivityCount++;
+            logSecurityEvent('suspicious_extension_detected', {
+              script_domain: new URL(script.src).hostname,
+              keyword_matched: suspiciousKeywords.find(k => script.src.toLowerCase().includes(k))
+            }, 'warning');
+          }
+        });
+
         // Check for common extension modification patterns
         const suspiciousElements = document.querySelectorAll('[class*="extension"], [id*="extension"]');
         if (suspiciousElements.length > 0) {
+          logSecurityEvent('extension_elements_detected', {
+            element_count: suspiciousElements.length
+          }, 'info');
           trackPrivacyError('security_alert', `Potential browser extensions detected: ${suspiciousElements.length}`);
         }
+
+        // Monitor for excessive DOM manipulation
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 20) {
+              suspiciousActivityCount++;
+              if (suspiciousActivityCount > 10) {
+                logSecurityEvent('excessive_dom_manipulation', {
+                  mutations_count: mutation.addedNodes.length,
+                  suspicious_count: suspiciousActivityCount
+                }, 'warning');
+              }
+            }
+          });
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
       };
 
       setTimeout(checkExtensions, 3000); // Check after page load
@@ -139,8 +230,13 @@ export const SecurityMonitor = () => {
     setupErrorMonitoring();
     const cleanupDeviceMonitoring = monitorDeviceSecurity();
 
-    // Track initial security page view
+    // Track initial security initialization
     trackPrivacyPageView(window.location.pathname);
+    logSecurityEvent('security_monitor_initialized', {
+      user_agent: navigator.userAgent.substring(0, 200),
+      url: window.location.href,
+      timestamp: new Date().toISOString()
+    });
 
     return cleanupDeviceMonitoring;
   }, [trackPrivacyPageView, trackPrivacyError]);
@@ -149,6 +245,9 @@ export const SecurityMonitor = () => {
   useEffect(() => {
     if (sessionTimeoutWarning) {
       document.body.classList.add('session-warning');
+      logSecurityEvent('session_timeout_warning_shown', {
+        url: window.location.href
+      }, 'warning');
     } else {
       document.body.classList.remove('session-warning');
     }

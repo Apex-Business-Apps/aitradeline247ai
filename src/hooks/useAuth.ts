@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-export type UserRole = 'admin' | 'user';
+export type UserRole = 'admin' | 'user' | 'moderator';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -16,6 +16,13 @@ export const useAuth = () => {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        
+        // Log authentication events for security monitoring
+        if (event === 'SIGNED_IN') {
+          logSecurityEvent('user_signed_in', session?.user?.id);
+        } else if (event === 'SIGNED_OUT') {
+          logSecurityEvent('user_signed_out', session?.user?.id);
+        }
         
         // Fetch user role when user logs in
         if (session?.user) {
@@ -45,11 +52,31 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const logSecurityEvent = async (eventType: string, userId?: string) => {
+    try {
+      await supabase.functions.invoke('secure-analytics', {
+        body: {
+          event_type: eventType,
+          user_id: userId,
+          severity: 'info'
+        }
+      });
+    } catch (error) {
+      console.error('Failed to log security event:', error);
+    }
+  };
+
   const fetchUserRole = async (userId: string) => {
     try {
-      // TODO: Create user_roles table when implementing role-based access
-      // For now, default all users to 'user' role
-      setUserRole('user');
+      const { data, error } = await supabase.rpc('get_user_role', { _user_id: userId });
+      
+      if (error) {
+        console.error('Error fetching user role:', error);
+        setUserRole('user');
+        return;
+      }
+      
+      setUserRole(data || 'user');
     } catch (error) {
       console.error('Error fetching user role:', error);
       setUserRole('user');

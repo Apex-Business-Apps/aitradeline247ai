@@ -1,0 +1,20 @@
+Contact: security@tradeline247ai.com
+Expires: 2025-12-31T23:59:59.000Z
+Acknowledgments: https://www.tradeline247ai.com/security
+Preferred-Languages: en
+Canonical: https://www.tradeline247ai.com/.well-known/security.txt
+Policy: https://www.tradeline247ai.com/security-policy
+
+# Security Disclosure Policy
+# 
+# TradeLine 24/7 takes security seriously. We appreciate responsible disclosure
+# of security vulnerabilities. Please report security issues to the contact
+# above and allow us reasonable time to address them before public disclosure.
+#
+# In scope: All TradeLine 24/7 services and infrastructure
+# Out of scope: Third-party services we integrate with
+#
+# We commit to:
+# - Acknowledge receipt within 48 hours
+# - Provide regular updates on remediation progress
+# - Credit researchers (with permission) in our security acknowledgments
