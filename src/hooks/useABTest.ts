@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAnalytics } from './useAnalytics';
+import { useSecureAnalytics } from './useSecureAnalytics';
 
 interface ABTestVariant {
   [key: string]: any;
@@ -17,15 +17,15 @@ export const useABTest = (testName: string) => {
   const [variant, setVariant] = useState<string>('A');
   const [variantData, setVariantData] = useState<ABTestVariant>({});
   const [loading, setLoading] = useState(true);
-  const { getSessionId, track } = useAnalytics();
+  const { trackEvent } = useSecureAnalytics();
 
   // Get user's assigned variant (simplified version without database)
   const getAssignedVariant = useCallback(async () => {
     try {
-      const sessionId = getSessionId();
+      const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
       // Check localStorage for existing assignment
-      const storageKey = `ab_test_${testName}_${sessionId}`;
+      const storageKey = `ab_test_${testName}`;
       const existingAssignment = localStorage.getItem(storageKey);
       
       if (existingAssignment) {
@@ -40,7 +40,7 @@ export const useABTest = (testName: string) => {
       localStorage.setItem(storageKey, assignedVariant);
 
       // Track assignment
-      track({
+      trackEvent({
         event_type: 'ab_test_assignment',
         event_data: { test_name: testName, variant: assignedVariant }
       });
@@ -50,7 +50,7 @@ export const useABTest = (testName: string) => {
       console.error('Error getting A/B test assignment:', error);
       return 'A'; // Default fallback
     }
-  }, [testName, getSessionId, track]);
+  }, [testName, trackEvent]);
 
   // Load test configuration and user assignment
   useEffect(() => {
@@ -83,8 +83,7 @@ export const useABTest = (testName: string) => {
   // Mark conversion for this user (simplified version without database)
   const convert = useCallback(async (conversionValue?: number) => {
     try {
-      const sessionId = getSessionId();
-      const storageKey = `ab_test_${testName}_${sessionId}_converted`;
+      const storageKey = `ab_test_${testName}_converted`;
       
       // Check if already converted
       if (localStorage.getItem(storageKey)) {
@@ -95,7 +94,7 @@ export const useABTest = (testName: string) => {
       localStorage.setItem(storageKey, 'true');
 
       // Track conversion
-      track({
+      trackEvent({
         event_type: 'ab_test_conversion',
         event_data: { test_name: testName, variant, conversion_value: conversionValue },
       });
@@ -103,7 +102,7 @@ export const useABTest = (testName: string) => {
     } catch (error) {
       console.error('Error tracking A/B test conversion:', error);
     }
-  }, [testName, variant, getSessionId, track]);
+  }, [testName, variant, trackEvent]);
 
   return {
     variant,

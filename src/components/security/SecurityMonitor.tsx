@@ -27,11 +27,11 @@ export const SecurityMonitor = () => {
         meta.httpEquiv = 'Content-Security-Policy';
         meta.content = [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://supabase.co https://*.supabase.co",
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://supabase.co https://*.supabase.co https://cdn.gpteng.co https://www.googletagmanager.com https://static.klaviyo.com https://static-tracking.klaviyo.com",
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
           "img-src 'self' data: blob: https:",
-          "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.resend.com",
+          "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.resend.com https://cdn.gpteng.co https://www.googletagmanager.com https://static.klaviyo.com https://static-tracking.klaviyo.com",
           "media-src 'self' blob:",
           "object-src 'none'",
           "base-uri 'self'",

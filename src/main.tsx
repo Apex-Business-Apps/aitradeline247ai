@@ -1,7 +1,5 @@
-// PWA: register SW and mount banner (no other changes)
-import PWAInstall from "./components/PWAInstall";
 import React from "react";
-import ReactDOM from "react-dom/client";
+import PWAInstall from "./components/PWAInstall";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -20,7 +18,7 @@ if ("serviceWorker" in navigator) {
 // Mount PWAInstall into a portal so layout doesn't shift
 const mount = document.createElement("div");
 document.body.appendChild(mount);
-ReactDOM.createRoot(mount).render(React.createElement(PWAInstall));
+createRoot(mount).render(<PWAInstall />);
 
 createRoot(document.getElementById("root")!).render(<App />);
 

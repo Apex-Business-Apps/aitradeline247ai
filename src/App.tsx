@@ -1,8 +1,6 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
-import { SecurityHeaders } from "@/components/security/SecurityHeaders";
-import { EnhancedSecurityHeaders } from "@/components/security/EnhancedSecurityHeaders";
-import { useSessionSecurity } from "@/hooks/useSessionSecurity";
+import { useEnhancedSessionSecurity } from "@/hooks/useEnhancedSessionSecurity";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -65,8 +63,8 @@ const AppWithMonitoring = () => {
   // Initialize error tracking
   useErrorTracking();
   
-  // Initialize session security monitoring
-  useSessionSecurity();
+  // Initialize enhanced session security monitoring
+  useEnhancedSessionSecurity();
   
   // Initialize performance optimization
   const { measureRenderTime } = usePerformanceOptimization();
@@ -77,8 +75,6 @@ const AppWithMonitoring = () => {
   return (
     <>
       <RouteSEOFallback />
-      <SecurityHeaders />
-      <EnhancedSecurityHeaders />
       <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
@@ -120,7 +116,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        {import.meta.env.VITE_SPLASH_ENABLED !== "false" && <StartupSplash />}
+        <StartupSplash />
         <BrowserRouter>
           <AppWithMonitoring />
           <InstallPrompt />

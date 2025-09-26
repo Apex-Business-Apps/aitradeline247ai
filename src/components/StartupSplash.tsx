@@ -4,11 +4,11 @@ export default function StartupSplash() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    // feature flag + one-time per session
-    const disabled = import.meta.env.VITE_SPLASH_ENABLED === "false";
+    // Don't show splash if URL has nosplash param or already seen this session
     const urlOff = new URLSearchParams(location.search).has("nosplash");
     const seen = sessionStorage.getItem("tl_splash_dismissed") === "1";
-    if (disabled || urlOff || seen) return;
+    if (urlOff || seen) return;
+    
     setShow(true);
     const t = setTimeout(() => dismiss(), 1800);
     return () => clearTimeout(t);

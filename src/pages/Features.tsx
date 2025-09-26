@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CheckCircle, Phone, MessageSquare, Brain, Zap, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAnalytics } from "@/hooks/useAnalytics";
+import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
 import { setSEO } from "@/lib/seo";
 
 const features = [
@@ -47,7 +47,7 @@ const features = [
 ];
 
 const Features = () => {
-  const { trackPageView, trackButtonClick } = useAnalytics();
+  const { trackPageView, trackInteraction } = useSecureAnalytics();
 
   useEffect(() => {
     setSEO({
@@ -59,7 +59,7 @@ const Features = () => {
   }, [trackPageView]);
 
   const handleCTAClick = () => {
-    trackButtonClick('features_cta', 'features_page');
+    trackInteraction('features_cta', 'click');
   };
   return (
     <div className="min-h-screen flex flex-col">

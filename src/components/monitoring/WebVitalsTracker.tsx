@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useAnalytics } from '@/hooks/useAnalytics';
+import { useSecureAnalytics } from '@/hooks/useSecureAnalytics';
 
 export const WebVitalsTracker = () => {
-  const { track } = useAnalytics();
+  const { trackEvent } = useSecureAnalytics();
 
   useEffect(() => {
     const trackWebVital = (name: string, value: number, id?: string) => {
-      track({
+      trackEvent({
         event_type: 'web_vital',
         event_data: {
           name,
@@ -127,7 +127,7 @@ export const WebVitalsTracker = () => {
     return () => {
       window.removeEventListener('load', getWebVitals);
     };
-  }, [track]);
+  }, [trackEvent]);
 
   return null; // This component doesn't render anything
 };

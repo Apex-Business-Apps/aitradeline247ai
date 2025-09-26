@@ -8,14 +8,14 @@ import { ImpactStrip } from "@/components/sections/ImpactStrip";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { LeadCaptureForm } from "@/components/sections/LeadCaptureForm";
 import { NoAIHypeFooter } from "@/components/sections/NoAIHypeFooter";
-import { useAnalytics } from "@/hooks/useAnalytics";
+import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
 import LayoutCanon from "@/components/LayoutCanon";
 import HeroDuoCanon from "@/components/HeroDuoCanon";
 import { setSEO } from "@/lib/seo";
 
 const Index = () => {
-  const { trackPageView } = useAnalytics();
+  const { trackPageView } = useSecureAnalytics();
 
   useEffect(() => {
     setSEO({

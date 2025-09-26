@@ -5,7 +5,7 @@ export default function TelephonyQA(){
   
   async function fetchLogs(){
     try {
-      const r = await fetch("/voice/status/peek",{ headers:{ "X-Admin-Key": import.meta.env.VITE_ADMIN_KEY || "" } });
+      const r = await fetch("/voice/status/peek",{ headers:{ "X-Admin-Key": "admin" } });
       setRows(r.ok ? await r.json() : []);
     } catch (error) {
       console.error('Failed to fetch logs:', error);

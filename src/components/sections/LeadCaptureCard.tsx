@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle, Sparkles, Clock, DollarSign } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAnalytics } from "@/hooks/useAnalytics";
+import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
 import { useABTest } from "@/hooks/useABTest";
 import { useSecureFormSubmission } from "@/hooks/useSecureFormSubmission";
 import { z } from "zod";
@@ -56,7 +56,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
   });
 
   const { toast } = useToast();
-  const { trackFormSubmission, trackConversion, trackButtonClick } = useAnalytics();
+  const { trackEvent, trackConversion, trackInteraction } = useSecureAnalytics();
   const { variant, variantData, convert } = useABTest('hero_cta_test');
   const { secureSubmit, getRemainingAttempts } = useSecureFormSubmission({
     rateLimitKey: 'lead_form_submit',
@@ -75,9 +75,14 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         description: errorMessage,
         variant: "destructive"
       });
-      trackFormSubmission('lead_capture', false, {
-        error: 'validation_failed',
-        variant: variant
+      trackEvent({
+        event_type: 'form_submission',
+        event_data: {
+          form_name: 'lead_capture',
+          success: false,
+          error: 'validation_failed',
+          variant: variant
+        }
       });
       return;
     }
@@ -93,7 +98,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
     }
 
     setIsSubmitting(true);
-    trackButtonClick('lead_form_submit', 'lead_capture_form');
+    trackInteraction('lead_form_submit', 'click', { form: 'lead_capture_form' });
 
     try {
       console.log("Submitting lead:", formData);
@@ -115,10 +120,15 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
       console.log("Lead submission successful:", { emailData, leadData });
 
       // Track successful form submission
-      trackFormSubmission('lead_capture', true, {
-        lead_score: 0,
-        email_domain: formData.email.split('@')[1],
-        variant: variant
+      trackEvent({
+        event_type: 'form_submission',
+        event_data: {
+          form_name: 'lead_capture',
+          success: true,
+          lead_score: 0,
+          email_domain: formData.email.split('@')[1],
+          variant: variant
+        }
       });
 
       // Track conversion for A/B test
@@ -150,9 +160,14 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
 
     } catch (error: any) {
       console.error("Lead submission error:", error);
-      trackFormSubmission('lead_capture', false, {
-        error: error.message || 'unknown_error',
-        variant: variant
+      trackEvent({
+        event_type: 'form_submission',
+        event_data: {
+          form_name: 'lead_capture',
+          success: false,
+          error: error.message || 'unknown_error',
+          variant: variant
+        }
       });
       toast({
         title: "Oops! Something went wrong",
