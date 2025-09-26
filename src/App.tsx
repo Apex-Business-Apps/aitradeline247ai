@@ -42,6 +42,7 @@ import CallCenter from "./pages/CallCenter";
 import AdminKB from "./pages/AdminKB";
 import TelephonyQA from "./pages/qa/Telephony";
 import Dashboard from "./pages/qa/Dashboard";
+import SEOQA from "./pages/qa/SEO";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +103,7 @@ const AppWithMonitoring = () => {
         <Route path="/admin/kb" element={<main id="main"><AdminKB /></main>} />
         <Route path="/qa/telephony" element={<main id="main"><TelephonyQA /></main>} />
         <Route path="/qa/dashboard" element={<main id="main"><Dashboard /></main>} />
+        <Route path="/qa/seo" element={<main id="main"><SEOQA /></main>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>
