@@ -11,6 +11,7 @@ import { NoAIHypeFooter } from "@/components/sections/NoAIHypeFooter";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
+import LayoutCanon from "@/components/LayoutCanon";
 
 const Index = () => {
   const { trackPageView } = useAnalytics();
@@ -20,7 +21,9 @@ const Index = () => {
   }, [trackPageView]);
 
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <>
+      <LayoutCanon />
+      <div className="min-h-screen flex flex-col relative">
       {/* Background Image Layer */}
       <div 
         className="fixed inset-0 z-0"
@@ -118,6 +121,7 @@ const Index = () => {
         <NoAIHypeFooter />
       </div>
     </div>
+    </>
   );
 };
 
