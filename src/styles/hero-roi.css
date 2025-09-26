@@ -1,5 +1,33 @@
-:root { --duo-gap:16px; --duo-max:1200px; }
-.hero-roi__container{ max-width:clamp(960px, 90vw, var(--duo-max)); margin-inline:auto; padding-inline:16px; }
-.hero-roi__grid{ display:grid !important; grid-template-columns:repeat(2, minmax(440px,1fr)); gap:var(--duo-gap); align-items:stretch; }
-#start-trial-hero,#roi-calculator{ position:static !important; transform:none !important; height:100%; display:flex; flex-direction:column; max-width:100% !important; }
-@media (max-width:1024px){ .hero-roi__grid{ grid-template-columns:1fr; } .hero-roi__container{ max-width:680px; } }
+/* === HERO ROI CENTERING CANON === */
+
+/* Container centers itself within the page */
+.hero-roi__container{
+  /* wide enough for two healthy columns + gap, but responsive */
+  max-width: clamp(960px, 90vw, 1200px);
+  margin-inline: auto;           /* center the container itself */
+  padding-inline: 16px;
+}
+
+/* Grid: two equal columns, centered inside the container */
+.hero-roi__grid{
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(440px, 1fr));
+  gap: 16px;
+  align-items: stretch;          /* equal heights */
+  /* Top-align vertically, center horizontally */
+  place-content: start center;   /* align-content: start; justify-content: center; */
+}
+
+/* Safety: ensure the two panels don't shift themselves */
+#start-trial-hero,
+#roi-calculator{
+  position: static !important;
+  transform: none !important;
+  max-width: 100% !important;
+}
+
+/* Stack on tablets/phones */
+@media (max-width: 1024px){
+  .hero-roi__grid{ grid-template-columns: 1fr; }
+  .hero-roi__container{ max-width: 680px; }
+}
