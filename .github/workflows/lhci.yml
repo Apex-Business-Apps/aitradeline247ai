@@ -1,0 +1,25 @@
+name: Lighthouse CI
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "URL to audit"
+        required: true
+        default: "https://www.tradeline247ai.com"
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LHCI
+        run: npm i -g @lhci/cli@0.12.x
+      - name: Run Lighthouse (mobile & desktop)
+        env: { URL: ${{ github.event.inputs.url }} }
+        run: |
+          lhci collect --config=lighthouserc.json --url "$URL"
+          lhci upload --target=temporary-public-storage
+      - name: Upload HTML reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: ".lighthouseci/*report.html"
