@@ -23,7 +23,7 @@ export default function HeroRoiDuo() {
             Never miss a call. Work while you sleep.
           </p>
           
-          <h2 className="text-2xl font-semibold text-[#1e556b] mb-2 mt-[120px] text-center py-0 md:text-3xl my-[50px]">Help us help you.</h2>
+          <h2 className="text-2xl text-[#1e556b] mb-2 mt-[120px] text-center py-0 md:text-4xl font-semibold my-[50px]">Help us help you.</h2>
           
           {/* Custom grid layout for side-by-side components */}
           <div className="hero-roi__container" data-lovable-lock="true" aria-label="Start Trial and ROI">
