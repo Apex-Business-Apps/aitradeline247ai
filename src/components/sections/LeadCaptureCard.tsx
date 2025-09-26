@@ -230,34 +230,32 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         </>
       )}
 
-      <Card className="max-w-lg mx-auto shadow-2xl border-0 bg-background/95 backdrop-blur-sm">
-        <CardHeader className="text-center space-y-4">
-          <div className="animate-fade-in">
-            <CardTitle className="text-2xl flex items-center justify-center gap-2">
-              <Sparkles className="w-6 h-6 text-primary animate-pulse" />
-              Start Your Free Trial
-            </CardTitle>
-            <CardDescription className="text-center mt-2">
-              Tell us about your business and we'll set up your service
-            </CardDescription>
-          </div>
+      <Card className="max-w-[420px] mx-auto shadow-2xl border-0 bg-background/95 backdrop-blur-sm border-primary/20">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="text-lg md:text-xl text-foreground mb-1">
+            <Sparkles className="w-4 h-4 text-primary inline mr-2" />
+            Start Your Free Trial
+          </CardTitle>
+          <CardDescription className="text-center">
+            Tell us about your business
+          </CardDescription>
         </CardHeader>
-        <CardContent className="-mt-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
-              <Label htmlFor="lead-name">Your name *</Label>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <Label htmlFor="lead-name" className="text-sm font-medium text-foreground">Your name *</Label>
               <Input 
                 id="lead-name" 
                 placeholder="Your name" 
                 value={formData.name} 
                 onChange={e => handleInputChange("name", e.target.value)} 
                 required 
-                className="transition-all duration-300 focus:scale-105"
+                className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <Label htmlFor="lead-email">Work email *</Label>
+            <div>
+              <Label htmlFor="lead-email" className="text-sm font-medium text-foreground">Work email *</Label>
               <Input 
                 id="lead-email" 
                 type="email" 
@@ -265,51 +263,39 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
                 value={formData.email} 
                 onChange={e => handleInputChange("email", e.target.value)} 
                 required 
-                className="transition-all duration-300 focus:scale-105"
+                className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
-              <Label htmlFor="lead-phone">Best number</Label>
-              <Input 
-                id="lead-phone" 
-                type="tel" 
-                placeholder="Best number" 
-                value={formData.phone || ""} 
-                onChange={e => handleInputChange("phone" as keyof LeadFormData, e.target.value)} 
-                className="transition-all duration-300 focus:scale-105"
-              />
-            </div>
-
-            <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
-              <Label htmlFor="lead-company">Company name *</Label>
+            <div>
+              <Label htmlFor="lead-company" className="text-sm font-medium text-foreground">Company name *</Label>
               <Input 
                 id="lead-company" 
                 placeholder="Company name" 
                 value={formData.company} 
                 onChange={e => handleInputChange("company", e.target.value)} 
                 required 
-                className="transition-all duration-300 focus:scale-105"
+                className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
-              <Label htmlFor="lead-notes">What do you want help with?</Label>
+            <div>
+              <Label htmlFor="lead-notes" className="text-sm font-medium text-foreground">What do you want help with?</Label>
               <Textarea 
                 id="lead-notes" 
                 placeholder="What do you want help with?" 
                 value={formData.notes} 
                 onChange={e => handleInputChange("notes", e.target.value)} 
-                className="min-h-[100px] transition-all duration-300 focus:scale-105" 
+                className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent min-h-[60px]" 
               />
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '600ms' }}>
-              <label className="flex items-start space-x-3 text-sm text-muted-foreground">
+            <div>
+              <label className="flex items-start space-x-2 text-xs text-muted-foreground">
                 <input
                   type="checkbox"
                   required
-                  className="mt-1 rounded border-gray-300 text-primary focus:ring-primary transition-all duration-200"
+                  className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
                 />
                 <span>
                   I agree to get emails about setup and updates. Unsubscribe anytime.
@@ -317,12 +303,11 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
               </label>
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '700ms' }}>
+            <div className="space-y-2 pt-2">
               <Button 
                 type="submit" 
                 size="lg" 
-                variant={ctaVariant} 
-                className="w-full shadow-lg hover:shadow-xl transition-all duration-300 hover-scale" 
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
