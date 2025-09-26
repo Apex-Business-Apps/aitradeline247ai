@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle, Sparkles } from "lucide-react";
+import { Loader2, CheckCircle, Sparkles, Clock, DollarSign } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useABTest } from "@/hooks/useABTest";
@@ -230,113 +230,171 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         </>
       )}
 
-      <Card className="max-w-lg mx-auto shadow-2xl border-0 bg-background/95 backdrop-blur-sm">
-        <CardHeader className="text-center space-y-4">
-          <div className="animate-fade-in">
-            <CardTitle className="text-2xl flex items-center justify-center gap-2">
-              <Sparkles className="w-6 h-6 text-primary animate-pulse" />
-              Start Your Free Trial
-            </CardTitle>
-            <CardDescription className="text-center mt-2">
-              Tell us about your business and we'll set up your service
-            </CardDescription>
-          </div>
+      <Card className="w-full max-w-[420px] mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="text-lg md:text-xl text-foreground mb-1">
+            Start Your Free Trial
+          </CardTitle>
+          <p className="text-muted-foreground">
+            Tell us about your business and we'll set up your service
+          </p>
         </CardHeader>
-        <CardContent className="-mt-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
-              <Label htmlFor="lead-name">Your name *</Label>
-              <Input 
-                id="lead-name" 
-                placeholder="Your name" 
-                value={formData.name} 
-                onChange={e => handleInputChange("name", e.target.value)} 
-                required 
-                className="transition-all duration-300 focus:scale-105"
-              />
-            </div>
+        
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              {/* Left Column: Form Fields */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-foreground mb-3">Your Information</h3>
+                
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="lead-name" className="text-sm font-medium text-foreground">
+                      Your name *
+                    </Label>
+                    <input 
+                      id="lead-name" 
+                      placeholder="Your name" 
+                      value={formData.name} 
+                      onChange={e => handleInputChange("name", e.target.value)} 
+                      required 
+                      className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
-              <Label htmlFor="lead-email">Work email *</Label>
-              <Input 
-                id="lead-email" 
-                type="email" 
-                placeholder="Work email" 
-                value={formData.email} 
-                onChange={e => handleInputChange("email", e.target.value)} 
-                required 
-                className="transition-all duration-300 focus:scale-105"
-              />
-            </div>
+                  <div>
+                    <Label htmlFor="lead-email" className="text-sm font-medium text-foreground">
+                      Work email *
+                    </Label>
+                    <input 
+                      id="lead-email" 
+                      type="email" 
+                      placeholder="Work email" 
+                      value={formData.email} 
+                      onChange={e => handleInputChange("email", e.target.value)} 
+                      required 
+                      className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
-              <Label htmlFor="lead-phone">Best number</Label>
-              <Input 
-                id="lead-phone" 
-                type="tel" 
-                placeholder="Best number" 
-                value={formData.phone || ""} 
-                onChange={e => handleInputChange("phone" as keyof LeadFormData, e.target.value)} 
-                className="transition-all duration-300 focus:scale-105"
-              />
-            </div>
+                  <div>
+                    <Label htmlFor="lead-company" className="text-sm font-medium text-foreground">
+                      Company name *
+                    </Label>
+                    <input 
+                      id="lead-company" 
+                      placeholder="Company name" 
+                      value={formData.company} 
+                      onChange={e => handleInputChange("company", e.target.value)} 
+                      required 
+                      className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
-              <Label htmlFor="lead-company">Company name *</Label>
-              <Input 
-                id="lead-company" 
-                placeholder="Company name" 
-                value={formData.company} 
-                onChange={e => handleInputChange("company", e.target.value)} 
-                required 
-                className="transition-all duration-300 focus:scale-105"
-              />
-            </div>
+                  <div>
+                    <Label htmlFor="lead-notes" className="text-sm font-medium text-foreground">
+                      What do you want help with?
+                    </Label>
+                    <textarea 
+                      id="lead-notes" 
+                      placeholder="What do you want help with?" 
+                      value={formData.notes} 
+                      onChange={e => handleInputChange("notes", e.target.value)} 
+                      className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent min-h-[60px]"
+                    />
+                  </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
-              <Label htmlFor="lead-notes">What do you want help with?</Label>
-              <Textarea 
-                id="lead-notes" 
-                placeholder="What do you want help with?" 
-                value={formData.notes} 
-                onChange={e => handleInputChange("notes", e.target.value)} 
-                className="min-h-[100px] transition-all duration-300 focus:scale-105" 
-              />
-            </div>
+                  <div>
+                    <label className="flex items-start space-x-2 text-xs text-muted-foreground">
+                      <input
+                        type="checkbox"
+                        required
+                        className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <span>
+                        I agree to get emails about setup and updates.
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '600ms' }}>
-              <label className="flex items-start space-x-3 text-sm text-muted-foreground">
-                <input
-                  type="checkbox"
-                  required
-                  className="mt-1 rounded border-gray-300 text-primary focus:ring-primary transition-all duration-200"
-                />
-                <span>
-                  I agree to get emails about setup and updates. Unsubscribe anytime.
-                </span>
-              </label>
-            </div>
+              {/* Right Column: Next Steps */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-foreground mb-3">Next Steps</h3>
+                
+                <div className="space-y-3">
+                  <div className="bg-muted/50 p-3 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-foreground text-xs">Response Time</span>
+                    </div>
+                    <div className="text-2xl font-bold text-primary">
+                      2 hours
+                    </div>
+                  </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '700ms' }}>
-              <Button 
-                type="submit" 
-                size="lg" 
-                variant={ctaVariant} 
-                className="w-full shadow-lg hover:shadow-xl transition-all duration-300 hover-scale" 
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Grow now
-                  </>
-                )}
-              </Button>
+                  <div className="bg-muted/50 p-3 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium text-foreground">Setup Cost</span>
+                    </div>
+                    <div className="text-2xl font-bold text-primary">
+                      Free
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center py-2 border-b border-border">
+                      <span className="text-sm text-muted-foreground">Demo call</span>
+                      <span className="font-medium text-foreground">15 mins</span>
+                    </div>
+
+                    <div className="flex justify-between items-center py-2 border-b border-border">
+                      <span className="text-sm text-muted-foreground">Setup time</span>
+                      <span className="font-medium text-foreground">24 hours</span>
+                    </div>
+
+                    <div className="flex justify-between items-center py-2 border-b border-border">
+                      <span className="text-sm text-muted-foreground">Trial period</span>
+                      <span className="font-medium text-primary">14 days</span>
+                    </div>
+
+                    <div className="flex justify-between items-center py-2 border-b border-border">
+                      <span className="text-sm text-muted-foreground">Contract length</span>
+                      <span className="font-medium text-primary">Month-to-month</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 pt-2">
+                    <Button 
+                      type="submit" 
+                      size="lg" 
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        "Start Free Trial"
+                      )}
+                    </Button>
+                    
+                    <Button 
+                      size="lg" 
+                      variant="outline" 
+                      className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                      type="button"
+                      onClick={() => window.location.href = '/contact'}
+                    >
+                      Schedule Demo Call
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           </form>
         </CardContent>
