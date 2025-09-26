@@ -1,5 +1,4 @@
 import React from "react";
-import PWAInstall from "./components/PWAInstall";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -14,11 +13,6 @@ import { startKlaviyoAutoCapture } from "./lib/klaviyo-autocapture";
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js"));
 }
-
-// Mount PWAInstall into a portal so layout doesn't shift
-const mount = document.createElement("div");
-document.body.appendChild(mount);
-createRoot(mount).render(<PWAInstall />);
 
 createRoot(document.getElementById("root")!).render(<App />);
 
