@@ -1,21 +1,21 @@
 /* === HERO ROI CENTERING CANON === */
 
-/* Container centers itself within the page */
+/* Container positioned without centering */
 .hero-roi__container{
   /* wide enough for two healthy columns + gap, but responsive */
   max-width: clamp(960px, 90vw, 1200px);
-  margin-inline: auto;           /* center the container itself */
+  margin-inline: 0;              /* no centering */
   padding-inline: 16px;
 }
 
-/* Grid: two equal columns, centered inside the container */
+/* Grid: two equal columns, left-aligned */
 .hero-roi__grid{
   display: grid !important;
   grid-template-columns: repeat(2, minmax(440px, 1fr));
   gap: 16px;
   align-items: stretch;          /* equal heights */
-  /* Top-align vertically, center horizontally */
-  place-content: start center;   /* align-content: start; justify-content: center; */
+  /* Top-align vertically, left-align horizontally */
+  place-content: start;          /* align-content: start; justify-content: start; */
 }
 
 /* Safety: ensure the two panels don't shift themselves */
