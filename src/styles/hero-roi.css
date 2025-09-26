@@ -1,33 +1,48 @@
-/* === HERO ROI CENTERING CANON === */
+/* === HERO DUO CANON — center, equal widths/heights, locked === */
+:root { --hero-duo-gap: 16px; --hero-duo-max: 1200px; }
 
-/* Container positioned without centering */
 .hero-roi__container{
-  /* wide enough for two healthy columns + gap, but responsive */
-  max-width: clamp(960px, 90vw, 1200px);
-  margin-inline: 0;              /* no centering */
+  /* center the whole section within the page */
+  max-width: clamp(960px, 90vw, var(--hero-duo-max));
+  margin-inline: auto;
   padding-inline: 16px;
 }
 
-/* Grid: two equal columns, left-aligned */
+/* center grid tracks under the heading; equal heights */
 .hero-roi__grid{
   display: grid !important;
-  grid-template-columns: repeat(2, minmax(440px, 1fr));
-  gap: 16px;
-  align-items: stretch;          /* equal heights */
-  /* Top-align vertically, left-align horizontally */
-  place-content: start;          /* align-content: start; justify-content: start; */
+  grid-template-columns: repeat(2, minmax(460px, 1fr)); /* roomy, responsive cols */
+  gap: var(--hero-duo-gap);
+  align-items: stretch;          /* equal heights in each column */
+  /* top-align vertically; center horizontally (tracks) */
+  place-content: start center;   /* align-content: start + justify-content: center */
 }
 
-/* Safety: ensure the two panels don't shift themselves */
-#start-trial-hero,
-#roi-calculator{
+/* ensure cards don't self-shift */
+#start-trial-hero, #roi-calculator{
   position: static !important;
   transform: none !important;
+  height: 100%;
+  display: flex; flex-direction: column;
   max-width: 100% !important;
 }
 
-/* Stack on tablets/phones */
-@media (max-width: 1024px){
+/* Give the title a reliable hook and add the 2 cm separation (see JS that sets this id) */
+#hero-duo-title { margin-bottom: 2cm !important; } /* absolute CSS unit */
+
+@media (max-width:1024px){
   .hero-roi__grid{ grid-template-columns: 1fr; }
   .hero-roi__container{ max-width: 680px; }
 }
+
+/* ==== Red overlay if someone breaks the canon ==== */
+.canon-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(185, 28, 28, 0.96); color: #fff; text-align: center;
+  padding: 24px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.canon-overlay[data-open="true"] { display: flex; }
+.canon-overlay__box { max-width: 860px; }
+.canon-overlay__title { font-size: 28px; margin: 0 0 8px; font-weight: 800; }
+.canon-overlay__detail { opacity: .95; white-space: pre-wrap; font-size: 14px; line-height: 1.45; }
