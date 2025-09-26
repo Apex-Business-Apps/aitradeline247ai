@@ -1,10 +1,11 @@
+import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CheckCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { SEOHead } from "@/components/seo/SEOHead";
+import { setSEO } from "@/lib/seo";
 
 const plans = [
   {
@@ -38,55 +39,16 @@ const plans = [
 ];
 
 const Pricing = () => {
+  useEffect(() => {
+    setSEO({
+      title: "Pricing — TradeLine 24/7",
+      description: "Start free. Choose Predictable (zero-monthly) or Commission. No setup fee. Canada-compliant and ready for work.",
+      path: "/pricing",
+    });
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <SEOHead 
-        title="Pricing - TradeLine 24/7 AI Receptionist Plans"
-        description="Simple, transparent pricing for 24/7 AI receptionist services. Commission-only or $249/month plans. No setup fees. Edmonton, AB business."
-        keywords="AI receptionist pricing, business automation cost, 24/7 customer service plans, AI phone answering pricing, Edmonton business"
-        canonical="https://www.tradeline247ai.com/pricing"
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "Product",
-          "name": "TradeLine 24/7 AI Receptionist Service",
-          "description": "24/7 AI receptionist and customer service automation for businesses",
-          "brand": {
-            "@type": "Organization",
-            "name": "Apex Business Systems"
-          },
-          "offers": [
-            {
-              "@type": "Offer",
-              "name": "No Monthly. Pay per appointment.",
-              "price": "149",
-              "priceCurrency": "CAD",
-              "priceSpecification": {
-                "@type": "UnitPriceSpecification",
-                "price": "149",
-                "priceCurrency": "CAD",
-                "unitText": "per qualified appointment"
-              },
-              "description": "Pay only for results — no monthly fees",
-              "url": "https://www.tradeline247ai.com/signup?plan=commission"
-            },
-            {
-              "@type": "Offer", 
-              "name": "Predictable Plan — Core",
-              "price": "249",
-              "priceCurrency": "CAD",
-              "priceSpecification": {
-                "@type": "UnitPriceSpecification",
-                "price": "249",
-                "priceCurrency": "CAD",
-                "unitText": "per month"
-              },
-              "description": "Fixed monthly pricing with transparent overages",
-              "url": "https://www.tradeline247ai.com/signup?plan=core"
-            }
-          ]
-        }}
-      />
-      
       <Header />
       
       <main className="flex-1">

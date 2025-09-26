@@ -1,18 +1,20 @@
+import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SEOHead } from "@/components/seo/SEOHead";
+import { setSEO } from "@/lib/seo";
 
 const Terms = () => {
+  useEffect(() => {
+    setSEO({
+      title: "Terms of Service — TradeLine 24/7",
+      description: "Terms and conditions for using TradeLine 24/7 AI receptionist services. Service description, user responsibilities, and legal information.",
+      path: "/terms",
+    });
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <SEOHead 
-        title="Terms of Service - TradeLine 24/7"
-        description="Terms and conditions for using TradeLine 24/7 AI receptionist services. Service description, user responsibilities, and legal information."
-        keywords="terms of service, legal terms, AI receptionist terms, service agreement"
-        canonical="https://www.tradeline247ai.com/terms"
-      />
-      
       <Header />
       
       <main className="flex-1 py-20">

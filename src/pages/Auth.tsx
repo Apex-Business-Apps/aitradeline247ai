@@ -12,6 +12,7 @@ import { Session, User } from '@supabase/supabase-js';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { usePasswordSecurity } from '@/hooks/usePasswordSecurity';
+import { setSEO } from '@/lib/seo';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -29,6 +30,12 @@ const Auth = () => {
   const { validatePassword: secureValidatePassword } = usePasswordSecurity();
 
   useEffect(() => {
+    setSEO({
+      title: "Start Free Trial — TradeLine 24/7",
+      description: "Tell us about your business and we'll set up your 24/7 AI receptionist. No setup cost.",
+      path: "/auth",
+    });
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {

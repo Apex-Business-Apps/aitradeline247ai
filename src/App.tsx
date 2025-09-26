@@ -7,7 +7,7 @@ import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
 import { WebVitalsTracker } from "@/components/monitoring/WebVitalsTracker";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
@@ -16,6 +16,8 @@ import { useErrorTracking } from "@/hooks/useErrorTracking";
 import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
 import useKlaviyoPageview from "@/hooks/useKlaviyoPageview";
+import { setSEO } from "@/lib/seo";
+import { useEffect } from "react";
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
 import Index from "./pages/Index";
@@ -43,6 +45,19 @@ import Dashboard from "./pages/qa/Dashboard";
 
 const queryClient = new QueryClient();
 
+// Fallback SEO component
+function RouteSEOFallback() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    setSEO({
+      title: "TradeLine 24/7 — Your 24/7 AI Receptionist",
+      description: "Recover missed calls and bookings with an AI receptionist built for trades & local businesses.",
+      path: pathname || "/",
+    });
+  }, [pathname]);
+  return null;
+}
+
 // App monitoring wrapper component
 const AppWithMonitoring = () => {
   // Initialize error tracking
@@ -59,6 +74,7 @@ const AppWithMonitoring = () => {
 
   return (
     <>
+      <RouteSEOFallback />
       <SecurityHeaders />
       <EnhancedSecurityHeaders />
       <SecurityMonitor />

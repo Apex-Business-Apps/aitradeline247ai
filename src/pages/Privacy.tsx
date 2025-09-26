@@ -1,18 +1,20 @@
+import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SEOHead } from "@/components/seo/SEOHead";
+import { setSEO } from "@/lib/seo";
 
 const Privacy = () => {
+  useEffect(() => {
+    setSEO({
+      title: "Privacy Policy — TradeLine 24/7",
+      description: "Learn how TradeLine 24/7 protects your privacy and data. SOC 2 compliant, GDPR ready with bank-level security for AI receptionist services.",
+      path: "/privacy",
+    });
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <SEOHead 
-        title="Privacy Policy - TradeLine 24/7"
-        description="Learn how TradeLine 24/7 protects your privacy and data. SOC 2 compliant, GDPR ready with bank-level security for AI receptionist services."
-        keywords="privacy policy, data protection, GDPR compliance, AI receptionist security"
-        canonical="https://www.tradeline247ai.com/privacy"
-      />
-      
       <Header />
       
       <main className="flex-1 py-20">

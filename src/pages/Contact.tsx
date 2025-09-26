@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Clock, MessageCircle, Loader2 } from "lucide-react";
-import { SEOHead } from "@/components/seo/SEOHead";
+import { setSEO } from "@/lib/seo";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -48,6 +48,14 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    setSEO({
+      title: "Contact — TradeLine 24/7",
+      description: "Talk to our team, get a demo, or ask a question. Typical response time: ~2 hours.",
+      path: "/contact",
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,13 +108,6 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <SEOHead 
-        title="Contact Us - TradeLine 24/7 AI Receptionist"
-        description="Get in touch with TradeLine 24/7 for AI receptionist services. Contact sales, support, or request a demo of our 24/7 customer service automation."
-        keywords="contact TradeLine 24/7, AI receptionist support, business automation contact, customer service demo"
-        canonical="https://www.tradeline247ai.com/contact"
-      />
-      
       <Header />
       
       <main className="flex-1">
