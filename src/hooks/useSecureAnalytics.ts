@@ -98,29 +98,14 @@ export const useSecureAnalytics = (config: SecureAnalyticsConfig = {}) => {
   const optOut = useCallback(() => {
     setIsTracking(false);
     localStorage.setItem('analytics_opt_out', 'true');
-    
-    // Track the opt-out event (ironic but important for compliance)
-    trackEvent({
-      event_type: 'privacy_opt_out',
-      event_data: {
-        timestamp: new Date().toISOString(),
-        user_choice: 'opted_out'
-      }
-    });
-  }, [trackEvent]);
+    // Note: We don't track opt-out events to prevent recursion
+  }, []);
 
   const optIn = useCallback(() => {
     setIsTracking(true);
     localStorage.removeItem('analytics_opt_out');
-    
-    trackEvent({
-      event_type: 'privacy_opt_in',
-      event_data: {
-        timestamp: new Date().toISOString(),
-        user_choice: 'opted_in'
-      }
-    });
-  }, [trackEvent]);
+    // Note: We don't track opt-in events to prevent recursion
+  }, []);
 
   const getPrivacyStatus = useCallback(() => {
     return {
