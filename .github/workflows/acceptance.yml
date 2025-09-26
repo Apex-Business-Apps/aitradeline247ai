@@ -1,0 +1,22 @@
+name: Acceptance Sweep
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: "Base URL"
+        required: true
+        default: "https://www.tradeline247ai.com"
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run acceptance_sweep.sh
+        run: |
+          chmod +x scripts/acceptance_sweep.sh || true
+          # If the script defines BASE internally, leave it. If it has a BASE line, patch it.
+          if grep -q '^BASE=' scripts/acceptance_sweep.sh; then
+            sed -i "s#^BASE=.*#BASE=\"${{ github.event.inputs.base }}\"#" scripts/acceptance_sweep.sh || true
+          fi
+          bash scripts/acceptance_sweep.sh
