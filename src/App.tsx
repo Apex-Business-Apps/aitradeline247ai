@@ -15,6 +15,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { useErrorTracking } from "@/hooks/useErrorTracking";
 import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
+import useKlaviyoPageview from "@/hooks/useKlaviyoPageview";
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
 import Index from "./pages/Index";
@@ -50,6 +51,9 @@ const AppWithMonitoring = () => {
   
   // Initialize performance optimization
   const { measureRenderTime } = usePerformanceOptimization();
+  
+  // Initialize Klaviyo pageview tracking
+  useKlaviyoPageview();
 
   return (
     <>

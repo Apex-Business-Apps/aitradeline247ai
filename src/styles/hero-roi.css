@@ -1,48 +1,5 @@
-/* ROI Duo Canon Fix — do not edit outside this block */
-:root {
-  --duo-gap: 16px;
-  --duo-max: 1200px;           /* wide enough for two healthy columns */
-}
-
-/* Center + sensible width; prevent "sardine" */
-.hero-roi__container {
-  max-width: clamp(960px, 90vw, var(--duo-max));
-  margin-inline: auto;         /* center the container */
-  padding-inline: 16px;
-}
-
-/* Two equal, tall columns on desktop */
-.hero-roi__grid {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(440px, 1fr));
-  gap: var(--duo-gap);
-  align-items: stretch;        /* equal heights */
-}
-
-/* Make sure inner content can actually fill the column */
-.hero-roi__container,
-.hero-roi__container * {
-  box-sizing: border-box;      /* padding/border won't collapse width */
-}
-
-/* Kill stray transforms/positioning that break alignment */
-#start-trial-hero,
-#roi-calculator {
-  position: static !important;
-  transform: none !important;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  max-width: 100% !important;
-}
-
-#start-trial-hero * ,
-#roi-calculator * {
-  max-width: 100%;
-}
-
-/* Stack cleanly on tablets/phones */
-@media (max-width: 1024px) {
-  .hero-roi__grid { grid-template-columns: 1fr; }
-  .hero-roi__container { max-width: 680px; }
-}
+:root { --duo-gap:16px; --duo-max:1200px; }
+.hero-roi__container{ max-width:clamp(960px, 90vw, var(--duo-max)); margin-inline:auto; padding-inline:16px; }
+.hero-roi__grid{ display:grid !important; grid-template-columns:repeat(2, minmax(440px,1fr)); gap:var(--duo-gap); align-items:stretch; }
+#start-trial-hero,#roi-calculator{ position:static !important; transform:none !important; height:100%; display:flex; flex-direction:column; max-width:100% !important; }
+@media (max-width:1024px){ .hero-roi__grid{ grid-template-columns:1fr; } .hero-roi__container{ max-width:680px; } }

@@ -1,22 +1,43 @@
 name: Acceptance Sweep
-on:
-  workflow_dispatch:
-    inputs:
-      base:
-        description: "Base URL"
-        required: true
-        default: "https://www.tradeline247ai.com"
+on: { workflow_dispatch: { inputs: { base: { description: "Base URL", required: true, default: "https://www.tradeline247ai.com" } } } }
 jobs:
   sweep:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Run acceptance_sweep.sh
+      - uses: actions/checkout@v4
+      - name: Run acceptance_sweep.sh (create if missing)
         run: |
-          chmod +x scripts/acceptance_sweep.sh || true
-          # If the script defines BASE internally, leave it. If it has a BASE line, patch it.
-          if grep -q '^BASE=' scripts/acceptance_sweep.sh; then
-            sed -i "s#^BASE=.*#BASE=\"${{ github.event.inputs.base }}\"#" scripts/acceptance_sweep.sh || true
-          fi
-          bash scripts/acceptance_sweep.sh
+          mkdir -p scripts
+          cat > scripts/acceptance_sweep.sh <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          BASE="${BASE:-${{ github.event.inputs.base }}}"
+
+          pass=true
+          echo "== HEAD =="
+          curl -fsS -I "$BASE/" | head -n1 || { echo "FAIL: HEAD"; pass=false; }
+
+          echo "== healthz / readyz =="
+          curl -fsS "$BASE/healthz" || { echo "FAIL: /healthz"; pass=false; }
+          curl -fsS "$BASE/readyz"  || { echo "WARN: /readyz"; }
+
+          echo "== robots/sitemap =="
+          curl -fsS "$BASE/robots.txt" | tee /tmp/robots.txt >/dev/null
+          grep -q "$BASE/sitemap.xml" /tmp/robots.txt || { echo "FAIL: robots sitemap host"; pass=false; }
+          curl -fsS "$BASE/sitemap.xml" | tee /tmp/sitemap.xml >/dev/null
+          grep -q "$BASE/" /tmp/sitemap.xml || { echo "FAIL: sitemap host"; pass=false; }
+
+          echo "== PWA =="
+          curl -fsS "$BASE/manifest.webmanifest" | tee /tmp/manifest.json >/dev/null
+          grep -q '"display": *"standalone"' /tmp/manifest.json || { echo "FAIL: manifest display"; pass=false; }
+          for i in 192 512; do code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/assets/brand/App_Icons/icon-$i.png"); [ "$code" = "200" ] || { echo "FAIL: icon-$i"; pass=false; }; done
+
+          echo "== GA4 + Klaviyo presence on / =="
+          html=$(curl -fsS "$BASE/" )
+          echo "$html" | grep -q "G-5KPE9X0NDM" || { echo "FAIL: GA4 ID missing"; pass=false; }
+          echo "$html" | grep -q "static.klaviyo.com/onsite/js/Te837r/klaviyo.js" || { echo "FAIL: Klaviyo snippet missing"; pass=false; }
+
+          $pass && { echo "✅ ACCEPTANCE: PASS"; exit 0; } || { echo "❌ ACCEPTANCE: FAIL"; exit 1; }
+          EOF
+          chmod +x scripts/acceptance_sweep.sh
+          BASE="${{ github.event.inputs.base }}" bash scripts/acceptance_sweep.sh
