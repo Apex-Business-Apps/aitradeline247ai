@@ -50,6 +50,24 @@ export type Database = {
         }
         Relationships: []
       }
+      blocklist_numbers: {
+        Row: {
+          created_at: string
+          phone_e164: string
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string
+          phone_e164: string
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string
+          phone_e164?: string
+          reason?: string | null
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           created_at: string | null
@@ -82,23 +100,35 @@ export type Database = {
       }
       calls: {
         Row: {
+          booked: boolean | null
           call_sid: string
           caller_e164: string | null
+          intent: string | null
           org_id: string
+          outcome: string | null
+          redacted: boolean | null
           started_at: string | null
           status: string | null
         }
         Insert: {
+          booked?: boolean | null
           call_sid: string
           caller_e164?: string | null
+          intent?: string | null
           org_id: string
+          outcome?: string | null
+          redacted?: boolean | null
           started_at?: string | null
           status?: string | null
         }
         Update: {
+          booked?: boolean | null
           call_sid?: string
           caller_e164?: string | null
+          intent?: string | null
           org_id?: string
+          outcome?: string | null
+          redacted?: boolean | null
           started_at?: string | null
           status?: string | null
         }
@@ -205,6 +235,41 @@ export type Database = {
           },
         ]
       }
+      faqs: {
+        Row: {
+          a: string
+          created_at: string
+          id: string
+          organization_id: string
+          q: string
+          updated_at: string
+        }
+        Insert: {
+          a: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          q: string
+          updated_at?: string
+        }
+        Update: {
+          a?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          q?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faqs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hotline_numbers: {
         Row: {
           agent_name: string
@@ -299,6 +364,56 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      org_settings: {
+        Row: {
+          business_hours: Json | null
+          calendly_url: string | null
+          emergency_number: string | null
+          gcal_service: Json | null
+          language: string | null
+          organization_id: string
+          slack_webhook_url: string | null
+          teams_webhook_url: string | null
+          updated_at: string
+          voice_id: string | null
+          zap_outgoing_url: string | null
+        }
+        Insert: {
+          business_hours?: Json | null
+          calendly_url?: string | null
+          emergency_number?: string | null
+          gcal_service?: Json | null
+          language?: string | null
+          organization_id: string
+          slack_webhook_url?: string | null
+          teams_webhook_url?: string | null
+          updated_at?: string
+          voice_id?: string | null
+          zap_outgoing_url?: string | null
+        }
+        Update: {
+          business_hours?: Json | null
+          calendly_url?: string | null
+          emergency_number?: string | null
+          gcal_service?: Json | null
+          language?: string | null
+          organization_id?: string
+          slack_webhook_url?: string | null
+          teams_webhook_url?: string | null
+          updated_at?: string
+          voice_id?: string | null
+          zap_outgoing_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organization_members: {
         Row: {
