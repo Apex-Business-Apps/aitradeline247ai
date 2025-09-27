@@ -58,7 +58,7 @@ export const ImpactStrip = () => {
         <div className="text-center mt-12 animate-fade-in" style={{
         animationDelay: '600ms'
       }}>
-          <p className="text-muted-foreground font-medium text-xl text-center">
+          <p className="font-medium text-xl text-center text-slate-900">
             If you can't beat 'em, hire 'em!
           </p>
         </div>

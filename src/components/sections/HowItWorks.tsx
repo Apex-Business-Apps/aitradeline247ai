@@ -13,7 +13,7 @@ const steps = [{
 }, {
   icon: Zap,
   step: "03",
-  title: "Growth is 24/7",
+  title: "Start Growing 24/7",
   description: "Your AI receptionist handles inquiries, books appointments, captures leads, and escalates when needed - all while you focus on growing your business."
 }];
 export const HowItWorks = () => {
@@ -23,7 +23,7 @@ export const HowItWorks = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             How It Works
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg max-w-2xl mx-auto text-slate-800">
             Get your AI receptionist up and running in three simple steps
           </p>
         </div>
