@@ -13,7 +13,7 @@ const steps = [{
 }, {
   icon: Zap,
   step: "03",
-  title: "Start Growing 24/7",
+  title: "Growth is 24/7",
   description: "Your AI receptionist handles inquiries, books appointments, captures leads, and escalates when needed - all while you focus on growing your business."
 }];
 export const HowItWorks = () => {
