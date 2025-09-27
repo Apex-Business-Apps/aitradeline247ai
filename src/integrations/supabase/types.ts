@@ -677,6 +677,10 @@ export type Database = {
         Args: { p_phone_e164: string }
         Returns: string
       }
+      share_org: {
+        Args: { _user_a: string; _user_b: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator"
