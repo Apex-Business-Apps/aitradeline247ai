@@ -495,6 +495,42 @@ export type Database = {
         }
         Relationships: []
       }
+      security_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string | null
+          event_data: Json | null
+          id: string
+          ip_address: unknown | null
+          resolved: boolean | null
+          severity: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string | null
+          event_data?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resolved?: boolean | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string | null
+          event_data?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resolved?: boolean | null
+          severity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       supported_locales: {
         Row: {
           code: string
@@ -634,6 +670,19 @@ export type Database = {
         Args: { "": string }
         Returns: string
       }
+      cleanup_old_analytics_events: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      detect_auth_anomalies: {
+        Args: {
+          p_event_type: string
+          p_ip_address: unknown
+          p_user_agent: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -648,6 +697,16 @@ export type Database = {
       is_org_member: {
         Args: { p_org_id: string }
         Returns: boolean
+      }
+      log_data_export: {
+        Args: {
+          p_export_type: string
+          p_filters?: Json
+          p_record_count: number
+          p_table_name: string
+          p_user_id: string
+        }
+        Returns: undefined
       }
       log_security_event: {
         Args: {
