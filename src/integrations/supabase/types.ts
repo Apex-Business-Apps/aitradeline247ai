@@ -916,6 +916,38 @@ export type Database = {
           },
         ]
       }
+      retention_policies: {
+        Row: {
+          email_logs_days: number
+          org_id: string
+          recordings_days: number
+          transcripts_days: number
+          updated_at: string | null
+        }
+        Insert: {
+          email_logs_days?: number
+          org_id: string
+          recordings_days?: number
+          transcripts_days?: number
+          updated_at?: string | null
+        }
+        Update: {
+          email_logs_days?: number
+          org_id?: string
+          recordings_days?: number
+          transcripts_days?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retention_policies_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: true
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_alerts: {
         Row: {
           alert_type: string

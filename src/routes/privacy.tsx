@@ -29,14 +29,14 @@ const Privacy: React.FC = () => {
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Information We Collect</h2>
                   <p className="text-muted-foreground">
-                    TradeLine 24/7 collects information to provide our AI receptionist services in compliance with PIPEDA and applicable Canadian privacy laws.
+                    TradeLine 24/7 collects information to provide our AI receptionist services in compliance with PIPEDA (Personal Information Protection and Electronic Documents Act) and applicable Canadian privacy laws.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">CASL Compliance</h2>
                   <p className="text-muted-foreground">
-                    We comply with Canada's Anti-Spam Legislation (CASL). All marketing communications require express consent, and you can withdraw consent at any time.
+                    We comply with Canada's Anti-Spam Legislation (CASL). All marketing communications require express consent. You can withdraw consent at any time by contacting info@tradeline247ai.com.
                   </p>
                 </section>
 

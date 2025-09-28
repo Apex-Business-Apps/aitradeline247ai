@@ -1,7 +1,7 @@
 # Wire Next - Phase 2 Integration
 
 ## Overview
-Phase 2 system integration that wires auth protection, audit logging, retention jobs, and legal compliance.
+Phase 2 system integration that wires auth protection, audit logging, retention jobs, and existing onboarding systems into a single import.
 
 ## Files Created
 - `server/boot/wire.next.mjs` - Main integration point
@@ -18,14 +18,16 @@ await wireNext(app);
 ```
 
 ## What Gets Wired
-1. **Auth Protection** (`auth.protect.wire.mjs`)
-   - JWT middleware for `/api/settings*`
-   - JWT middleware for `/api/billing/portal`
+1. **Existing Onboarding** (`onboarding.wire.mjs`)
+   - Gracefully handles if not found
+   
+2. **Auth Protection** (`auth.protect.wire.mjs`)
+   - JWT middleware for `/api/settings*`, `/api/billing/portal`
 
-2. **Audit Viewer** (`internal.audit.view.mjs`) 
+3. **Audit Viewer** (`internal.audit.recent.mjs`) 
    - GET `/internal/audit/recent` endpoint
 
-3. **Retention Job** (`internal.retention.run.mjs`)
+4. **Retention Job** (`internal.retention.run.mjs`)
    - POST `/internal/retention/run` endpoint
 
 ## Startup Log
@@ -38,8 +40,11 @@ Look for these console messages:
 ```
 
 ## Error Handling
-If wiring fails, check:
-- Import paths are correct
-- Supabase client is configured
-- All dependencies are installed
-- No circular imports
+- Graceful handling of missing onboarding wire
+- Logs errors but continues with other wiring
+- Each system wire is independent
+
+## Order of Operations
+1. Call wireNext(app) after status/enhancements wiring
+2. Ensures auth protection is applied to existing routes
+3. Audit and retention endpoints are available for ops

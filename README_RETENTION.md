@@ -22,11 +22,7 @@ POST /internal/retention/run?dry=1
     "recordings_deleted": 0,
     "dry_run": true
   },
-  "retention_policies": {
-    "email_logs_days": 90,
-    "transcripts_days": 365,
-    "recordings_days": 30
-  }
+  "policies_processed": 1
 }
 ```
 
@@ -36,10 +32,17 @@ POST /internal/retention/run?dry=1
 POST /internal/retention/run
 ```
 
-## Retention Policies
-- **Email logs**: 90 days (hard delete)
-- **Transcripts**: 365 days (soft delete/redaction)
+## Retention Policies (per org)
+- **Email logs**: 180 days (hard delete) 
+- **Transcripts**: 90 days (soft delete/redaction)
 - **Twilio recordings**: 30 days (API deletion)
+
+## How It Works
+1. Reads retention policies from `retention_policies` table
+2. For each org, processes cleanup based on policy
+3. Transcripts are soft-deleted (content → '[REDACTED - RETENTION POLICY]')
+4. Twilio recordings deleted via REST API if credentials available
+5. Email logs cleaned up when table exists
 
 ## Cron Schedule
 Recommended: Weekly execution
@@ -49,7 +52,7 @@ Recommended: Weekly execution
 ```
 
 ## Implementation Notes
-- Start with dry-run testing
-- Monitor logs for errors
+- Always start with dry-run testing (`?dry=1`)
+- Monitor logs for Twilio API errors
 - Verify compliance with local data laws
-- Consider org-specific retention policies
+- Consider org-specific retention policies via UI

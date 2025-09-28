@@ -29,27 +29,29 @@ const Terms: React.FC = () => {
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Acceptance of Terms</h2>
                   <p className="text-muted-foreground">
-                    By using TradeLine 24/7 services provided by Apex Business Systems, you agree to these terms. Our services are governed by Canadian law.
+                    By using TradeLine 24/7 services provided by Apex Business Systems, you agree to these terms. Our services are governed by Canadian law and Alberta provincial law.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Service Description</h2>
                   <p className="text-muted-foreground">
-                    TradeLine 24/7 provides AI-powered receptionist services including call handling, message processing, and appointment scheduling for Canadian businesses.
+                    TradeLine 24/7 provides AI-powered receptionist services including call handling, message processing, and appointment scheduling for Canadian businesses, with compliance to CASL and PIPEDA requirements.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Limitation of Liability</h2>
                   <p className="text-muted-foreground">
-                    Our liability is limited under Canadian law. We are not liable for indirect damages arising from service use.
+                    Our liability is limited under Canadian law. We are not liable for indirect, incidental, or consequential damages arising from service use. Maximum liability is limited to fees paid in the preceding 12 months.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Contact Information</h2>
                   <p className="text-muted-foreground">
+                    For questions about these Terms of Service:
+                    <br />
                     Apex Business Systems
                     <br />
                     Email: info@tradeline247ai.com

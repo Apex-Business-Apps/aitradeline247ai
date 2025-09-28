@@ -1,4 +1,10 @@
-import { supabase } from '../lib/supabaseClient.mjs';
+import { createClient } from '@supabase/supabase-js';
+import Twilio from 'twilio';
+
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hysvqdwmhxnblxfqnszn.supabase.co';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 /**
  * Data retention job - POST /internal/retention/run
@@ -15,48 +21,76 @@ export function wireRetention(app) {
         dry_run: isDryRun
       };
 
-      // Default retention policies (should come from org settings in production)
-      const retentionPolicies = {
-        email_logs_days: 90,
-        transcripts_days: 365,
-        recordings_days: 30
-      };
+      // Get all retention policies
+      const { data: policies } = await supabase
+        .from('retention_policies')
+        .select('*');
 
-      // Clean old email logs (if table exists)
-      const emailCutoff = new Date();
-      emailCutoff.setDate(emailCutoff.getDate() - retentionPolicies.email_logs_days);
-      
-      if (!isDryRun) {
-        // This would delete actual records
-        // const { count: emailCount } = await supabase
-        //   .from('email_logs')
-        //   .delete()
-        //   .lt('created_at', emailCutoff.toISOString());
-        // summary.email_logs_deleted = emailCount || 0;
-      } else {
-        // Dry run - just count what would be deleted
-        summary.email_logs_deleted = 0; // Would query count here
+      if (!policies || policies.length === 0) {
+        return res.json({
+          ok: true,
+          message: 'No retention policies found',
+          summary
+        });
       }
 
-      // Clean old transcripts (soft delete)
-      const transcriptCutoff = new Date();
-      transcriptCutoff.setDate(transcriptCutoff.getDate() - retentionPolicies.transcripts_days);
-      
-      if (!isDryRun) {
-        const { count: transcriptCount } = await supabase
-          .from('transcripts')
-          .update({ content: '[REDACTED - RETENTION POLICY]' })
-          .lt('created_at', transcriptCutoff.toISOString());
-        summary.transcripts_deleted = transcriptCount || 0;
-      }
+      for (const policy of policies) {
+        // Clean old transcripts (soft delete)
+        const transcriptCutoff = new Date();
+        transcriptCutoff.setDate(transcriptCutoff.getDate() - policy.transcripts_days);
+        
+        if (!isDryRun) {
+          const { count: transcriptCount } = await supabase
+            .from('transcripts')
+            .update({ content: '[REDACTED - RETENTION POLICY]' })
+            .eq('org_id', policy.org_id)
+            .lt('created_at', transcriptCutoff.toISOString());
+          summary.transcripts_deleted += transcriptCount || 0;
+        }
 
-      // Note: Twilio recording deletion would require API calls
-      // This is handled separately if TWILIO_ACCOUNT_SID is present
+        // Delete Twilio recordings if credentials available
+        if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+          const client = Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+          const recordingCutoff = new Date();
+          recordingCutoff.setDate(recordingCutoff.getDate() - policy.recordings_days);
+          
+          if (!isDryRun) {
+            try {
+              const recordings = await client.recordings.list({
+                dateCreatedBefore: recordingCutoff,
+                limit: 100
+              });
+              
+              for (const recording of recordings) {
+                await recording.remove();
+                summary.recordings_deleted++;
+              }
+            } catch (twilioError) {
+              console.error('Twilio recording cleanup failed:', twilioError);
+            }
+          }
+        }
+
+        // Email logs cleanup would go here if table exists
+        // This is a placeholder for future email_logs table
+        const emailCutoff = new Date();
+        emailCutoff.setDate(emailCutoff.getDate() - policy.email_logs_days);
+        
+        if (!isDryRun) {
+          // Placeholder for email_logs cleanup
+          // const { count: emailCount } = await supabase
+          //   .from('email_logs')  
+          //   .delete()
+          //   .eq('org_id', policy.org_id)
+          //   .lt('created_at', emailCutoff.toISOString());
+          // summary.email_logs_deleted += emailCount || 0;
+        }
+      }
 
       res.json({
         ok: true,
         summary,
-        retention_policies: retentionPolicies,
+        policies_processed: policies.length,
         timestamp: new Date().toISOString()
       });
 
