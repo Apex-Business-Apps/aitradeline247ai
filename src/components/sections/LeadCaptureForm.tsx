@@ -255,6 +255,8 @@ export const LeadCaptureForm = () => {
                   value={formData.name} 
                   onChange={e => handleInputChange("name", e.target.value)} 
                   required 
+                  aria-describedby="lead-name-error"
+                  aria-required="true"
                   className="transition-all duration-300 focus:scale-105"
                 />
               </div>
@@ -268,6 +270,9 @@ export const LeadCaptureForm = () => {
                   value={formData.email} 
                   onChange={e => handleInputChange("email", e.target.value)} 
                   required 
+                  aria-describedby="lead-email-error"
+                  aria-required="true"
+                  autoComplete="work email"
                   className="transition-all duration-300 focus:scale-105"
                 />
               </div>
@@ -280,8 +285,11 @@ export const LeadCaptureForm = () => {
                   placeholder="Best number" 
                   value={formData.phone || ""} 
                   onChange={e => handleInputChange("phone" as keyof LeadFormData, e.target.value)} 
+                  aria-describedby="lead-phone-help"
+                  autoComplete="tel"
                   className="transition-all duration-300 focus:scale-105"
                 />
+                <div id="lead-phone-help" className="sr-only">Optional phone number for contact</div>
               </div>
 
               <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
@@ -292,6 +300,9 @@ export const LeadCaptureForm = () => {
                   value={formData.company} 
                   onChange={e => handleInputChange("company", e.target.value)} 
                   required 
+                  aria-describedby="lead-company-error"
+                  aria-required="true"
+                  autoComplete="organization"
                   className="transition-all duration-300 focus:scale-105"
                 />
               </div>
@@ -303,21 +314,27 @@ export const LeadCaptureForm = () => {
                   placeholder="What do you want help with?" 
                   value={formData.notes} 
                   onChange={e => handleInputChange("notes", e.target.value)} 
+                  aria-describedby="lead-notes-help"
                   className="min-h-[100px] transition-all duration-300 focus:scale-105" 
                 />
+                <div id="lead-notes-help" className="sr-only">Optional description of how TradeLine 24/7 can help your business</div>
               </div>
 
               <div className="animate-fade-in" style={{ animationDelay: '600ms' }}>
                 <label className="flex items-start space-x-3 text-sm text-muted-foreground">
                   <input
+                    id="consent-checkbox"
                     type="checkbox"
                     required
+                    aria-required="true"
+                    aria-describedby="consent-help"
                     className="mt-1 rounded border-gray-300 text-primary focus:ring-primary transition-all duration-200"
                   />
                   <span>
-                I agree to get emails about setup and updates. Unsubscribe anytime.
+                    I agree to get emails about setup and updates. Unsubscribe anytime.
                   </span>
                 </label>
+                <div id="consent-help" className="sr-only">Required consent for email communications per Canadian CASL regulations</div>
               </div>
 
               <div className="animate-fade-in" style={{ animationDelay: '700ms' }}>

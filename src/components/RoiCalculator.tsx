@@ -95,35 +95,83 @@ const RoiCalculator = () => {
                 <Label htmlFor="calls" className="text-sm font-medium text-foreground">
                   Monthly inbound calls
                 </Label>
-                <input id="calls" type="number" min="0" value={calls} onChange={e => setCalls(Number(e.target.value) || 0)} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input 
+                  id="calls" 
+                  type="number" 
+                  min="0" 
+                  value={calls} 
+                  onChange={e => setCalls(Number(e.target.value) || 0)} 
+                  aria-describedby="calls-help"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+                <div id="calls-help" className="sr-only">Enter the total number of phone calls your business receives per month</div>
               </div>
 
               <div>
                 <Label htmlFor="currentAnswer" className="text-sm font-medium text-foreground">
                   Current answer rate (%)
                 </Label>
-                <input id="currentAnswer" type="number" min="0" max="100" value={currentAnswer} onChange={e => setCurrentAnswer(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input 
+                  id="currentAnswer" 
+                  type="number" 
+                  min="0" 
+                  max="100" 
+                  value={currentAnswer} 
+                  onChange={e => setCurrentAnswer(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
+                  aria-describedby="currentAnswer-help"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+                <div id="currentAnswer-help" className="sr-only">Percentage of calls currently answered by your team (0-100)</div>
               </div>
 
               <div>
                 <Label htmlFor="conv" className="text-sm font-medium text-foreground">
                   Appointment conversion when answered (%)
                 </Label>
-                <input id="conv" type="number" min="0" max="100" value={conv} onChange={e => setConv(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input 
+                  id="conv" 
+                  type="number" 
+                  min="0" 
+                  max="100" 
+                  value={conv} 
+                  onChange={e => setConv(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
+                  aria-describedby="conv-help"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+                <div id="conv-help" className="sr-only">Percentage of answered calls that result in appointments (0-100)</div>
               </div>
 
               <div>
                 <Label htmlFor="value" className="text-sm font-medium text-foreground">
                   Avg revenue per appointment (CAD)
                 </Label>
-                <input id="value" type="number" min="0" value={value} onChange={e => setValue(Number(e.target.value) || 0)} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input 
+                  id="value" 
+                  type="number" 
+                  min="0" 
+                  value={value} 
+                  onChange={e => setValue(Number(e.target.value) || 0)} 
+                  aria-describedby="value-help"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+                <div id="value-help" className="sr-only">Average revenue in Canadian dollars generated per appointment</div>
               </div>
 
               <div>
                 <Label htmlFor="tlCapture" className="text-sm font-medium text-foreground">
                   Our after-hours capture (%)
                 </Label>
-                <input id="tlCapture" type="number" min="0" max="100" value={tlCapture} onChange={e => setTlCapture(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                <input 
+                  id="tlCapture" 
+                  type="number" 
+                  min="0" 
+                  max="100" 
+                  value={tlCapture} 
+                  onChange={e => setTlCapture(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
+                  aria-describedby="tlCapture-help"
+                  className="w-full mt-1 px-2 py-1 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                />
+                <div id="tlCapture-help" className="sr-only">Expected percentage of missed calls TradeLine 24/7 can capture (0-100)</div>
               </div>
             </div>
           </div>
