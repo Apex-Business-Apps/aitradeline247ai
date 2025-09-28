@@ -42,6 +42,11 @@ import TelephonyQA from "./pages/qa/Telephony";
 import Dashboard from "./pages/qa/Dashboard";
 import SEOQA from "./pages/qa/SEO";
 import PWAQA from "./pages/qa/PWA";
+import Login from "./routes/login";
+import Logout from "./routes/logout";
+import PrivacyRoute from "./routes/privacy";
+import TermsRoute from "./routes/terms";
+import { AuthProvider } from "./context/AuthProvider";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +92,8 @@ const AppWithMonitoring = () => {
         <Route path="/contact" element={<main id="main"><Contact /></main>} />
         <Route path="/privacy" element={<main id="main"><Privacy /></main>} />
         <Route path="/terms" element={<main id="main"><Terms /></main>} />
+        <Route path="/login" element={<main id="main"><Login /></main>} />
+        <Route path="/logout" element={<main id="main"><Logout /></main>} />
         <Route path="/design-tokens" element={<main id="main"><DesignTokens /></main>} />
         <Route path="/dashboard" element={<main id="main"><ClientDashboard /></main>} />
         <Route path="/dashboard/integrations/crm" element={<main id="main"><CRMIntegration /></main>} />
@@ -114,14 +121,16 @@ const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <StartupSplash />
-        <BrowserRouter>
-          <AppWithMonitoring />
-          <InstallPrompt />
-          <MiniChat />
-        </BrowserRouter>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <StartupSplash />
+          <BrowserRouter>
+            <AppWithMonitoring />
+            <InstallPrompt />
+            <MiniChat />
+          </BrowserRouter>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>
