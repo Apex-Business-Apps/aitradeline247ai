@@ -13,13 +13,16 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 export async function latestConsent(e164) {
   const { data, error } = await supabase
     .from('v_latest_consent')
-    .select('channel, status')
+    .select('*')
     .eq('e164', e164);
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error fetching consent:', error);
+    return { sms: null, whatsapp: null };
+  }
 
   const result = { sms: null, whatsapp: null };
-  data?.forEach(row => {
+  data.forEach(row => {
     result[row.channel] = row.status;
   });
 
@@ -27,6 +30,7 @@ export async function latestConsent(e164) {
 }
 
 export async function chooseChannel(e164) {
+  // Check contact capabilities and consent
   const { data: contact } = await supabase
     .from('contacts')
     .select('wa_capable')
@@ -34,24 +38,32 @@ export async function chooseChannel(e164) {
     .single();
 
   const consent = await latestConsent(e164);
-  
+
+  // Use WhatsApp if capable and consented (or no explicit opt-out)
   if (contact?.wa_capable && consent.whatsapp !== 'opt_out') {
     return 'whatsapp';
   }
-  
-  return 'sms';
+
+  // Default to SMS if not opted out
+  return consent.sms !== 'opt_out' ? 'sms' : null;
 }
 
 export async function maySendInitial(e164) {
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  
   const { data, error } = await supabase
     .from('outreach_sessions')
     .select('id')
     .eq('e164', e164)
+    .gte('created_at', cutoff)
     .in('state', ['pending', 'sent'])
-    .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
     .limit(1);
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error checking recent sessions:', error);
+    return false;
+  }
+
   return data.length === 0;
 }
 
@@ -61,117 +73,114 @@ export async function createSessionFromCall({ callSid, e164, meta }) {
     .upsert({
       call_sid: callSid,
       e164: e164,
-      channel: await chooseChannel(e164),
-      state: 'pending',
-      meta: meta || {}
-    }, { 
-      onConflict: 'call_sid',
-      ignoreDuplicates: false 
+      meta: meta || {},
+      channel: await chooseChannel(e164)
+    }, {
+      onConflict: 'call_sid'
     })
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error creating session:', error);
+    throw error;
+  }
+
   return data;
 }
 
 export async function sendInitial(session) {
-  const businessName = process.env.BUSINESS_NAME || 'TradeLine 24/7';
-  
   // Get contact name for personalization
   const { data: contact } = await supabase
     .from('contacts')
     .select('first_name')
     .eq('e164', session.e164)
     .single();
-  
+
   const firstName = contact?.first_name || 'there';
+  const businessName = process.env.BUSINESS_NAME || 'our business';
+
+  let messageResult;
   
   try {
     if (session.channel === 'whatsapp') {
-      // WhatsApp interactive message with 3 buttons
-      await sendWhatsApp(session.e164, {
-        body: `📞 Hi ${firstName}, you just tried ${businessName}. How can we help?`,
+      // Send interactive WhatsApp message
+      const payload = {
+        body: `Hi ${firstName}, you just tried ${businessName}. How can we help?`,
         buttons: ['Call now', 'Book time', 'Leave note']
-      });
+      };
+      messageResult = await sendWhatsApp(session.e164, payload);
     } else {
-      // SMS with reply options
-      const message = `Hi ${firstName}, you just tried ${businessName}. Reply 1) Call now 2) Book 3) Leave a note — Reply STOP to opt-out.`;
-      await sendSMS(session.e164, message);
+      // Send SMS
+      const text = `Hi ${firstName}, you just tried ${businessName}. Reply 1) Call now 2) Book 3) Leave a note — Reply STOP to opt-out.`;
+      messageResult = await sendSMS(session.e164, text);
     }
 
-    // Log outbound message
+    // Log the outbound message
     await supabase.from('outreach_messages').insert({
       session_id: session.id,
       direction: 'out',
-      body: session.channel === 'whatsapp' ? 'Interactive message sent' : 'Initial SMS sent'
+      body: messageResult.body,
+      payload: { message_sid: messageResult.sid }
     });
 
     // Update session state
-    const followupTime = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
+    const followupDue = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours from now
     await supabase
       .from('outreach_sessions')
       .update({
         state: 'sent',
         last_sent_at: new Date().toISOString(),
-        followup_due_at: followupTime.toISOString()
+        followup_due_at: followupDue.toISOString()
       })
       .eq('id', session.id);
 
+    console.log(`Initial outreach sent for session ${session.id}`);
   } catch (error) {
-    console.error('Failed to send initial outreach:', error);
+    console.error(`Failed to send initial outreach for session ${session.id}:`, error);
     throw error;
   }
 }
 
 export async function handleReply(session, signalOrText) {
-  const signal = String(signalOrText).trim().toLowerCase();
-  
+  const signal = String(signalOrText).toLowerCase();
+
   try {
-    if (signal === '1' || signal === 'call now') {
-      // Place outbound bridge call
+    if (signal === '1' || signal.includes('call')) {
+      // Place outbound call
       const targetNumber = process.env.BUSINESS_TARGET_E164;
       if (targetNumber) {
         await voiceClient.create({
-          from: process.env.TWILIO_PHONE_NUMBER,
           to: session.e164,
-          twiml: `<Response><Dial answerOnBridge="true">${targetNumber}</Dial></Response>`
+          from: targetNumber,
+          answerOnBridge: true,
+          url: `${process.env.BASE_URL}/voice/answer/bridge`
         });
       }
-      
-      await supabase.from('reply_events').insert({
-        session_id: session.id,
-        signal: 'call_request'
-      });
-      
-    } else if (signal === '2' || signal === 'book time') {
+    } else if (signal === '2' || signal.includes('book')) {
       // Send booking link
-      const baseUrl = process.env.BASE_URL || 'https://www.tradeline247ai.com';
-      const bookingUrl = `${baseUrl}/book?src=tl247&n=${encodeURIComponent(session.e164)}`;
+      const bookingUrl = `${process.env.BASE_URL}/book?src=tl247&n=${encodeURIComponent(session.e164)}`;
+      const message = `Book your appointment here: ${bookingUrl}`;
       
       if (session.channel === 'whatsapp') {
-        await sendWhatsApp(session.e164, `Book your appointment here: ${bookingUrl}`);
+        await sendWhatsApp(session.e164, message);
       } else {
-        await sendSMS(session.e164, `Book your appointment here: ${bookingUrl}`);
+        await sendSMS(session.e164, message);
       }
-      
-      await supabase.from('reply_events').insert({
-        session_id: session.id,
-        signal: 'booking_request'
-      });
-      
-    } else {
-      // Store as note/free text
-      await supabase.from('outreach_messages').insert({
-        session_id: session.id,
-        direction: 'in',
-        body: signalOrText
-      });
-      
+    } else if (signal === '3' || signal.includes('note')) {
+      // Store note (just log for now)
       await supabase.from('reply_events').insert({
         session_id: session.id,
         signal: 'note'
       });
+      console.log(`Note request for session ${session.id}`);
+    } else {
+      // Free text - store as note
+      await supabase.from('reply_events').insert({
+        session_id: session.id,
+        signal: signalOrText
+      });
+      console.log(`Free text reply for session ${session.id}: ${signalOrText}`);
     }
 
     // Mark session as responded
@@ -181,20 +190,20 @@ export async function handleReply(session, signalOrText) {
       .eq('id', session.id);
 
   } catch (error) {
-    console.error('Failed to handle reply:', error);
+    console.error(`Error handling reply for session ${session.id}:`, error);
     throw error;
   }
 }
 
 export async function applyOptStatus(e164, channel, action) {
-  const status = action === 'opt_in' ? 'opt_in' : 'opt_out';
-  
   await supabase.from('consent_logs').insert({
     e164: e164,
     channel: channel,
-    status: status,
-    source: 'webhook'
+    status: action,
+    source: 'sms_reply'
   });
+  
+  console.log(`Applied ${action} for ${e164} on ${channel}`);
 }
 
 export async function dueFollowups() {
@@ -204,26 +213,32 @@ export async function dueFollowups() {
     .eq('state', 'sent')
     .lte('followup_due_at', new Date().toISOString());
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error fetching due followups:', error);
+    return 0;
+  }
 
   let sent = 0;
   
   for (const session of sessions) {
     try {
-      const nudgeMessage = "Still need help? Reply with your question or call us directly.";
+      const message = "Still need help?";
       
       if (session.channel === 'whatsapp') {
-        await sendWhatsApp(session.e164, nudgeMessage);
+        await sendWhatsApp(session.e164, message);
       } else {
-        await sendSMS(session.e164, nudgeMessage);
+        await sendSMS(session.e164, message);
       }
 
+      // Log the nudge message
       await supabase.from('outreach_messages').insert({
         session_id: session.id,
         direction: 'out',
-        body: 'Follow-up nudge sent'
+        body: message,
+        payload: { type: 'followup_nudge' }
       });
 
+      // Mark as expired
       await supabase
         .from('outreach_sessions')
         .update({ state: 'expired' })
