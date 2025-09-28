@@ -1219,6 +1219,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_views: {
+        Row: {
+          created_at: string | null
+          id: string
+          kind: string
+          name: string
+          payload: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          kind: string
+          name: string
+          payload: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          kind?: string
+          name?: string
+          payload?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
