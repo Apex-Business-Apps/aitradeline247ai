@@ -40,6 +40,10 @@ app.post("/voice/answer/pay", twilioWebhook, payHandler);
 // GBM webhook (guarded by shared secret)
 app.post("/integrations/gbm/webhook", gbmWebhook);
 
+// Wire up enhancement routes
+import { wireEnhancements } from "./server/boot/enhancements.wire.mjs";
+wireEnhancements(app);
+
 // Static file serving
 app.use(express.static(path.join(__dirname, "dist")));
 app.use("/assets", express.static(path.join(__dirname, "public", "assets")));
