@@ -93,6 +93,12 @@ serve(async (req) => {
       }
     );
 
+    // Validate required environment variables
+    if (!Deno.env.get('SUPABASE_URL') || !Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')) {
+      console.error('Missing required environment variables');
+      return new Response('Server configuration error', { status: 500, headers: corsHeaders });
+    }
+
     // Sanitize and validate event data
     const sanitizedEvent = {
       event_type: String(eventData.event_type).substring(0, 100),
@@ -113,7 +119,7 @@ serve(async (req) => {
     const { data: recentEvents } = await supabase
       .from('analytics_events')
       .select('id')
-      .eq('user_session', sessionId)
+      .eq('session_id', sessionId)  // Fixed: using correct column name
       .gte('created_at', oneMinuteAgo);
 
     if (recentEvents && recentEvents.length > 50) {

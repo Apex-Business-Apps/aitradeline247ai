@@ -28,6 +28,15 @@ export const useSecureAnalytics = (config: SecureAnalyticsConfig = {}) => {
     if (!isTracking) return;
 
     try {
+      // Rate limiting: prevent excessive events
+      const lastEventTime = sessionStorage.getItem('last_analytics_event');
+      const now = Date.now();
+      if (lastEventTime && (now - parseInt(lastEventTime)) < 1000) {
+        // Skip if less than 1 second since last event
+        return;
+      }
+      sessionStorage.setItem('last_analytics_event', now.toString());
+
       // Privacy-first event tracking
       const sanitizedEvent = {
         event_type: event.event_type,
@@ -49,6 +58,7 @@ export const useSecureAnalytics = (config: SecureAnalyticsConfig = {}) => {
       });
 
       if (error) {
+        // Fail silently for privacy - don't spam console
         console.warn('Analytics tracking failed:', error.message);
       }
     } catch (error) {

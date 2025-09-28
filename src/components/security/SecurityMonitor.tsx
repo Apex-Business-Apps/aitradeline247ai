@@ -20,9 +20,20 @@ export const SecurityMonitor = () => {
   const { sessionTimeoutWarning } = useEnhancedSessionSecurity();
   const { trackPrivacyPageView, trackPrivacyError } = usePrivacyAnalytics();
 
-  // Enhanced security event logging
+  // Enhanced security event logging with rate limiting
   const logSecurityEvent = async (eventType: string, data?: any, severity: 'info' | 'warning' | 'error' | 'critical' = 'info') => {
     try {
+      // Rate limiting for security events
+      const eventKey = `security_event_${eventType}`;
+      const lastEventTime = sessionStorage.getItem(eventKey);
+      const now = Date.now();
+      
+      // Skip if same event was logged in last 5 seconds
+      if (lastEventTime && (now - parseInt(lastEventTime)) < 5000) {
+        return;
+      }
+      sessionStorage.setItem(eventKey, now.toString());
+
       await supabase.functions.invoke('secure-analytics', {
         body: {
           event_type: eventType,
@@ -32,7 +43,7 @@ export const SecurityMonitor = () => {
         }
       });
     } catch (error) {
-      console.error('Failed to log security event:', error);
+      // Fail silently to prevent recursion and console spam
     }
   };
 
@@ -151,7 +162,7 @@ export const SecurityMonitor = () => {
       });
     };
 
-    // Device and browser security monitoring
+    // Device and browser security monitoring (with reduced frequency)
     const monitorDeviceSecurity = () => {
       let devToolsOpen = false;
       let suspiciousActivityCount = 0;
@@ -166,16 +177,17 @@ export const SecurityMonitor = () => {
               screen_resolution: `${window.screen.width}x${window.screen.height}`,
               window_size: `${window.innerWidth}x${window.innerHeight}`
             });
-            trackPrivacyError('security_alert', 'Developer tools potentially opened');
+            trackPrivacyError('security_alert', 'Developer tools potentially opened', 'no_context');
           }
         } else {
           devToolsOpen = false;
         }
       };
 
-      const devToolsInterval = setInterval(checkDevTools, 5000);
+      // Reduced frequency to prevent excessive API calls
+      const devToolsInterval = setInterval(checkDevTools, 15000); // Changed from 5000 to 15000
 
-      // Enhanced suspicious extension detection
+      // Enhanced suspicious extension detection (run only once)
       const checkExtensions = () => {
         const suspiciousKeywords = ['wallet', 'crypto', 'password', 'autofill', 'inject'];
         const scripts = Array.from(document.querySelectorAll('script'));
@@ -197,28 +209,35 @@ export const SecurityMonitor = () => {
           logSecurityEvent('extension_elements_detected', {
             element_count: suspiciousElements.length
           }, 'info');
-          trackPrivacyError('security_alert', `Potential browser extensions detected: ${suspiciousElements.length}`);
+          trackPrivacyError('security_alert', `Potential browser extensions detected: ${suspiciousElements.length}`, 'no_context');
         }
 
-        // Monitor for excessive DOM manipulation
+        // Monitor for excessive DOM manipulation (throttled)
+        let mutationCount = 0;
         const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 20) {
-              suspiciousActivityCount++;
-              if (suspiciousActivityCount > 10) {
-                logSecurityEvent('excessive_dom_manipulation', {
-                  mutations_count: mutation.addedNodes.length,
-                  suspicious_count: suspiciousActivityCount
-                }, 'warning');
+          mutationCount++;
+          // Only log every 100th mutation to prevent spam
+          if (mutationCount % 100 === 0) {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'childList' && mutation.addedNodes.length > 20) {
+                suspiciousActivityCount++;
+                if (suspiciousActivityCount > 10) {
+                  logSecurityEvent('excessive_dom_manipulation', {
+                    mutations_count: mutation.addedNodes.length,
+                    suspicious_count: suspiciousActivityCount,
+                    total_mutations: mutationCount
+                  }, 'warning');
+                }
               }
-            }
-          });
+            });
+          }
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
       };
 
-      setTimeout(checkExtensions, 3000); // Check after page load
+      // Only run extension check once after page load
+      setTimeout(checkExtensions, 5000);
 
       return () => {
         clearInterval(devToolsInterval);
