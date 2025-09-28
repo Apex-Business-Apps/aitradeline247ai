@@ -91,6 +91,7 @@ export type Database = {
           first_name: string | null
           id: string
           note: string | null
+          organization_id: string | null
           source: string
           start_at: string
           status: string
@@ -104,6 +105,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           note?: string | null
+          organization_id?: string | null
           source?: string
           start_at: string
           status?: string
@@ -117,6 +119,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           note?: string | null
+          organization_id?: string | null
           source?: string
           start_at?: string
           status?: string
@@ -303,6 +306,39 @@ export type Database = {
           first_name?: string | null
           id?: string
           wa_capable?: boolean | null
+        }
+        Relationships: []
+      }
+      data_access_audit: {
+        Row: {
+          access_type: string
+          accessed_record_id: string | null
+          accessed_table: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_type: string
+          accessed_record_id?: string | null
+          accessed_table: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string
+          accessed_record_id?: string | null
+          accessed_table?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -978,6 +1014,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      anonymize_ip_address: {
+        Args: { ip: unknown }
+        Returns: unknown
+      }
       citext: {
         Args: { "": boolean } | { "": string } | { "": unknown }
         Returns: string
@@ -1006,6 +1046,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      detect_anomalous_access: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       detect_auth_anomalies: {
         Args: {
           p_event_type: string
@@ -1024,6 +1068,16 @@ export type Database = {
           status: string
         }[]
       }
+      get_masked_profile: {
+        Args: { profile_user_id: string }
+        Returns: {
+          created_at: string
+          full_name: string
+          id: string
+          phone_e164_masked: string
+          updated_at: string
+        }[]
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -1038,6 +1092,25 @@ export type Database = {
       is_org_member: {
         Args: { p_org_id: string }
         Returns: boolean
+      }
+      log_analytics_event_secure: {
+        Args: {
+          p_event_data?: Json
+          p_event_type: string
+          p_ip_address?: unknown
+          p_page_url?: string
+          p_user_agent?: string
+          p_user_session?: string
+        }
+        Returns: boolean
+      }
+      log_data_access: {
+        Args: {
+          p_access_type?: string
+          p_record_id?: string
+          p_table_name: string
+        }
+        Returns: undefined
       }
       log_data_export: {
         Args: {
