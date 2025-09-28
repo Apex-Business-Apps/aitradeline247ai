@@ -128,7 +128,7 @@ serve(async (req) => {
                     headers.get('x-real-ip') || 
                     null;
 
-    // Use the new safe analytics insertion function to prevent recursion
+    // Use the safe analytics insertion function to prevent recursion
     const { data: insertResult, error: insertError } = await supabase
       .rpc('safe_analytics_insert_with_circuit_breaker', {
         p_event_type: sanitizedEvent.event_type,
@@ -147,9 +147,9 @@ serve(async (req) => {
       });
     }
 
-    // If insertResult is null, it means the circuit breaker prevented insertion (recursion detected)
-    if (insertResult === null) {
-      console.warn('Analytics insertion prevented by circuit breaker - recursion detected');
+    // If insertResult is false, circuit breaker prevented insertion (rate limiting)
+    if (insertResult === false) {
+      console.warn('Analytics insertion prevented by circuit breaker - rate limit exceeded');
     }
 
     console.log(`Analytics event tracked: ${sanitizedEvent.event_type}`);

@@ -677,6 +677,17 @@ export type Database = {
         Args: { p_phone_e164: string }
         Returns: string
       }
+      safe_analytics_insert_with_circuit_breaker: {
+        Args: {
+          p_event_data?: Json
+          p_event_type: string
+          p_ip_address?: unknown
+          p_page_url?: string
+          p_user_agent?: string
+          p_user_session?: string
+        }
+        Returns: boolean
+      }
       share_org: {
         Args: { _user_a: string; _user_b: string }
         Returns: boolean
