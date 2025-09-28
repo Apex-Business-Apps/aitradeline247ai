@@ -671,6 +671,30 @@ export type Database = {
         }
         Relationships: []
       }
+      orgs: {
+        Row: {
+          created_at: string
+          email_to: string
+          id: string
+          name: string
+          target_e164: string
+        }
+        Insert: {
+          created_at?: string
+          email_to: string
+          id?: string
+          name: string
+          target_e164: string
+        }
+        Update: {
+          created_at?: string
+          email_to?: string
+          id?: string
+          name?: string
+          target_e164?: string
+        }
+        Relationships: []
+      }
       outreach_events: {
         Row: {
           call_sid: string | null
@@ -898,6 +922,47 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          id: string
+          org_id: string
+          plan: string
+          status: string
+          stripe_customer_id: string
+          stripe_subscription_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          org_id: string
+          plan: string
+          status: string
+          stripe_customer_id: string
+          stripe_subscription_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          org_id?: string
+          plan?: string
+          status?: string
+          stripe_customer_id?: string
+          stripe_subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       supported_locales: {
         Row: {
