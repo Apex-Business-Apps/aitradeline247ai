@@ -531,6 +531,36 @@ export type Database = {
         }
         Relationships: []
       }
+      security_compliance: {
+        Row: {
+          check_name: string
+          description: string | null
+          id: string
+          last_checked: string | null
+          manual_action_required: boolean | null
+          remediation_notes: string | null
+          status: string
+        }
+        Insert: {
+          check_name: string
+          description?: string | null
+          id?: string
+          last_checked?: string | null
+          manual_action_required?: boolean | null
+          remediation_notes?: string | null
+          status: string
+        }
+        Update: {
+          check_name?: string
+          description?: string | null
+          id?: string
+          last_checked?: string | null
+          manual_action_required?: boolean | null
+          remediation_notes?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       supported_locales: {
         Row: {
           code: string
@@ -746,6 +776,10 @@ export type Database = {
           p_user_session?: string
         }
         Returns: boolean
+      }
+      schedule_analytics_cleanup: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       share_org: {
         Args: { _user_a: string; _user_b: string }
