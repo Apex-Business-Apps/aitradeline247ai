@@ -1050,6 +1050,33 @@ export type Database = {
           },
         ]
       }
+      upgrade_audit: {
+        Row: {
+          check_name: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          status: string
+          upgrade_phase: string
+        }
+        Insert: {
+          check_name: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          status: string
+          upgrade_phase: string
+        }
+        Update: {
+          check_name?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          status?: string
+          upgrade_phase?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1197,9 +1224,27 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_upgrade_step: {
+        Args: {
+          p_details?: Json
+          p_phase: string
+          p_status: string
+          p_step: string
+        }
+        Returns: undefined
+      }
       mask_phone_number: {
         Args: { phone_e164: string; requesting_user_id: string }
         Returns: string
+      }
+      monitor_upgrade_health: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          component: string
+          details: string
+          last_check: string
+          status: string
+        }[]
       }
       process_event: {
         Args: {
@@ -1233,6 +1278,10 @@ export type Database = {
       share_org: {
         Args: { _user_a: string; _user_b: string }
         Returns: boolean
+      }
+      validate_security_post_upgrade: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
     }
     Enums: {
