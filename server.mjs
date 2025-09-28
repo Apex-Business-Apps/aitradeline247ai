@@ -40,11 +40,14 @@ app.post("/voice/answer/pay", twilioWebhook, payHandler);
 // GBM webhook (guarded by shared secret)
 app.post("/integrations/gbm/webhook", gbmWebhook);
 
-// Wire up enhancement routes
-import { wireEnhancements } from "./server/boot/enhancements.wire.mjs";
-import { wireStatus } from "./server/boot/status.wire.mjs";
-wireEnhancements(app);
-wireStatus(app);
+// Wire all enhancement routes
+import { wireAll } from "./server/boot/wire.all.mjs";
+await wireAll(app);
+
+// SEO routes
+import { robotsHandler, sitemapHandler } from "./server/routes/seo.robots.sitemap.mjs";
+app.get('/robots.txt', robotsHandler);
+app.get('/sitemap.xml', sitemapHandler);
 
 // Static file serving
 app.use(express.static(path.join(__dirname, "dist")));
