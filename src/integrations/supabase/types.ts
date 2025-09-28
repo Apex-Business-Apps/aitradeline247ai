@@ -975,15 +975,7 @@ export type Database = {
       }
     }
     Views: {
-      v_latest_consent: {
-        Row: {
-          channel: string | null
-          e164: string | null
-          last_change_at: string | null
-          status: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       citext: {
@@ -1022,6 +1014,15 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      get_latest_consent_status: {
+        Args: { p_channel?: string; p_e164?: string }
+        Returns: {
+          channel: string
+          e164: string
+          last_change_at: string
+          status: string
+        }[]
       }
       get_user_role: {
         Args: { _user_id: string }
