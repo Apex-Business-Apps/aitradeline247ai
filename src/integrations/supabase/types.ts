@@ -98,6 +98,45 @@ export type Database = {
         }
         Relationships: []
       }
+      call_lifecycle: {
+        Row: {
+          call_sid: string
+          direction: string | null
+          end_time: string | null
+          from_number: string | null
+          meta: Json | null
+          start_time: string | null
+          status: string | null
+          talk_seconds: number | null
+          to_number: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          call_sid: string
+          direction?: string | null
+          end_time?: string | null
+          from_number?: string | null
+          meta?: Json | null
+          start_time?: string | null
+          status?: string | null
+          talk_seconds?: number | null
+          to_number?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          call_sid?: string
+          direction?: string | null
+          end_time?: string | null
+          from_number?: string | null
+          meta?: Json | null
+          start_time?: string | null
+          status?: string | null
+          talk_seconds?: number | null
+          to_number?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       calls: {
         Row: {
           booked: boolean | null
@@ -470,6 +509,44 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      outreach_events: {
+        Row: {
+          call_sid: string | null
+          channel: string
+          created_at: string | null
+          dedupe_key: string | null
+          id: number
+          payload: Json | null
+          status: string
+        }
+        Insert: {
+          call_sid?: string | null
+          channel: string
+          created_at?: string | null
+          dedupe_key?: string | null
+          id?: number
+          payload?: Json | null
+          status: string
+        }
+        Update: {
+          call_sid?: string | null
+          channel?: string
+          created_at?: string | null
+          dedupe_key?: string | null
+          id?: number
+          payload?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_events_call_sid_fkey"
+            columns: ["call_sid"]
+            isOneToOne: false
+            referencedRelation: "call_lifecycle"
+            referencedColumns: ["call_sid"]
+          },
+        ]
       }
       profiles: {
         Row: {
