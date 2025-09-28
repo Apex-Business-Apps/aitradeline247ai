@@ -70,7 +70,7 @@ export const LeadCaptureForm = () => {
     // Client-side validation with Zod
     const validationResult = leadFormSchema.safeParse(formData);
     if (!validationResult.success) {
-      const errorMessage = validationResult.error.errors[0]?.message || "Please check your input";
+      const errorMessage = validationResult.error.issues[0]?.message || "Please check your input";
       toast({
         title: "Invalid Information",
         description: errorMessage,

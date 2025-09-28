@@ -6,6 +6,7 @@ import { voiceCallbackConnectHandler } from '../routes/voice.callback.connect.mj
 import { paymentsCreateCheckoutHandler } from '../routes/payments.create_checkout.mjs';
 import { webhooksStripeHandler } from '../routes/webhooks.stripe.mjs';
 import { internalDigestRunHandler } from '../routes/internal.digest.run.mjs';
+import { supportNewHandler } from '../routes/support.new.mjs';
 
 // Light rate limiting for enhancement endpoints
 const enhancementRateLimit = rateLimit({
@@ -28,6 +29,7 @@ export function wireEnhancements(app) {
   // Apply rate limiting to enhancement endpoints
   app.use('/a/*', enhancementRateLimit);
   app.use('/api/payments/*', enhancementRateLimit);
+  app.use('/api/support', enhancementRateLimit);
   app.use('/webhooks/stripe', enhancementRateLimit);
   app.use('/internal/digest/run', enhancementRateLimit);
   
@@ -41,6 +43,9 @@ export function wireEnhancements(app) {
   
   // Payments routes
   app.post('/api/payments/create-checkout', paymentsCreateCheckoutHandler);
+  
+  // Support routes
+  app.post('/api/support', supportNewHandler);
   
   // Stripe webhook (raw body needed for signature verification)
   app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), webhooksStripeHandler);

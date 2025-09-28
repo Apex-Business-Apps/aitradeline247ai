@@ -1,0 +1,9 @@
+# Placeholder for demo video file
+# In a real implementation, this would be your demov2.webm file
+# For now, this creates the directory structure
+
+# To add your video:
+# 1. Copy your demov2.webm file to this location
+# 2. Rename it to demo.webm
+# 3. Optionally create MP4 fallback with:
+#    ffmpeg -i demo.webm -c:v libx264 -profile:v high -pix_fmt yuv420p -movflags +faststart -crf 22 -preset medium -c:a aac -b:a 128k demo.mp4
