@@ -1,4 +1,5 @@
 import { sign } from './signer.mjs';
+import { FLAGS } from './flags.mjs';
 
 const BASE_URL = process.env.BASE_URL;
 const PAY_DEPOSIT_AMOUNT_CAD = process.env.PAY_DEPOSIT_AMOUNT_CAD || '25';
@@ -11,15 +12,15 @@ const PAY_DEPOSIT_AMOUNT_CAD = process.env.PAY_DEPOSIT_AMOUNT_CAD || '25';
 export function missedCall({ callSid, fromE164, transcript = '', audioUrl = '', hasRecentPayment = false }) {
   const transcriptExcerpt = transcript ? transcript.substring(0, 500) : '(no speech detected)';
   
-  // Generate signed tokens for CTAs
-  const callbackToken = sign({ callSid, toE164: fromE164 });
-  const resolveToken = sign({ callSid, toE164: fromE164 });
+  // Generate signed tokens for CTAs (only if enhancements enabled)
+  const callbackToken = FLAGS.ENHANCEMENTS_ENABLED ? sign({ callSid, toE164: fromE164 }) : '';
+  const resolveToken = FLAGS.ENHANCEMENTS_ENABLED ? sign({ callSid, toE164: fromE164 }) : '';
   
   const callbackUrl = `${BASE_URL}/a/c?t=${callbackToken}`;
   const resolveUrl = `${BASE_URL}/a/r?t=${resolveToken}`;
   
-  // Show Stripe button only if keys exist and no recent payment
-  const showStripeButton = process.env.STRIPE_SECRET_KEY && !hasRecentPayment;
+  // Show Stripe button only if flags allow and keys exist and no recent payment
+  const showStripeButton = FLAGS.ENHANCEMENTS_ENABLED && FLAGS.DEPOSIT_CTA_ENABLED && process.env.STRIPE_SECRET_KEY && !hasRecentPayment;
   const stripeButtonHtml = showStripeButton ? `
     <tr>
       <td style="padding: 10px 0;">
@@ -60,6 +61,7 @@ export function missedCall({ callSid, fromE164, transcript = '', audioUrl = '', 
         <p><a href="${audioUrl}" style="color: #3b82f6; text-decoration: none;">🎵 Listen to 7-day audio link</a></p>
       </div>` : ''}
       
+      ${FLAGS.ENHANCEMENTS_ENABLED ? `
       <div style="margin-bottom: 24px;">
         <h2 style="color: #374151; margin: 0 0 16px 0; font-size: 18px;">Quick Actions</h2>
         <table style="width: 100%;">
@@ -77,7 +79,7 @@ export function missedCall({ callSid, fromE164, transcript = '', audioUrl = '', 
           </tr>
           ${stripeButtonHtml}
         </table>
-      </div>
+      </div>` : ''}
       
       <div style="border-top: 1px solid #e5e7eb; padding-top: 16px; color: #6b7280; font-size: 14px;">
         <p>TradeLine 24/7 - Your AI Receptionist</p>
@@ -98,10 +100,10 @@ ${transcriptExcerpt}
 
 ${audioUrl ? `Recording: ${audioUrl}\n` : ''}
 
-Quick Actions:
+${FLAGS.ENHANCEMENTS_ENABLED ? `Quick Actions:
 - Call back now: ${callbackUrl}
 - Mark resolved: ${resolveUrl}
-${showStripeButton ? `- Secure booking with $${PAY_DEPOSIT_AMOUNT_CAD} deposit: ${BASE_URL}/booking/deposit?callSid=${callSid}&e164=${encodeURIComponent(fromE164)}` : ''}
+${showStripeButton ? `- Secure booking with $${PAY_DEPOSIT_AMOUNT_CAD} deposit: ${BASE_URL}/booking/deposit?callSid=${callSid}&e164=${encodeURIComponent(fromE164)}` : ''}` : 'Contact support for assistance.'}
 
 TradeLine 24/7 - Your AI Receptionist
 Links expire in 7 days for security.
