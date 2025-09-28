@@ -42,7 +42,9 @@ app.post("/integrations/gbm/webhook", gbmWebhook);
 
 // Wire up enhancement routes
 import { wireEnhancements } from "./server/boot/enhancements.wire.mjs";
+import { wireStatus } from "./server/boot/status.wire.mjs";
 wireEnhancements(app);
+wireStatus(app);
 
 // Static file serving
 app.use(express.static(path.join(__dirname, "dist")));
