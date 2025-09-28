@@ -127,6 +127,36 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          id: string
+          org_id: string | null
+          payload: Json | null
+          target: string | null
+          ts: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          id?: string
+          org_id?: string | null
+          payload?: Json | null
+          target?: string | null
+          ts?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          id?: string
+          org_id?: string | null
+          payload?: Json | null
+          target?: string | null
+          ts?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       blocklist_numbers: {
         Row: {
           created_at: string
