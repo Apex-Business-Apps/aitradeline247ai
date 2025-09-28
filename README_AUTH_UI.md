@@ -19,7 +19,7 @@ Wrap protected routes with the `<Protected>` component:
 ```tsx
 import { Protected } from '@/lib/protect';
 
-// In your route file
+// In your route file (e.g., /settings)
 const SettingsPage = () => {
   return (
     <Protected>
@@ -32,7 +32,7 @@ export default SettingsPage;
 ```
 
 ### App Integration
-Wrap your app with AuthProvider:
+Wrap your app with AuthProvider in App.tsx:
 
 ```tsx
 import { AuthProvider } from '@/context/AuthProvider';
@@ -52,6 +52,11 @@ function App() {
 Ensure these are set:
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
+
+## Configuration
+Make sure your Supabase project has:
+- Site URL configured for your domain
+- Redirect URLs configured for magic link landing
 
 ## Flow
 1. User enters email on `/login`
