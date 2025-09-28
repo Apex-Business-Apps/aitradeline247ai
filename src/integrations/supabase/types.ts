@@ -181,6 +181,57 @@ export type Database = {
           },
         ]
       }
+      consent_logs: {
+        Row: {
+          channel: string
+          created_at: string
+          e164: string
+          id: string
+          source: string | null
+          status: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          e164: string
+          id?: string
+          source?: string | null
+          status: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          e164?: string
+          id?: string
+          source?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          created_at: string
+          e164: string
+          first_name: string | null
+          id: string
+          wa_capable: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          e164: string
+          first_name?: string | null
+          id?: string
+          wa_capable?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          e164?: string
+          first_name?: string | null
+          id?: string
+          wa_capable?: boolean | null
+        }
+        Relationships: []
+      }
       events_inbox: {
         Row: {
           call_sid: string
@@ -548,6 +599,77 @@ export type Database = {
           },
         ]
       }
+      outreach_messages: {
+        Row: {
+          body: string | null
+          created_at: string
+          direction: string
+          id: string
+          payload: Json | null
+          session_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          direction: string
+          id?: string
+          payload?: Json | null
+          session_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          direction?: string
+          id?: string
+          payload?: Json | null
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outreach_sessions: {
+        Row: {
+          call_sid: string
+          channel: string | null
+          created_at: string
+          e164: string
+          followup_due_at: string | null
+          id: string
+          last_sent_at: string | null
+          meta: Json | null
+          state: string
+        }
+        Insert: {
+          call_sid: string
+          channel?: string | null
+          created_at?: string
+          e164: string
+          followup_due_at?: string | null
+          id?: string
+          last_sent_at?: string | null
+          meta?: Json | null
+          state?: string
+        }
+        Update: {
+          call_sid?: string
+          channel?: string | null
+          created_at?: string
+          e164?: string
+          followup_due_at?: string | null
+          id?: string
+          last_sent_at?: string | null
+          meta?: Json | null
+          state?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -571,6 +693,35 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      reply_events: {
+        Row: {
+          created_at: string
+          id: string
+          session_id: string
+          signal: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          session_id: string
+          signal: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          session_id?: string
+          signal?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reply_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "outreach_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       security_alerts: {
         Row: {
@@ -750,7 +901,15 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_latest_consent: {
+        Row: {
+          channel: string | null
+          e164: string | null
+          last_change_at: string | null
+          status: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       citext: {
