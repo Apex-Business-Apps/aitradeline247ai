@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import TrustPanel from "@/features/trust/TrustPanel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -393,6 +394,9 @@ const Settings = () => {
                   </form>
                 </CardContent>
               </Card>
+
+              {/* Trust & Compliance */}
+              <TrustPanel />
             </>
           )}
 

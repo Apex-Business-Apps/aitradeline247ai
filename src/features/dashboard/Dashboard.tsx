@@ -1,10 +1,10 @@
 import DemoSpotlight from "./DemoSpotlight";
-import { CallSummary } from "../dashboard/CallSummary";
-import { DashboardStats } from "../dashboard/DashboardStats";
-import { IntegrationsGrid } from "../dashboard/IntegrationsGrid";
-import { QuickActions } from "../dashboard/QuickActions";
-import { RecentActivity } from "../dashboard/RecentActivity";
-import { TwilioStats } from "../dashboard/TwilioStats";
+import { CallSummary } from "@/components/dashboard/CallSummary";
+import { DashboardStats } from "@/components/dashboard/DashboardStats";
+import { IntegrationsGrid } from "@/components/dashboard/IntegrationsGrid";
+import { QuickActions } from "@/components/dashboard/QuickActions";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { TwilioStats } from "@/components/dashboard/TwilioStats";
 import KpiRibbon from "./KpiRibbon";
 import HealthWidget from "./HealthWidget";
 import OnboardingChecklist from "@/features/checklist/OnboardingChecklist";
@@ -21,7 +21,7 @@ export default function Dashboard({ demoMode = false }: DashboardProps) {
   return (
     <div className="container mx-auto p-6 space-y-6">
       {/* Demo spotlight overlay */}
-      {demoMode && <DemoSpotlight />}
+      {demoMode && <DemoSpotlight rect={null} />}
 
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold" data-demo="dashboard-header">Dashboard</h1>
