@@ -49,7 +49,7 @@
 #start-trial-hero,
 #roi-calculator{
   position: static !important;
-  transform: translateX(-2cm) !important;
+  transform: translateX(-2.5cm) !important;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
