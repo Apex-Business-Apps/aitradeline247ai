@@ -215,7 +215,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         </>
       )}
 
-      <Card className="w-full max-w-[420px] mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+      <Card className="w-full bg-card/95 backdrop-blur-sm border-primary/20">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-lg md:text-xl text-foreground mb-1">
             Start Your Free Trial
