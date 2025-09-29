@@ -23,10 +23,13 @@
 .hero-roi__container{
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding-left: max(2rem, env(safe-area-inset-left));
+  padding-right: max(2rem, env(safe-area-inset-right));
+  padding-top: max(0rem, env(safe-area-inset-top));
+  padding-bottom: max(0rem, env(safe-area-inset-bottom));
   width: 100%;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  place-items: center;
 }
 
 /* Grid: two equal columns, centered */
