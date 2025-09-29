@@ -1,10 +1,10 @@
 /* === HERO ROI CENTERING CANON === */
 
-/* Container positioned without centering */
+/* Container positioned with centering */
 .hero-roi__container{
   /* wide enough for two healthy columns + gap, but responsive */
   max-width: clamp(960px, 90vw, 1200px);
-  margin-inline: 0;              /* no centering */
+  margin-inline: auto;              /* centered */
   padding-inline: 16px;
 }
 
