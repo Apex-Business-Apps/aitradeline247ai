@@ -97,50 +97,35 @@ export const LeadCaptureForm = () => {
     try {
       console.log("Submitting lead:", formData);
 
-      // Submit lead via email function
-      const {
-        data: emailData,
-        error: emailError
-      } = await supabase.functions.invoke('send-lead-email', {
-        body: formData
+      // Submit to secure edge function which handles both email and database operations
+      const { data: response, error: submitError } = await supabase.functions.invoke('secure-lead-submission', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          notes: formData.notes,
+          source: 'website_lead_form'
+        }
       });
-      if (emailError) {
-        console.error("Email function error:", emailError);
-        throw emailError;
+      
+      if (submitError) {
+        console.error("Secure submission error:", submitError);
+        throw new Error(submitError.message || 'Failed to submit lead');
       }
-
-      // Store lead in database with automatic scoring
-      const {
-        data: leadData,
-        error: leadError
-      } = await supabase.from('leads').insert([{
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        notes: formData.notes,
-        source: 'website_lead_form'
-      }]).select().single();
-      if (leadError) {
-        console.error("Lead storage error:", leadError);
-        // Don't throw here - email was sent successfully
-      }
-      console.log("Lead submission successful:", {
-        emailData,
-        leadData
-      });
+      console.log("Lead submission successful:", response);
 
       // Track successful form submission
       trackFormSubmission('lead_capture', true, {
-        lead_score: leadData?.lead_score || 0,
+        lead_score: response.leadScore || 0,
         email_domain: formData.email.split('@')[1],
         variant: variant
       });
 
       // Track conversion for A/B test
-      await convert(leadData?.lead_score || 50);
+      await convert(response.leadScore || 50);
 
       // Track business conversion
-      trackConversion('lead_generated', leadData?.lead_score || 50, {
+      trackConversion('lead_generated', response.leadScore || 50, {
         source: 'website_form',
         variant: variant
       });
