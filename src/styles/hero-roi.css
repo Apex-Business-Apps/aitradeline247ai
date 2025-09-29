@@ -16,6 +16,7 @@
   justify-items: center;
   /* Top-align vertically, center horizontally */
   place-content: start center;   /* align-content: start; justify-content: center; */
+  margin-left: 1.5cm;            /* shift right by 1.5cm */
 }
 
 /* Safety: ensure the two panels don't shift themselves */
