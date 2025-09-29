@@ -18,6 +18,7 @@ import { MiniChat } from "@/components/ui/MiniChat";
 import useKlaviyoPageview from "@/hooks/useKlaviyoPageview";
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
+import LayoutCanon from "@/components/LayoutCanon";
 import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
 import ClientDashboard from "./pages/ClientDashboard";
@@ -62,6 +63,7 @@ const AppWithMonitoring = () => {
       <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
+      <LayoutCanon />
       <Routes>
         <Route path="/" element={<main id="main"><Index /></main>} />
         <Route path="/auth" element={<main id="main"><Auth /></main>} />
