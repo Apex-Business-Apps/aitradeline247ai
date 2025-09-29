@@ -2,6 +2,9 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { Resend } from "resend";
+
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const CANONICAL_DOMAIN = "tradeline247ai.com";
 const CANONICAL_WWW = "www.tradeline247ai.com";
@@ -66,7 +69,31 @@ app.get("/status.json", (_req, res) => {
   });
 });
 
-/* 6) SPA fallback only if artifacts exist */
+/* 6) Lead capture API */
+app.post("/api/lead", async (req, res) => {
+  try {
+    const { name="", email="", phone="", message="" } = req.body || {};
+    const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!okEmail || (!name && !phone && !message)) return res.status(400).json({ ok:false, error:"invalid_input" });
+    res.status(202).json({ ok:true }); // fast ack (idempotent UX)
+    if (resend) {
+      await resend.emails.send({
+        from: "TradeLine 24/7 <noreply@tradeline247ai.com>",
+        to: ["support@tradeline247ai.com"],
+        subject: "New Lead — TradeLine 24/7",
+        text: `Name:${name}\nEmail:${email}\nPhone:${phone}\nMessage:${message}\nTS:${new Date().toISOString()}`
+      }).catch(()=>{});
+      if (email) await resend.emails.send({
+        from: "TradeLine 24/7 <noreply@tradeline247ai.com>",
+        to: [email],
+        subject: "Thanks — we'll reach out shortly",
+        text: "We've received your message and will get back to you soon. — TradeLine 24/7"
+      }).catch(()=>{});
+    }
+  } catch {}
+});
+
+/* 7) SPA fallback only if artifacts exist */
 const hasArtifacts =
   fs.existsSync(path.join(PUB, "download", "release.tar.gz")) &&
   fs.existsSync(path.join(PUB, "download", "release.tar.gz.sha256"));
