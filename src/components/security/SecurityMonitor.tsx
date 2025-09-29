@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useEnhancedSessionSecurity } from '@/hooks/useEnhancedSessionSecurity';
 import { usePrivacyAnalytics } from '@/hooks/usePrivacyAnalytics';
 import { usePasswordSecurity } from '@/hooks/usePasswordSecurity';
+import { useSecureAnalytics } from '@/hooks/useSecureAnalytics';
 
 /**
  * Comprehensive Security Monitor Component
