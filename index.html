@@ -2,15 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/assets/brand/App_Icons/favicon.ico">
-    <link rel="icon" type="image/svg+xml" href="/assets/brand/App_Icons/favicon.svg">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/App_Icons/icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/brand/App_Icons/icon-512.png">
-    <link rel="apple-touch-icon" href="/assets/brand/App_Icons/apple-touch-icon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>TradeLine 24/7 — Your 24/7 AI Receptionist!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#FFB347" />
+    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials" />
+    <link rel="icon" href="/assets/brand/App_Icons/favicon.ico" sizes="any" />
+    <title>TradeLine 24/7 — Your 24/7 Ai Receptionist!</title>
+    <link rel="preload" href="/assets/fonts/BrandFont.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="title" content="TradeLine 24/7 — Your 24/7 AI Receptionist!" />
     <meta name="description" content="TradeLine 24/7 — your AI receptionist for trades & local businesses. Faster setup, smarter routing, and email-only transcripts." data-seo-meta>
     <meta name="keywords" content="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration">
@@ -116,8 +113,12 @@
 </head>
 
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
     <div id="root"></div>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(()=>{}));
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
     
     <!-- Google tag (gtag.js) — GA4 -->

@@ -3,10 +3,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import twilio from 'twilio';
+import { Resend } from "resend";
 
 const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
+
+app.use(express.json({ limit: "256kb" }));
+app.use(express.urlencoded({ extended: true, limit: "256kb" }));
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUB = path.join(__dirname, 'public');
@@ -49,6 +56,38 @@ app.post('/voice/answer', webhook, (req, res) => {
 app.post('/voice/status', webhook, (req, res) => {
   // upsert by CallSid with minimal work; no heavy I/O in request path
   res.sendStatus(200);
+});
+
+app.post("/api/lead", async (req, res) => {
+  try {
+    const { name = "", email = "", phone = "", message = "" } = req.body || {};
+    const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!okEmail || (!name && !phone && !message)) return res.status(400).json({ ok: false, error: "invalid_input" });
+
+    // Always accept quickly (idempotent UX)
+    res.status(202).json({ ok: true });
+
+    // Side effect: email notify if secrets configured
+    if (resend) {
+      await resend.emails.send({
+        from: "TradeLine 24/7 <noreply@tradeline247ai.com>",
+        to: ["support@tradeline247ai.com"],
+        subject: "New Lead — TradeLine 24/7",
+        text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}\nTS: ${new Date().toISOString()}`
+      }).catch(() => {});
+      // Optional: simple auto-reply
+      if (email) {
+        await resend.emails.send({
+          from: "TradeLine 24/7 <noreply@tradeline247ai.com>",
+          to: [email],
+          subject: "Thanks — we'll reach out shortly",
+          text: "We've received your message and will get back to you soon. — TradeLine 24/7"
+        }).catch(() => {});
+      }
+    }
+  } catch {
+    // Never throw at user
+  }
 });
 
 // 6) SPA fallback only if artifacts exist (prevents bad states)
