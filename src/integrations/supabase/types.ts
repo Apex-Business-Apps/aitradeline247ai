@@ -80,6 +80,13 @@ export type Database = {
             referencedRelation: "appointments"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "appointment_events_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       appointments: {
@@ -1248,7 +1255,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      appointments_safe: {
+        Row: {
+          created_at: string | null
+          e164: string | null
+          email: string | null
+          end_at: string | null
+          first_name: string | null
+          id: string | null
+          note: string | null
+          organization_id: string | null
+          source: string | null
+          start_at: string | null
+          status: string | null
+          tz: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          e164?: never
+          email?: never
+          end_at?: string | null
+          first_name?: never
+          id?: string | null
+          note?: string | null
+          organization_id?: string | null
+          source?: string | null
+          start_at?: string | null
+          status?: string | null
+          tz?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          e164?: never
+          email?: never
+          end_at?: string | null
+          first_name?: never
+          id?: string | null
+          note?: string | null
+          organization_id?: string | null
+          source?: string | null
+          start_at?: string | null
+          status?: string | null
+          tz?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       anonymize_ip_address: {
@@ -1303,6 +1354,22 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      emergency_customer_contact: {
+        Args: { appointment_id: string; emergency_reason: string }
+        Returns: {
+          e164: string
+          email: string
+          first_name: string
+        }[]
+      }
+      get_customer_contact_info: {
+        Args: { appointment_id: string }
+        Returns: {
+          e164: string
+          email: string
+          first_name: string
+        }[]
       }
       get_latest_consent_status: {
         Args: { p_channel?: string; p_e164?: string }
