@@ -21,22 +21,25 @@
 
 /* Container positioned with centering */
 .hero-roi__container{
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 /* Grid: two equal columns, centered */
 .hero-roi__grid{
   display: grid !important;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 3rem;
   justify-items: center;
   justify-content: center;
   align-items: start;
   margin: 0 auto;
   width: 100%;
+  max-width: 1800px;
 }
 
 /* Safety: ensure the two panels don't shift themselves */
@@ -45,14 +48,21 @@
   position: static !important;
   transform: none !important;
   width: 100%;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 /* Desktop: side by side */
 @media (min-width: 1024px) {
   .hero-roi__grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 1400px;
-    gap: 2rem;
+    grid-template-columns: repeat(2, minmax(500px, 650px));
+    max-width: 1800px;
+    gap: 4rem;
+    justify-content: center;
+  }
+  
+  #start-trial-hero,
+  #roi-calculator{
+    max-width: 650px;
   }
 }
