@@ -1151,6 +1151,33 @@ export type Database = {
           },
         ]
       }
+      support_ticket_rate_limits: {
+        Row: {
+          created_at: string
+          id: string
+          identifier: string
+          identifier_type: string
+          ticket_count: number
+          window_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          identifier: string
+          identifier_type: string
+          ticket_count?: number
+          window_start?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          identifier?: string
+          identifier_type?: string
+          ticket_count?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
       support_tickets: {
         Row: {
           created_at: string
@@ -1387,6 +1414,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      cleanup_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       detect_and_alert_anomalies: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -1503,6 +1534,10 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      get_variant_display_data: {
+        Args: { p_test_name: string; p_variant: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1513,6 +1548,10 @@ export type Database = {
       is_org_member: {
         Args: { p_org_id: string }
         Returns: boolean
+      }
+      log_ab_test_access: {
+        Args: { p_access_type?: string; p_test_name: string; p_variant: string }
+        Returns: undefined
       }
       log_analytics_event_secure: {
         Args: {

@@ -42,15 +42,15 @@ export const useSecureABTest = (testName: string) => {
 
       if (error) {
         console.error('Error getting secure A/B assignment:', error);
-        return 'A'; // Fallback
+        return { variant: 'A', variantData: { text: 'Grow Now', color: 'primary' } };
       }
 
       console.log(`Secure assignment result:`, data);
-      return data?.variant || 'A';
+      return data || { variant: 'A', variantData: { text: 'Grow Now', color: 'primary' } };
 
     } catch (error) {
       console.error('Error in secure A/B test assignment:', error);
-      return 'A'; // Default fallback
+      return { variant: 'A', variantData: { text: 'Grow Now', color: 'primary' } };
     }
   }, [testName]);
 
@@ -59,22 +59,16 @@ export const useSecureABTest = (testName: string) => {
     const loadSecureTest = async () => {
       setLoading(true);
       try {
-        // Get assigned variant from secure endpoint
-        const assignedVariant = await getSecureVariant();
-        setVariant(assignedVariant);
-
-        // Get test configuration for variant data (client-side, read-only)
-        const { data: testConfig } = await supabase
-          .from('ab_tests')
-          .select('variants')
-          .eq('test_name', testName)
-          .eq('active', true)
-          .maybeSingle();
-
-        if (testConfig && testConfig.variants[assignedVariant]) {
-          setVariantData(testConfig.variants[assignedVariant]);
+        // Get assigned variant and safe display data from secure endpoint
+        const result = await getSecureVariant();
+        
+        if (typeof result === 'object' && result.variant) {
+          setVariant(result.variant);
+          // Use the variantData returned from the secure endpoint (no direct table access)
+          setVariantData(result.variantData || { text: 'Grow Now', color: 'primary' });
         } else {
-          // Fallback variant data
+          // Fallback for string response (backward compatibility)
+          setVariant(result as string);
           setVariantData({ text: 'Grow Now', color: 'primary' });
         }
       } catch (error) {

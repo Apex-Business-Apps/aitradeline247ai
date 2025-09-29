@@ -125,9 +125,26 @@ serve(async (req) => {
           }
         } else {
           console.log(`New assignment saved: ${testName} -> ${assignedVariant}`);
+          
+          // Log assignment for audit trail
+          const { error: auditError } = await supabase.rpc('log_ab_test_access', {
+            p_test_name: testName,
+            p_variant: assignedVariant,
+            p_access_type: 'assignment'
+          });
+          
+          if (auditError) {
+            console.error('Audit log error:', auditError);
+          }
         }
       }
     }
+
+    // Get secure variant display data (NOT full config)
+    const { data: variantData } = await supabase.rpc('get_variant_display_data', {
+      p_test_name: testName,
+      p_variant: assignedVariant
+    });
 
     // Create HMAC signature for integrity
     const secret = Deno.env.get('AB_TEST_SECRET') || 'default-secret';
@@ -152,7 +169,8 @@ serve(async (req) => {
     const response = new Response(JSON.stringify({ 
       variant: assignedVariant,
       testName,
-      anonId: anonymousId
+      anonId: anonymousId,
+      variantData: variantData || { text: 'Grow Now', color: 'primary', variant: assignedVariant }
     }), {
       status: 200,
       headers: {
