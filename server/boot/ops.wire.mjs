@@ -5,6 +5,7 @@
 
 import { alertTestHandler } from '../routes/webhooks.alert.test.mjs';
 import { ctaCallbackPageHandler, ctaDepositSuccessPageHandler } from '../routes/cta.pages.mjs';
+import { securityMonitorHandler } from '../routes/internal.security.monitor.mjs';
 
 /**
  * Wire all operational routes to Express app
@@ -22,6 +23,9 @@ export async function wireOps(app) {
     
     // Alert test endpoint
     app.post('/internal/alert/test', alertTestHandler);
+    
+    // Security monitoring endpoint
+    app.post('/internal/security/monitor', securityMonitorHandler);
     
     // CTA landing pages with GA4 tracking
     app.get('/cta/callback', ctaCallbackPageHandler);

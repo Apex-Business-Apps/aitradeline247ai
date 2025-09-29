@@ -1255,6 +1255,10 @@ export type Database = {
         Args: { ip: unknown }
         Returns: unknown
       }
+      can_access_customer_pii: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
       citext: {
         Args: { "": boolean } | { "": string } | { "": unknown }
         Returns: string
@@ -1280,6 +1284,10 @@ export type Database = {
         Returns: string
       }
       cleanup_old_analytics_events: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      detect_and_alert_anomalies: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
@@ -1311,6 +1319,17 @@ export type Database = {
           created_at: string
           full_name: string
           id: string
+          phone_e164_masked: string
+          updated_at: string
+        }[]
+      }
+      get_profile_with_restrictions: {
+        Args: { profile_user_id: string }
+        Returns: {
+          created_at: string
+          full_name: string
+          id: string
+          phone_e164_full: string
           phone_e164_masked: string
           updated_at: string
         }[]
@@ -1375,6 +1394,18 @@ export type Database = {
           p_event_type: string
           p_session_id?: string
           p_severity?: string
+          p_user_id?: string
+        }
+        Returns: undefined
+      }
+      log_security_event_enhanced: {
+        Args: {
+          p_event_data?: Json
+          p_event_type: string
+          p_ip_address?: unknown
+          p_session_id?: string
+          p_severity?: string
+          p_user_agent?: string
           p_user_id?: string
         }
         Returns: undefined
