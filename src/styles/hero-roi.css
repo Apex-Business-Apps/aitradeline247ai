@@ -44,7 +44,6 @@
   position: static !important;
   transform: none !important;
   width: 100%;
-  max-width: 560px;
   margin: 0 auto;
 }
 
@@ -54,10 +53,5 @@
     grid-template-columns: repeat(2, 1fr);
     max-width: 1200px;
     gap: 2rem;
-  }
-  
-  #start-trial-hero,
-  #roi-calculator{
-    max-width: 560px;
   }
 }
