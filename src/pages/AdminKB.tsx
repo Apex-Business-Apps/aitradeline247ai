@@ -28,14 +28,34 @@ export default function AdminKB() {
 
   const fetchKBStats = async () => {
     try {
-      // TODO: Create kb_versions and kb_documents tables when implementing KB functionality
-      // For now, return empty stats to prevent build errors
-      setKbStats([]);
+      const { data, error } = await supabase
+        .from('kb_versions')
+        .select('org_id, version, updated_at')
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+
+      const statsPromises = data?.map(async (version) => {
+        const { count } = await supabase
+          .from('kb_documents')
+          .select('*', { count: 'exact', head: true })
+          .eq('org_id', version.org_id);
+
+        return {
+          org_id: version.org_id,
+          doc_count: count || 0,
+          kb_version: version.version,
+          last_updated: version.updated_at
+        };
+      }) || [];
+
+      const stats = await Promise.all(statsPromises);
+      setKbStats(stats);
     } catch (error) {
       console.error('Error fetching KB stats:', error);
       toast({
         title: 'Error',
-        description: 'Knowledge base functionality not yet implemented',
+        description: 'Failed to fetch knowledge base statistics',
         variant: 'destructive'
       });
     }
@@ -54,11 +74,25 @@ export default function AdminKB() {
 
     setUploading(true);
     try {
-      // TODO: Create kb_documents table and increment_kb_version function when implementing KB
+      const text = await file.text();
+      
+      const { error } = await supabase
+        .from('kb_documents')
+        .insert({
+          org_id: selectedOrg,
+          title: file.name,
+          text: text,
+          checksum: await generateChecksum(text)
+        });
+
+      if (error) throw error;
+
+      // Increment KB version
+      await supabase.rpc('increment_kb_version', { target_org_id: selectedOrg });
+
       toast({
-        title: 'Info',
-        description: 'Knowledge base functionality not yet implemented',
-        variant: 'default'
+        title: 'Success',
+        description: 'Document uploaded successfully'
       });
       
       fetchKBStats();
@@ -85,11 +119,25 @@ export default function AdminKB() {
     }
 
     try {
-      // TODO: Create kb_documents table and increment_kb_version function when implementing KB
+      // This would typically fetch content from the URL
+      // For now, we'll just store the URL as a placeholder
+      const { error } = await supabase
+        .from('kb_documents')
+        .insert({
+          org_id: selectedOrg,
+          title: `URL: ${urlInput}`,
+          url: urlInput,
+          text: `Content from ${urlInput}`, // Placeholder
+          checksum: await generateChecksum(urlInput)
+        });
+
+      if (error) throw error;
+
+      await supabase.rpc('increment_kb_version', { target_org_id: selectedOrg });
+
       toast({
-        title: 'Info',
-        description: 'Knowledge base functionality not yet implemented',
-        variant: 'default'
+        title: 'Success',
+        description: 'URL added successfully'
       });
       
       setUrlInput('');

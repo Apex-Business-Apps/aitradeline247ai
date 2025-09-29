@@ -10,1164 +10,688 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
+      ab_test_assignments: {
+        Row: {
+          converted: boolean | null
+          created_at: string
+          id: string
+          test_name: string
+          user_session: string
+          variant: string
+        }
+        Insert: {
+          converted?: boolean | null
+          created_at?: string
+          id?: string
+          test_name: string
+          user_session: string
+          variant: string
+        }
+        Update: {
+          converted?: boolean | null
+          created_at?: string
+          id?: string
+          test_name?: string
+          user_session?: string
+          variant?: string
+        }
+        Relationships: []
+      }
+      ab_tests: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          end_date: string | null
+          id: string
+          start_date: string | null
+          test_name: string
+          traffic_split: Json | null
+          variants: Json
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          test_name: string
+          traffic_split?: Json | null
+          variants: Json
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          start_date?: string | null
+          test_name?: string
+          traffic_split?: Json | null
+          variants?: Json
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
           event_data: Json | null
           event_type: string
           id: string
-          ip_address: unknown | null
-          session_id: string | null
-          severity: string | null
+          ip_address: string | null
+          page_url: string | null
           user_agent: string | null
           user_id: string | null
+          user_session: string | null
         }
         Insert: {
           created_at?: string
           event_data?: Json | null
           event_type: string
           id?: string
-          ip_address?: unknown | null
-          session_id?: string | null
-          severity?: string | null
+          ip_address?: string | null
+          page_url?: string | null
           user_agent?: string | null
           user_id?: string | null
+          user_session?: string | null
         }
         Update: {
           created_at?: string
           event_data?: Json | null
           event_type?: string
           id?: string
-          ip_address?: unknown | null
-          session_id?: string | null
-          severity?: string | null
+          ip_address?: string | null
+          page_url?: string | null
           user_agent?: string | null
           user_id?: string | null
+          user_session?: string | null
         }
         Relationships: []
       }
-      appointment_events: {
+      batch_embeddings_jobs: {
         Row: {
-          appointment_id: string
+          batch_id: string
+          completed_count: number
           created_at: string
-          event: string
+          failed_count: number
           id: string
-          meta: Json | null
-        }
-        Insert: {
-          appointment_id: string
-          created_at?: string
-          event: string
-          id?: string
-          meta?: Json | null
-        }
-        Update: {
-          appointment_id?: string
-          created_at?: string
-          event?: string
-          id?: string
-          meta?: Json | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "appointment_events_appointment_id_fkey"
-            columns: ["appointment_id"]
-            isOneToOne: false
-            referencedRelation: "appointments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "appointment_events_appointment_id_fkey"
-            columns: ["appointment_id"]
-            isOneToOne: false
-            referencedRelation: "appointments_safe"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      appointments: {
-        Row: {
-          created_at: string
-          e164: string
-          email: string | null
-          end_at: string
-          first_name: string | null
-          id: string
-          note: string | null
-          organization_id: string | null
-          source: string
-          start_at: string
+          input_file_count: number
+          org_id: string
           status: string
-          tz: string
+          updated_at: string
         }
         Insert: {
+          batch_id: string
+          completed_count?: number
           created_at?: string
-          e164: string
-          email?: string | null
-          end_at: string
-          first_name?: string | null
+          failed_count?: number
           id?: string
-          note?: string | null
-          organization_id?: string | null
-          source?: string
-          start_at: string
-          status?: string
-          tz?: string
-        }
-        Update: {
-          created_at?: string
-          e164?: string
-          email?: string | null
-          end_at?: string
-          first_name?: string | null
-          id?: string
-          note?: string | null
-          organization_id?: string | null
-          source?: string
-          start_at?: string
-          status?: string
-          tz?: string
-        }
-        Relationships: []
-      }
-      audit_logs: {
-        Row: {
-          action: string
-          id: string
-          org_id: string | null
-          payload: Json | null
-          target: string | null
-          ts: string
-          user_id: string | null
-        }
-        Insert: {
-          action: string
-          id?: string
-          org_id?: string | null
-          payload?: Json | null
-          target?: string | null
-          ts?: string
-          user_id?: string | null
-        }
-        Update: {
-          action?: string
-          id?: string
-          org_id?: string | null
-          payload?: Json | null
-          target?: string | null
-          ts?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      blocklist_numbers: {
-        Row: {
-          created_at: string
-          phone_e164: string
-          reason: string | null
-        }
-        Insert: {
-          created_at?: string
-          phone_e164: string
-          reason?: string | null
-        }
-        Update: {
-          created_at?: string
-          phone_e164?: string
-          reason?: string | null
-        }
-        Relationships: []
-      }
-      bookings: {
-        Row: {
-          created_at: string | null
-          customer_name: string | null
-          datetime: string | null
-          id: string
-          service: string | null
-          status: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          customer_name?: string | null
-          datetime?: string | null
-          id?: string
-          service?: string | null
-          status?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          customer_name?: string | null
-          datetime?: string | null
-          id?: string
-          service?: string | null
-          status?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      call_lifecycle: {
-        Row: {
-          call_sid: string
-          direction: string | null
-          end_time: string | null
-          from_number: string | null
-          meta: Json | null
-          start_time: string | null
-          status: string | null
-          talk_seconds: number | null
-          to_number: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          call_sid: string
-          direction?: string | null
-          end_time?: string | null
-          from_number?: string | null
-          meta?: Json | null
-          start_time?: string | null
-          status?: string | null
-          talk_seconds?: number | null
-          to_number?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          call_sid?: string
-          direction?: string | null
-          end_time?: string | null
-          from_number?: string | null
-          meta?: Json | null
-          start_time?: string | null
-          status?: string | null
-          talk_seconds?: number | null
-          to_number?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      calls: {
-        Row: {
-          booked: boolean | null
-          call_sid: string
-          caller_e164: string | null
-          intent: string | null
+          input_file_count?: number
           org_id: string
-          outcome: string | null
-          redacted: boolean | null
-          started_at: string | null
-          status: string | null
-        }
-        Insert: {
-          booked?: boolean | null
-          call_sid: string
-          caller_e164?: string | null
-          intent?: string | null
-          org_id: string
-          outcome?: string | null
-          redacted?: boolean | null
-          started_at?: string | null
-          status?: string | null
+          status?: string
+          updated_at?: string
         }
         Update: {
-          booked?: boolean | null
-          call_sid?: string
-          caller_e164?: string | null
-          intent?: string | null
+          batch_id?: string
+          completed_count?: number
+          created_at?: string
+          failed_count?: number
+          id?: string
+          input_file_count?: number
           org_id?: string
-          outcome?: string | null
-          redacted?: boolean | null
-          started_at?: string | null
-          status?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "calls_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      consent_logs: {
-        Row: {
-          channel: string
-          created_at: string
-          e164: string
-          id: string
-          source: string | null
-          status: string
-        }
-        Insert: {
-          channel: string
-          created_at?: string
-          e164: string
-          id?: string
-          source?: string | null
-          status: string
-        }
-        Update: {
-          channel?: string
-          created_at?: string
-          e164?: string
-          id?: string
-          source?: string | null
           status?: string
+          updated_at?: string
         }
         Relationships: []
       }
-      contacts: {
-        Row: {
-          created_at: string
-          e164: string
-          first_name: string | null
-          id: string
-          wa_capable: boolean | null
-        }
-        Insert: {
-          created_at?: string
-          e164: string
-          first_name?: string | null
-          id?: string
-          wa_capable?: boolean | null
-        }
-        Update: {
-          created_at?: string
-          e164?: string
-          first_name?: string | null
-          id?: string
-          wa_capable?: boolean | null
-        }
-        Relationships: []
-      }
-      data_access_audit: {
-        Row: {
-          access_type: string
-          accessed_record_id: string | null
-          accessed_table: string
-          created_at: string | null
-          id: string
-          ip_address: unknown | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          access_type: string
-          accessed_record_id?: string | null
-          accessed_table: string
-          created_at?: string | null
-          id?: string
-          ip_address?: unknown | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          access_type?: string
-          accessed_record_id?: string | null
-          accessed_table?: string
-          created_at?: string | null
-          id?: string
-          ip_address?: unknown | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      events_inbox: {
-        Row: {
-          call_sid: string
-          created_at: string
-          id: string
-          idempotency_key: string
-          kind: string
-          org_id: string
-          payload: Json
-          processed_at: string | null
-        }
-        Insert: {
-          call_sid: string
-          created_at?: string
-          id?: string
-          idempotency_key: string
-          kind: string
-          org_id: string
-          payload: Json
-          processed_at?: string | null
-        }
-        Update: {
-          call_sid?: string
-          created_at?: string
-          id?: string
-          idempotency_key?: string
-          kind?: string
-          org_id?: string
-          payload?: Json
-          processed_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "events_inbox_call_sid_fkey"
-            columns: ["call_sid"]
-            isOneToOne: false
-            referencedRelation: "calls"
-            referencedColumns: ["call_sid"]
-          },
-          {
-            foreignKeyName: "events_inbox_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      events_outbox: {
+      call_summaries: {
         Row: {
           call_sid: string | null
+          confidence_score: number | null
           created_at: string
-          dispatched_at: string | null
+          escalated: boolean | null
           id: string
-          kind: string
+          model_used: string | null
+          next_actions: Json | null
           org_id: string
-          payload: Json
-        }
-        Insert: {
-          call_sid?: string | null
-          created_at?: string
-          dispatched_at?: string | null
-          id?: string
-          kind: string
-          org_id: string
-          payload: Json
-        }
-        Update: {
-          call_sid?: string | null
-          created_at?: string
-          dispatched_at?: string | null
-          id?: string
-          kind?: string
-          org_id?: string
-          payload?: Json
-        }
-        Relationships: [
-          {
-            foreignKeyName: "events_outbox_call_sid_fkey"
-            columns: ["call_sid"]
-            isOneToOne: false
-            referencedRelation: "calls"
-            referencedColumns: ["call_sid"]
-          },
-          {
-            foreignKeyName: "events_outbox_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      faqs: {
-        Row: {
-          a: string
-          created_at: string
-          id: string
-          organization_id: string
-          q: string
-          updated_at: string
-        }
-        Insert: {
-          a: string
-          created_at?: string
-          id?: string
-          organization_id: string
-          q: string
-          updated_at?: string
-        }
-        Update: {
-          a?: string
-          created_at?: string
-          id?: string
-          organization_id?: string
-          q?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "faqs_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      hotline_numbers: {
-        Row: {
-          agent_name: string
-          created_at: string
-          greeting_template: string | null
-          locale: string
-          org_id: string
-          phone_e164: string
-          tagline_on: boolean
-        }
-        Insert: {
-          agent_name?: string
-          created_at?: string
-          greeting_template?: string | null
-          locale?: string
-          org_id: string
-          phone_e164: string
-          tagline_on?: boolean
-        }
-        Update: {
-          agent_name?: string
-          created_at?: string
-          greeting_template?: string | null
-          locale?: string
-          org_id?: string
-          phone_e164?: string
-          tagline_on?: boolean
-        }
-        Relationships: [
-          {
-            foreignKeyName: "hotline_numbers_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      hotline_voice_prefs: {
-        Row: {
-          phone_e164: string
-          voice_code: string
-        }
-        Insert: {
-          phone_e164: string
-          voice_code: string
-        }
-        Update: {
-          phone_e164?: string
-          voice_code?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "hotline_voice_prefs_phone_e164_fkey"
-            columns: ["phone_e164"]
-            isOneToOne: true
-            referencedRelation: "hotline_numbers"
-            referencedColumns: ["phone_e164"]
-          },
-          {
-            foreignKeyName: "hotline_voice_prefs_voice_code_fkey"
-            columns: ["voice_code"]
-            isOneToOne: false
-            referencedRelation: "supported_voices"
-            referencedColumns: ["code"]
-          },
-        ]
-      }
-      messages: {
-        Row: {
-          body: string | null
-          created_at: string | null
-          from_phone: string | null
-          id: string
           subject: string | null
-          user_id: string | null
+          summary: string
+          tags: Json | null
         }
         Insert: {
-          body?: string | null
-          created_at?: string | null
-          from_phone?: string | null
+          call_sid?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          escalated?: boolean | null
           id?: string
+          model_used?: string | null
+          next_actions?: Json | null
+          org_id: string
           subject?: string | null
-          user_id?: string | null
+          summary: string
+          tags?: Json | null
         }
         Update: {
-          body?: string | null
-          created_at?: string | null
-          from_phone?: string | null
+          call_sid?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          escalated?: boolean | null
           id?: string
+          model_used?: string | null
+          next_actions?: Json | null
+          org_id?: string
           subject?: string | null
-          user_id?: string | null
+          summary?: string
+          tags?: Json | null
         }
         Relationships: []
       }
-      org_settings: {
+      commission_charges: {
         Row: {
-          business_hours: Json | null
-          calendly_url: string | null
-          emergency_number: string | null
-          gcal_service: Json | null
-          language: string | null
-          organization_id: string
-          slack_webhook_url: string | null
-          teams_webhook_url: string | null
-          updated_at: string
-          voice_id: string | null
-          zap_outgoing_url: string | null
+          amount_cents: number
+          call_id: string | null
+          call_sid: string | null
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
+          id: string
+          idempotency_key: string | null
+          invoice_id: string | null
+          ledger_entry_id: string | null
+          org_id: string
+          qualified: boolean
+          rules_snapshot: Json
         }
         Insert: {
-          business_hours?: Json | null
-          calendly_url?: string | null
-          emergency_number?: string | null
-          gcal_service?: Json | null
-          language?: string | null
-          organization_id: string
-          slack_webhook_url?: string | null
-          teams_webhook_url?: string | null
-          updated_at?: string
-          voice_id?: string | null
-          zap_outgoing_url?: string | null
+          amount_cents: number
+          call_id?: string | null
+          call_sid?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          idempotency_key?: string | null
+          invoice_id?: string | null
+          ledger_entry_id?: string | null
+          org_id: string
+          qualified?: boolean
+          rules_snapshot?: Json
         }
         Update: {
-          business_hours?: Json | null
-          calendly_url?: string | null
-          emergency_number?: string | null
-          gcal_service?: Json | null
-          language?: string | null
-          organization_id?: string
-          slack_webhook_url?: string | null
-          teams_webhook_url?: string | null
-          updated_at?: string
-          voice_id?: string | null
-          zap_outgoing_url?: string | null
+          amount_cents?: number
+          call_id?: string | null
+          call_sid?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          idempotency_key?: string | null
+          invoice_id?: string | null
+          ledger_entry_id?: string | null
+          org_id?: string
+          qualified?: boolean
+          rules_snapshot?: Json
         }
         Relationships: [
           {
-            foreignKeyName: "org_settings_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: true
+            foreignKeyName: "commission_charges_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_charges_ledger_entry_id_fkey"
+            columns: ["ledger_entry_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_ledger"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_charges_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
       }
-      org_users: {
+      commission_disputes: {
         Row: {
-          created_at: string | null
+          charge_id: string
+          created_at: string
+          decided_at: string | null
+          decision_memo: string | null
+          id: string
           org_id: string
-          role: string
-          user_id: string
+          reason: string
+          status: string
         }
         Insert: {
-          created_at?: string | null
+          charge_id: string
+          created_at?: string
+          decided_at?: string | null
+          decision_memo?: string | null
+          id?: string
           org_id: string
-          role?: string
-          user_id: string
+          reason: string
+          status?: string
         }
         Update: {
-          created_at?: string | null
+          charge_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decision_memo?: string | null
+          id?: string
           org_id?: string
-          role?: string
-          user_id?: string
+          reason?: string
+          status?: string
         }
         Relationships: [
           {
-            foreignKeyName: "org_users_org_id_fkey"
+            foreignKeyName: "commission_disputes_charge_id_fkey"
+            columns: ["charge_id"]
+            isOneToOne: false
+            referencedRelation: "commission_charges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_disputes_org_id_fkey"
             columns: ["org_id"]
             isOneToOne: false
-            referencedRelation: "orgs"
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
       }
-      organization_members: {
+      consent_records: {
+        Row: {
+          consent_given: boolean
+          consent_timestamp: string | null
+          consent_type: string
+          contact_identifier: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          org_id: string
+          source: string | null
+          updated_at: string
+          withdraw_timestamp: string | null
+        }
+        Insert: {
+          consent_given?: boolean
+          consent_timestamp?: string | null
+          consent_type: string
+          contact_identifier: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          org_id: string
+          source?: string | null
+          updated_at?: string
+          withdraw_timestamp?: string | null
+        }
+        Update: {
+          consent_given?: boolean
+          consent_timestamp?: string | null
+          consent_type?: string
+          contact_identifier?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          org_id?: string
+          source?: string | null
+          updated_at?: string
+          withdraw_timestamp?: string | null
+        }
+        Relationships: []
+      }
+      encrypted_lead_data: {
         Row: {
           created_at: string
-          org_id: string
-          role: string
+          encrypted_company: string
+          encrypted_email: string
+          encrypted_name: string
+          encrypted_notes: string | null
+          encryption_key_id: string
+          id: string
+          lead_id: string
+        }
+        Insert: {
+          created_at?: string
+          encrypted_company: string
+          encrypted_email: string
+          encrypted_name: string
+          encrypted_notes?: string | null
+          encryption_key_id?: string
+          id?: string
+          lead_id: string
+        }
+        Update: {
+          created_at?: string
+          encrypted_company?: string
+          encrypted_email?: string
+          encrypted_name?: string
+          encrypted_notes?: string | null
+          encryption_key_id?: string
+          id?: string
+          lead_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "encrypted_lead_data_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: true
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      encrypted_session_tokens: {
+        Row: {
+          created_at: string
+          device_fingerprint: string | null
+          encrypted_token: string
+          expires_at: string
+          id: string
+          ip_address_hash: string | null
+          is_revoked: boolean
+          last_used: string
+          token_hash: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          org_id: string
-          role?: string
+          device_fingerprint?: string | null
+          encrypted_token: string
+          expires_at?: string
+          id?: string
+          ip_address_hash?: string | null
+          is_revoked?: boolean
+          last_used?: string
+          token_hash: string
           user_id: string
         }
         Update: {
           created_at?: string
-          org_id?: string
-          role?: string
+          device_fingerprint?: string | null
+          encrypted_token?: string
+          expires_at?: string
+          id?: string
+          ip_address_hash?: string | null
+          is_revoked?: boolean
+          last_used?: string
+          token_hash?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      invoices: {
+        Row: {
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
+          id: string
+          meta: Json
+          number: string | null
+          org_id: string
+          period_end: string | null
+          period_start: string | null
+          provider: string | null
+          provider_id: string | null
+          status: Database["public"]["Enums"]["invoice_status"]
+          subtotal_cents: number
+          tax_cents: number
+          total_cents: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          meta?: Json
+          number?: string | null
+          org_id: string
+          period_end?: string | null
+          period_start?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal_cents?: number
+          tax_cents?: number
+          total_cents?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          id?: string
+          meta?: Json
+          number?: string | null
+          org_id?: string
+          period_end?: string | null
+          period_start?: string | null
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          subtotal_cents?: number
+          tax_cents?: number
+          total_cents?: number | null
+          updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "organization_members_org_id_fkey"
+            foreignKeyName: "invoices_org_id_fkey"
             columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
+      }
+      kb_documents: {
+        Row: {
+          checksum: string
+          created_at: string
+          embedding: string | null
+          id: string
+          org_id: string
+          text: string
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          checksum: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          org_id: string
+          text: string
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          checksum?: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          org_id?: string
+          text?: string
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      kb_versions: {
+        Row: {
+          created_at: string
+          document_count: number
+          id: string
+          last_embedded_at: string | null
+          org_id: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          document_count?: number
+          id?: string
+          last_embedded_at?: string | null
+          org_id: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          document_count?: number
+          id?: string
+          last_embedded_at?: string | null
+          org_id?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          assigned_to: string | null
+          company: string
+          created_at: string
+          email: string
+          id: string
+          lead_score: number | null
+          name: string
+          notes: string | null
+          source: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          company: string
+          created_at?: string
+          email: string
+          id?: string
+          lead_score?: number | null
+          name: string
+          notes?: string | null
+          source?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          company?: string
+          created_at?: string
+          email?: string
+          id?: string
+          lead_score?: number | null
+          name?: string
+          notes?: string | null
+          source?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      operational_metrics: {
+        Row: {
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_unit: string | null
+          metric_value: number
+          org_id: string
+          recorded_at: string
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_unit?: string | null
+          metric_value: number
+          org_id: string
+          recorded_at?: string
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_unit?: string | null
+          metric_value?: number
+          org_id?: string
+          recorded_at?: string
+        }
+        Relationships: []
       }
       organizations: {
         Row: {
           created_at: string
           id: string
           name: string
-          settings: Json
-          slug: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
-          settings?: Json
-          slug?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
-          settings?: Json
-          slug?: string | null
           updated_at?: string
         }
         Relationships: []
       }
-      orgs: {
+      outbox_messages: {
         Row: {
-          created_at: string
-          email_to: string
-          id: string
-          name: string
-          target_e164: string
-        }
-        Insert: {
-          created_at?: string
-          email_to: string
-          id?: string
-          name: string
-          target_e164: string
-        }
-        Update: {
-          created_at?: string
-          email_to?: string
-          id?: string
-          name?: string
-          target_e164?: string
-        }
-        Relationships: []
-      }
-      outreach_events: {
-        Row: {
-          call_sid: string | null
-          channel: string
-          created_at: string | null
-          dedupe_key: string | null
-          id: number
-          payload: Json | null
-          status: string
-        }
-        Insert: {
-          call_sid?: string | null
-          channel: string
-          created_at?: string | null
-          dedupe_key?: string | null
-          id?: number
-          payload?: Json | null
-          status: string
-        }
-        Update: {
-          call_sid?: string | null
-          channel?: string
-          created_at?: string | null
-          dedupe_key?: string | null
-          id?: number
-          payload?: Json | null
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "outreach_events_call_sid_fkey"
-            columns: ["call_sid"]
-            isOneToOne: false
-            referencedRelation: "call_lifecycle"
-            referencedColumns: ["call_sid"]
-          },
-        ]
-      }
-      outreach_messages: {
-        Row: {
-          body: string | null
-          created_at: string
-          direction: string
-          id: string
-          payload: Json | null
-          session_id: string
-        }
-        Insert: {
-          body?: string | null
-          created_at?: string
-          direction: string
-          id?: string
-          payload?: Json | null
-          session_id: string
-        }
-        Update: {
-          body?: string | null
-          created_at?: string
-          direction?: string
-          id?: string
-          payload?: Json | null
-          session_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "outreach_messages_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "outreach_sessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      outreach_sessions: {
-        Row: {
-          call_sid: string
-          channel: string | null
-          created_at: string
-          e164: string
-          followup_due_at: string | null
-          id: string
-          last_sent_at: string | null
-          meta: Json | null
-          state: string
-        }
-        Insert: {
-          call_sid: string
-          channel?: string | null
-          created_at?: string
-          e164: string
-          followup_due_at?: string | null
-          id?: string
-          last_sent_at?: string | null
-          meta?: Json | null
-          state?: string
-        }
-        Update: {
-          call_sid?: string
-          channel?: string | null
-          created_at?: string
-          e164?: string
-          followup_due_at?: string | null
-          id?: string
-          last_sent_at?: string | null
-          meta?: Json | null
-          state?: string
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          created_at: string
-          full_name: string | null
-          id: string
-          phone_e164: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          full_name?: string | null
-          id: string
-          phone_e164?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          full_name?: string | null
-          id?: string
-          phone_e164?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      reply_events: {
-        Row: {
+          attempts: number
+          body_html: string | null
+          body_text: string | null
           created_at: string
           id: string
-          session_id: string
-          signal: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          session_id: string
-          signal: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          session_id?: string
-          signal?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reply_events_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "outreach_sessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      retention_policies: {
-        Row: {
-          email_logs_days: number
+          kind: string
+          last_error: string | null
           org_id: string
-          recordings_days: number
-          transcripts_days: number
-          updated_at: string | null
-        }
-        Insert: {
-          email_logs_days?: number
-          org_id: string
-          recordings_days?: number
-          transcripts_days?: number
-          updated_at?: string | null
-        }
-        Update: {
-          email_logs_days?: number
-          org_id?: string
-          recordings_days?: number
-          transcripts_days?: number
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "retention_policies_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: true
-            referencedRelation: "orgs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      security_alerts: {
-        Row: {
-          alert_type: string
-          created_at: string | null
-          event_data: Json | null
-          id: string
-          ip_address: unknown | null
-          resolved: boolean | null
-          severity: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          alert_type: string
-          created_at?: string | null
-          event_data?: Json | null
-          id?: string
-          ip_address?: unknown | null
-          resolved?: boolean | null
-          severity?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          alert_type?: string
-          created_at?: string | null
-          event_data?: Json | null
-          id?: string
-          ip_address?: unknown | null
-          resolved?: boolean | null
-          severity?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      security_compliance: {
-        Row: {
-          check_name: string
-          description: string | null
-          id: string
-          last_checked: string | null
-          manual_action_required: boolean | null
-          remediation_notes: string | null
-          status: string
-        }
-        Insert: {
-          check_name: string
-          description?: string | null
-          id?: string
-          last_checked?: string | null
-          manual_action_required?: boolean | null
-          remediation_notes?: string | null
-          status: string
-        }
-        Update: {
-          check_name?: string
-          description?: string | null
-          id?: string
-          last_checked?: string | null
-          manual_action_required?: boolean | null
-          remediation_notes?: string | null
-          status?: string
-        }
-        Relationships: []
-      }
-      subscriptions: {
-        Row: {
-          created_at: string
-          current_period_end: string | null
-          id: string
-          org_id: string
-          plan: string
-          status: string
-          stripe_customer_id: string
-          stripe_subscription_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          current_period_end?: string | null
-          id?: string
-          org_id: string
-          plan: string
-          status: string
-          stripe_customer_id: string
-          stripe_subscription_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          current_period_end?: string | null
-          id?: string
-          org_id?: string
-          plan?: string
-          status?: string
-          stripe_customer_id?: string
-          stripe_subscription_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "subscriptions_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "orgs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      support_tickets: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          message: string
+          sent_at: string | null
           status: string
           subject: string
+          to_email: string
         }
         Insert: {
+          attempts?: number
+          body_html?: string | null
+          body_text?: string | null
           created_at?: string
-          email: string
           id?: string
-          message: string
+          kind: string
+          last_error?: string | null
+          org_id: string
+          sent_at?: string | null
           status?: string
           subject: string
+          to_email: string
         }
         Update: {
+          attempts?: number
+          body_html?: string | null
+          body_text?: string | null
           created_at?: string
-          email?: string
           id?: string
-          message?: string
+          kind?: string
+          last_error?: string | null
+          org_id?: string
+          sent_at?: string | null
           status?: string
           subject?: string
-        }
-        Relationships: []
-      }
-      supported_locales: {
-        Row: {
-          code: string
-          name: string
-        }
-        Insert: {
-          code: string
-          name: string
-        }
-        Update: {
-          code?: string
-          name?: string
-        }
-        Relationships: []
-      }
-      supported_voices: {
-        Row: {
-          code: string
-          display_name: string
-          gender: string | null
-          locale_code: string
-          provider: string
-        }
-        Insert: {
-          code: string
-          display_name: string
-          gender?: string | null
-          locale_code: string
-          provider: string
-        }
-        Update: {
-          code?: string
-          display_name?: string
-          gender?: string | null
-          locale_code?: string
-          provider?: string
+          to_email?: string
         }
         Relationships: [
           {
-            foreignKeyName: "supported_voices_locale_code_fkey"
-            columns: ["locale_code"]
-            isOneToOne: false
-            referencedRelation: "supported_locales"
-            referencedColumns: ["code"]
-          },
-        ]
-      }
-      transcripts: {
-        Row: {
-          call_sid: string
-          content: string
-          created_at: string
-          id: string
-          org_id: string
-        }
-        Insert: {
-          call_sid: string
-          content: string
-          created_at?: string
-          id?: string
-          org_id: string
-        }
-        Update: {
-          call_sid?: string
-          content?: string
-          created_at?: string
-          id?: string
-          org_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "transcripts_call_sid_fkey"
-            columns: ["call_sid"]
-            isOneToOne: false
-            referencedRelation: "calls"
-            referencedColumns: ["call_sid"]
-          },
-          {
-            foreignKeyName: "transcripts_org_id_fkey"
+            foreignKeyName: "outbox_messages_org_id_fkey"
             columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -1175,279 +699,470 @@ export type Database = {
           },
         ]
       }
-      upgrade_audit: {
+      payment_intents: {
         Row: {
-          check_name: string
-          created_at: string | null
-          details: Json | null
+          amount_cents: number
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
           id: string
-          status: string
-          upgrade_phase: string
+          idempotency_key: string | null
+          intent_type: Database["public"]["Enums"]["txn_type"]
+          metadata: Json
+          org_id: string
+          provider: string | null
+          provider_id: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
         }
         Insert: {
-          check_name: string
-          created_at?: string | null
-          details?: Json | null
+          amount_cents: number
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
           id?: string
-          status: string
-          upgrade_phase: string
+          idempotency_key?: string | null
+          intent_type: Database["public"]["Enums"]["txn_type"]
+          metadata?: Json
+          org_id: string
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
         }
         Update: {
-          check_name?: string
-          created_at?: string | null
-          details?: Json | null
+          amount_cents?: number
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
           id?: string
-          status?: string
-          upgrade_phase?: string
+          idempotency_key?: string | null
+          intent_type?: Database["public"]["Enums"]["txn_type"]
+          metadata?: Json
+          org_id?: string
+          provider?: string | null
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_intents_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          organization_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          organization_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          organization_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rag_cache: {
+        Row: {
+          answer: Json
+          created_at: string
+          expires_at: string
+          id: string
+          kb_version: number
+          org_id: string
+          question_hash: string
+        }
+        Insert: {
+          answer: Json
+          created_at?: string
+          expires_at?: string
+          id?: string
+          kb_version: number
+          org_id: string
+          question_hash: string
+        }
+        Update: {
+          answer?: Json
+          created_at?: string
+          expires_at?: string
+          id?: string
+          kb_version?: number
+          org_id?: string
+          question_hash?: string
+        }
+        Relationships: []
+      }
+      ragas_evaluations: {
+        Row: {
+          answer: string
+          answer_relevance_score: number | null
+          context: Json | null
+          created_at: string
+          faithfulness_score: number | null
+          ground_truth: string | null
+          id: string
+          org_id: string
+          question: string
+          retrieval_precision: number | null
+        }
+        Insert: {
+          answer: string
+          answer_relevance_score?: number | null
+          context?: Json | null
+          created_at?: string
+          faithfulness_score?: number | null
+          ground_truth?: string | null
+          id?: string
+          org_id: string
+          question: string
+          retrieval_precision?: number | null
+        }
+        Update: {
+          answer?: string
+          answer_relevance_score?: number | null
+          context?: Json | null
+          created_at?: string
+          faithfulness_score?: number | null
+          ground_truth?: string | null
+          id?: string
+          org_id?: string
+          question?: string
+          retrieval_precision?: number | null
         }
         Relationships: []
       }
       user_roles: {
         Row: {
           created_at: string
-          created_by: string | null
           id: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
           created_at?: string
-          created_by?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
           created_at?: string
-          created_by?: string | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
         Relationships: []
       }
-      user_views: {
+      user_sessions: {
         Row: {
-          created_at: string | null
+          created_at: string
+          expires_at: string
           id: string
-          kind: string
-          name: string
-          payload: Json
+          is_active: boolean
+          last_activity: string
+          session_token: string
           user_id: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
+          expires_at?: string
           id?: string
-          kind: string
-          name: string
-          payload: Json
+          is_active?: boolean
+          last_activity?: string
+          session_token: string
           user_id: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
+          expires_at?: string
           id?: string
-          kind?: string
-          name?: string
-          payload?: Json
+          is_active?: boolean
+          last_activity?: string
+          session_token?: string
           user_id?: string
         }
         Relationships: []
       }
-    }
-    Views: {
-      appointments_safe: {
+      wallet_ledger: {
         Row: {
-          created_at: string | null
-          end_at: string | null
-          id: string | null
-          note: string | null
-          organization_id: string | null
-          source: string | null
-          start_at: string | null
-          status: string | null
-          tz: string | null
+          amount_cents: number
+          created_at: string
+          created_by: string | null
+          currency: Database["public"]["Enums"]["currency_code"]
+          entry_type: Database["public"]["Enums"]["ledger_entry_type"]
+          id: string
+          idempotency_key: string | null
+          memo: string | null
+          org_id: string
+          related_id: string | null
+          related_type: string | null
         }
         Insert: {
-          created_at?: string | null
-          end_at?: string | null
-          id?: string | null
-          note?: string | null
-          organization_id?: string | null
-          source?: string | null
-          start_at?: string | null
-          status?: string | null
-          tz?: string | null
+          amount_cents: number
+          created_at?: string
+          created_by?: string | null
+          currency?: Database["public"]["Enums"]["currency_code"]
+          entry_type: Database["public"]["Enums"]["ledger_entry_type"]
+          id?: string
+          idempotency_key?: string | null
+          memo?: string | null
+          org_id: string
+          related_id?: string | null
+          related_type?: string | null
         }
         Update: {
-          created_at?: string | null
-          end_at?: string | null
-          id?: string | null
-          note?: string | null
-          organization_id?: string | null
-          source?: string | null
-          start_at?: string | null
-          status?: string | null
-          tz?: string | null
+          amount_cents?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: Database["public"]["Enums"]["currency_code"]
+          entry_type?: Database["public"]["Enums"]["ledger_entry_type"]
+          id?: string
+          idempotency_key?: string | null
+          memo?: string | null
+          org_id?: string
+          related_id?: string | null
+          related_type?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "wallet_ledger_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhook_events: {
+        Row: {
+          dedupe_key: string | null
+          event_type: string
+          id: string
+          org_id: string | null
+          payload: Json
+          processed_at: string | null
+          provider: string
+          received_at: string
+        }
+        Insert: {
+          dedupe_key?: string | null
+          event_type: string
+          id?: string
+          org_id?: string | null
+          payload: Json
+          processed_at?: string | null
+          provider: string
+          received_at?: string
+        }
+        Update: {
+          dedupe_key?: string | null
+          event_type?: string
+          id?: string
+          org_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          provider?: string
+          received_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_events_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      wallet_balances: {
+        Row: {
+          balance_cents: number | null
+          org_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_ledger_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
-      anonymize_ip_address: {
-        Args: { ip: unknown }
+      anonymize_old_analytics_data: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      anonymize_old_leads: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      automated_privacy_cleanup: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      binary_quantize: {
+        Args: { "": string } | { "": unknown }
         Returns: unknown
       }
-      can_access_customer_pii: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
-      can_view_appointment_summary: {
-        Args: { org_id_param: string }
-        Returns: boolean
-      }
-      citext: {
-        Args: { "": boolean } | { "": string } | { "": unknown }
-        Returns: string
-      }
-      citext_hash: {
-        Args: { "": string }
+      calculate_lead_score: {
+        Args: {
+          company_name: string
+          email_domain: string
+          notes_content: string
+        }
         Returns: number
       }
-      citextin: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      citextout: {
-        Args: { "": string }
-        Returns: unknown
-      }
-      citextrecv: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      citextsend: {
-        Args: { "": string }
-        Returns: string
-      }
-      cleanup_old_analytics_events: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      detect_and_alert_anomalies: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      detect_anomalous_access: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      detect_auth_anomalies: {
+      charge_commission: {
         Args: {
-          p_event_type: string
-          p_ip_address: unknown
-          p_user_agent: string
+          p_amount_cents: number
+          p_call_id: string
+          p_call_sid: string
+          p_idempotency_key: string
+          p_org_id: string
+          p_rules: Json
+        }
+        Returns: string
+      }
+      cleanup_expired_rag_cache: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      cleanup_expired_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_analytics_data: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      create_encrypted_session_token: {
+        Args: {
+          p_device_fingerprint?: string
+          p_ip_address?: string
+          p_raw_token: string
           p_user_id: string
         }
-        Returns: undefined
+        Returns: string
       }
-      emergency_customer_contact: {
-        Args: { appointment_id: string; emergency_reason: string }
+      current_org_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_analytics_privacy_summary: {
+        Args: Record<PropertyKey, never>
         Returns: {
-          e164: string
-          email: string
-          first_name: string
+          event_count: number
+          event_type: string
+          time_window: string
+          traffic_level: string
+          unique_sessions: number
         }[]
       }
-      get_appointments_summary: {
-        Args: { limit_count?: number; org_id: string }
-        Returns: {
-          created_at: string
-          end_at: string
-          has_contact_info: boolean
-          id: string
-          note: string
-          organization_id: string
-          source: string
-          start_at: string
-          status: string
-          tz: string
-        }[]
-      }
-      get_customer_contact_info: {
-        Args: { appointment_id: string }
-        Returns: {
-          e164: string
-          email: string
-          first_name: string
-        }[]
-      }
-      get_latest_consent_status: {
-        Args: { p_channel?: string; p_e164?: string }
-        Returns: {
-          channel: string
-          e164: string
-          last_change_at: string
-          status: string
-        }[]
-      }
-      get_masked_profile: {
-        Args: { profile_user_id: string }
-        Returns: {
-          created_at: string
-          full_name: string
-          id: string
-          phone_e164_masked: string
-          updated_at: string
-        }[]
-      }
-      get_org_appointments_secure: {
-        Args: { limit_count?: number; org_id: string }
-        Returns: {
-          created_at: string
-          e164_masked: string
-          email_masked: string
-          end_at: string
-          first_name_masked: string
-          id: string
-          note: string
-          organization_id: string
-          source: string
-          start_at: string
-          status: string
-          tz: string
-        }[]
-      }
-      get_profile_with_restrictions: {
-        Args: { profile_user_id: string }
-        Returns: {
-          created_at: string
-          full_name: string
-          id: string
-          phone_e164_full: string
-          phone_e164_masked: string
-          updated_at: string
-        }[]
-      }
-      get_secure_appointment: {
-        Args: { appointment_id: string }
-        Returns: {
-          created_at: string
-          e164_masked: string
-          email_masked: string
-          end_at: string
-          first_name_masked: string
-          id: string
-          note: string
-          organization_id: string
-          source: string
-          start_at: string
-          status: string
-          tz: string
-        }[]
-      }
-      get_user_role: {
-        Args: { _user_id: string }
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
+      }
+      get_lead_security_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          average_score: number
+          domain_diversity: number
+          recent_leads: number
+          security_events: number
+          total_leads: number
+        }[]
+      }
+      get_secure_lead_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          average_score: number
+          domain_diversity: number
+          recent_leads: number
+          security_events: number
+          total_leads: number
+        }[]
+      }
+      get_secure_lead_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          avg_score: number
+          leads_today: number
+          total_leads: number
+          unique_domains: number
+        }[]
+      }
+      get_security_status: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          component: string
+          details: Json
+          last_check: string
+          status: string
+        }[]
+      }
+      get_wallet_balance: {
+        Args: { p_org_id: string }
+        Returns: {
+          balance_cents: number
+          last_updated: string
+          org_id: string
+        }[]
+      }
+      get_wallet_minimum_flags: {
+        Args: { p_org_id?: string }
+        Returns: {
+          balance_cents: number
+          below_minimum: boolean
+          org_id: string
+        }[]
+      }
+      halfvec_avg: {
+        Args: { "": number[] }
+        Returns: unknown
+      }
+      halfvec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      halfvec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      halfvec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
       }
       has_role: {
         Args: {
@@ -1456,133 +1171,180 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_org_member: {
-        Args: { p_org_id: string }
-        Returns: boolean
+      hnsw_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
       }
-      log_analytics_event_secure: {
+      hnsw_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_sparsevec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnswhandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      increment_kb_version: {
+        Args: { target_org_id: string }
+        Returns: number
+      }
+      ivfflat_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflat_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflathandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      l2_norm: {
+        Args: { "": unknown } | { "": unknown }
+        Returns: number
+      }
+      l2_normalize: {
+        Args: { "": string } | { "": unknown } | { "": unknown }
+        Returns: string
+      }
+      log_analytics_access_attempt: {
+        Args: { access_type: string; success?: boolean; user_context?: string }
+        Returns: undefined
+      }
+      log_security_audit_event: {
+        Args: {
+          p_details?: Json
+          p_event_type: string
+          p_severity?: string
+          p_user_id?: string
+        }
+        Returns: undefined
+      }
+      post_wallet_entry: {
+        Args: {
+          p_amount_cents: number
+          p_idempotency_key: string
+          p_memo?: string
+          p_org_id: string
+          p_related_id: string
+          p_related_type: string
+          p_type: Database["public"]["Enums"]["ledger_entry_type"]
+        }
+        Returns: string
+      }
+      refresh_wallet_balances: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      safe_analytics_insert: {
         Args: {
           p_event_data?: Json
           p_event_type: string
-          p_ip_address?: unknown
+          p_ip_address?: string
           p_page_url?: string
           p_user_agent?: string
           p_user_session?: string
         }
-        Returns: boolean
-      }
-      log_auth_attempt: {
-        Args: {
-          p_event_type: string
-          p_ip_address?: unknown
-          p_success: boolean
-          p_user_agent?: string
-          p_user_identifier?: string
-        }
         Returns: undefined
-      }
-      log_data_access: {
-        Args: {
-          p_access_type?: string
-          p_record_id?: string
-          p_table_name: string
-        }
-        Returns: undefined
-      }
-      log_data_export: {
-        Args: {
-          p_export_type: string
-          p_filters?: Json
-          p_record_count: number
-          p_table_name: string
-          p_user_id: string
-        }
-        Returns: undefined
-      }
-      log_security_event: {
-        Args: {
-          p_event_data?: Json
-          p_event_type: string
-          p_session_id?: string
-          p_severity?: string
-          p_user_id?: string
-        }
-        Returns: undefined
-      }
-      log_security_event_enhanced: {
-        Args: {
-          p_event_data?: Json
-          p_event_type: string
-          p_ip_address?: unknown
-          p_session_id?: string
-          p_severity?: string
-          p_user_agent?: string
-          p_user_id?: string
-        }
-        Returns: undefined
-      }
-      log_upgrade_step: {
-        Args: {
-          p_details?: Json
-          p_phase: string
-          p_status: string
-          p_step: string
-        }
-        Returns: undefined
-      }
-      mask_phone_number: {
-        Args: { phone_e164: string; requesting_user_id: string }
-        Returns: string
-      }
-      monitor_upgrade_health: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          component: string
-          details: string
-          last_check: string
-          status: string
-        }[]
-      }
-      process_event: {
-        Args: {
-          p_call_sid: string
-          p_idempotency_key: string
-          p_kind: string
-          p_org_id: string
-          p_payload: Json
-        }
-        Returns: undefined
-      }
-      resolve_greeting: {
-        Args: { p_phone_e164: string }
-        Returns: string
       }
       safe_analytics_insert_with_circuit_breaker: {
         Args: {
           p_event_data?: Json
           p_event_type: string
-          p_ip_address?: unknown
+          p_ip_address?: string
           p_page_url?: string
           p_user_agent?: string
           p_user_session?: string
         }
-        Returns: boolean
+        Returns: string
       }
-      schedule_analytics_cleanup: {
+      safe_refresh_wallet_balances: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
-      share_org: {
-        Args: { _user_a: string; _user_b: string }
-        Returns: boolean
-      }
-      validate_security_post_upgrade: {
+      secure_data_retention_cleanup: {
         Args: Record<PropertyKey, never>
-        Returns: Json
+        Returns: undefined
+      }
+      sparsevec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      sparsevec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      sparsevec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
+      vector_avg: {
+        Args: { "": number[] }
+        Returns: string
+      }
+      vector_dims: {
+        Args: { "": string } | { "": unknown }
+        Returns: number
+      }
+      vector_norm: {
+        Args: { "": string }
+        Returns: number
+      }
+      vector_out: {
+        Args: { "": string }
+        Returns: unknown
+      }
+      vector_send: {
+        Args: { "": string }
+        Returns: string
+      }
+      vector_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
+      wallet_top_up: {
+        Args: {
+          p_amount_cents: number
+          p_idempotency_key: string
+          p_org_id: string
+          p_provider: string
+          p_provider_id: string
+        }
+        Returns: string
       }
     }
     Enums: {
-      app_role: "admin" | "user" | "moderator"
+      app_role: "admin" | "user"
+      currency_code: "CAD"
+      invoice_status:
+        | "draft"
+        | "open"
+        | "paid"
+        | "uncollectible"
+        | "void"
+        | "refunded"
+      ledger_entry_type:
+        | "top_up"
+        | "authorization"
+        | "capture"
+        | "refund"
+        | "adjustment"
+      payment_status:
+        | "requires_payment"
+        | "processing"
+        | "succeeded"
+        | "canceled"
+        | "requires_action"
+        | "failed"
+      txn_type:
+        | "wallet_top_up"
+        | "commission_charge"
+        | "subscription_invoice"
+        | "refund"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1710,7 +1472,37 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user", "moderator"],
+      app_role: ["admin", "user"],
+      currency_code: ["CAD"],
+      invoice_status: [
+        "draft",
+        "open",
+        "paid",
+        "uncollectible",
+        "void",
+        "refunded",
+      ],
+      ledger_entry_type: [
+        "top_up",
+        "authorization",
+        "capture",
+        "refund",
+        "adjustment",
+      ],
+      payment_status: [
+        "requires_payment",
+        "processing",
+        "succeeded",
+        "canceled",
+        "requires_action",
+        "failed",
+      ],
+      txn_type: [
+        "wallet_top_up",
+        "commission_charge",
+        "subscription_invoice",
+        "refund",
+      ],
     },
   },
 } as const

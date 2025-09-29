@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { useABTest } from "@/hooks/useABTest";
 import { useSecureFormSubmission } from "@/hooks/useSecureFormSubmission";
 import { z } from "zod";
@@ -55,10 +55,10 @@ export const LeadCaptureForm = () => {
     toast
   } = useToast();
   const {
-    trackEvent,
+    trackFormSubmission,
     trackConversion,
-    trackInteraction
-  } = useSecureAnalytics();
+    trackButtonClick
+  } = useAnalytics();
   const { variant, variantData, convert } = useABTest('hero_cta_test');
   const { secureSubmit, getRemainingAttempts } = useSecureFormSubmission({
     rateLimitKey: 'lead_form_submit',
@@ -76,14 +76,9 @@ export const LeadCaptureForm = () => {
         description: errorMessage,
         variant: "destructive"
       });
-      trackEvent({
-        event_type: 'form_submission',
-        event_data: {
-          form_name: 'lead_capture',
-          success: false,
-          error: 'validation_failed',
-          variant: variant
-        }
+      trackFormSubmission('lead_capture', false, {
+        error: 'validation_failed',
+        variant: variant
       });
       return;
     }
@@ -98,7 +93,7 @@ export const LeadCaptureForm = () => {
       return;
     }
     setIsSubmitting(true);
-    trackInteraction('lead_form_submit', 'click', { form: 'lead_capture_form' });
+    trackButtonClick('lead_form_submit', 'lead_capture_form');
     try {
       console.log("Submitting lead:", formData);
 
@@ -114,31 +109,38 @@ export const LeadCaptureForm = () => {
         throw emailError;
       }
 
-      // TODO: Create leads table when implementing lead functionality
-      // For now, skip database storage and just send email
-      const leadData = null;
+      // Store lead in database with automatic scoring
+      const {
+        data: leadData,
+        error: leadError
+      } = await supabase.from('leads').insert([{
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        notes: formData.notes,
+        source: 'website_lead_form'
+      }]).select().single();
+      if (leadError) {
+        console.error("Lead storage error:", leadError);
+        // Don't throw here - email was sent successfully
+      }
       console.log("Lead submission successful:", {
         emailData,
         leadData
       });
 
       // Track successful form submission
-      trackEvent({
-        event_type: 'form_submission',
-        event_data: {
-          form_name: 'lead_capture',
-          success: true,
-          lead_score: 0,
-          email_domain: formData.email.split('@')[1],
-          variant: variant
-        }
+      trackFormSubmission('lead_capture', true, {
+        lead_score: leadData?.lead_score || 0,
+        email_domain: formData.email.split('@')[1],
+        variant: variant
       });
 
       // Track conversion for A/B test
-      await convert(50);
+      await convert(leadData?.lead_score || 50);
 
       // Track business conversion
-      trackConversion('lead_generated', 50, {
+      trackConversion('lead_generated', leadData?.lead_score || 50, {
         source: 'website_form',
         variant: variant
       });
@@ -161,14 +163,9 @@ export const LeadCaptureForm = () => {
       }, 5000);
     } catch (error: any) {
       console.error("Lead submission error:", error);
-      trackEvent({
-        event_type: 'form_submission',
-        event_data: {
-          form_name: 'lead_capture',
-          success: false,
-          error: error.message || 'unknown_error',
-          variant: variant
-        }
+      trackFormSubmission('lead_capture', false, {
+        error: error.message || 'unknown_error',
+        variant: variant
       });
       toast({
         title: "Oops! Something went wrong",
@@ -255,8 +252,6 @@ export const LeadCaptureForm = () => {
                   value={formData.name} 
                   onChange={e => handleInputChange("name", e.target.value)} 
                   required 
-                  aria-describedby="lead-name-error"
-                  aria-required="true"
                   className="transition-all duration-300 focus:scale-105"
                 />
               </div>
@@ -270,9 +265,6 @@ export const LeadCaptureForm = () => {
                   value={formData.email} 
                   onChange={e => handleInputChange("email", e.target.value)} 
                   required 
-                  aria-describedby="lead-email-error"
-                  aria-required="true"
-                  autoComplete="work email"
                   className="transition-all duration-300 focus:scale-105"
                 />
               </div>
@@ -285,11 +277,8 @@ export const LeadCaptureForm = () => {
                   placeholder="Best number" 
                   value={formData.phone || ""} 
                   onChange={e => handleInputChange("phone" as keyof LeadFormData, e.target.value)} 
-                  aria-describedby="lead-phone-help"
-                  autoComplete="tel"
                   className="transition-all duration-300 focus:scale-105"
                 />
-                <div id="lead-phone-help" className="sr-only">Optional phone number for contact</div>
               </div>
 
               <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
@@ -300,9 +289,6 @@ export const LeadCaptureForm = () => {
                   value={formData.company} 
                   onChange={e => handleInputChange("company", e.target.value)} 
                   required 
-                  aria-describedby="lead-company-error"
-                  aria-required="true"
-                  autoComplete="organization"
                   className="transition-all duration-300 focus:scale-105"
                 />
               </div>
@@ -314,27 +300,21 @@ export const LeadCaptureForm = () => {
                   placeholder="What do you want help with?" 
                   value={formData.notes} 
                   onChange={e => handleInputChange("notes", e.target.value)} 
-                  aria-describedby="lead-notes-help"
                   className="min-h-[100px] transition-all duration-300 focus:scale-105" 
                 />
-                <div id="lead-notes-help" className="sr-only">Optional description of how TradeLine 24/7 can help your business</div>
               </div>
 
               <div className="animate-fade-in" style={{ animationDelay: '600ms' }}>
                 <label className="flex items-start space-x-3 text-sm text-muted-foreground">
                   <input
-                    id="consent-checkbox"
                     type="checkbox"
                     required
-                    aria-required="true"
-                    aria-describedby="consent-help"
                     className="mt-1 rounded border-gray-300 text-primary focus:ring-primary transition-all duration-200"
                   />
                   <span>
-                    I agree to get emails about setup and updates. Unsubscribe anytime.
+                I agree to get emails about setup and updates. Unsubscribe anytime.
                   </span>
                 </label>
-                <div id="consent-help" className="sr-only">Required consent for email communications per Canadian CASL regulations</div>
               </div>
 
               <div className="animate-fade-in" style={{ animationDelay: '700ms' }}>

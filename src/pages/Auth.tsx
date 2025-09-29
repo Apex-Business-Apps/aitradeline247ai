@@ -12,7 +12,6 @@ import { Session, User } from '@supabase/supabase-js';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { usePasswordSecurity } from '@/hooks/usePasswordSecurity';
-import { setSEO } from '@/lib/seo';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -30,19 +29,13 @@ const Auth = () => {
   const { validatePassword: secureValidatePassword } = usePasswordSecurity();
 
   useEffect(() => {
-    setSEO({
-      title: "Start Free Trial — TradeLine 24/7",
-      description: "Tell us about your business and we'll set up your 24/7 AI receptionist. No setup cost.",
-      path: "/auth",
-    });
-
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Navigate authenticated users to home
+        // Redirect authenticated users to home
         if (session?.user) {
           navigate('/');
         }
@@ -54,7 +47,7 @@ const Auth = () => {
       setSession(session);
       setUser(session?.user ?? null);
       
-      // Navigate if already logged in
+      // Redirect if already logged in
       if (session?.user) {
         navigate('/');
       }
@@ -129,10 +122,13 @@ const Auth = () => {
       throw new Error('This password appears in known data breaches. Please choose a different password.');
     }
 
+    const redirectUrl = `${window.location.origin}/`;
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo: redirectUrl,
         data: {
           display_name: displayName,
         }

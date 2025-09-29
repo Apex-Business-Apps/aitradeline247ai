@@ -35,14 +35,39 @@ export const useEnhancedSessionSecurity = () => {
     }
   }, [user, session]);
 
-  // Enhanced concurrent session monitoring (simplified without database)
+  // Enhanced concurrent session monitoring with automatic cleanup
   const checkConcurrentSessions = useCallback(async () => {
     if (!user) return;
 
     try {
-      // TODO: Create user_sessions table when implementing session management
-      // For now, just log that we would check for concurrent sessions
-      console.log('Concurrent session check skipped - no user_sessions table');
+      const { data } = await supabase
+        .from('user_sessions')
+        .select('session_token, created_at, last_activity')
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+
+      if (data && data.length > 3) {
+        console.warn('🚨 Multiple active sessions detected:', data.length);
+        
+        // Log security event
+        await supabase.functions.invoke('secure-analytics', {
+          body: {
+            event_type: 'security_alert',
+            event_data: {
+              alert_type: 'concurrent_sessions',
+              session_count: data.length,
+              user_id: user.id,
+              timestamp: new Date().toISOString()
+            }
+          }
+        });
+
+        toast({
+          title: "Security Alert",
+          description: `${data.length} active sessions detected. Consider reviewing your account security.`,
+          variant: "destructive"
+        });
+      }
     } catch (error) {
       console.error('Failed to check concurrent sessions:', error);
     }

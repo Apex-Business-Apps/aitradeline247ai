@@ -63,13 +63,18 @@ export const useSecureABTest = (testName: string) => {
         const assignedVariant = await getSecureVariant();
         setVariant(assignedVariant);
 
-        // Get test configuration for variant data (fallback to local data)
-        // TODO: Create ab_tests table when implementing A/B testing functionality
-        const testConfig = null;
+        // Get test configuration for variant data (client-side, read-only)
+        const { data: testConfig } = await supabase
+          .from('ab_tests')
+          .select('variants')
+          .eq('test_name', testName)
+          .eq('active', true)
+          .maybeSingle();
 
-        if (assignedVariant === 'B') {
-          setVariantData({ text: 'Start Now', color: 'secondary' });
+        if (testConfig && testConfig.variants[assignedVariant]) {
+          setVariantData(testConfig.variants[assignedVariant]);
         } else {
+          // Fallback variant data
           setVariantData({ text: 'Grow Now', color: 'primary' });
         }
       } catch (error) {

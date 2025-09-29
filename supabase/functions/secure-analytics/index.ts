@@ -93,12 +93,6 @@ serve(async (req) => {
       }
     );
 
-    // Validate required environment variables
-    if (!Deno.env.get('SUPABASE_URL') || !Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')) {
-      console.error('Missing required environment variables');
-      return new Response('Server configuration error', { status: 500, headers: corsHeaders });
-    }
-
     // Sanitize and validate event data
     const sanitizedEvent = {
       event_type: String(eventData.event_type).substring(0, 100),
@@ -119,7 +113,7 @@ serve(async (req) => {
     const { data: recentEvents } = await supabase
       .from('analytics_events')
       .select('id')
-      .eq('session_id', sessionId)  // Fixed: using correct column name
+      .eq('user_session', sessionId)
       .gte('created_at', oneMinuteAgo);
 
     if (recentEvents && recentEvents.length > 50) {
@@ -127,14 +121,14 @@ serve(async (req) => {
       return new Response('Rate limit exceeded', { status: 429, headers: corsHeaders });
     }
 
-    // Get the real IP from headers
+    // Get the real IP from headers (CF-Connecting-IP for Cloudflare, X-Forwarded-For for others)
     const headers = req.headers;
-    const clientIP =
+    const clientIP = headers.get('cf-connecting-ip') || 
                     headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
                     headers.get('x-real-ip') || 
                     null;
 
-    // Use the safe analytics insertion function to prevent recursion
+    // Use the new safe analytics insertion function to prevent recursion
     const { data: insertResult, error: insertError } = await supabase
       .rpc('safe_analytics_insert_with_circuit_breaker', {
         p_event_type: sanitizedEvent.event_type,
@@ -153,9 +147,9 @@ serve(async (req) => {
       });
     }
 
-    // If insertResult is false, circuit breaker prevented insertion (rate limiting)
-    if (insertResult === false) {
-      console.warn('Analytics insertion prevented by circuit breaker - rate limit exceeded');
+    // If insertResult is null, it means the circuit breaker prevented insertion (recursion detected)
+    if (insertResult === null) {
+      console.warn('Analytics insertion prevented by circuit breaker - recursion detected');
     }
 
     console.log(`Analytics event tracked: ${sanitizedEvent.event_type}`);

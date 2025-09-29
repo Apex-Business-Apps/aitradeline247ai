@@ -30,17 +30,6 @@ export const usePrivacyAnalytics = () => {
   // Privacy-focused analytics tracking with automatic data minimization
   const trackPrivacyEvent = useCallback(async (event: PrivacyAnalyticsEvent) => {
     try {
-      // Client-side rate limiting to prevent excessive calls
-      const lastEventKey = `last_privacy_event_${event.event_type}`;
-      const lastEventTime = sessionStorage.getItem(lastEventKey);
-      const now = Date.now();
-      
-      // Skip if same event type was sent in last 2 seconds
-      if (lastEventTime && (now - parseInt(lastEventTime)) < 2000) {
-        return;
-      }
-      sessionStorage.setItem(lastEventKey, now.toString());
-
       const sessionId = getPrivacySessionId();
       
       // Sanitize and minimize data collection
@@ -69,20 +58,12 @@ export const usePrivacyAnalytics = () => {
       });
 
       if (error) {
-        // Only log once to prevent recursion
-        if (!sessionStorage.getItem('analytics_error_logged')) {
-          console.error('Privacy analytics tracking error:', error);
-          sessionStorage.setItem('analytics_error_logged', 'true');
-          setTimeout(() => sessionStorage.removeItem('analytics_error_logged'), 30000);
-        }
+        console.error('Privacy analytics tracking error:', error);
+      } else {
+        console.log('Privacy analytics event tracked:', event.event_type);
       }
     } catch (error) {
-      // Only log once to prevent console spam
-      if (!sessionStorage.getItem('analytics_error_logged')) {
-        console.error('Privacy analytics tracking failed:', error);
-        sessionStorage.setItem('analytics_error_logged', 'true');
-        setTimeout(() => sessionStorage.removeItem('analytics_error_logged'), 30000);
-      }
+      console.error('Privacy analytics tracking failed:', error);
     }
   }, [getPrivacySessionId]);
 

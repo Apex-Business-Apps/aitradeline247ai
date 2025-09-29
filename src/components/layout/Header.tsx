@@ -43,25 +43,8 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <>
-      {/* Skip Navigation Link for Screen Readers */}
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[60] bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium transition-all duration-200"
-        onClick={(e) => {
-          e.preventDefault();
-          const mainContent = document.getElementById('main-content');
-          if (mainContent) {
-            mainContent.focus();
-            mainContent.scrollIntoView({ behavior: 'smooth' });
-          }
-        }}
-      >
-        Skip to main content
-      </a>
-      
-      <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')}>
-        <div className="container flex h-14 items-center justify-between">
+  return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')}>
+      <div className="container flex h-14 items-center justify-between">
         {/* Logo with Animation */}
         <div className="animate-fade-in">
           
@@ -118,13 +101,7 @@ export const Header: React.FC = () => {
             </Button>}
           
           {/* Enhanced Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 rounded-md hover:bg-accent transition-all duration-300 hover-scale" 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-navigation"
-          >
+          <button className="md:hidden p-2 rounded-md hover:bg-accent transition-all duration-300 hover-scale" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle mobile menu">
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
@@ -132,7 +109,7 @@ export const Header: React.FC = () => {
 
       {/* Enhanced Mobile Navigation with Slide Animation */}
       {isMobileMenuOpen && <div className="md:hidden border-t bg-background/95 backdrop-blur animate-slide-in-right">
-          <nav id="mobile-navigation" className="container py-4 space-y-2" aria-label="Mobile navigation">
+          <nav className="container py-4 space-y-2">
             {navigationItems.map((item, index) => <Link key={item.name} to={item.href} className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-300 hover-scale animate-fade-in" onClick={() => setIsMobileMenuOpen(false)} style={{
           animationDelay: `${index * 100}ms`
         }}>
@@ -146,6 +123,5 @@ export const Header: React.FC = () => {
               </Link>)}
           </nav>
         </div>}
-      </header>
-    </>;
+    </header>;
 };

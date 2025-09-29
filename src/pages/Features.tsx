@@ -4,8 +4,8 @@ import { Footer } from "@/components/layout/Footer";
 import { CheckCircle, Phone, MessageSquare, Brain, Zap, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
-import { setSEO } from "@/lib/seo";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const features = [
   {
@@ -47,22 +47,24 @@ const features = [
 ];
 
 const Features = () => {
-  const { trackPageView, trackInteraction } = useSecureAnalytics();
+  const { trackPageView, trackButtonClick } = useAnalytics();
 
   useEffect(() => {
-    setSEO({
-      title: "Features — TradeLine 24/7: AI Receptionist for Trades",
-      description: "Instant call capture, smart routing, email-only transcripts, and a fast PWA install. Built for plumbing, HVAC, electrical, contractors, SMB & freelancers.",
-      path: "/features",
-    });
     trackPageView('features');
   }, [trackPageView]);
 
   const handleCTAClick = () => {
-    trackInteraction('features_cta', 'click');
+    trackButtonClick('features_cta', 'features_page');
   };
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="Features — TradeLine 24/7 AI Receptionist"
+        description="Discover powerful AI features: 24/7 call handling, smart routing, omnichannel messaging, CRM integration, and enterprise security. Transform your customer service today."
+        keywords="AI receptionist features, call management, omnichannel messaging, CRM integration, business automation, 24/7 customer service"
+        canonical="https://www.tradeline247ai.com/features"
+      />
+      
       <Header />
       
       <main className="flex-1">

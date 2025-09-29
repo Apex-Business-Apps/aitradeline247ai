@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSecureAnalytics } from '@/hooks/useSecureAnalytics';
+import { useAnalytics } from './useAnalytics';
 
 interface ErrorInfo {
   message: string;
@@ -13,7 +13,7 @@ interface ErrorInfo {
 }
 
 export const useErrorTracking = () => {
-  const { trackEvent } = useSecureAnalytics();
+  const { track } = useAnalytics();
 
   const trackError = (error: Error, context?: Record<string, any>) => {
     const errorInfo: ErrorInfo = {
@@ -25,7 +25,7 @@ export const useErrorTracking = () => {
       ...context
     };
 
-    trackEvent({
+    track({
       event_type: 'javascript_error',
       event_data: errorInfo
     });
@@ -33,7 +33,7 @@ export const useErrorTracking = () => {
 
   const trackPerformanceIssue = (metric: string, value: number, threshold: number) => {
     if (value > threshold) {
-      trackEvent({
+      track({
         event_type: 'performance_issue',
         event_data: {
           metric,
@@ -121,7 +121,7 @@ export const useErrorTracking = () => {
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
       window.removeEventListener('load', observeWebVitals);
     };
-  }, [trackEvent]);
+  }, [track]);
 
   return {
     trackError,

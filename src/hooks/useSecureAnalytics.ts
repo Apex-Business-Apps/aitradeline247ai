@@ -28,15 +28,6 @@ export const useSecureAnalytics = (config: SecureAnalyticsConfig = {}) => {
     if (!isTracking) return;
 
     try {
-      // Rate limiting: prevent excessive events
-      const lastEventTime = sessionStorage.getItem('last_analytics_event');
-      const now = Date.now();
-      if (lastEventTime && (now - parseInt(lastEventTime)) < 1000) {
-        // Skip if less than 1 second since last event
-        return;
-      }
-      sessionStorage.setItem('last_analytics_event', now.toString());
-
       // Privacy-first event tracking
       const sanitizedEvent = {
         event_type: event.event_type,
@@ -58,7 +49,6 @@ export const useSecureAnalytics = (config: SecureAnalyticsConfig = {}) => {
       });
 
       if (error) {
-        // Fail silently for privacy - don't spam console
         console.warn('Analytics tracking failed:', error.message);
       }
     } catch (error) {
@@ -108,14 +98,29 @@ export const useSecureAnalytics = (config: SecureAnalyticsConfig = {}) => {
   const optOut = useCallback(() => {
     setIsTracking(false);
     localStorage.setItem('analytics_opt_out', 'true');
-    // Note: We don't track opt-out events to prevent recursion
-  }, []);
+    
+    // Track the opt-out event (ironic but important for compliance)
+    trackEvent({
+      event_type: 'privacy_opt_out',
+      event_data: {
+        timestamp: new Date().toISOString(),
+        user_choice: 'opted_out'
+      }
+    });
+  }, [trackEvent]);
 
   const optIn = useCallback(() => {
     setIsTracking(true);
     localStorage.removeItem('analytics_opt_out');
-    // Note: We don't track opt-in events to prevent recursion
-  }, []);
+    
+    trackEvent({
+      event_type: 'privacy_opt_in',
+      event_data: {
+        timestamp: new Date().toISOString(),
+        user_choice: 'opted_in'
+      }
+    });
+  }, [trackEvent]);
 
   const getPrivacyStatus = useCallback(() => {
     return {

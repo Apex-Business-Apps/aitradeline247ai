@@ -1,88 +1,92 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CheckCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { setSEO } from "@/lib/seo";
-import { pricingJsonLd } from "@/lib/jsonld";
-import { onPricingView } from "@/hooks/usePricingGa";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const plans = [
   {
-    name: "Basic",
-    price: "$149 / month",
-    description: "Perfect for small businesses getting started",
+    name: "No Monthly. Pay per appointment.",
+    price: "$149 / Qualified Appointment",
+    description: "Pay only for results — no monthly fees",
     features: [
-      "24/7 AI receptionist",
-      "Call forwarding and screening", 
-      "Basic transcription",
-      "Email notifications",
-      "Up to 100 calls/month"
+      "Prepaid wallet: $200 minimum (auto-recharge)",
+      "Qualified = unique caller • >60s talk time • in service area • not duplicate (30d) • real intent",
+      "Transcript emailed every time"
     ],
-    cta: "Get Started",
+    cta: "Start with $200 wallet",
     popular: false,
-    id: "basic",
-    plan: "basic"
+    id: "no-monthly",
+    link: "/signup?plan=commission"
   },
   {
-    name: "Pro",
-    price: "$299 / month", 
-    description: "Advanced features for growing businesses",
+    name: "Predictable Plan — Core",
+    price: "$249 / month", 
+    description: "Fixed monthly pricing with transparent overages",
     features: [
-      "Everything in Basic",
-      "Advanced AI conversation",
-      "CRM integration",
-      "Custom greetings",
-      "Up to 500 calls/month",
-      "Priority support"
+      "Includes AI minutes & routed calls",
+      "Simple overage pricing",  
+      "Add-ons: bilingual, human fallback, CRM push"
     ],
-    cta: "Choose Pro",
+    cta: "Choose Core",
     popular: true,
-    id: "pro", 
-    plan: "pro"
-  },
-  {
-    name: "Enterprise",
-    price: "$599 / month",
-    description: "Full-featured solution for large organizations", 
-    features: [
-      "Everything in Pro",
-      "Unlimited calls",
-      "Multi-line support",
-      "Advanced analytics",
-      "Custom integrations",
-      "Dedicated account manager"
-    ],
-    cta: "Contact Sales",
-    popular: false,
-    id: "enterprise",
-    plan: "enterprise"
+    id: "monthly-core",
+    link: "/signup?plan=core"
   }
 ];
 
 const Pricing = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setSEO({
-      title: "Pricing — TradeLine 24/7",
-      description: "Choose the perfect AI receptionist plan for your business. 24/7 coverage starting at $149/month.",
-      path: "/pricing",
-    });
-    
-    // Track pricing page view
-    onPricingView();
-  }, []);
-
-  const handlePlanSelect = (plan: string) => {
-    navigate(`/subscribe?plan=${plan}`);
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="Pricing - TradeLine 24/7 AI Receptionist Plans"
+        description="Simple, transparent pricing for 24/7 AI receptionist services. Commission-only or $249/month plans. No setup fees. Edmonton, AB business."
+        keywords="AI receptionist pricing, business automation cost, 24/7 customer service plans, AI phone answering pricing, Edmonton business"
+        canonical="https://www.tradeline247ai.com/pricing"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "TradeLine 24/7 AI Receptionist Service",
+          "description": "24/7 AI receptionist and customer service automation for businesses",
+          "brand": {
+            "@type": "Organization",
+            "name": "Apex Business Systems"
+          },
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "No Monthly. Pay per appointment.",
+              "price": "149",
+              "priceCurrency": "CAD",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "149",
+                "priceCurrency": "CAD",
+                "unitText": "per qualified appointment"
+              },
+              "description": "Pay only for results — no monthly fees",
+              "url": "https://www.tradeline247ai.com/signup?plan=commission"
+            },
+            {
+              "@type": "Offer", 
+              "name": "Predictable Plan — Core",
+              "price": "249",
+              "priceCurrency": "CAD",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "249",
+                "priceCurrency": "CAD",
+                "unitText": "per month"
+              },
+              "description": "Fixed monthly pricing with transparent overages",
+              "url": "https://www.tradeline247ai.com/signup?plan=core"
+            }
+          ]
+        }}
+      />
+      
       <Header />
       
       <main className="flex-1">
@@ -132,7 +136,7 @@ const Pricing = () => {
                       className="w-full" 
                       variant={plan.popular ? "default" : "outline"}
                       size="lg"
-                      onClick={() => handlePlanSelect(plan.plan)}
+                      onClick={() => window.location.href = plan.link}
                     >
                       {plan.cta}
                     </Button>
@@ -189,14 +193,6 @@ const Pricing = () => {
       </main>
       
       <Footer />
-      
-      {/* JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: pricingJsonLd(window.location.origin)
-        }}
-      />
     </div>
   );
 };

@@ -1,10 +1,9 @@
-import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { setSEO } from "@/lib/seo";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const faqs = [
   {
@@ -50,16 +49,15 @@ const faqs = [
 ];
 
 const FAQ = () => {
-  useEffect(() => {
-    setSEO({
-      title: "FAQ — TradeLine 24/7",
-      description: "Get answers to common questions about TradeLine 24/7 AI receptionist service. Learn about setup, integrations, pricing, security and more.",
-      path: "/faq",
-    });
-  }, []);
-
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="FAQ - TradeLine 24/7 AI Receptionist Questions"
+        description="Get answers to common questions about TradeLine 24/7 AI receptionist service. Learn about setup, integrations, pricing, security and more."
+        keywords="AI receptionist FAQ, customer service automation questions, business phone answering help"
+        canonical="https://www.tradeline247ai.com/faq"
+      />
+      
       <Header />
       
       <main className="flex-1">

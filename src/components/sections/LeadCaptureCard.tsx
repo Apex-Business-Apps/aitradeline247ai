@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle, Sparkles, Clock, DollarSign } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { useABTest } from "@/hooks/useABTest";
 import { useSecureFormSubmission } from "@/hooks/useSecureFormSubmission";
 import { z } from "zod";
@@ -56,7 +56,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
   });
 
   const { toast } = useToast();
-  const { trackEvent, trackConversion, trackInteraction } = useSecureAnalytics();
+  const { trackFormSubmission, trackConversion, trackButtonClick } = useAnalytics();
   const { variant, variantData, convert } = useABTest('hero_cta_test');
   const { secureSubmit, getRemainingAttempts } = useSecureFormSubmission({
     rateLimitKey: 'lead_form_submit',
@@ -75,14 +75,9 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         description: errorMessage,
         variant: "destructive"
       });
-      trackEvent({
-        event_type: 'form_submission',
-        event_data: {
-          form_name: 'lead_capture',
-          success: false,
-          error: 'validation_failed',
-          variant: variant
-        }
+      trackFormSubmission('lead_capture', false, {
+        error: 'validation_failed',
+        variant: variant
       });
       return;
     }
@@ -98,7 +93,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
     }
 
     setIsSubmitting(true);
-    trackInteraction('lead_form_submit', 'click', { form: 'lead_capture_form' });
+    trackButtonClick('lead_form_submit', 'lead_capture_form');
 
     try {
       console.log("Submitting lead:", formData);
@@ -113,29 +108,34 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         throw emailError;
       }
 
-      // TODO: Create leads table when implementing lead functionality
-      // For now, skip database storage and just send email
-      const leadData = null;
+      // Store lead in database with automatic scoring
+      const { data: leadData, error: leadError } = await supabase.from('leads').insert([{
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        notes: formData.notes,
+        source: 'website_lead_form'
+      }]).select().single();
+
+      if (leadError) {
+        console.error("Lead storage error:", leadError);
+        // Don't throw here - email was sent successfully
+      }
 
       console.log("Lead submission successful:", { emailData, leadData });
 
       // Track successful form submission
-      trackEvent({
-        event_type: 'form_submission',
-        event_data: {
-          form_name: 'lead_capture',
-          success: true,
-          lead_score: 0,
-          email_domain: formData.email.split('@')[1],
-          variant: variant
-        }
+      trackFormSubmission('lead_capture', true, {
+        lead_score: leadData?.lead_score || 0,
+        email_domain: formData.email.split('@')[1],
+        variant: variant
       });
 
       // Track conversion for A/B test
-      await convert(50);
+      await convert(leadData?.lead_score || 50);
 
       // Track business conversion
-      trackConversion('lead_generated', 50, {
+      trackConversion('lead_generated', leadData?.lead_score || 50, {
         source: 'website_form',
         variant: variant
       });
@@ -160,14 +160,9 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
 
     } catch (error: any) {
       console.error("Lead submission error:", error);
-      trackEvent({
-        event_type: 'form_submission',
-        event_data: {
-          form_name: 'lead_capture',
-          success: false,
-          error: error.message || 'unknown_error',
-          variant: variant
-        }
+      trackFormSubmission('lead_capture', false, {
+        error: error.message || 'unknown_error',
+        variant: variant
       });
       toast({
         title: "Oops! Something went wrong",
@@ -235,7 +230,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         </>
       )}
 
-      <Card id="start-trial-hero" className="w-full max-w-[420px] mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
+      <Card className="w-full max-w-[420px] mx-auto bg-card/95 backdrop-blur-sm border-primary/20">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-lg md:text-xl text-foreground mb-1">
             Start Your Free Trial

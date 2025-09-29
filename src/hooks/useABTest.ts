@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useSecureAnalytics } from './useSecureAnalytics';
+import { useAnalytics } from './useAnalytics';
 
 interface ABTestVariant {
   [key: string]: any;
@@ -17,30 +17,63 @@ export const useABTest = (testName: string) => {
   const [variant, setVariant] = useState<string>('A');
   const [variantData, setVariantData] = useState<ABTestVariant>({});
   const [loading, setLoading] = useState(true);
-  const { trackEvent } = useSecureAnalytics();
+  const { getSessionId, track } = useAnalytics();
 
-  // Get user's assigned variant (simplified version without database)
+  // Get user's assigned variant
   const getAssignedVariant = useCallback(async () => {
     try {
-      const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const sessionId = getSessionId();
       
-      // Check localStorage for existing assignment
-      const storageKey = `ab_test_${testName}`;
-      const existingAssignment = localStorage.getItem(storageKey);
-      
+      // Check if user already has an assignment
+      const { data: existingAssignment, error: assignmentError } = await supabase
+        .from('ab_test_assignments')
+        .select('variant')
+        .eq('test_name', testName)
+        .eq('user_session', sessionId)
+        .maybeSingle();
+
       if (existingAssignment) {
-        return existingAssignment;
+        return existingAssignment.variant;
       }
 
-      // Simple random assignment between A and B
-      const variants = ['A', 'B'];
-      const assignedVariant = variants[Math.floor(Math.random() * variants.length)];
+      // Get active test configuration
+      const { data: testConfig, error: testError } = await supabase
+        .from('ab_tests')
+        .select('*')
+        .eq('test_name', testName)
+        .eq('active', true)
+        .maybeSingle();
+
+      if (!testConfig) {
+        console.log(`A/B Test ${testName} not found or inactive, defaulting to variant A`);
+        return 'A';
+      }
+
+      // Assign variant based on traffic split
+      const variants = Object.keys(testConfig.traffic_split);
+      const splits = Object.values(testConfig.traffic_split) as number[];
       
-      // Save assignment to localStorage
-      localStorage.setItem(storageKey, assignedVariant);
+      const random = Math.random() * 100;
+      let cumulative = 0;
+      let assignedVariant = variants[0];
+
+      for (let i = 0; i < variants.length; i++) {
+        cumulative += splits[i];
+        if (random <= cumulative) {
+          assignedVariant = variants[i];
+          break;
+        }
+      }
+
+      // Save assignment
+      await supabase.from('ab_test_assignments').insert({
+        test_name: testName,
+        user_session: sessionId,
+        variant: assignedVariant
+      });
 
       // Track assignment
-      trackEvent({
+      track({
         event_type: 'ab_test_assignment',
         event_data: { test_name: testName, variant: assignedVariant }
       });
@@ -50,7 +83,7 @@ export const useABTest = (testName: string) => {
       console.error('Error getting A/B test assignment:', error);
       return 'A'; // Default fallback
     }
-  }, [testName, trackEvent]);
+  }, [testName, getSessionId, track]);
 
   // Load test configuration and user assignment
   useEffect(() => {
@@ -61,10 +94,18 @@ export const useABTest = (testName: string) => {
         const assignedVariant = await getAssignedVariant();
         setVariant(assignedVariant);
 
-        // Set fallback variant data based on variant
-        if (assignedVariant === 'B') {
-          setVariantData({ text: 'Start Now', color: 'secondary' });
+        // Get test configuration for variant data
+        const { data: testConfig, error: configError } = await supabase
+          .from('ab_tests')
+          .select('variants')
+          .eq('test_name', testName)
+          .eq('active', true)
+          .maybeSingle();
+
+        if (testConfig && testConfig.variants[assignedVariant]) {
+          setVariantData(testConfig.variants[assignedVariant]);
         } else {
+          // Fallback variant data
           setVariantData({ text: 'Grow Now', color: 'primary' });
         }
       } catch (error) {
@@ -80,29 +121,32 @@ export const useABTest = (testName: string) => {
     loadTest();
   }, [testName, getAssignedVariant]);
 
-  // Mark conversion for this user (simplified version without database)
+  // Mark conversion for this user - secure update with double-write guard
   const convert = useCallback(async (conversionValue?: number) => {
     try {
-      const storageKey = `ab_test_${testName}_converted`;
-      
-      // Check if already converted
-      if (localStorage.getItem(storageKey)) {
-        return;
+      const sessionId = getSessionId();
+
+      // Only update if not already converted and belongs to this session
+      const { error } = await supabase
+        .from('ab_test_assignments')
+        .update({ converted: true })
+        .eq('test_name', testName)
+        .eq('user_session', sessionId)
+        .eq('converted', false);
+
+      if (!error) {
+        track({
+          event_type: 'ab_test_conversion',
+          event_data: { test_name: testName, variant, conversion_value: conversionValue },
+        });
+        console.log(`A/B test conversion tracked for ${testName}, variant ${variant}`);
+      } else {
+        console.warn('Conversion update failed:', error);
       }
-
-      // Mark as converted in localStorage
-      localStorage.setItem(storageKey, 'true');
-
-      // Track conversion
-      trackEvent({
-        event_type: 'ab_test_conversion',
-        event_data: { test_name: testName, variant, conversion_value: conversionValue },
-      });
-      console.log(`A/B test conversion tracked for ${testName}, variant ${variant}`);
     } catch (error) {
       console.error('Error tracking A/B test conversion:', error);
     }
-  }, [testName, variant, trackEvent]);
+  }, [testName, variant, getSessionId, track]);
 
   return {
     variant,
