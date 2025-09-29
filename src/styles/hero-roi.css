@@ -3,20 +3,24 @@
 /* Container positioned with centering */
 .hero-roi__container{
   /* wide enough for two healthy columns + gap, but responsive */
-  max-width: clamp(960px, 90vw, 1200px);
+  max-width: min(1200px, 100% - 2rem);
   margin-inline: auto;              /* centered */
-  padding-inline: 16px;
+  padding-inline: max(env(safe-area-inset-left, 1rem), 1rem);
+  padding-inline-end: max(env(safe-area-inset-right, 1rem), 1rem);
 }
 
 /* Grid: two equal columns, centered */
 .hero-roi__grid{
   display: grid !important;
-  grid-template-columns: repeat(2, minmax(420px, max-content));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
   justify-items: center;
   /* Top-align vertically, center horizontally */
   place-content: start center;   /* align-content: start; justify-content: center; */
-  margin-left: 1.8cm;            /* shift right by 1.8cm */
+  margin-inline: auto;           /* centered horizontally */
+  padding-inline: env(safe-area-inset-right, 1rem) env(safe-area-inset-left, 1rem);
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 /* Safety: ensure the two panels don't shift themselves */
@@ -27,8 +31,21 @@
   max-width: 100% !important;
 }
 
+/* Desktop: side by side */
+@media (min-width: 1024px) {
+  .hero-roi__grid {
+    grid-template-columns: repeat(2, minmax(0, 560px));
+    max-width: 1200px;
+  }
+}
+
 /* Stack on tablets/phones */
 @media (max-width: 1024px){
-  .hero-roi__grid{ grid-template-columns: 1fr; }
-  .hero-roi__container{ max-width: 680px; }
+  .hero-roi__grid{ 
+    grid-template-columns: 1fr; 
+  }
+  .hero-roi__container{ 
+    max-width: 100%;
+    padding-inline: env(safe-area-inset-left, 1rem) env(safe-area-inset-right, 1rem);
+  }
 }

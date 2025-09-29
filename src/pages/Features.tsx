@@ -69,7 +69,12 @@ const Features = () => {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-20 bg-gradient-to-br from-background to-secondary/20">
+        <section className="bg-gradient-to-br from-background to-secondary/20" style={{
+          paddingTop: 'max(env(safe-area-inset-top, 0), 5rem)',
+          paddingBottom: 'max(env(safe-area-inset-bottom, 0), 5rem)',
+          paddingLeft: 'env(safe-area-inset-left, 0)',
+          paddingRight: 'env(safe-area-inset-right, 0)'
+        }}>
           <div className="container">
             <div className="text-center max-w-3xl mx-auto">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">

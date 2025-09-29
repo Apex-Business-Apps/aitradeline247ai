@@ -5,25 +5,37 @@ import { LeadCaptureCard } from "../components/sections/LeadCaptureCard";
 import RoiCalculator from "../components/RoiCalculator";
 import officialLogo from '@/assets/official-logo.svg';
 export default function HeroRoiDuo() {
-  return <section className="py-20 bg-gradient-orange-subtle section-heavy">
+  return <section className="bg-gradient-orange-subtle section-heavy" style={{
+    paddingTop: 'max(env(safe-area-inset-top, 0), 5rem)',
+    paddingBottom: 'max(env(safe-area-inset-bottom, 0), 5rem)',
+    paddingLeft: 'env(safe-area-inset-left, 0)',
+    paddingRight: 'env(safe-area-inset-right, 0)'
+  }}>
       <div className="container">
         {/* Hero Content */}
         <div className="text-center mb-16">
           {/* Logo above hero text */}
-          <div className="flex justify-center mb-8 min-h-[10.9375rem] md:min-h-[14.0625rem] items-center">
-            <img src={officialLogo} alt="TradeLine 24/7 Logo" className="h-[8.75rem] md:h-[11.25rem] w-auto opacity-80" style={{
-            transform: 'translateY(-0.5cm) scale(1.45) scaleY(1.3225) scaleX(1.3225)'
-          }} />
+          <div className="flex justify-center mb-8 items-center" style={{ aspectRatio: '16/9', maxHeight: 'clamp(8rem, 15vw, 14rem)' }}>
+            <img 
+              src={officialLogo} 
+              alt="TradeLine 24/7 Logo" 
+              className="w-full max-w-[200px] md:max-w-[280px] h-auto opacity-80" 
+              style={{
+                transform: 'translateY(clamp(-0.5rem, -2vw, -1rem)) scale(clamp(1.2, 1.45, 1.5))',
+                aspectRatio: '1/1'
+              }}
+              loading="eager"
+            />
           </div>
           
-          <h1 id="hero-h1" className="text-4xl md:text-6xl mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-extrabold lg:text-7xl">
+          <h1 id="hero-h1" className="mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-extrabold" style={{ fontSize: 'clamp(2rem, 5vw + 1rem, 4.5rem)', lineHeight: '1.1' }}>
             Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b] md:text-4xl">
+          <p className="mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b]" style={{ fontSize: 'clamp(1rem, 2vw + 0.5rem, 2.5rem)', lineHeight: '1.5' }}>
             Never miss a call. Work while you sleep.
           </p>
           
-          <h2 className="text-2xl text-[#1e556b] mb-[50px] mt-[63px] text-center py-0 md:text-4xl font-semibold">Help us help you.</h2>
+          <h2 className="text-[#1e556b] mb-[50px] mt-[63px] text-center py-0 font-semibold" style={{ fontSize: 'clamp(1.5rem, 3vw + 0.5rem, 2.5rem)' }}>Help us help you.</h2>
           
           {/* Custom grid layout for side-by-side components */}
           <div className="hero-roi__container" data-lovable-lock="true" aria-label="Start Trial and ROI">
