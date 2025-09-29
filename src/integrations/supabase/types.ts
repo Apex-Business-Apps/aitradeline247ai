@@ -1219,33 +1219,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_views: {
-        Row: {
-          created_at: string | null
-          id: string
-          kind: string
-          name: string
-          payload: Json
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          kind: string
-          name: string
-          payload: Json
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          kind?: string
-          name?: string
-          payload?: Json
-          user_id?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
@@ -1254,10 +1227,6 @@ export type Database = {
       anonymize_ip_address: {
         Args: { ip: unknown }
         Returns: unknown
-      }
-      can_access_customer_pii: {
-        Args: { _user_id: string }
-        Returns: boolean
       }
       citext: {
         Args: { "": boolean } | { "": string } | { "": unknown }
@@ -1284,10 +1253,6 @@ export type Database = {
         Returns: string
       }
       cleanup_old_analytics_events: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      detect_and_alert_anomalies: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
@@ -1323,17 +1288,6 @@ export type Database = {
           updated_at: string
         }[]
       }
-      get_profile_with_restrictions: {
-        Args: { profile_user_id: string }
-        Returns: {
-          created_at: string
-          full_name: string
-          id: string
-          phone_e164_full: string
-          phone_e164_masked: string
-          updated_at: string
-        }[]
-      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -1360,16 +1314,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      log_auth_attempt: {
-        Args: {
-          p_event_type: string
-          p_ip_address?: unknown
-          p_success: boolean
-          p_user_agent?: string
-          p_user_identifier?: string
-        }
-        Returns: undefined
-      }
       log_data_access: {
         Args: {
           p_access_type?: string
@@ -1394,18 +1338,6 @@ export type Database = {
           p_event_type: string
           p_session_id?: string
           p_severity?: string
-          p_user_id?: string
-        }
-        Returns: undefined
-      }
-      log_security_event_enhanced: {
-        Args: {
-          p_event_data?: Json
-          p_event_type: string
-          p_ip_address?: unknown
-          p_session_id?: string
-          p_severity?: string
-          p_user_agent?: string
           p_user_id?: string
         }
         Returns: undefined

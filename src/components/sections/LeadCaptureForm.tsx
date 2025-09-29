@@ -11,7 +11,6 @@ import { useSecureAnalytics } from "@/hooks/useSecureAnalytics";
 import { useABTest } from "@/hooks/useABTest";
 import { useSecureFormSubmission } from "@/hooks/useSecureFormSubmission";
 import { z } from "zod";
-import { secureLog } from "@/lib/securityUtils";
 // Client-side validation schema matching server-side
 const leadFormSchema = z.object({
   name: z.string()
@@ -71,7 +70,7 @@ export const LeadCaptureForm = () => {
     // Client-side validation with Zod
     const validationResult = leadFormSchema.safeParse(formData);
     if (!validationResult.success) {
-      const errorMessage = validationResult.error.issues[0]?.message || "Please check your input";
+      const errorMessage = validationResult.error.errors[0]?.message || "Please check your input";
       toast({
         title: "Invalid Information",
         description: errorMessage,
@@ -161,13 +160,13 @@ export const LeadCaptureForm = () => {
         setIsSuccess(false);
       }, 5000);
     } catch (error: any) {
-      secureLog.error("Lead submission error:", error);
+      console.error("Lead submission error:", error);
       trackEvent({
         event_type: 'form_submission',
         event_data: {
           form_name: 'lead_capture',
           success: false,
-          error: 'submission_failed', // Generic error type
+          error: error.message || 'unknown_error',
           variant: variant
         }
       });

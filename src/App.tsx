@@ -29,8 +29,6 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import DemoDashboard from "./routes/demo/dashboard";
-import Support from "./routes/support";
 import CRMIntegration from "./pages/integrations/CRMIntegration";
 import EmailIntegration from "./pages/integrations/EmailIntegration";
 import PhoneIntegration from "./pages/integrations/PhoneIntegration";
@@ -111,8 +109,6 @@ const AppWithMonitoring = () => {
         <Route path="/qa/dashboard" element={<main id="main"><Dashboard /></main>} />
         <Route path="/qa/seo" element={<main id="main"><SEOQA /></main>} />
         <Route path="/qa/pwa" element={<main id="main"><PWAQA /></main>} />
-        <Route path="/demo/dashboard" element={<main id="main"><DemoDashboard /></main>} />
-        <Route path="/support" element={<main id="main"><Support /></main>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>

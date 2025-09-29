@@ -1,2 +1,0 @@
-# Placeholder for MP4 fallback video file
-# Create with: ffmpeg -i demo.webm -c:v libx264 -profile:v high -pix_fmt yuv420p -movflags +faststart -crf 22 -preset medium -c:a aac -b:a 128k demo.mp4

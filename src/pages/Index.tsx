@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import HeroRoiDuo from "@/sections/HeroRoiDuo";
-import HeroShowcase from "@/sections/HeroShowcase";
 import { TrustBadgesSlim } from "@/components/sections/TrustBadgesSlim";
 import { BenefitsGrid } from "@/components/sections/BenefitsGrid";
 import { ImpactStrip } from "@/components/sections/ImpactStrip";
@@ -53,7 +52,7 @@ const Index = () => {
         
         <main className="flex-1">
           <div className="backdrop-blur-sm bg-background/75">
-            <HeroShowcase />
+            <HeroRoiDuo />
           </div>
           <div className="backdrop-blur-sm bg-background/75">
             <BenefitsGrid />

@@ -1,2 +1,0 @@
-# Placeholder for poster image
-# Create from video with: ffmpeg -i demo.webm -ss 00:00:02 -vframes 1 demo_poster.jpg

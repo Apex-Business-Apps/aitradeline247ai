@@ -1,13 +1,23 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import AppRouter from "./router";
-import EmergencyApp from "./EmergencyApp";
-import { installGlobalTraps } from "./bootstrap-safety";
+import App from "./App.tsx";
+import "./index.css";
+import "./styles/a11y-canon.css";
+import "./styles/roi-table.css";
+import { wireSpaRouter } from "./lib/klaviyo";
+import { watchRoiTableCanon } from "./lib/roiTableFix";
+import { startGAAutotrack } from "./lib/ga-autotrack";
+import { startKlaviyoAutoCapture } from "./lib/klaviyo-autocapture";
 
-createRoot(document.getElementById("root")!).render(<React.StrictMode><AppRouter/></React.StrictMode>);
+// PWA: register SW
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js"));
+}
 
-const rootEl = document.getElementById("root")!;
-installGlobalTraps(()=>{
-  rootEl.innerHTML="";
-  import("react-dom/client").then(({createRoot})=>createRoot(rootEl).render(<EmergencyApp/>));
-});
+createRoot(document.getElementById("root")!).render(<App />);
+
+// Wire SPA router tracking after app mounts
+wireSpaRouter(() => location.pathname);
+watchRoiTableCanon();
+startGAAutotrack();
+startKlaviyoAutoCapture();

@@ -1,108 +1,117 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, ArrowLeft, Search, Phone } from "lucide-react";
-import { setSEO } from "@/lib/seo";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Home, AlertTriangle, Bot } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const NotFound = () => {
-  useEffect(() => {
-    setSEO({
-      title: "Page Not Found — TradeLine 24/7",
-      description: "The page you're looking for doesn't exist. Return to our homepage to find what you need.",
-      path: "/404",
-    });
-  }, []);
-
-  const popularPages = [
-    { name: "Features", path: "/features", description: "Explore our AI receptionist features" },
-    { name: "Pricing", path: "/pricing", description: "View our transparent pricing plans" },
-    { name: "FAQ", path: "/faq", description: "Get answers to common questions" },
-    { name: "Contact", path: "/contact", description: "Get in touch with our team" }
-  ];
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="404 - Page Not Found | TradeLine 24/7"
+        description="The page you're looking for doesn't exist. Return to TradeLine 24/7 for 24/7 AI receptionist services and business automation solutions."
+        canonical="https://www.tradeline247ai.com/404"
+        noIndex={true}
+      />
+      
       <Header />
       
-      <main className="flex-1">
-        <section className="py-20 bg-gradient-to-br from-background to-secondary/20">
-          <div className="container text-center">
-            <div className="max-w-2xl mx-auto">
-              <div className="text-8xl font-bold text-primary/20 mb-4">404</div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Page Not Found
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground mb-8">
-                Oops! The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.
-              </p>
+      <main className="flex-1 flex items-center justify-center py-20">
+        <div className="container text-center">
+          <Card 
+            className="max-w-lg mx-auto border-0"
+            style={{ 
+              boxShadow: 'var(--premium-shadow-medium)',
+              background: 'linear-gradient(135deg, hsl(var(--card) / 0.98) 0%, hsl(var(--card) / 0.95) 100%)'
+            }}
+          >
+            <CardHeader>
+              <div className="w-20 h-20 bg-gradient-to-br from-brand-orange-primary/10 to-brand-orange-light/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-brand-orange-primary/20">
+                <Bot className="w-10 h-10 text-brand-orange-primary" />
+              </div>
+              <CardTitle className="text-5xl mb-4 bg-gradient-to-r from-brand-orange-primary to-brand-orange-light bg-clip-text text-transparent">
+                404
+              </CardTitle>
+              <CardDescription className="text-xl font-medium">
+                Oops! This page wandered off
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <div className="space-y-4">
+                <p className="text-muted-foreground text-base leading-relaxed">
+                  The page you're looking for doesn't exist or has been moved. 
+                </p>
+                <p className="text-sm text-muted-foreground/80">
+                  Don't worry — our AI receptionist is still here 24/7 to help your business grow!
+                </p>
+              </div>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <Button asChild size="lg" className="shadow-lg">
-                  <Link to="/">
-                    <Home className="w-4 h-4 mr-2" />
-                    Back to Home
-                  </Link>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  onClick={() => navigate('/')}
+                  className="flex items-center gap-2"
+                  size="lg"
+                >
+                  <Home className="w-4 h-4" />
+                  Back to Home
                 </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link to="/contact">
-                    <Phone className="w-4 h-4 mr-2" />
-                    Contact Support
-                  </Link>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => navigate(-1)}
+                  className="flex items-center gap-2"
+                  size="lg"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Go Back
                 </Button>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20">
-          <div className="container">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Popular Pages</h2>
-              <p className="text-muted-foreground">Here are some pages you might find helpful</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {popularPages.map((page, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow group">
-                  <CardHeader>
-                    <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                      {page.name}
-                    </CardTitle>
-                    <CardDescription>{page.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button asChild variant="outline" className="w-full">
-                      <Link to={page.path}>
-                        Visit Page
-                        <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20 bg-gradient-to-br from-primary/10 to-accent/10">
-          <div className="container text-center">
-            <div className="max-w-2xl mx-auto">
-              <Search className="w-16 h-16 text-primary mx-auto mb-6" />
-              <h2 className="text-3xl font-bold mb-4">Still can't find what you're looking for?</h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Our team is here to help. Get in touch and we'll point you in the right direction.
-              </p>
-              <Button asChild size="lg" className="shadow-lg">
-                <Link to="/contact">
-                  Contact Our Team
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+              
+              <div className="pt-6 border-t border-border/50">
+                <h3 className="font-semibold mb-4 text-foreground/90">Popular pages</h3>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => navigate('/features')}
+                    className="h-10 justify-start hover:bg-primary/5"
+                  >
+                    Features
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => navigate('/pricing')}
+                    className="h-10 justify-start hover:bg-primary/5"
+                  >
+                    Pricing
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => navigate('/faq')}
+                    className="h-10 justify-start hover:bg-primary/5"
+                  >
+                    FAQ
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => navigate('/contact')}
+                    className="h-10 justify-start hover:bg-primary/5"
+                  >
+                    Contact
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </main>
       
       <Footer />
