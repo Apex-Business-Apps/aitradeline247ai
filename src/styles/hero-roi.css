@@ -8,14 +8,14 @@
   padding-inline: 16px;
 }
 
-/* Grid: two equal columns, left-aligned */
+/* Grid: two equal columns, centered */
 .hero-roi__grid{
   display: grid !important;
   grid-template-columns: repeat(2, minmax(440px, 1fr));
   gap: 16px;
   align-items: stretch;          /* equal heights */
-  /* Top-align vertically, left-align horizontally */
-  place-content: start;          /* align-content: start; justify-content: start; */
+  /* Top-align vertically, center horizontally */
+  place-content: start center;   /* align-content: start; justify-content: center; */
 }
 
 /* Safety: ensure the two panels don't shift themselves */
