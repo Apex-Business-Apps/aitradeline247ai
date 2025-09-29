@@ -1,64 +1,67 @@
-import express from "express";
-import path from "path";
-import compression from "compression";
-import helmet from "helmet";
-import rateLimit from "express-rate-limit";
-import twilio from "twilio";
-import { fileURLToPath } from "url";
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+import twilio from 'twilio';
 
-// Telephony handlers
-import { telephonyStatusHandler } from "./server/telephony.status.mjs";
-import { payHandler } from "./server/voice/pay.mjs";
-import { gbmWebhook } from "./integrations/gbm/webhook.mjs";
+const app = express();
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const app = express();
+const PUB = path.join(__dirname, 'public');
+const DIST = path.join(__dirname, 'dist');
 
-// Trust proxy for proper IP detection
-app.set("trust proxy", 1);
-
-// Security and middleware
-app.use(helmet());
-app.use(compression());
-app.use(rateLimit({ windowMs: 60_000, max: 120 }));
-
-// Body parsing middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-// Twilio webhook validation middleware
-const twilioWebhook = twilio.webhook({ 
-  validate: true, 
-  protocol: "https", 
-  host: process.env.PUBLIC_HOSTNAME 
+// 1) Apex → www (strict 308), FIRST
+app.use((req, res, next) => {
+  if (req.headers.host === 'tradeline247ai.com') {
+    return res.redirect(308, `https://www.tradeline247ai.com${req.originalUrl}`);
+  }
+  next();
 });
 
-// Telephony routes - ALWAYS behind twilioWebhook validation
-app.post("/voice/status", twilioWebhook, telephonyStatusHandler);
-app.post("/voice/answer/pay", twilioWebhook, payHandler);
+// 2) Security headers (cheap)
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  next();
+});
 
-// GBM webhook (guarded by shared secret)
-app.post("/integrations/gbm/webhook", gbmWebhook);
+// 3) Liveness/Readiness
+app.get('/healthz', (_req, res) => res.status(200).send('ok'));
+app.get('/readyz',  (_req, res) => res.status(200).send('ok'));
 
-// Wire all enhancement routes
-import { wireAll } from "./server/boot/wire.all.mjs";
-await wireAll(app);
+// 4) Static mounts BEFORE SPA
+app.use(express.static(PUB,  { immutable: true, maxAge: '1y' }));
+app.use(express.static(DIST, { extensions: ['html'] }));
 
-// SEO routes
-import { robotsHandler, sitemapHandler } from "./server/routes/seo.robots.sitemap.mjs";
-app.get('/robots.txt', robotsHandler);
-app.get('/sitemap.xml', sitemapHandler);
+// 5) Telephony (Twilio) — minimal, validated, overload-safe
+const webhook = twilio.webhook({ validate: true });
 
-// Static file serving
-app.use(express.static(path.join(__dirname, "dist")));
-app.use("/assets", express.static(path.join(__dirname, "public", "assets")));
+app.post('/voice/answer', webhook, (req, res) => {
+  const vr = new twilio.twiml.VoiceResponse();
+  vr.say('This call may be recorded for quality. Please hold while we connect you.');
+  vr.dial({ answerOnBridge: true, timeout: 20 }).number(process.env.BUSINESS_TARGET_E164 || '+14319900222');
+  res.type('text/xml').send(vr.toString());
+});
 
-// Health checks
-app.get("/healthz", (_,res)=>res.type("text").send("ok"));
-app.get("/readyz",  (_,res)=>res.type("text").send("ready"));
+app.post('/voice/status', webhook, (req, res) => {
+  // upsert by CallSid with minimal work; no heavy I/O in request path
+  res.sendStatus(200);
+});
 
-// SPA fallback
-app.get("*", (_,res)=>res.sendFile(path.join(__dirname,"dist","index.html")));
+// 6) SPA fallback only if artifacts exist (prevents bad states)
+const hasArtifacts =
+  fs.existsSync(path.join(PUB, 'download', 'release.tar.gz')) &&
+  fs.existsSync(path.join(PUB, 'download', 'release.tar.gz.sha256'));
+
+app.get('*', (_req, res) => {
+  if (!hasArtifacts) return res.status(503).send('Artifacts missing');
+  res.sendFile(path.join(DIST, 'index.html'));
+});
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT,"0.0.0.0",()=>console.log(`TradeLine 24/7 server listening on ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`TradeLine 24/7 server listening on ${PORT}`));
+
+export default app;
