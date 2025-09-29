@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_test_assignments: {
+        Row: {
+          converted: boolean
+          created_at: string
+          id: string
+          test_name: string
+          updated_at: string
+          user_session: string
+          variant: string
+        }
+        Insert: {
+          converted?: boolean
+          created_at?: string
+          id?: string
+          test_name: string
+          updated_at?: string
+          user_session: string
+          variant: string
+        }
+        Update: {
+          converted?: boolean
+          created_at?: string
+          id?: string
+          test_name?: string
+          updated_at?: string
+          user_session?: string
+          variant?: string
+        }
+        Relationships: []
+      }
+      ab_tests: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          test_name: string
+          traffic_split: Json
+          updated_at: string
+          variants: Json
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          test_name: string
+          traffic_split?: Json
+          updated_at?: string
+          variants?: Json
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          test_name?: string
+          traffic_split?: Json
+          updated_at?: string
+          variants?: Json
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -567,6 +627,42 @@ export type Database = {
             referencedColumns: ["code"]
           },
         ]
+      }
+      leads: {
+        Row: {
+          company: string
+          created_at: string
+          email: string
+          id: string
+          lead_score: number | null
+          name: string
+          notes: string | null
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          email: string
+          id?: string
+          lead_score?: number | null
+          name: string
+          notes?: string | null
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          email?: string
+          id?: string
+          lead_score?: number | null
+          name?: string
+          notes?: string | null
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       messages: {
         Row: {
