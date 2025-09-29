@@ -1,3 +1,27 @@
+/**
+ * 🔒 HERO SECTION COMPONENT - PROTECTED BY PERMANENT SAFEGUARDS 🔒
+ * 
+ * CRITICAL: READ HERO_GUARDRAILS.md BEFORE MODIFYING
+ * 
+ * This component is actively monitored by:
+ * - heroGuardian.ts (performance + structure validation)
+ * - layoutCanon.ts (layout validation)
+ * - layoutGuard.ts (self-healing)
+ * 
+ * Protected Elements:
+ * - Brand title: "Your 24/7 Ai Receptionist" (DO NOT CHANGE)
+ * - data-node attributes (REQUIRED for validation)
+ * - Safe area insets (REQUIRED for mobile/PWA)
+ * - Logo optimization (eager loading + aspectRatio)
+ * - Fluid typography (clamp() only, NO fixed units)
+ * 
+ * Performance Targets (ENFORCED):
+ * - LCP ≤ 2.5s
+ * - CLS ≤ 0.05
+ * 
+ * Any violations will trigger console errors and may block deployment.
+ */
+
 // LOVABLE-GUARD: Only import existing components; do not alter their internals.
 import React from "react";
 import "../styles/hero-roi.css";

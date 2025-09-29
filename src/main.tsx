@@ -5,6 +5,7 @@ import "./styles/roi-table.css";
 import { wireSpaRouter } from "./lib/klaviyo";
 import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
+import { initHeroGuardian } from "./lib/heroGuardian";
 
 createRoot(document.getElementById("root")!).render(<App />);
 
@@ -12,3 +13,10 @@ createRoot(document.getElementById("root")!).render(<App />);
 wireSpaRouter(() => location.pathname);
 watchRoiTableCanon();
 initPWAInstall();
+
+// Initialize hero guardian for permanent safeguards
+if (typeof window !== 'undefined') {
+  window.addEventListener('load', () => {
+    setTimeout(initHeroGuardian, 1500);
+  });
+}

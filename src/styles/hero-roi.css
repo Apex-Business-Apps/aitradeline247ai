@@ -1,3 +1,22 @@
+/* 🔒 HERO SECTION STYLES - PROTECTED BY GUARDRAILS 🔒
+ * 
+ * CRITICAL: DO NOT MODIFY WITHOUT APPROVAL
+ * Read HERO_GUARDRAILS.md before making ANY changes
+ * 
+ * Protected by:
+ * - Runtime validation (heroGuardian.ts)
+ * - Layout canon checks (layoutCanon.ts)
+ * - Performance monitoring (LCP/CLS thresholds)
+ * 
+ * Rules:
+ * - NO fixed units (cm, mm, pt) - use clamp(), vw, rem only
+ * - MUST include env(safe-area-inset-*) for mobile/PWA
+ * - Grid MUST be responsive (no horizontal overflow)
+ * - Changes MUST maintain LCP ≤ 2.5s, CLS ≤ 0.05
+ * 
+ * Violations will trigger console errors and validation failures.
+ */
+
 /* === HERO ROI CENTERING CANON === */
 
 /* Container positioned with centering */
