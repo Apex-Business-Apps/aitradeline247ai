@@ -1,10 +1,12 @@
 import { Outlet } from "react-router-dom";
+import officialLogo from '@/assets/official-logo.svg';
+
 export default function RootLayout(){
   return (
     <div className="min-h-full flex flex-col">
       <header className="px-6 py-4 border-b">
         <div className="max-w-6xl mx-auto flex items-center gap-3">
-          <img src="/assets/brand/OFFICIAL_LOGO.svg" alt="TradeLine 24/7" className="h-8" />
+          <img src={officialLogo} alt="TradeLine 24/7" className="h-8" />
           <span className="sr-only">TradeLine 24/7</span>
         </div>
       </header>
