@@ -83,7 +83,10 @@ const Features = () => {
               <p className="text-lg md:text-xl text-muted-foreground mb-8">
                 Everything you need to transform customer interactions with fast and reliable automation
               </p>
-              <Button size="lg" className="shadow-lg" onClick={handleCTAClick}>
+              <Button size="lg" className="shadow-lg" onClick={() => {
+                handleCTAClick();
+                window.location.href = '/signup';
+              }}>
                 Start Free Trial
               </Button>
             </div>

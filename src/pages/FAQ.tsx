@@ -113,10 +113,10 @@ const FAQ = () => {
               Our team is here to help. Get in touch and we'll answer any questions about TradeLine 24/7.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="shadow-lg">
+              <Button size="lg" className="shadow-lg" onClick={() => window.location.href = '/contact'}>
                 Contact Sales
               </Button>
-              <Button size="lg" variant="outline">
+              <Button size="lg" variant="outline" onClick={() => window.location.href = '/contact'}>
                 Schedule Demo
               </Button>
             </div>

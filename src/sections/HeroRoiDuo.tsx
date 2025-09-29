@@ -39,11 +39,11 @@ export default function HeroRoiDuo() {
           
           {/* Custom grid layout for side-by-side components */}
           <div className="hero-roi__container" data-lovable-lock="true" aria-label="Start Trial and ROI">
-            <div className="hero-roi__grid" data-lovable-lock="true">
-              <div id="roi-calculator" className="hero-roi__card" data-lovable-lock="true">
+            <div className="hero-roi__grid" data-node="grid" data-lovable-lock="true">
+              <div id="roi-calculator" data-node="ron" className="hero-roi__card" data-lovable-lock="true">
                 <RoiCalculator />
               </div>
-              <div id="start-trial-hero" className="hero-roi__card" data-lovable-lock="true">
+              <div id="start-trial-hero" data-node="start" className="hero-roi__card" data-lovable-lock="true">
                 <LeadCaptureCard compact />
               </div>
             </div>
