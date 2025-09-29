@@ -56,11 +56,11 @@ Ensure these are set:
 ## Configuration
 Make sure your Supabase project has:
 - Site URL configured for your domain
-- Redirect URLs configured for magic link landing
+- Magic link URLs configured
 
 ## Flow
 1. User enters email on `/login`
 2. Magic link sent via Supabase Auth
-3. User clicks link, gets redirected with session
+3. User clicks link, session established
 4. Protected routes now accessible
 5. Logout via `/logout` clears session

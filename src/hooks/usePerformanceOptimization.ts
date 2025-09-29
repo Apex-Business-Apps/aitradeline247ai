@@ -130,10 +130,6 @@ export const usePerformanceOptimization = () => {
     });
 
     // Resource hints for performance
-    const link = document.createElement('link');
-    link.rel = 'dns-prefetch';
-    link.href = '//cdnjs.cloudflare.com';
-    document.head.appendChild(link);
   }, []);
 
   useEffect(() => {

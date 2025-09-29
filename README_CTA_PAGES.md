@@ -44,7 +44,7 @@ Both pages expect query parameters:
 
 ## Email Template Integration
 
-To add client-side GA4 tracking to email CTAs, update button links to redirect through these pages:
+To add client-side GA4 tracking to email CTAs, update button links to use these pages:
 
 ### Current (server-only tracking)
 ```html
@@ -53,7 +53,7 @@ To add client-side GA4 tracking to email CTAs, update button links to redirect t
 
 ### Enhanced (client + server tracking)  
 ```html
-<a href="https://domain.com/cta/callback?n=+17805551212&redirect=/a/c?t=token123">Call Me Back</a>
+<a href="https://domain.com/cta/callback?n=+17805551212&target=/a/c?t=token123">Call Me Back</a>
 ```
 
 ## Benefits

@@ -79,7 +79,7 @@ const MobileIntegration = () => {
   const [showQRCode, setShowQRCode] = useState(false);
 
   const handleDownload = (store: any) => {
-    toast.success(`Redirecting to ${store.name}...`);
+    toast.success(`Opening ${store.name}...`);
     // In a real app, this would open the app store
     window.open(store.url, '_blank');
   };

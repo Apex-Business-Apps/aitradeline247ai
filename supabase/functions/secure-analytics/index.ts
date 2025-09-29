@@ -127,9 +127,9 @@ serve(async (req) => {
       return new Response('Rate limit exceeded', { status: 429, headers: corsHeaders });
     }
 
-    // Get the real IP from headers (CF-Connecting-IP for Cloudflare, X-Forwarded-For for others)
+    // Get the real IP from headers
     const headers = req.headers;
-    const clientIP = headers.get('cf-connecting-ip') || 
+    const clientIP =
                     headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
                     headers.get('x-real-ip') || 
                     null;

@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "numberOfRuns": 1,
-      "settings": { "skipAudits": ["redirects-http"] },
+      "settings": {},
       "url": []
     },
     "assert": {

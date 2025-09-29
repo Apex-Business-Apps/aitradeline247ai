@@ -77,7 +77,7 @@ const Subscribe = () => {
         plan: plan as 'basic' | 'pro' | 'enterprise'
       });
 
-      // Redirect to Stripe Checkout
+      // Navigate to Stripe Checkout
       window.location.href = response.url;
 
     } catch (err) {

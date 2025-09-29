@@ -29,7 +29,7 @@ Subscription signup form with Stripe Checkout integration.
 **Features:**
 - Real-time phone number validation and formatting
 - Plan-specific pricing display
-- Secure redirect to Stripe Checkout
+- Secure Stripe Checkout integration
 - Error handling with user-friendly messages
 
 **GA Events Fired:**

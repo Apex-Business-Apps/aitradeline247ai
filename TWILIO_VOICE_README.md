@@ -131,7 +131,7 @@ Recording is disabled by default. To enable:
 ### DNCL Integration
 - Implement Do-Not-Call list checking in voice-answer function
 - Query internal DNC database before processing calls
-- Reject or redirect based on caller number
+- Reject calls based on caller number
 
 ## Support Links
 

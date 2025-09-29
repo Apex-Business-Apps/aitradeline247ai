@@ -42,7 +42,7 @@ const Auth = () => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Redirect authenticated users to home
+        // Navigate authenticated users to home
         if (session?.user) {
           navigate('/');
         }
@@ -54,7 +54,7 @@ const Auth = () => {
       setSession(session);
       setUser(session?.user ?? null);
       
-      // Redirect if already logged in
+      // Navigate if already logged in
       if (session?.user) {
         navigate('/');
       }
@@ -129,13 +129,10 @@ const Auth = () => {
       throw new Error('This password appears in known data breaches. Please choose a different password.');
     }
 
-    const redirectUrl = `${window.location.origin}/`;
-    
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl,
         data: {
           display_name: displayName,
         }
