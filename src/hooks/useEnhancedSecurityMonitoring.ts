@@ -13,24 +13,28 @@ export const useEnhancedSecurityMonitoring = () => {
   const [securityAlerts, setSecurityAlerts] = useState<SecurityEvent[]>([]);
   const [sessionTimeoutWarning, setSessionTimeoutWarning] = useState(false);
 
-  // Enhanced session token creation with encryption
+  // Enhanced session token creation with security logging
   const createSecureSession = useCallback(async (deviceFingerprint?: string) => {
     if (!user || !session) return null;
 
     try {
-      const { data, error } = await supabase.rpc('create_encrypted_session_token', {
-        p_user_id: user.id,
-        p_raw_token: session.access_token,
-        p_device_fingerprint: deviceFingerprint,
-        p_ip_address: null // Let the function handle IP detection
+      // Generate secure session identifier
+      const sessionId = crypto.randomUUID();
+      
+      // Log session creation for security monitoring
+      await supabase.functions.invoke('secure-analytics', {
+        body: {
+          event_type: 'secure_session_created',
+          event_data: {
+            user_id: user.id,
+            session_id: sessionId,
+            device_fingerprint: deviceFingerprint,
+            timestamp: new Date().toISOString()
+          }
+        }
       });
 
-      if (error) {
-        console.error('Failed to create secure session:', error);
-        return null;
-      }
-
-      return data;
+      return sessionId;
     } catch (error) {
       console.error('Secure session creation error:', error);
       return null;
@@ -44,11 +48,16 @@ export const useEnhancedSecurityMonitoring = () => {
     details?: Record<string, any>
   ) => {
     try {
-      await supabase.rpc('log_security_audit_event', {
-        p_event_type: eventType,
-        p_severity: severity,
-        p_user_id: user?.id,
-        p_details: details || {}
+      await supabase.functions.invoke('secure-analytics', {
+        body: {
+          event_type: `security_${eventType}`,
+          severity,
+          event_data: {
+            user_id: user?.id,
+            timestamp: new Date().toISOString(),
+            ...details
+          }
+        }
       });
 
       // Add to local alerts for immediate user feedback

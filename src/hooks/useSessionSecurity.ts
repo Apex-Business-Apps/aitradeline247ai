@@ -22,20 +22,34 @@ export const useSessionSecurity = () => {
     }
   }, [user, session]);
 
-  // Check for concurrent sessions
+  // Check for concurrent sessions using analytics data
   const checkConcurrentSessions = useCallback(async () => {
     if (!user) return;
 
     try {
+      // Use analytics events to detect concurrent sessions
       const { data } = await supabase
-        .from('user_sessions')
-        .select('session_token, created_at')
+        .from('analytics_events')
+        .select('session_id, created_at')
         .eq('user_id', user.id)
-        .eq('is_active', true);
+        .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
+        .order('created_at', { ascending: false });
 
-      if (data && data.length > 3) {
-        console.warn('🚨 Multiple active sessions detected');
-        // Optionally force logout of older sessions
+      if (data) {
+        const uniqueSessions = new Set(data.map(event => event.session_id).filter(Boolean));
+        if (uniqueSessions.size > 3) {
+          console.warn('🚨 Multiple active sessions detected');
+          // Log security event for monitoring
+          supabase.functions.invoke('secure-analytics', {
+            body: {
+              event_type: 'concurrent_sessions_detected',
+              event_data: {
+                session_count: uniqueSessions.size,
+                user_id: user.id
+              }
+            }
+          });
+        }
       }
     } catch (error) {
       console.error('Failed to check concurrent sessions:', error);

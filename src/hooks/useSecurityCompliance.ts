@@ -25,25 +25,26 @@ export const useSecurityCompliance = () => {
         .rpc('validate_security_post_upgrade');
       
       if (rlsTables) {
+        const validationData = rlsTables as any; // Type assertion for database response
         checks.push({
           check_name: 'RLS_ENABLED_TABLES',
-          status: rlsTables.rls_enabled_tables > 0 ? 'passed' : 'failed',
-          description: `${rlsTables.rls_enabled_tables} tables have RLS enabled`,
-          manual_action_required: rlsTables.rls_enabled_tables === 0
+          status: validationData.rls_enabled_tables > 0 ? 'passed' : 'failed',
+          description: `${validationData.rls_enabled_tables || 0} tables have RLS enabled`,
+          manual_action_required: validationData.rls_enabled_tables === 0
         });
 
         checks.push({
           check_name: 'SECURITY_DEFINER_FUNCTIONS',
-          status: rlsTables.security_definer_functions > 5 ? 'passed' : 'warning',
-          description: `${rlsTables.security_definer_functions} security definer functions configured`,
+          status: validationData.security_definer_functions > 5 ? 'passed' : 'warning',
+          description: `${validationData.security_definer_functions || 0} security definer functions configured`,
           manual_action_required: false
         });
 
         checks.push({
           check_name: 'RLS_POLICIES',
-          status: rlsTables.rls_policies > 10 ? 'passed' : 'warning',
-          description: `${rlsTables.rls_policies} RLS policies active`,
-          manual_action_required: rlsTables.rls_policies < 5
+          status: validationData.rls_policies > 10 ? 'passed' : 'warning',
+          description: `${validationData.rls_policies || 0} RLS policies active`,
+          manual_action_required: validationData.rls_policies < 5
         });
       }
 
@@ -112,7 +113,14 @@ export const useSecurityCompliance = () => {
         .order('last_checked', { ascending: false });
 
       if (compliance) {
-        setComplianceChecks(compliance);
+        const typedCompliance = compliance.map(item => ({
+          check_name: item.check_name,
+          status: (item.status as 'passed' | 'failed' | 'warning') || 'warning',
+          description: item.description,
+          manual_action_required: item.manual_action_required,
+          remediation_notes: item.remediation_notes
+        }));
+        setComplianceChecks(typedCompliance);
       }
     } catch (error) {
       console.error('Failed to get compliance status:', error);

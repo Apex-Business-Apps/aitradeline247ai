@@ -35,38 +35,45 @@ export const useEnhancedSessionSecurity = () => {
     }
   }, [user, session]);
 
-  // Enhanced concurrent session monitoring with automatic cleanup
+  // Enhanced concurrent session monitoring with analytics tracking
   const checkConcurrentSessions = useCallback(async () => {
     if (!user) return;
 
     try {
+      // Check analytics events for recent session activity patterns
       const { data } = await supabase
-        .from('user_sessions')
-        .select('session_token, created_at, last_activity')
+        .from('analytics_events')
+        .select('session_id, created_at')
         .eq('user_id', user.id)
-        .eq('is_active', true);
+        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+        .order('created_at', { ascending: false });
 
-      if (data && data.length > 3) {
-        console.warn('🚨 Multiple active sessions detected:', data.length);
-        
-        // Log security event
-        await supabase.functions.invoke('secure-analytics', {
-          body: {
-            event_type: 'security_alert',
-            event_data: {
-              alert_type: 'concurrent_sessions',
-              session_count: data.length,
-              user_id: user.id,
-              timestamp: new Date().toISOString()
+      if (data) {
+        const uniqueSessions = new Set(data.map(event => event.session_id).filter(Boolean));
+        const sessionCount = uniqueSessions.size;
+
+        if (sessionCount > 3) {
+          console.warn('🚨 Multiple active sessions detected:', sessionCount);
+          
+          // Log security event
+          await supabase.functions.invoke('secure-analytics', {
+            body: {
+              event_type: 'security_alert',
+              event_data: {
+                alert_type: 'concurrent_sessions',
+                session_count: sessionCount,
+                user_id: user.id,
+                timestamp: new Date().toISOString()
+              }
             }
-          }
-        });
+          });
 
-        toast({
-          title: "Security Alert",
-          description: `${data.length} active sessions detected. Consider reviewing your account security.`,
-          variant: "destructive"
-        });
+          toast({
+            title: "Security Alert",
+            description: `${sessionCount} active sessions detected. Consider reviewing your account security.`,
+            variant: "destructive"
+          });
+        }
       }
     } catch (error) {
       console.error('Failed to check concurrent sessions:', error);
