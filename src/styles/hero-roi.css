@@ -21,25 +21,21 @@
 
 /* Container positioned with centering */
 .hero-roi__container{
-  /* wide enough for two healthy columns + gap, but responsive */
-  max-width: min(1200px, 100% - 2rem);
-  margin-inline: auto;              /* centered */
-  padding-inline: max(env(safe-area-inset-left, 1rem), 1rem);
-  padding-inline-end: max(env(safe-area-inset-right, 1rem), 1rem);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
 }
 
 /* Grid: two equal columns, centered */
 .hero-roi__grid{
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
-  gap: clamp(1rem, 2vw, 2rem);
+  grid-template-columns: 1fr;
+  gap: 2rem;
   justify-items: center;
-  /* Top-align vertically, center horizontally */
-  place-content: start center;   /* align-content: start; justify-content: center; */
-  margin-inline: auto;           /* centered horizontally */
-  padding-inline: env(safe-area-inset-right, 1rem) env(safe-area-inset-left, 1rem);
-  padding-top: env(safe-area-inset-top, 0);
-  padding-bottom: env(safe-area-inset-bottom, 0);
+  align-items: start;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Safety: ensure the two panels don't shift themselves */
@@ -47,24 +43,21 @@
 #roi-calculator{
   position: static !important;
   transform: none !important;
-  max-width: 100% !important;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
 }
 
 /* Desktop: side by side */
 @media (min-width: 1024px) {
   .hero-roi__grid {
-    grid-template-columns: repeat(2, minmax(0, 560px));
+    grid-template-columns: repeat(2, 1fr);
     max-width: 1200px;
+    gap: 2rem;
   }
-}
-
-/* Stack on tablets/phones */
-@media (max-width: 1024px){
-  .hero-roi__grid{ 
-    grid-template-columns: 1fr; 
-  }
-  .hero-roi__container{ 
-    max-width: 100%;
-    padding-inline: env(safe-area-inset-left, 1rem) env(safe-area-inset-right, 1rem);
+  
+  #start-trial-hero,
+  #roi-calculator{
+    max-width: 560px;
   }
 }

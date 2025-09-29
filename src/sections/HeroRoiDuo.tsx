@@ -39,15 +39,12 @@ export default function HeroRoiDuo() {
         {/* Hero Content */}
         <div className="text-center mb-16">
           {/* Logo above hero text */}
-          <div className="flex justify-center mb-8 items-center" style={{ aspectRatio: '16/9', maxHeight: 'clamp(8rem, 15vw, 14rem)' }}>
+          <div className="flex justify-center items-center mb-8 mx-auto" style={{ maxWidth: '280px' }}>
             <img 
               src={officialLogo} 
               alt="TradeLine 24/7 Logo" 
-              className="w-full max-w-[200px] md:max-w-[280px] h-auto opacity-80" 
-              style={{
-                transform: 'translateY(clamp(-0.5rem, -2vw, -1rem)) scale(clamp(1.2, 1.45, 1.5))',
-                aspectRatio: '1/1'
-              }}
+              className="w-full h-auto opacity-80" 
+              style={{ aspectRatio: '1/1' }}
               loading="eager"
             />
           </div>
@@ -59,15 +56,15 @@ export default function HeroRoiDuo() {
             Never miss a call. Work while you sleep.
           </p>
           
-          <h2 className="text-[#1e556b] mb-[50px] mt-[63px] text-center py-0 font-semibold" style={{ fontSize: 'clamp(1.5rem, 3vw + 0.5rem, 2.5rem)' }}>Help us help you.</h2>
+          <h2 className="text-[#1e556b] mb-12 mt-16 text-center py-0 font-semibold mx-auto" style={{ fontSize: 'clamp(1.5rem, 3vw + 0.5rem, 2.5rem)' }}>Help us help you.</h2>
           
           {/* Custom grid layout for side-by-side components */}
-          <div className="hero-roi__container" data-lovable-lock="true" aria-label="Start Trial and ROI">
+          <div className="hero-roi__container mx-auto" data-lovable-lock="true" aria-label="Start Trial and ROI">
             <div className="hero-roi__grid" data-node="grid" data-lovable-lock="true">
-              <div id="roi-calculator" data-node="ron" className="hero-roi__card" data-lovable-lock="true">
+              <div id="roi-calculator" data-node="ron" data-lovable-lock="true">
                 <RoiCalculator />
               </div>
-              <div id="start-trial-hero" data-node="start" className="hero-roi__card" data-lovable-lock="true">
+              <div id="start-trial-hero" data-node="start" data-lovable-lock="true">
                 <LeadCaptureCard compact />
               </div>
             </div>
