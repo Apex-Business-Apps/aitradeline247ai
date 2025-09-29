@@ -21,7 +21,7 @@
 
 /* Container positioned with centering */
 .hero-roi__container{
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
   width: 100%;
@@ -32,7 +32,8 @@
   display: grid !important;
   grid-template-columns: 1fr;
   gap: 2rem;
-  justify-items: stretch;
+  justify-items: center;
+  justify-content: center;
   align-items: start;
   margin: 0 auto;
   width: 100%;
@@ -51,7 +52,7 @@
 @media (min-width: 1024px) {
   .hero-roi__grid {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 1200px;
+    max-width: 1400px;
     gap: 2rem;
   }
 }
