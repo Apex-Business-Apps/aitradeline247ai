@@ -113,10 +113,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuthContext = () => {
+export const useAuthContext = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuthContext must be used within an AuthProvider');
+    // Soft-fallback to avoid runtime crash if provider isn't mounted yet
+    return {
+      user: null,
+      session: null,
+      loading: false,
+      userRole: null,
+      signInWithEmail: async () => ({ error: new Error('Auth not initialized') }),
+      signOut: async () => ({ error: new Error('Auth not initialized') }),
+      isAdmin: () => false,
+    };
   }
   return context;
 };
