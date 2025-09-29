@@ -1,0 +1,31 @@
+name: auto-heal
+on:
+  workflow_dispatch:
+  push: { paths: ["public/download/**"] }
+permissions: { contents: write }
+concurrency: { group: auto-heal, cancel-in-progress: true }
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Ensure artifact + sha256
+        run: |
+          set -euo pipefail
+          mkdir -p public/download
+          if [[ ! -f public/download/release.tar.gz ]]; then
+            mkdir -p tmp_rel && echo "TradeLine 24/7 release" > tmp_rel/README.txt
+            tar -C tmp_rel -czf public/download/release.tar.gz README.txt
+          fi
+          sha256sum public/download/release.tar.gz | awk '{print $1}' > public/download/release.tar.gz.sha256
+      - name: Commit if changed
+        run: |
+          set -e
+          if ! git diff --quiet; then
+            git config user.name  "auto-heal bot"
+            git config user.email "auto-heal@users.noreply.github.com"
+            git add public/download/release.tar.gz public/download/release.tar.gz.sha256
+            git commit -m "auto-heal: ensure artifact+sha256"
+            git push
+          else echo "No changes"; fi
