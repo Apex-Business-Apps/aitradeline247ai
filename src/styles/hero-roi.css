@@ -11,9 +11,9 @@
 /* Grid: two equal columns, centered */
 .hero-roi__grid{
   display: grid !important;
-  grid-template-columns: repeat(2, minmax(440px, 1fr));
+  grid-template-columns: repeat(2, minmax(420px, max-content));
   gap: 16px;
-  align-items: stretch;          /* equal heights */
+  justify-items: center;
   /* Top-align vertically, center horizontally */
   place-content: start center;   /* align-content: start; justify-content: center; */
 }
