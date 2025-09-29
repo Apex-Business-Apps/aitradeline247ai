@@ -1301,6 +1301,10 @@ export type Database = {
         Args: { _user_id: string }
         Returns: boolean
       }
+      can_view_appointment_summary: {
+        Args: { org_id_param: string }
+        Returns: boolean
+      }
       citext: {
         Args: { "": boolean } | { "": string } | { "": unknown }
         Returns: string
