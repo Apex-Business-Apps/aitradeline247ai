@@ -30,7 +30,7 @@
 - **Backend:** Supabase (Edge Functions, Database, Auth, Storage)
 - **Telephony:** Twilio Voice API with signature validation
 - **Analytics:** GA4 + Klaviyo with privacy-compliant tracking
-- **Deployment:** Lovable hosting with Cloudflare CDN
+- **Deployment:** Lovable hosting with direct DNS
 
 ## Guardrails
 - **Absolute Guard:** Only modify whitelisted files per prompt; abort on uncertainty

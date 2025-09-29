@@ -28,10 +28,10 @@
 
 **Action:** Manual GSC configuration only
 
-## 4) Cloudflare Purge Secrets Setup
-**Prompt:** "Set up Cloudflare purge secrets in GitHub repository settings. Add `CF_ZONE_ID` and `CF_API_TOKEN` to repository secrets. Test the existing 'Cloudflare Purge (Targeted)' workflow with default URLs (homepage, manifest, icons). Verify successful purge response."
+## 4) Asset Cache Validation
+**Prompt:** "Verify asset caching headers are properly configured. Test that static assets have appropriate cache-control headers and that asset versioning is working for browser cache busting. No CDN cache purging needed."
 
-**Action:** GitHub secrets configuration + workflow test
+**Action:** Cache header verification only
 
 ## 5) Guardrails QA Implementation
 **Prompt:** "Create comprehensive guardrails QA page at `src/pages/qa/Guardrails.tsx` that tests for potential security issues: jailbreak attempts, injection attacks, malware detection. All tests should return **BLOCKED** status. Include tests for: SQL injection patterns, XSS attempts, path traversal, CSRF protection, and Twilio signature validation."
