@@ -98,21 +98,14 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
     try {
       console.log("Submitting lead:", formData);
 
-      // Submit to secure edge function which handles both email and database operations
-      const { data: response, error: submitError } = await supabase.functions.invoke('secure-lead-submission', {
-        body: {
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          notes: formData.notes,
-          source: 'website_lead_form'
-        }
+      // Submit using secure submission hook
+      const response = await secureSubmit<{success: boolean; leadId: string; leadScore: number; remainingAttempts: number}>('secure-lead-submission', {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        notes: formData.notes,
+        source: 'website_lead_form'
       });
-
-      if (submitError) {
-        console.error("Secure submission error:", submitError);
-        throw new Error(submitError.message || 'Failed to submit lead');
-      }
 
       console.log("Lead submission successful:", response);
 

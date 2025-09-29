@@ -40,7 +40,13 @@ export const useSecureFormSubmission = (options: SecureSubmissionOptions = {}) =
   };
 
   const getCSRFToken = (): string => {
-    return sessionStorage.getItem('csrf-token') || '';
+    // Generate a CSRF token if none exists
+    let token = sessionStorage.getItem('csrf-token');
+    if (!token) {
+      token = crypto.randomUUID();
+      sessionStorage.setItem('csrf-token', token);
+    }
+    return token;
   };
 
   const secureSubmit = async <T>(
