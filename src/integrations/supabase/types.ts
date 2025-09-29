@@ -1258,10 +1258,7 @@ export type Database = {
       appointments_safe: {
         Row: {
           created_at: string | null
-          e164: string | null
-          email: string | null
           end_at: string | null
-          first_name: string | null
           id: string | null
           note: string | null
           organization_id: string | null
@@ -1272,10 +1269,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          e164?: never
-          email?: never
           end_at?: string | null
-          first_name?: never
           id?: string | null
           note?: string | null
           organization_id?: string | null
@@ -1286,10 +1280,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
-          e164?: never
-          email?: never
           end_at?: string | null
-          first_name?: never
           id?: string | null
           note?: string | null
           organization_id?: string | null
