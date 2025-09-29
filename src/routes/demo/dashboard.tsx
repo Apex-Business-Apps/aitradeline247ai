@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Dashboard, DemoSpotlight } from "@/features/dashboard";
-import { demoSteps } from "@/features/dashboard/DemoScript";
+import { demoSteps as DEMO_SCRIPT } from "@/features/dashboard/DemoScript";
 
 export default function DemoDashboard() {
   const [i, setI] = useState(0);
@@ -11,15 +11,17 @@ export default function DemoDashboard() {
 
   useEffect(() => {
     if (!playing) return;
-    const step = demoSteps[i];
-    if (!step) { 
-      if (loop) { 
-        setI(0); 
-      } 
-      return; 
+    const step = DEMO_SCRIPT[i];
+    if (!step) {
+      if (loop) {
+        setI(0);
+      }
+      return;
     }
+
     const el = document.querySelector(step.target) as HTMLElement | null;
     setRect(el ? el.getBoundingClientRect() : null);
+
     const t = setTimeout(() => setI((v) => v + 1), (step.wait ?? 1000) / speed);
     return () => clearTimeout(t);
   }, [i, playing, speed, loop]);
