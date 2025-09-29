@@ -32,7 +32,7 @@
   display: grid !important;
   grid-template-columns: 1fr;
   gap: 2rem;
-  justify-items: center;
+  justify-items: stretch;
   align-items: start;
   margin: 0 auto;
   width: 100%;
