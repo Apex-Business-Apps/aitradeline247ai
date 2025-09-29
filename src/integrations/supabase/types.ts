@@ -1341,6 +1341,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      log_auth_attempt: {
+        Args: {
+          p_event_type: string
+          p_ip_address?: unknown
+          p_success: boolean
+          p_user_agent?: string
+          p_user_identifier?: string
+        }
+        Returns: undefined
+      }
       log_data_access: {
         Args: {
           p_access_type?: string

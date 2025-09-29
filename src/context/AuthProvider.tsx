@@ -41,18 +41,61 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signInWithEmail = async (email: string) => {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+        }
+      });
+      
+      // Log authentication attempt securely
+      try {
+        await supabase.functions.invoke('enhanced-security', {
+          body: {
+            event_type: error ? 'auth_failed' : 'auth_success',
+            event_data: { method: 'email_otp' }
+          }
+        });
+      } catch (analyticsError) {
+        // Silently fail analytics to not break auth flow
+        if (import.meta.env.DEV) {
+          console.warn('Security logging failed:', analyticsError);
+        }
       }
-    });
-    return { error };
+      
+      // Return generic error message to prevent email enumeration
+      return { 
+        error: error ? new Error('Invalid credentials or account not found') : null 
+      };
+    } catch (err) {
+      // Generic error message for security
+      return { error: new Error('Authentication failed. Please try again.') };
+    }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      // Log sign out event
+      try {
+        await supabase.functions.invoke('enhanced-security', {
+          body: {
+            event_type: 'auth_signout',
+            event_data: { timestamp: Date.now() }
+          }
+        });
+      } catch (analyticsError) {
+        if (import.meta.env.DEV) {
+          console.warn('Security logging failed:', analyticsError);
+        }
+      }
+      
+      return { error };
+    } catch (err) {
+      return { error: new Error('Sign out failed. Please try again.') };
+    }
   };
 
   const isAdmin = () => userRole === 'admin';
