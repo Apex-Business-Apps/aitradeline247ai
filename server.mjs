@@ -1,106 +1,81 @@
-import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
-import twilio from 'twilio';
-import { Resend } from "resend";
+import express from "express";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
+const CANONICAL_DOMAIN = "tradeline247ai.com";
+const CANONICAL_WWW = "www.tradeline247ai.com";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-app.disable('x-powered-by');
-app.set('trust proxy', 1);
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
 
+// body parsing for forms/APIs
 app.use(express.json({ limit: "256kb" }));
 app.use(express.urlencoded({ extended: true, limit: "256kb" }));
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+const PUB = path.join(__dirname, "public");
+const DIST = path.join(__dirname, "dist");
+const DIST_INDEX = path.join(DIST, "index.html");
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PUB = path.join(__dirname, 'public');
-const DIST = path.join(__dirname, 'dist');
-
-// 1) Apex → www (strict 308), FIRST
+/* 1) apex → www (method-preserving 308) */
 app.use((req, res, next) => {
-  if (req.headers.host === 'tradeline247ai.com') {
-    return res.redirect(308, `https://www.tradeline247ai.com${req.originalUrl}`);
+  if (req.headers.host === CANONICAL_DOMAIN) {
+    return res.redirect(308, `https://${CANONICAL_WWW}${req.originalUrl}`);
   }
   next();
 });
 
-// 2) Security headers (cheap)
-app.use((req, res, next) => {
-  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+/* 2) minimal security headers */
+app.use((_, res, next) => {
+  res.setHeader("Strict-Transport-Security","max-age=31536000; includeSubDomains; preload");
+  res.setHeader("X-Content-Type-Options","nosniff");
   next();
 });
 
-// 3) Liveness/Readiness
-app.get('/healthz', (_req, res) => res.status(200).send('ok'));
-app.get('/readyz',  (_req, res) => res.status(200).send('ok'));
+/* 3) health */
+app.get("/healthz", (_req, res) => res.status(200).send("ok"));
+app.get("/readyz",  (_req, res) => fs.existsSync(DIST_INDEX) ? res.status(200).send("ok") : res.status(503).send("not ready"));
 
-// 4) Static mounts BEFORE SPA
-app.use(express.static(PUB,  { immutable: true, maxAge: '1y' }));
-app.use(express.static(DIST, { extensions: ['html'] }));
+/* 4) static before SPA */
+app.use("/assets", express.static(path.join(PUB, "assets"), { immutable: true, maxAge: "1y" }));
+app.use(express.static(DIST, { extensions: ["html"] }));
 
-// 5) Telephony (Twilio) — minimal, validated, overload-safe
-const webhook = twilio.webhook({ validate: true });
-
-app.post('/voice/answer', webhook, (req, res) => {
-  const vr = new twilio.twiml.VoiceResponse();
-  vr.say('This call may be recorded for quality. Please hold while we connect you.');
-  vr.dial({ answerOnBridge: true, timeout: 20 }).number(process.env.BUSINESS_TARGET_E164 || '+14319900222');
-  res.type('text/xml').send(vr.toString());
+/* 5) diagnostics */
+app.get("/selftest", (_req, res) => {
+  const ex = (p) => fs.existsSync(path.join(__dirname, p));
+  res.json({
+    ok: {
+      artifacts_tgz: ex("public/download/release.tar.gz"),
+      artifacts_sha: ex("public/download/release.tar.gz.sha256"),
+      icon_192:      ex("public/assets/brand/App_Icons/icon-192.png"),
+    },
+    ts: new Date().toISOString(),
+  });
+});
+app.get("/status.json", (_req, res) => {
+  const hasArtifacts =
+    fs.existsSync(path.join(PUB, "download", "release.tar.gz")) &&
+    fs.existsSync(path.join(PUB, "download", "release.tar.gz.sha256"));
+  res.json({
+    build: process.env.BUILD_ID || null,
+    brand_title: "TradeLine 24/7 — Your 24/7 Ai Receptionist!",
+    artifacts: hasArtifacts ? "ok" : "missing",
+    ts: new Date().toISOString(),
+  });
 });
 
-app.post('/voice/status', webhook, (req, res) => {
-  // upsert by CallSid with minimal work; no heavy I/O in request path
-  res.sendStatus(200);
-});
-
-app.post("/api/lead", async (req, res) => {
-  try {
-    const { name = "", email = "", phone = "", message = "" } = req.body || {};
-    const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!okEmail || (!name && !phone && !message)) return res.status(400).json({ ok: false, error: "invalid_input" });
-
-    // Always accept quickly (idempotent UX)
-    res.status(202).json({ ok: true });
-
-    // Side effect: email notify if secrets configured
-    if (resend) {
-      await resend.emails.send({
-        from: "TradeLine 24/7 <noreply@tradeline247ai.com>",
-        to: ["support@tradeline247ai.com"],
-        subject: "New Lead — TradeLine 24/7",
-        text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}\nTS: ${new Date().toISOString()}`
-      }).catch(() => {});
-      // Optional: simple auto-reply
-      if (email) {
-        await resend.emails.send({
-          from: "TradeLine 24/7 <noreply@tradeline247ai.com>",
-          to: [email],
-          subject: "Thanks — we'll reach out shortly",
-          text: "We've received your message and will get back to you soon. — TradeLine 24/7"
-        }).catch(() => {});
-      }
-    }
-  } catch {
-    // Never throw at user
-  }
-});
-
-// 6) SPA fallback only if artifacts exist (prevents bad states)
+/* 6) SPA fallback only if artifacts exist */
 const hasArtifacts =
-  fs.existsSync(path.join(PUB, 'download', 'release.tar.gz')) &&
-  fs.existsSync(path.join(PUB, 'download', 'release.tar.gz.sha256'));
+  fs.existsSync(path.join(PUB, "download", "release.tar.gz")) &&
+  fs.existsSync(path.join(PUB, "download", "release.tar.gz.sha256"));
 
-app.get('*', (_req, res) => {
-  if (!hasArtifacts) return res.status(503).send('Artifacts missing');
-  res.sendFile(path.join(DIST, 'index.html'));
+app.get("*", (_req, res) => {
+  if (!hasArtifacts) return res.status(503).send("Artifacts missing");
+  res.sendFile(DIST_INDEX);
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => console.log(`TradeLine 24/7 server listening on ${PORT}`));
-
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log("listening on", port));
 export default app;
