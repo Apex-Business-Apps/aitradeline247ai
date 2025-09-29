@@ -1354,6 +1354,21 @@ export type Database = {
           first_name: string
         }[]
       }
+      get_appointments_summary: {
+        Args: { limit_count?: number; org_id: string }
+        Returns: {
+          created_at: string
+          end_at: string
+          has_contact_info: boolean
+          id: string
+          note: string
+          organization_id: string
+          source: string
+          start_at: string
+          status: string
+          tz: string
+        }[]
+      }
       get_customer_contact_info: {
         Args: { appointment_id: string }
         Returns: {
