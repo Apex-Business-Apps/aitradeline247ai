@@ -11,25 +11,25 @@
   "lang": "en",
   "icons": [
     {
-      "src": "/assets/app-icon.png",
+      "src": "/assets/app_icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/app-icon.png", 
+      "src": "/assets/app_icon.png", 
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/app-icon.png",
+      "src": "/assets/app_icon.png",
       "sizes": "192x192", 
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/assets/app-icon.png",
+      "src": "/assets/app_icon.png",
       "sizes": "512x512",
       "type": "image/png", 
       "purpose": "any maskable"
@@ -42,21 +42,21 @@
       "short_name": "New Lead",
       "description": "Quick access to lead capture form",
       "url": "/#lead",
-      "icons": [{ "src": "/assets/app-icon.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/assets/app_icon.png", "sizes": "96x96" }]
     },
     {
       "name": "Dashboard",
       "short_name": "Dashboard", 
       "description": "Access your AI receptionist dashboard",
       "url": "/dashboard",
-      "icons": [{ "src": "/assets/app-icon.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/assets/app_icon.png", "sizes": "96x96" }]
     },
     {
       "name": "Features",
       "short_name": "Features",
       "description": "Explore TradeLine 24/7 features", 
       "url": "/features",
-      "icons": [{ "src": "/assets/app-icon.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/assets/app_icon.png", "sizes": "96x96" }]
     }
   ]
 }
