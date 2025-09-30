@@ -906,6 +906,36 @@ export type Database = {
         }
         Relationships: []
       }
+      performance_metrics: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_unit: string | null
+          metric_value: number
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_unit?: string | null
+          metric_value: number
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_unit?: string | null
+          metric_value?: number
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -1397,6 +1427,10 @@ export type Database = {
           first_name: string
         }[]
       }
+      get_dashboard_data_optimized: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       get_latest_consent_status: {
         Args: { p_channel?: string; p_e164?: string }
         Returns: {
@@ -1431,6 +1465,17 @@ export type Database = {
           start_at: string
           status: string
           tz: string
+        }[]
+      }
+      get_performance_insights: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          avg_value: number
+          max_value: number
+          metric_name: string
+          min_value: number
+          sample_count: number
+          time_period: string
         }[]
       }
       get_profile_with_restrictions: {
@@ -1520,6 +1565,15 @@ export type Database = {
           p_record_count: number
           p_table_name: string
           p_user_id: string
+        }
+        Returns: undefined
+      }
+      log_performance_metric: {
+        Args: {
+          p_metadata?: Json
+          p_metric_name: string
+          p_metric_unit?: string
+          p_metric_value: number
         }
         Returns: undefined
       }

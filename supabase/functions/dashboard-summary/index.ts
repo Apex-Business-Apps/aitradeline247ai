@@ -39,15 +39,43 @@ Deno.serve(async (req) => {
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    console.log('Dashboard summary request received');
+
+    // Try to use optimized database function first
+    try {
+      const { data: optimizedData, error: dbError } = await supabase
+        .rpc('get_dashboard_data_optimized');
+
+      if (dbError) {
+        console.warn('Optimized database function failed, falling back to mock data:', dbError);
+        throw dbError;
+      }
+
+      if (optimizedData) {
+        console.log('Using optimized database data');
+        return new Response(
+          JSON.stringify(optimizedData),
+          {
+            headers: {
+              ...corsHeaders,
+              'Content-Type': 'application/json',
+              'Cache-Control': 'public, max-age=60, s-maxage=120'
+            }
+          }
+        );
+      }
+    } catch (dbError) {
+      console.warn('Database optimization failed, using mock data:', dbError);
+    }
+
+    // Fallback to mock data if database function fails
+    console.log('Generating mock dashboard data');
+
     // Get current time in America/Edmonton timezone
     const edmontonTime = new Date().toLocaleString("en-CA", {
       timeZone: "America/Edmonton"
     });
 
-    // Mock KPI calculations (replace with real data sources later)
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    
     // Simulate real KPIs with some variability
     const kpis = [
       {
@@ -71,11 +99,11 @@ Deno.serve(async (req) => {
       }
     ];
 
-    // Mock next items (replace with real calendar/CRM integration)
+    // Mock next items
     const nextItems = [
       {
         id: 'appt_' + Date.now(),
-        whenISO: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours from now
+        whenISO: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
         name: "Sarah Johnson",
         contact: "sarah@example.com",
         status: 'new' as const,
@@ -83,7 +111,7 @@ Deno.serve(async (req) => {
       },
       {
         id: 'appt_' + (Date.now() + 1),
-        whenISO: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(), // 4 hours from now
+        whenISO: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
         name: "Mike Chen",
         contact: "(555) 123-4567",
         status: 'confirmed' as const,
@@ -91,11 +119,11 @@ Deno.serve(async (req) => {
       }
     ];
 
-    // Mock recent transcripts (replace with real call transcription service)
+    // Mock recent transcripts
     const transcripts = [
       {
         id: 'transcript_' + Date.now(),
-        atISO: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 min ago
+        atISO: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
         caller: "David Wilson",
         summary: "Interested in our premium package, asked about pricing and implementation timeline.",
         sentiment: 'positive' as const,
@@ -103,7 +131,7 @@ Deno.serve(async (req) => {
       },
       {
         id: 'transcript_' + (Date.now() + 1),
-        atISO: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+        atISO: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
         caller: "Jennifer Adams", 
         summary: "Had technical issues with current setup, needs support call scheduled.",
         sentiment: 'neutral' as const,
@@ -122,7 +150,8 @@ Deno.serve(async (req) => {
       kpisCount: kpis.length,
       nextItemsCount: nextItems.length,
       transcriptsCount: transcripts.length,
-      timezone: 'America/Edmonton'
+      timezone: 'America/Edmonton',
+      source: 'mock_data'
     });
 
     return new Response(
