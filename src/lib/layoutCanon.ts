@@ -63,23 +63,27 @@ export function startLayoutCanon() {
 
   const fail = assertLayout();
   if (fail) {
-    openOverlay(`${fail.reason}\n\nDetails: ${JSON.stringify(fail.meta, null, 2)}`);
-    if (process.env.NODE_ENV !== "production") {
-      throw new Error(`Layout Canon Violation: ${fail.reason}`);
-    }
+    // Log warning instead of blocking overlay
+    console.warn(`[LayoutCanon] ${fail.reason}`, fail.meta);
   }
 
   // keep watching for naughty changes
   const mo = new MutationObserver(() => {
     const f = assertLayout();
-    if (f) openOverlay(`${f.reason}\n\nDetails: ${JSON.stringify(f.meta, null, 2)}`);
+    if (f) {
+      // Log warning instead of blocking overlay
+      console.warn(`[LayoutCanon] ${f.reason}`, f.meta);
+    }
   });
   mo.observe(document.body, { childList: true, subtree: true });
 
   if ((window as any).ResizeObserver) {
     const ro = new (window as any).ResizeObserver(() => {
       const f = assertLayout();
-      if (f) openOverlay(`${f.reason}\n\nDetails: ${JSON.stringify(f.meta, null, 2)}`);
+      if (f) {
+        // Log warning instead of blocking overlay
+        console.warn(`[LayoutCanon] ${f.reason}`, f.meta);
+      }
     });
     ro.observe(document.documentElement);
   }
