@@ -44,9 +44,9 @@ export default function HeroRoiDuo() {
             <img 
               src={officialLogo} 
               alt="TradeLine 24/7 Logo" 
-              className="h-[10.6875rem] md:h-[13.7375rem] w-auto opacity-80" 
+              className="h-[8.75rem] md:h-[11.25rem] w-auto opacity-80" 
               style={{ 
-                transform: 'translateY(-0.5cm) scale(1.767) scaleY(1.61085) scaleX(1.61085)',
+                transform: 'translateY(-0.5cm) scale(1.45) scaleY(1.3225) scaleX(1.3225)',
                 aspectRatio: '1',
                 filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
               }}
