@@ -103,7 +103,7 @@
   #start-trial-hero,
   #roi-calculator{
     max-width: 715px !important; /* Increased by 10% from 650px */
-    transform: translateX(0.35cm) !important; /* Adjusted from 1.35cm */
+    transform: translateX(-0.65cm) !important; /* Moved left by 1cm from 0.35cm */
     /* CLS FIX: Maintain min-height on desktop */
     min-height: 520px !important;
   }
