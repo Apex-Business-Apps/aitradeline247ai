@@ -14,6 +14,19 @@ const getOrCreateSessionId = (): string => {
   if (!sessionId) {
     sessionId = crypto.randomUUID();
     sessionStorage.setItem(sessionKey, sessionId);
+    
+    // Register session server-side for validation (async, non-blocking)
+    fetch('https://hysvqdwmhxnblxfqnszn.supabase.co/functions/v1/register-ab-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        sessionId,
+        userAgent: navigator.userAgent 
+      })
+    }).catch(() => {
+      // Fail silently - session registration is best-effort
+      console.debug('Session registration deferred');
+    });
   }
   
   return sessionId;

@@ -12,31 +12,32 @@ export const useSecureFormSubmission = (options: SecureSubmissionOptions = {}) =
   
   const { rateLimitKey, maxAttemptsPerHour = 5 } = options;
 
-  const checkRateLimit = (): boolean => {
+  const checkRateLimit = async (): Promise<boolean> => {
     if (!rateLimitKey) return true;
     
-    const storageKey = `rate_limit_${rateLimitKey}`;
-    const now = Date.now();
-    const oneHour = 60 * 60 * 1000;
-    
-    const storedData = localStorage.getItem(storageKey);
-    let rateLimitData = storedData ? JSON.parse(storedData) : { attempts: 0, resetTime: now + oneHour };
-    
-    // Reset if hour has passed
-    if (now > rateLimitData.resetTime) {
-      rateLimitData = { attempts: 0, resetTime: now + oneHour };
-    }
-    
-    if (rateLimitData.attempts >= maxAttemptsPerHour) {
+    try {
+      // Use server-side rate limiting via edge function
+      const { data, error } = await supabase.functions.invoke('secure-rate-limit', {
+        body: {
+          identifier: rateLimitKey,
+          endpoint: 'form_submission',
+          maxRequests: maxAttemptsPerHour,
+          windowMinutes: 60
+        }
+      });
+
+      if (error || !data?.allowed) {
+        console.warn('Rate limit exceeded:', error?.message || 'Too many requests');
+        return false;
+      }
+
+      setAttempts(data.requestCount || 0);
+      return true;
+    } catch (error) {
+      console.error('Rate limit check failed:', error);
+      // Fail closed - deny on error to prevent bypass
       return false;
     }
-    
-    // Increment attempts
-    rateLimitData.attempts++;
-    localStorage.setItem(storageKey, JSON.stringify(rateLimitData));
-    setAttempts(rateLimitData.attempts);
-    
-    return true;
   };
 
   const getCSRFToken = (): string => {
@@ -57,7 +58,8 @@ export const useSecureFormSubmission = (options: SecureSubmissionOptions = {}) =
       sanitizeData?: (data: any) => any;
     } = {}
   ): Promise<T> => {
-    if (!checkRateLimit()) {
+    const rateLimitPassed = await checkRateLimit();
+    if (!rateLimitPassed) {
       throw new Error('Rate limit exceeded. Please try again later.');
     }
 
