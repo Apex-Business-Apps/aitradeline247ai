@@ -59,11 +59,11 @@ export const MiniChat: React.FC = () => {
       console.log('Sending chat request with', messages.length + 1, 'messages');
       
       // Use fetch directly for streaming support
-      const response = await fetch(`https://jbcxceojrztklnvwgyrq.supabase.co/functions/v1/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpiY3hjZW9qcnp0a2xudndneXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2NTEzMTUsImV4cCI6MjA3NDIyNzMxNX0.pUD21AhIcsG0WpPSFc03e_-UB1KISa1lutDrULzFFmk`,
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
           messages: [...messages, userMessage].map(m => ({
