@@ -254,11 +254,43 @@ export function initHeroGuardian() {
     });
   }, 1000);
 
-  // Watch for dynamic changes
-  const observer = new MutationObserver(() => {
-    const validation = validateHeroStructure(route);
-    if (!validation.isValid) {
-      console.error('🚨 HERO STRUCTURE CHANGED DYNAMICALLY:', validation);
+  // Enhanced layout protection with immediate recovery
+  const observer = new MutationObserver((mutations) => {
+    let heroChanged = false;
+    
+    mutations.forEach(mutation => {
+      if (mutation.target) {
+        const target = mutation.target as Element;
+        const isHeroElement = target.matches('#start-trial-hero, #roi-calculator, .hero-roi__grid, .hero-roi__container') ||
+                             target.querySelector('#start-trial-hero, #roi-calculator, .hero-roi__grid, .hero-roi__container');
+        
+        if (isHeroElement) {
+          heroChanged = true;
+          
+          // Immediately restore if locked element was modified
+          if (target.hasAttribute('data-lovable-lock')) {
+            console.warn('🔒 Blocked modification to locked hero element:', target);
+            
+            // Restore layout if needed
+            if (typeof window !== 'undefined' && (window as any).enforceHeroRoiDuo) {
+              (window as any).enforceHeroRoiDuo();
+            }
+          }
+        }
+      }
+    });
+    
+    if (heroChanged) {
+      const validation = validateHeroStructure(route);
+      if (!validation.isValid) {
+        console.error('🚨 HERO STRUCTURE CHANGED DYNAMICALLY:', validation);
+        
+        // Attempt recovery
+        if (typeof window !== 'undefined' && (window as any).enforceHeroRoiDuo) {
+          console.log('🔧 Attempting hero layout recovery...');
+          (window as any).enforceHeroRoiDuo();
+        }
+      }
     }
   });
 
@@ -266,8 +298,17 @@ export function initHeroGuardian() {
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ['data-node', 'class', 'style'],
+    attributeFilter: ['data-node', 'class', 'style', 'data-lovable-lock'],
   });
 
-  console.log('✅ Hero Guardian initialized on route:', route);
+  // Watch for orientation changes to enforce portrait centering
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      if (typeof window !== 'undefined' && (window as any).enforceHeroRoiDuo) {
+        (window as any).enforceHeroRoiDuo();
+      }
+    }, 100);
+  });
+
+  console.log('✅ Hero Guardian initialized with enhanced protection on route:', route);
 }

@@ -75,27 +75,46 @@
   position: static !important;
   transform: none !important;
   width: 100% !important;
-  max-width: 600px !important;
+  max-width: 660px !important; /* Increased by 10% from 600px */
   margin: 0 auto !important;
   /* CLS FIX: Reserve minimum height to prevent layout shift */
   min-height: 520px !important;
   contain: layout !important;
 }
 
+/* Portrait mode: force center alignment (height > width) - LOCKED */
+@media (orientation: portrait) {
+  #start-trial-hero,
+  #roi-calculator{
+    transform: none !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+  }
+}
+
 /* Desktop: side by side WITH offset for visual balance - LOCKED */
 @media (min-width: 1024px) {
   .hero-roi__grid {
-    grid-template-columns: repeat(2, minmax(500px, 650px)) !important;
-    max-width: 1800px !important;
+    grid-template-columns: repeat(2, minmax(550px, 715px)) !important; /* Increased by 10% */
+    max-width: 1980px !important; /* Increased by 10% from 1800px */
     gap: 4rem !important;
     justify-content: center !important;
   }
   
   #start-trial-hero,
   #roi-calculator{
-    max-width: 650px !important;
+    max-width: 715px !important; /* Increased by 10% from 650px */
     transform: translateX(1.35cm) !important;
     /* CLS FIX: Maintain min-height on desktop */
     min-height: 520px !important;
+  }
+  
+  /* Desktop portrait: override offset for center alignment */
+  @media (orientation: portrait) {
+    #start-trial-hero,
+    #roi-calculator{
+      transform: none !important;
+      margin: 0 auto !important;
+    }
   }
 }
