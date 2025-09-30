@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { useABTest } from "@/hooks/useABTest";
+import { useSecureABTest } from "@/hooks/useSecureABTest";
 import { useSecureFormSubmission } from "@/hooks/useSecureFormSubmission";
 import { z } from "zod";
 // Client-side validation schema matching server-side
@@ -59,7 +59,7 @@ export const LeadCaptureForm = () => {
     trackConversion,
     trackButtonClick
   } = useAnalytics();
-  const { variant, variantData, convert } = useABTest('hero_cta_test');
+  const { variant, variantData, convert } = useSecureABTest('hero_cta_test');
   const { secureSubmit, getRemainingAttempts } = useSecureFormSubmission({
     rateLimitKey: 'lead_form_submit',
     maxAttemptsPerHour: 3

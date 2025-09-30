@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useOptimizedTransitions } from '@/hooks/useOptimizedTransitions';
 
 interface LoadingStateProps {
   isLoading: boolean;
@@ -13,7 +12,6 @@ export const OptimizedLoadingState: React.FC<LoadingStateProps> = ({
   progress 
 }) => {
   const [dots, setDots] = useState('');
-  const { smoothTransition } = useOptimizedTransitions();
 
   useEffect(() => {
     if (isLoading) {
@@ -24,16 +22,6 @@ export const OptimizedLoadingState: React.FC<LoadingStateProps> = ({
       return () => clearInterval(interval);
     }
   }, [isLoading]);
-
-  useEffect(() => {
-    if (isLoading) {
-      smoothTransition('loading-container', {
-        duration: 200,
-        transform: 'translateY(0) scale(1)',
-        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-      });
-    }
-  }, [isLoading, smoothTransition]);
 
   if (!isLoading) return null;
 

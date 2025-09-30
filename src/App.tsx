@@ -3,7 +3,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { SecurityHeaders } from "@/components/security/SecurityHeaders";
 import { EnhancedSecurityHeaders } from "@/components/security/EnhancedSecurityHeaders";
 import { useSessionSecurity } from "@/hooks/useSessionSecurity";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,7 +11,6 @@ import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
 import { WebVitalsTracker } from "@/components/monitoring/WebVitalsTracker";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HelmetProvider } from 'react-helmet-async';
-import { useErrorTracking } from "@/hooks/useErrorTracking";
 import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
 
@@ -44,15 +42,8 @@ const queryClient = new QueryClient();
 
 // App monitoring wrapper component
 const AppWithMonitoring = () => {
-  // Initialize error tracking
-  useErrorTracking();
-  
   // Initialize session security monitoring
   useSessionSecurity();
-  
-  // Initialize performance optimization
-  const { measureRenderTime } = usePerformanceOptimization();
-  
 
   return (
     <>
