@@ -38,17 +38,6 @@ export default function HeroRoiDuo() {
       <div className="container">
         {/* Hero Content */}
         <div className="text-center mb-16">
-          {/* Logo above hero text */}
-          <div className="flex justify-center items-center mb-8 mx-auto" style={{ maxWidth: '322px' }} data-lovable-lock="true">
-            <img 
-              src={officialLogo} 
-              alt="TradeLine 24/7 Logo" 
-              className="w-full h-auto opacity-80" 
-              style={{ aspectRatio: '1/1' }}
-              loading="eager"
-              data-lovable-lock="true"
-            />
-          </div>
           
           <h1 id="hero-h1" className="mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-extrabold" style={{ fontSize: 'clamp(2rem, 5vw + 1rem, 4.5rem)', lineHeight: '1.1' }} data-lovable-lock="true">
             Your 24/7 A<span className="text-primary">i</span> Receptionist
