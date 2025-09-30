@@ -45,9 +45,15 @@ export const Header: React.FC = () => {
   }, []);
   return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')}>
       <div className="container flex h-14 items-center justify-between">
-        {/* Logo with Animation */}
-        <div className="animate-fade-in">
-          
+        {/* Badge and Logo with Animation */}
+        <div className="flex items-center gap-4 animate-fade-in">
+          <img 
+            src="/assets/brand/badges/built-in-canada-badge.png" 
+            alt="Built in Canada" 
+            className="h-10 w-auto"
+            loading="eager"
+          />
+          <Logo />
         </div>
 
         {/* Desktop Navigation */}
