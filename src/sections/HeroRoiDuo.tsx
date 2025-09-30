@@ -39,24 +39,25 @@ export default function HeroRoiDuo() {
         {/* Hero Content */}
         <div className="text-center mb-16">
           {/* Logo above hero text */}
-          <div className="flex justify-center items-center mb-8 mx-auto" style={{ maxWidth: '280px' }}>
+          <div className="flex justify-center items-center mb-8 mx-auto" style={{ maxWidth: '322px' }} data-lovable-lock="true">
             <img 
               src={officialLogo} 
               alt="TradeLine 24/7 Logo" 
               className="w-full h-auto opacity-80" 
               style={{ aspectRatio: '1/1' }}
               loading="eager"
+              data-lovable-lock="true"
             />
           </div>
           
-          <h1 id="hero-h1" className="mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-extrabold" style={{ fontSize: 'clamp(2rem, 5vw + 1rem, 4.5rem)', lineHeight: '1.1' }}>
+          <h1 id="hero-h1" className="mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-extrabold" style={{ fontSize: 'clamp(2rem, 5vw + 1rem, 4.5rem)', lineHeight: '1.1' }} data-lovable-lock="true">
             Your 24/7 A<span className="text-primary">i</span> Receptionist
           </h1>
-          <p className="mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b]" style={{ fontSize: 'clamp(1rem, 2vw + 0.5rem, 2.5rem)', lineHeight: '1.5' }}>
+          <p className="mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b]" style={{ fontSize: 'clamp(1rem, 2vw + 0.5rem, 2.5rem)', lineHeight: '1.5' }} data-lovable-lock="true">
             Never miss a call. Work while you sleep.
           </p>
           
-          <h2 className="text-[#1e556b] mb-12 mt-16 text-center py-0 font-semibold mx-auto" style={{ fontSize: 'clamp(1.5rem, 3vw + 0.5rem, 2.5rem)' }}>Help us help you.</h2>
+          <h2 className="text-[#1e556b] mb-12 mt-16 text-center py-0 font-semibold mx-auto" style={{ fontSize: 'clamp(1.5rem, 3vw + 0.5rem, 2.5rem)' }} data-lovable-lock="true">Help us help you.</h2>
           
           {/* Custom grid layout for side-by-side components */}
           <div className="hero-roi__container mx-auto" data-lovable-lock="true" aria-label="Start Trial and ROI">
