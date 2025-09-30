@@ -55,3 +55,6 @@ verify_jwt = false
 
 [functions.secure-rate-limit]
 verify_jwt = false
+
+[functions.dashboard-summary]
+verify_jwt = false
