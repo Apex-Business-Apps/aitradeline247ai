@@ -10,6 +10,17 @@ import { Mail, Phone, MapPin, Clock, MessageCircle, Loader2 } from "lucide-react
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const contactFormSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50),
+  lastName: z.string().trim().min(1, "Last name is required").max(50),
+  email: z.string().trim().email("Invalid email address").max(255),
+  company: z.string().trim().max(100).optional(),
+  phone: z.string().trim().max(20).optional(),
+  subject: z.string().trim().min(1, "Subject is required").max(200),
+  message: z.string().trim().min(10, "Message must be at least 10 characters").max(2000)
+});
 
 const contactMethods = [
   {
@@ -51,6 +62,19 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate with Zod
+    const validationResult = contactFormSchema.safeParse(contactFormData);
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Please check your input";
+      toast({
+        title: "Invalid Information",
+        description: errorMessage,
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
