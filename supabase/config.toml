@@ -49,3 +49,6 @@ verify_jwt = false
 
 [functions.track-session-activity]
 verify_jwt = false
+
+[functions.chat]
+verify_jwt = false
