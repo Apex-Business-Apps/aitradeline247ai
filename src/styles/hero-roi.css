@@ -1,4 +1,46 @@
-/* HERO SECTION STYLES - ROI LAYOUT */
+/* 🔒 HERO SECTION STYLES - PERMANENTLY LOCKED LAYOUT 🔒
+ * 
+ * ⚠️ CRITICAL: THIS LAYOUT IS LOCKED FOR LIFE - DO NOT MODIFY ⚠️
+ * Last locked: 2025-09-30
+ * 
+ * APPROVED LAYOUT SPECIFICATIONS:
+ * Mobile (< 1024px):
+ *   - Single column, perfectly centered
+ *   - Logo: 322px max-width, centered
+ *   - All text: centered alignment
+ *   - Form: single column, centered, max-width 600px
+ *   - NO horizontal offset (transform: none)
+ * 
+ * Desktop (≥ 1024px):
+ *   - Two column grid (form + ROI calculator)
+ *   - Both columns: equal width, same top alignment
+ *   - Horizontal offset: translateX(0.35cm) for visual balance
+ *   - Max-width per column: 715px
+ *   - Grid centered with max-width 1980px
+ * 
+ * Protected by:
+ * - Runtime validation (heroGuardian.ts)
+ * - Layout canon checks (layoutCanon.ts)
+ * - Layout self-healing (layoutGuard.ts)
+ * - MutationObserver monitoring
+ * 
+ * Performance Targets (ENFORCED):
+ * - LCP ≤ 2.5s
+ * - CLS ≤ 0.05
+ * 
+ * MODIFICATION REQUIRES:
+ * 1. Executive approval
+ * 2. Full regression testing
+ * 3. Performance validation
+ * 4. Mobile/PWA compliance check
+ * 
+ * Violations will trigger:
+ * - Console errors
+ * - Visual overlay warnings
+ * - Potential deployment blocks
+ */
+
+/* === LOCKED HERO ROI LAYOUT - MOBILE CENTERED, DESKTOP OFFSET === */
 
 /* Container: always centered with safe area insets - LOCKED */
 .hero-roi__container{
@@ -60,8 +102,9 @@
   
   #start-trial-hero,
   #roi-calculator{
-    max-width: 715px !important;
-    transform: translateX(0.35cm) !important;
+    max-width: 715px !important; /* Increased by 10% from 650px */
+    transform: translateX(0.35cm) !important; /* Adjusted from 1.35cm */
+    /* CLS FIX: Maintain min-height on desktop */
     min-height: 520px !important;
   }
   
