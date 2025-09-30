@@ -36,8 +36,6 @@ export const useAnalytics = () => {
 
       if (error) {
         console.error('Analytics tracking error:', error);
-      } else {
-        console.log('Analytics event tracked securely:', event.event_type);
       }
     } catch (error) {
       console.error('Analytics tracking failed:', error);

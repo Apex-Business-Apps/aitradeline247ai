@@ -22,10 +22,13 @@ export const HeroSection = () => {
         <div className="mt-6 mb-6 animate-fade-in min-h-[13.75rem] md:min-h-[20.625rem] lg:min-h-[24.75rem] flex items-center justify-center">
           <img 
             src={officialLogo} 
-            alt="TradeLine AI - 24/7 AI Receptionist" 
+            alt="TradeLine AI - 24/7 AI Receptionist"
+            width="396"
+            height="396"
             className="h-55 md:h-[20.625rem] lg:h-[24.75rem] w-auto mx-auto drop-shadow-2xl hover-scale transition-all duration-500"
             decoding="async"
             loading="eager"
+            fetchPriority="high"
             style={{filter: 'var(--premium-glow)'}}
           />
         </div>

@@ -29,8 +29,6 @@ export const useSecureABTest = (testName: string) => {
   const getSecureVariant = useCallback(async () => {
     try {
       const sessionId = getOrCreateSessionId();
-      
-      console.log(`Getting secure A/B test assignment for: ${testName}`);
 
       // Call secure assignment endpoint
       const { data, error } = await supabase.functions.invoke('secure-ab-assign', {
@@ -45,7 +43,6 @@ export const useSecureABTest = (testName: string) => {
         return { variant: 'A', variantData: { text: 'Grow Now', color: 'primary' } };
       }
 
-      console.log(`Secure assignment result:`, data);
       return data || { variant: 'A', variantData: { text: 'Grow Now', color: 'primary' } };
 
     } catch (error) {
@@ -87,8 +84,6 @@ export const useSecureABTest = (testName: string) => {
   // Mark conversion through secure endpoint with signed cookies
   const convert = useCallback(async (conversionValue?: number) => {
     try {
-      console.log(`Attempting secure conversion for ${testName}, variant ${variant}`);
-
       const { error } = await supabase.functions.invoke('ab-convert', {
         body: {
           testName,
@@ -99,8 +94,6 @@ export const useSecureABTest = (testName: string) => {
       if (error) {
         console.error('Secure conversion error:', error);
       } else {
-        console.log(`Secure A/B test conversion tracked for ${testName}, variant ${variant}`);
-        
         // Track conversion via privacy-first analytics
         analytics.trackConversion('ab_test_conversion', conversionValue, {
           test_name: testName,

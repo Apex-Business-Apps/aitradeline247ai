@@ -96,7 +96,6 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
     trackButtonClick('lead_form_submit', 'lead_capture_form');
 
     try {
-      console.log("Submitting lead:", formData);
 
       // Submit using secure submission hook
       const response = await secureSubmit<{success: boolean; leadId: string; leadScore: number; remainingAttempts: number}>('secure-lead-submission', {
@@ -106,8 +105,6 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         notes: formData.notes,
         source: 'website_lead_form'
       });
-
-      console.log("Lead submission successful:", response);
 
       // Track successful form submission
       trackFormSubmission('lead_capture', true, {

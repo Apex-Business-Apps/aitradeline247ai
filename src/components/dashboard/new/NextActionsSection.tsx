@@ -16,7 +16,6 @@ export const NextActionsSection: React.FC<NextActionsSectionProps> = ({
   
   const handleAction = (itemId: string, action: string) => {
     console.log('Action triggered:', { itemId, action });
-    // TODO: Implement real action handling
   };
   
   return (

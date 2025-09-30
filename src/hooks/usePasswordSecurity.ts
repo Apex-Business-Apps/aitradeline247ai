@@ -18,8 +18,6 @@ export const usePasswordSecurity = () => {
         };
       }
 
-      console.log('Checking password breach status...');
-
       // Call secure password check endpoint
       const { data, error } = await supabase.functions.invoke('check-password-breach', {
         body: { password }
