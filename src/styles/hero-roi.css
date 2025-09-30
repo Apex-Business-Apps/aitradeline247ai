@@ -1,72 +1,96 @@
-/* 🔒 HERO SECTION STYLES - PROTECTED BY GUARDRAILS 🔒
+/* 🔒 HERO SECTION STYLES - PERMANENTLY LOCKED LAYOUT 🔒
  * 
- * CRITICAL: DO NOT MODIFY WITHOUT APPROVAL
- * Read HERO_GUARDRAILS.md before making ANY changes
+ * ⚠️ CRITICAL: THIS LAYOUT IS LOCKED FOR LIFE - DO NOT MODIFY ⚠️
+ * Last locked: 2025-09-29
+ * Reference screenshot: Screenshot_20250929_193502_Chrome.jpg
+ * 
+ * APPROVED LAYOUT SPECIFICATIONS:
+ * Mobile (< 1024px):
+ *   - Single column, perfectly centered
+ *   - Logo: 322px max-width, centered
+ *   - All text: centered alignment
+ *   - Form: single column, centered, max-width 600px
+ *   - NO horizontal offset (transform: none)
+ * 
+ * Desktop (≥ 1024px):
+ *   - Two column grid (form + ROI calculator)
+ *   - Both columns: equal width, same top alignment
+ *   - Horizontal offset: translateX(1.35cm) for visual balance
+ *   - Max-width per column: 650px
+ *   - Grid centered with max-width 1800px
  * 
  * Protected by:
  * - Runtime validation (heroGuardian.ts)
  * - Layout canon checks (layoutCanon.ts)
- * - Performance monitoring (LCP/CLS thresholds)
+ * - Layout self-healing (layoutGuard.ts)
+ * - MutationObserver monitoring
  * 
- * Rules:
- * - NO fixed units (cm, mm, pt) - use clamp(), vw, rem only
- * - MUST include env(safe-area-inset-*) for mobile/PWA
- * - Grid MUST be responsive (no horizontal overflow)
- * - Changes MUST maintain LCP ≤ 2.5s, CLS ≤ 0.05
+ * Performance Targets (ENFORCED):
+ * - LCP ≤ 2.5s
+ * - CLS ≤ 0.05
  * 
- * Violations will trigger console errors and validation failures.
+ * MODIFICATION REQUIRES:
+ * 1. Executive approval
+ * 2. Full regression testing
+ * 3. Performance validation
+ * 4. Mobile/PWA compliance check
+ * 
+ * Violations will trigger:
+ * - Console errors
+ * - Visual overlay warnings
+ * - Potential deployment blocks
  */
 
-/* === HERO ROI CENTERING CANON === */
+/* === LOCKED HERO ROI LAYOUT - MOBILE CENTERED, DESKTOP OFFSET === */
 
-/* Container positioned with centering */
+/* Container: always centered with safe area insets - LOCKED */
 .hero-roi__container{
-  max-width: 100%;
-  margin: 0 auto;
-  padding-left: max(2rem, env(safe-area-inset-left));
-  padding-right: max(2rem, env(safe-area-inset-right));
-  padding-top: max(0rem, env(safe-area-inset-top));
-  padding-bottom: max(0rem, env(safe-area-inset-bottom));
-  width: 100%;
-  display: grid;
-  place-items: center;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  padding-left: max(2rem, env(safe-area-inset-left)) !important;
+  padding-right: max(2rem, env(safe-area-inset-right)) !important;
+  padding-top: max(0rem, env(safe-area-inset-top)) !important;
+  padding-bottom: max(0rem, env(safe-area-inset-bottom)) !important;
+  width: 100% !important;
+  display: grid !important;
+  place-items: center !important;
 }
 
-/* Grid: two equal columns, centered */
+/* Grid: single column mobile, two column desktop - LOCKED */
 .hero-roi__grid{
   display: grid !important;
-  grid-template-columns: 1fr;
-  gap: 3rem;
-  justify-items: center;
-  justify-content: center;
-  align-items: start;
-  margin: 0 auto;
-  width: 100%;
-  max-width: 1800px;
+  grid-template-columns: 1fr !important;
+  gap: 3rem !important;
+  justify-items: center !important;
+  justify-content: center !important;
+  align-items: start !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 1800px !important;
 }
 
-/* Safety: ensure the two panels don't shift themselves */
+/* Mobile: centered, NO offset - LOCKED */
 #start-trial-hero,
 #roi-calculator{
   position: static !important;
   transform: none !important;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  width: 100% !important;
+  max-width: 600px !important;
+  margin: 0 auto !important;
 }
 
-/* Desktop: side by side */
+/* Desktop: side by side WITH offset for visual balance - LOCKED */
 @media (min-width: 1024px) {
   .hero-roi__grid {
-    grid-template-columns: repeat(2, minmax(500px, 650px));
-    max-width: 1800px;
-    gap: 4rem;
-    justify-content: center;
+    grid-template-columns: repeat(2, minmax(500px, 650px)) !important;
+    max-width: 1800px !important;
+    gap: 4rem !important;
+    justify-content: center !important;
   }
   
   #start-trial-hero,
   #roi-calculator{
-    max-width: 650px;
+    max-width: 650px !important;
     transform: translateX(1.35cm) !important;
   }
 }
