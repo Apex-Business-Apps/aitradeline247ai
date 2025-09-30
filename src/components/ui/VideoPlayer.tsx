@@ -71,6 +71,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         muted={muted}
         loop
         playsInline
+        preload="metadata"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       />
