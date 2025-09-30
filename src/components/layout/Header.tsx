@@ -88,26 +88,6 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-2 animate-fade-in" style={{
         animationDelay: '400ms'
       }}>
-          {/* Primary CTA Button - Always visible */}
-          <Button 
-            variant="default" 
-            size={isScrolled ? 'sm' : 'default'} 
-            onClick={() => {
-              const heroSection = document.getElementById('start-trial-hero');
-              if (heroSection) {
-                heroSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // Focus on first input after scroll
-                setTimeout(() => {
-                  const firstInput = heroSection.querySelector('input');
-                  firstInput?.focus();
-                }, 500);
-              }
-            }}
-            className="hover-scale transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-r from-primary to-primary/90"
-          >
-            Grow Now
-          </Button>
-
           {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
                 <span className="text-sm text-muted-foreground hidden sm:block">
