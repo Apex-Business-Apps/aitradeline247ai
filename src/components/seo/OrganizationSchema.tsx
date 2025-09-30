@@ -18,6 +18,7 @@ export const OrganizationSchema: React.FC = () => {
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
+      "telephone": "+1-587-742-8885",
       "availableLanguage": ["English"],
       "hoursAvailable": {
         "@type": "OpeningHoursSpecification",
