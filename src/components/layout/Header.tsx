@@ -6,6 +6,7 @@ import { Menu, X, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 const navigationItems = [{
   name: 'Features',
   href: '/features'
@@ -88,6 +89,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-2 animate-fade-in" style={{
         animationDelay: '400ms'
       }}>
+          <LanguageSwitcher />
           {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
                 <span className="text-sm text-muted-foreground hidden sm:block">
