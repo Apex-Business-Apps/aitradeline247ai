@@ -741,35 +741,6 @@ export type Database = {
           },
         ]
       }
-      org_users: {
-        Row: {
-          created_at: string | null
-          org_id: string
-          role: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          org_id: string
-          role?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          org_id?: string
-          role?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "org_users_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "orgs"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       organization_members: {
         Row: {
           created_at: string
@@ -823,30 +794,6 @@ export type Database = {
           settings?: Json
           slug?: string | null
           updated_at?: string
-        }
-        Relationships: []
-      }
-      orgs: {
-        Row: {
-          created_at: string
-          email_to: string
-          id: string
-          name: string
-          target_e164: string
-        }
-        Insert: {
-          created_at?: string
-          email_to: string
-          id?: string
-          name: string
-          target_e164: string
-        }
-        Update: {
-          created_at?: string
-          email_to?: string
-          id?: string
-          name?: string
-          target_e164?: string
         }
         Relationships: []
       }
@@ -1034,15 +981,7 @@ export type Database = {
           transcripts_days?: number
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "retention_policies_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: true
-            referencedRelation: "orgs"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       security_alerts: {
         Row: {
@@ -1141,15 +1080,7 @@ export type Database = {
           stripe_customer_id?: string
           stripe_subscription_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "subscriptions_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "orgs"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       support_ticket_rate_limits: {
         Row: {
