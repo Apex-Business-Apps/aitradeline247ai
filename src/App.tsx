@@ -1,7 +1,5 @@
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
-import { SecurityHeaders } from "@/components/security/SecurityHeaders";
-import { EnhancedSecurityHeaders } from "@/components/security/EnhancedSecurityHeaders";
 import { useSessionSecurity } from "@/hooks/useSessionSecurity";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -47,8 +45,6 @@ const AppWithMonitoring = () => {
 
   return (
     <>
-      <SecurityHeaders />
-      <EnhancedSecurityHeaders />
       <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />

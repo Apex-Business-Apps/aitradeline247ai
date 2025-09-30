@@ -24,7 +24,7 @@ serve(async (req) => {
     // Validate Twilio signature for security
     const twilioSignature = req.headers.get('x-twilio-signature');
     if (!twilioSignature) {
-      console.warn('Missing Twilio signature');
+      console.warn('Missing Twilio signature - rejecting request');
       return new Response('Forbidden', { status: 403 });
     }
 
@@ -32,6 +32,19 @@ serve(async (req) => {
     const CallSid = formData.get('CallSid') as string;
     const From = formData.get('From') as string;
     const To = formData.get('To') as string;
+
+    // Input validation
+    if (!CallSid || !From || !To) {
+      console.error('Missing required Twilio parameters');
+      return new Response('Bad Request', { status: 400 });
+    }
+
+    // Sanitize phone numbers (basic E.164 format check)
+    const e164Regex = /^\+[1-9]\d{1,14}$/;
+    if (!e164Regex.test(From) || !e164Regex.test(To)) {
+      console.error('Invalid phone number format');
+      return new Response('Bad Request', { status: 400 });
+    }
 
     console.log('Incoming call:', { CallSid, From, To });
 

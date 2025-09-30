@@ -99,40 +99,11 @@ export const SecurityMonitor = () => {
       });
     };
 
-    // Device and browser security monitoring
+    // Minimal security monitoring - removed aggressive detection
     const monitorDeviceSecurity = () => {
-      // Check for developer tools (basic detection)
-      let devToolsOpen = false;
-      const threshold = 160;
-      
-      const checkDevTools = () => {
-        if (window.outerHeight - window.innerHeight > threshold ||
-            window.outerWidth - window.innerWidth > threshold) {
-          if (!devToolsOpen) {
-            devToolsOpen = true;
-            trackPrivacyError('security_alert', 'Developer tools potentially opened');
-          }
-        } else {
-          devToolsOpen = false;
-        }
-      };
-
-      const devToolsInterval = setInterval(checkDevTools, 5000);
-
-      // Monitor for suspicious browser extensions
-      const checkExtensions = () => {
-        // Check for common extension modification patterns
-        const suspiciousElements = document.querySelectorAll('[class*="extension"], [id*="extension"]');
-        if (suspiciousElements.length > 0) {
-          trackPrivacyError('security_alert', `Potential browser extensions detected: ${suspiciousElements.length}`);
-        }
-      };
-
-      setTimeout(checkExtensions, 3000); // Check after page load
-
-      return () => {
-        clearInterval(devToolsInterval);
-      };
+      // Removed dev tools detection to prevent false positives
+      // Keep only critical security monitoring
+      return () => {}; // No cleanup needed
     };
 
     // Initialize security measures

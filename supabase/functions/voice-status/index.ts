@@ -23,6 +23,35 @@ serve(async (req) => {
     const To = formData.get('To') as string;
     const RecordingUrl = formData.get('RecordingUrl') as string;
 
+    // Input validation
+    if (!CallSid || !CallStatus) {
+      console.error('Missing required Twilio parameters');
+      return new Response(JSON.stringify({ error: 'Bad Request' }), { 
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validate call status is a known value
+    const validStatuses = ['queued', 'ringing', 'in-progress', 'completed', 'busy', 'no-answer', 'canceled', 'failed'];
+    if (!validStatuses.includes(CallStatus)) {
+      console.error('Invalid call status:', CallStatus);
+      return new Response(JSON.stringify({ error: 'Invalid status' }), { 
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Sanitize duration (must be a valid number)
+    const duration = parseInt(CallDuration || '0');
+    if (isNaN(duration) || duration < 0) {
+      console.error('Invalid call duration');
+      return new Response(JSON.stringify({ error: 'Invalid duration' }), { 
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     console.log('Call status update:', { CallSid, CallStatus, CallDuration });
 
     // Store in call_lifecycle table for tracking
@@ -36,7 +65,7 @@ serve(async (req) => {
         to_number: To,
         status: CallStatus,
         direction: 'inbound',
-        talk_seconds: parseInt(CallDuration || '0'),
+        talk_seconds: duration,
         meta: {
           recording_url: RecordingUrl,
           updated_at: new Date().toISOString()

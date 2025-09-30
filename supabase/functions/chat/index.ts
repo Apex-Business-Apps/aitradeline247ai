@@ -18,6 +18,37 @@ serve(async (req) => {
       throw new Error('Messages array is required');
     }
 
+    // Rate limiting: max 100 messages per request
+    if (messages.length > 100) {
+      return new Response(JSON.stringify({ 
+        error: "Too many messages in request. Maximum 100 allowed." 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Validate message structure
+    for (const msg of messages) {
+      if (!msg.role || !msg.content) {
+        return new Response(JSON.stringify({ 
+          error: "Invalid message format. Each message must have 'role' and 'content'." 
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      // Limit message content length
+      if (msg.content.length > 10000) {
+        return new Response(JSON.stringify({ 
+          error: "Message content too long. Maximum 10,000 characters per message." 
+        }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
