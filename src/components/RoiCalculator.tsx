@@ -157,22 +157,22 @@ const RoiCalculator = () => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-sm text-muted-foreground">Cost — Commission</span>
+                  <span className="text-sm text-muted-foreground">Cost (Commission)</span>
                   <span className="font-medium text-foreground">{cad.format(results.commissionCost)}</span>
                 </div>
 
                 <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-sm text-muted-foreground">Cost — Predictable</span>
+                  <span className="text-sm text-muted-foreground">Cost (Predictable)</span>
                   <span className="font-medium text-foreground">{cad.format(249)}</span>
                 </div>
 
                 <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-sm text-muted-foreground">ROI — Commission</span>
+                  <span className="text-sm text-muted-foreground">ROI (Commission)</span>
                   <span className="font-medium text-primary">{Math.round(results.roiCommission * 100)}%</span>
                 </div>
 
                 <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-sm text-muted-foreground">ROI — Predictable</span>
+                  <span className="text-sm text-muted-foreground">ROI (Predictable)</span>
                   <span className="font-medium text-primary">{Math.round(results.roiPredictable * 100)}%</span>
                 </div>
               </div>

@@ -88,7 +88,7 @@ export const NewDashboard = () => {
           // Empty state fallback
           Array.from({ length: 4 }).map((_, i) => {
             const configs = [
-              { title: 'Bookings this week', subtitle: 'Quiet right now — your next one will show up here.' },
+              { title: 'Bookings this week', subtitle: 'Quiet right now. Your next one will show up here.' },
               { title: 'Expected payout', subtitle: 'Revenue tracking will appear here soon.' },
               { title: 'Calls we caught', subtitle: 'Call metrics loading...' },
               { title: 'Missed but saved', subtitle: 'Rescue stats coming up.' }

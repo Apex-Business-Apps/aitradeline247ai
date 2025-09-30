@@ -107,7 +107,7 @@ export const IntegrationsGrid: React.FC = () => {
           <span>One-Click Integrations</span>
         </CardTitle>
         <p className="text-muted-foreground/80">
-          Connect seamlessly to your favorite apps and services
+          Connect to your favorite apps and services
         </p>
       </CardHeader>
 

@@ -47,7 +47,7 @@ const NotFound = () => {
                   The page you're looking for doesn't exist or has been moved. 
                 </p>
                 <p className="text-sm text-muted-foreground/80">
-                  Don't worry — our AI receptionist is still here 24/7 to help your business grow!
+                  Don't worry! Our AI receptionist is still here 24/7 to help your business grow.
                 </p>
               </div>
               

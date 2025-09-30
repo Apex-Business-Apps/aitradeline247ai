@@ -79,14 +79,14 @@ export const useDashboardData = () => {
     if (!error) return '';
     
     if (error.message.includes('Failed to fetch') || error.message.includes('network')) {
-      return "Couldn't refresh right now — check your connection";
+      return "Couldn't refresh right now. Check your connection";
     }
     
     if (error.message.includes('timeout')) {
-      return "Taking longer than usual — we'll keep trying";
+      return "Taking longer than usual. We'll keep trying";
     }
     
-    return "Something's not quite right — we're looking into it";
+    return "Something's not quite right. We're looking into it";
   };
 
   const lastUpdatedFormatted = data?.lastUpdated 

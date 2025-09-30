@@ -10,7 +10,7 @@ const plans = [
   {
     name: "No Monthly. Pay per appointment.",
     price: "$149 / Qualified Appointment",
-    description: "Pay only for results — no monthly fees",
+    description: "Pay only for results - no monthly fees",
     features: [
       "Prepaid wallet: $200 minimum (auto-recharge)",
       "Qualified = unique caller • >60s talk time • in service area • not duplicate (30d) • real intent",
@@ -22,7 +22,7 @@ const plans = [
     link: "/signup?plan=commission"
   },
   {
-    name: "Predictable Plan — Core",
+    name: "Predictable Plan (Core)",
     price: "$249 / month", 
     description: "Fixed monthly pricing with transparent overages",
     features: [
@@ -66,12 +66,12 @@ const Pricing = () => {
                 "priceCurrency": "CAD",
                 "unitText": "per qualified appointment"
               },
-              "description": "Pay only for results — no monthly fees",
+              "description": "Pay only for results - no monthly fees",
               "url": "https://www.tradeline247ai.com/signup?plan=commission"
             },
             {
               "@type": "Offer", 
-              "name": "Predictable Plan — Core",
+              "name": "Predictable Plan (Core)",
               "price": "249",
               "priceCurrency": "CAD",
               "priceSpecification": {

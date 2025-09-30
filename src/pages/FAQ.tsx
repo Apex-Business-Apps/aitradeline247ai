@@ -8,7 +8,7 @@ import { SEOHead } from "@/components/seo/SEOHead";
 const faqs = [
   {
     question: "Do you record calls?",
-    answer: "Yes—only with notice and consent. You can opt out anytime."
+    answer: "Yes. Only with notice and consent. You can opt out anytime."
   },
   {
     question: "How do transcripts work?",

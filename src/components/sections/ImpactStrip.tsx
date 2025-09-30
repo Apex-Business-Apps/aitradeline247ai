@@ -5,7 +5,7 @@ export const ImpactStrip = () => {
   const impacts = [{
     icon: TrendingUp,
     title: "More booked work",
-    description: "Fewer voicemails means more conversations—and more wins.",
+    description: "Fewer voicemails means more conversations and more wins.",
     color: "text-green-600"
   }, {
     icon: Clock,

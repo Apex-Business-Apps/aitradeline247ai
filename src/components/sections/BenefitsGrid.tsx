@@ -5,7 +5,7 @@ export const BenefitsGrid = () => {
   const benefits = [{
     icon: Zap,
     title: "Lightning Speed",
-    description: "Answer in 2–3 rings so people stay.",
+    description: "Answer in 2-3 rings so people stay.",
     color: "text-brand-orange",
     gradient: "from-orange-500/20 to-orange-600/10"
   }, {
@@ -17,7 +17,7 @@ export const BenefitsGrid = () => {
   }, {
     icon: Target,
     title: "Cleaner Follow-through",
-    description: "A short summary lands in your inbox—next steps included.",
+    description: "A short summary lands in your inbox with next steps included.",
     color: "text-accent-foreground", 
     gradient: "from-green-500/20 to-green-600/10"
   }];

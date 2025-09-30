@@ -29,7 +29,7 @@ const features = [
   {
     icon: Zap,
     title: "Workflow Automation",
-    description: "Seamless integration with CRMs, calendars, and business tools",
+    description: "Easy integration with CRMs, calendars, and business tools",
     benefits: ["CRM integration", "Calendar sync", "Task automation", "Custom workflows"]
   },
   {
@@ -59,8 +59,8 @@ const Features = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead 
-        title="Features — TradeLine 24/7 AI Receptionist"
-        description="Discover powerful AI features: 24/7 call handling, smart routing, omnichannel messaging, CRM integration, and enterprise security. Transform your customer service today."
+        title="Features - TradeLine 24/7 AI Receptionist"
+        description="Discover powerful AI features: 24/7 call handling, smart routing, omnichannel messaging, CRM integration, and enterprise security. Upgrade your customer service today."
         keywords="AI receptionist features, call management, omnichannel messaging, CRM integration, business automation, 24/7 customer service"
         canonical="https://www.tradeline247ai.com/features"
       />
@@ -81,7 +81,7 @@ const Features = () => {
                 Powerful Features
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8">
-                Everything you need to transform customer interactions with fast and reliable automation
+                Everything you need for fast and reliable customer interaction automation
               </p>
               <Button size="lg" className="shadow-lg" onClick={() => {
                 handleCTAClick();
@@ -129,7 +129,7 @@ const Features = () => {
         <section className="py-20 bg-gradient-to-br from-primary/10 to-accent/10">
           <div className="container text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to Transform Your Business?
+              Ready to Grow Your Business?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of businesses already using TradeLine 24/7 to grow their customer relationships

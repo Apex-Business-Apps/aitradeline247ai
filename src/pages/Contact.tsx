@@ -141,7 +141,7 @@ const Contact = () => {
               Get in Touch
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Ready to transform your business with AI? Let's talk about how TradeLine 24/7 can help you grow.
+              Ready to grow your business with AI? Let's talk about how TradeLine 24/7 can help you.
             </p>
           </div>
         </section>

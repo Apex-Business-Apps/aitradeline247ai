@@ -54,7 +54,7 @@ export const WinsSection: React.FC = () => {
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {kpiData.length === 0 ? (
           <div className="col-span-full text-center py-8">
-            <p className="text-muted-foreground">Quiet right now — your next one will show up here.</p>
+            <p className="text-muted-foreground">Quiet right now. Your next one will show up here.</p>
           </div>
         ) : (
           kpiData.map((kpi) => (

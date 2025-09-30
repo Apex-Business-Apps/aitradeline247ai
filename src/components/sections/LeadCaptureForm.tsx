@@ -123,7 +123,7 @@ export const LeadCaptureForm = () => {
       setIsSuccess(true);
       toast({
         title: "🚀 Welcome to TradeLine 24/7!",
-        description: "Thanks—check your email. We'll follow up within 2 hours."
+        description: "Thanks! Check your email. We'll follow up within 2 hours."
       });
 
       // Reset form after success
@@ -172,7 +172,7 @@ export const LeadCaptureForm = () => {
               </div>
               <CardTitle className="text-2xl animate-fade-in">🎉 Welcome Aboard!</CardTitle>
               <CardDescription className="animate-fade-in" style={{ animationDelay: '200ms' }}>
-                Thanks—check your email. We'll follow up within 2 hours.
+                Thanks! Check your email. We'll follow up within 2 hours.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

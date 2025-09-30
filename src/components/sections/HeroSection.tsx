@@ -40,7 +40,7 @@ export const HeroSection = () => {
         
         {/* Value Proposition with Delayed Animation */}
         <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in [animation-delay:400ms]">
-          We pick up when you can't—so customers aren't kept waiting.
+          We pick up when you can't, so customers aren't kept waiting.
         </p>
         
         {/* Enhanced CTA Section */}
