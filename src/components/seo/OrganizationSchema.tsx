@@ -11,7 +11,7 @@ export const OrganizationSchema: React.FC = () => {
     "url": "https://www.tradeline247ai.com",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://www.tradeline247ai.com/pwa-512x512.png",
+      "url": "https://www.tradeline247ai.com/assets/app-icon.png",
       "width": 512,
       "height": 512
     },
