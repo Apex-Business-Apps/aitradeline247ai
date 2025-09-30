@@ -56,30 +56,50 @@ export const MiniChat: React.FC = () => {
     };
 
     try {
-      const { data, error } = await supabase.functions.invoke('chat', {
-        body: {
+      console.log('Sending chat request with', messages.length + 1, 'messages');
+      
+      // Use fetch directly for streaming support
+      const response = await fetch(`https://jbcxceojrztklnvwgyrq.supabase.co/functions/v1/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpiY3hjZW9qcnp0a2xudndneXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2NTEzMTUsImV4cCI6MjA3NDIyNzMxNX0.pUD21AhIcsG0WpPSFc03e_-UB1KISa1lutDrULzFFmk`,
+        },
+        body: JSON.stringify({
           messages: [...messages, userMessage].map(m => ({
             role: m.role,
             content: m.content
           }))
-        }
+        })
       });
 
-      if (error) {
-        throw error;
-      }
+      console.log('Response status:', response.status);
 
-      // Handle streaming response
-      const reader = data.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Chat API error:', errorData);
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
 
       // Add assistant message to UI immediately
       setMessages(prev => [...prev, assistantMessage]);
 
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Streaming not supported');
+      }
+
+      console.log('Starting stream processing...');
+      const decoder = new TextDecoder();
+      let buffer = '';
+
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          console.log('Stream completed');
+          break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
         
@@ -93,7 +113,10 @@ export const MiniChat: React.FC = () => {
           if (!line.startsWith('data: ')) continue;
 
           const jsonStr = line.slice(6).trim();
-          if (jsonStr === '[DONE]') break;
+          if (jsonStr === '[DONE]') {
+            console.log('Received stream end marker');
+            break;
+          }
 
           try {
             const parsed = JSON.parse(jsonStr);
@@ -110,10 +133,23 @@ export const MiniChat: React.FC = () => {
               );
             }
           } catch (parseError) {
-            console.warn('Failed to parse SSE data:', parseError);
+            console.warn('Failed to parse SSE data:', parseError, 'Line:', jsonStr);
           }
         }
       }
+
+      // Ensure message has content
+      if (!assistantContent.trim()) {
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === assistantMessage.id 
+              ? { ...msg, content: 'I apologize, but I didn\'t receive a complete response. Please try asking again.' }
+              : msg
+          )
+        );
+      }
+
+      console.log('Chat request completed successfully');
 
     } catch (error: any) {
       console.error('Chat error:', error);
