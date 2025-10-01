@@ -47,11 +47,11 @@ export const Header: React.FC = () => {
   return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
       <div className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
         {/* Badge with Animation */}
-        <div className="animate-fade-in hidden sm:block" data-lovable-lock="permanent">
+        <div className="animate-fade-in" data-lovable-lock="permanent">
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="h-8 w-auto"
+            className="h-6 sm:h-8 w-auto"
             loading="eager"
             data-lovable-lock="permanent"
           />
