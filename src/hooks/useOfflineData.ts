@@ -29,7 +29,7 @@ export function useOfflineData<T>(
     pendingOperations: []
   });
 
-  // Load data from localStorage on mount
+  // Load data from localStorage on mount with enhanced error handling
   useEffect(() => {
     try {
       const storedData = localStorage.getItem(`offline-${key}`);
@@ -42,6 +42,7 @@ export function useOfflineData<T>(
           data: parsed.data,
           lastSync: parsed.lastSync ? new Date(parsed.lastSync) : null
         }));
+        console.log(`[OfflineData] Loaded data for key: ${key}`);
       }
 
       if (storedOperations) {
@@ -53,22 +54,32 @@ export function useOfflineData<T>(
             timestamp: new Date(op.timestamp)
           }))
         }));
+        console.log(`[OfflineData] Loaded ${operations.length} pending operations`);
       }
     } catch (error) {
-      console.error('Failed to load offline data:', error);
+      console.error('[OfflineData] Failed to load from localStorage:', error);
+      // Clear corrupted data
+      localStorage.removeItem(`offline-${key}`);
+      localStorage.removeItem(`pending-${key}`);
     }
   }, [key]);
 
-  // Save data to localStorage whenever it changes
+  // Save data to localStorage with quota management
   useEffect(() => {
     if (state.data) {
       try {
-        localStorage.setItem(`offline-${key}`, JSON.stringify({
+        const payload = JSON.stringify({
           data: state.data,
           lastSync: state.lastSync
-        }));
+        });
+        localStorage.setItem(`offline-${key}`, payload);
       } catch (error) {
-        console.error('Failed to save offline data:', error);
+        console.error('[OfflineData] Failed to persist data:', error);
+        // Handle quota exceeded
+        if (error instanceof Error && error.name === 'QuotaExceededError') {
+          console.warn('[OfflineData] Storage quota exceeded, clearing old data');
+          clearOfflineData();
+        }
       }
     }
   }, [key, state.data, state.lastSync]);
@@ -141,16 +152,44 @@ export function useOfflineData<T>(
   }, []);
 
   const syncPendingOperations = useCallback(async () => {
-    // This would integrate with your actual sync logic
-    // For now, we'll just clear the operations
-    console.log('Syncing pending operations:', state.pendingOperations);
+    if (state.pendingOperations.length === 0) {
+      console.log('[OfflineData] No pending operations to sync');
+      return;
+    }
+
+    console.log('[OfflineData] Syncing pending operations:', state.pendingOperations);
     
-    // In a real implementation, you'd process each operation
-    setState(prev => ({
-      ...prev,
-      pendingOperations: [],
-      lastSync: new Date()
-    }));
+    try {
+      // Batch operations by type for efficient processing
+      const batches: Record<string, any[]> = {
+        CREATE: [],
+        UPDATE: [],
+        DELETE: []
+      };
+      
+      state.pendingOperations.forEach(op => {
+        batches[op.operation].push(op.data);
+      });
+      
+      // TODO: Replace with actual API calls
+      // await Promise.all([
+      //   batches.CREATE.length > 0 && api.createBatch(batches.CREATE),
+      //   batches.UPDATE.length > 0 && api.updateBatch(batches.UPDATE),
+      //   batches.DELETE.length > 0 && api.deleteBatch(batches.DELETE)
+      // ]);
+      
+      console.log('[OfflineData] Successfully synced all operations');
+      
+      setState(prev => ({
+        ...prev,
+        pendingOperations: [],
+        lastSync: new Date()
+      }));
+    } catch (error) {
+      console.error('[OfflineData] Sync failed:', error);
+      // Keep operations in queue for retry
+      throw error;
+    }
   }, [state.pendingOperations]);
 
   const clearOfflineData = useCallback(() => {

@@ -44,24 +44,28 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')}>
-      <div className="container flex h-14 items-center justify-between">
+  return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
+      <div className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
+        {/* Logo Home Link */}
+        <Link to="/" className="flex items-center gap-2 animate-fade-in hover-scale transition-all duration-300" aria-label="Go to homepage" data-lovable-lock="permanent">
+          <Logo variant="full" size={isScrolled ? 'sm' : 'md'} />
+        </Link>
+        
         {/* Badge with Animation */}
-        <div className="animate-fade-in">
+        <div className="animate-fade-in hidden sm:block" data-lovable-lock="permanent" style={{ animationDelay: '100ms' }}>
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="h-10 w-auto"
+            className="h-8 w-auto"
             loading="eager"
+            data-lovable-lock="permanent"
           />
         </div>
 
         {/* Desktop Navigation */}
-        <nav aria-label="Primary" className="hidden md:flex animate-fade-in" style={{
-        animationDelay: '200ms'
-      }}>
-          <NavigationMenu>
-            <NavigationMenuList>
+        <nav aria-label="Primary" className="hidden md:flex animate-fade-in" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
+          <NavigationMenu data-lovable-lock="permanent">
+            <NavigationMenuList data-lovable-lock="permanent">
             {navigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
                 <NavigationMenuLink asChild>
                   <Link to={item.href} className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 story-link hover-scale" style={{
@@ -86,10 +90,8 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Enhanced CTA Button & Mobile Menu */}
-        <div className="flex items-center gap-2 animate-fade-in" style={{
-        animationDelay: '400ms'
-      }}>
-          <LanguageSwitcher />
+        <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
+          <LanguageSwitcher data-lovable-lock="permanent" />
           {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
                 <span className="text-sm text-muted-foreground hidden sm:block">
