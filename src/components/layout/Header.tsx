@@ -58,17 +58,18 @@ export const Header: React.FC = () => {
         </div>
         
         {/* Home Button */}
-        <Button 
-          variant="default" 
-          size={isScrolled ? 'sm' : 'default'}
-          onClick={() => navigate('/')} 
-          className="animate-fade-in hover-scale transition-all duration-300 relative" 
-          style={{ right: '0.6cm' }}
-          aria-label="Go to homepage" 
-          data-lovable-lock="permanent"
-        >
-          Home
-        </Button>
+        <div className="-ml-[0.6cm]" data-lovable-lock="permanent">
+          <Button 
+            variant="default" 
+            size={isScrolled ? 'sm' : 'default'}
+            onClick={() => navigate('/')} 
+            className="animate-fade-in hover-scale transition-all duration-300" 
+            aria-label="Go to homepage" 
+            data-lovable-lock="permanent"
+          >
+            Home
+          </Button>
+        </div>
 
         {/* Desktop Navigation */}
         <nav aria-label="Primary" className="hidden md:flex animate-fade-in" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
