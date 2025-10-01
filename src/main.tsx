@@ -10,6 +10,7 @@ import "./styles/header-lock.css"; // must be last
 import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";
+import { verifyHeaderFlush } from "./lib/verifyHeaderFlush";
 
 createRoot(document.getElementById("root")!).render(<App />);
 
@@ -21,4 +22,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('load', () => {
     setTimeout(initHeroGuardian, 1500);
   });
+  
+  // Verification available in console via: verifyHeaderFlush()
+  console.log('💡 Run verifyHeaderFlush() in console to verify header flushness');
 }

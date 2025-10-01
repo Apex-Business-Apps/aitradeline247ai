@@ -13,8 +13,8 @@ header[data-site-header]{
   position:sticky;
   top:0 !important;
   margin-top:0 !important;
-  padding-top:0;
-  z-index:1000;
+  padding-top:env(safe-area-inset-top, 0) !important; /* iOS safe area - visually flush */
+  z-index:1000 !important;
   border-top-left-radius:0; border-top-right-radius:0; /* neutralize rounded classes */
 }
 
