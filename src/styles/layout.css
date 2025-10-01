@@ -1,0 +1,25 @@
+/* layout.css — safe-area + banner-aware header */
+:root{
+  --banner-h: 0px;                  /* dynamic; set by JS when banner present */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --header-z: 1000;
+  --banner-z: 1100;
+}
+
+/* Any top banner should be sticky (not fixed) so it reserves space in flow */
+[data-banner]{
+  position: sticky;
+  top: 0;
+  z-index: var(--banner-z);
+}
+
+/* Site header: always flush to top, never overlapped */
+header[data-site-header]{
+  position: sticky;
+  top: 0;                /* sits immediately below any sticky banner */
+  z-index: var(--header-z);
+  margin: 0;             /* belt-and-suspenders */
+}
+
+/* Ensure the first element after header never collapses upward */
+main#main{ margin-top: 0; }
