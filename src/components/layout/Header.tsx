@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Logo } from '@/components/ui/logo';
 import { Button } from '@/components/ui/button';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
-import { Menu, X, LogOut } from 'lucide-react';
+import { Menu, X, LogOut, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
@@ -46,14 +46,25 @@ export const Header: React.FC = () => {
   }, []);
   return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')}>
       <div className="container flex h-14 items-center justify-between">
-        {/* Badge with Animation */}
-        <div className="animate-fade-in">
+        {/* Badge and Home Button */}
+        <div className="flex items-center gap-3 animate-fade-in">
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
             className="h-10 w-auto"
             loading="eager"
           />
+          <Button 
+            asChild 
+            variant="default" 
+            size={isScrolled ? 'sm' : 'default'}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium shadow-md"
+          >
+            <Link to="/" className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              <span className="hidden sm:inline">Home</span>
+            </Link>
+          </Button>
         </div>
 
         {/* Desktop Navigation */}
