@@ -241,7 +241,7 @@ All colors MUST be HSL.
 
 /* Enhanced security monitoring styles */
 body.session-warning {
-  border-top: 3px solid hsl(var(--destructive));
+  border-top: 0 !important;
 }
 
 body.session-warning::before {
