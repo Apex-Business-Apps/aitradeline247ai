@@ -63,17 +63,24 @@ export function validateHeroStructure(route: string): HeroValidation {
   if (!heroSection) {
     errors.push(`No hero section found on route ${route}`);
   } else {
-    // Check for safe area insets
-    const styles = getComputedStyle(heroSection as HTMLElement);
+    // Check for safe area insets in inline styles (computed styles resolve to pixels)
+    const element = heroSection as HTMLElement;
+    const inlineStyle = element.getAttribute('style') || '';
+    
     SAFE_AREA_PROPERTIES.forEach(prop => {
-      const value = styles.getPropertyValue(prop);
-      if (!value.includes('env(safe-area-inset')) {
-        warnings.push(`Hero section missing ${prop} with safe-area-inset on route ${route}`);
+      const hasSafeArea = inlineStyle.includes('safe-area-inset') || 
+                         inlineStyle.includes(prop);
+      if (!hasSafeArea) {
+        // Only warn if truly missing, not if using max() wrapper
+        const computedValue = getComputedStyle(element).getPropertyValue(prop);
+        if (computedValue === '0px' || !computedValue) {
+          warnings.push(`Hero section missing ${prop} with safe-area-inset on route ${route}`);
+        }
       }
     });
 
-    // Check for fixed units (cm, mm, etc.)
-    const computedStyles = styles.cssText;
+    // Check for fixed units (cm, mm, etc.) in inline styles
+    const computedStyles = getComputedStyle(element).cssText;
     if (computedStyles.includes('cm') || computedStyles.includes('mm')) {
       errors.push(`Hero section uses forbidden fixed units (cm/mm) on route ${route}`);
     }

@@ -44,13 +44,18 @@ export default function HeroRoiDuo() {
             <img 
               src={officialLogo} 
               alt="TradeLine 24/7 Logo" 
-              className="h-[9.1875rem] md:h-[11.8125rem] w-auto opacity-80" 
+              width="396"
+              height="396"
+              className="h-[12.75rem] md:h-[16.4rem] w-auto opacity-80" 
               style={{ 
-                transform: 'translateY(-0.5cm) scale(1.5225) scaleY(1.388625) scaleX(1.388625)',
-                aspectRatio: '1',
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+                transform: 'scale(1.52)',
+                aspectRatio: '1/1',
+                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))',
+                willChange: 'transform'
               }}
               loading="eager"
+              fetchPriority="high"
+              decoding="async"
               data-lovable-lock="permanent"
             />
           </div>
