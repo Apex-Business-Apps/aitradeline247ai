@@ -59,10 +59,10 @@ export const Header: React.FC = () => {
         
         {/* Home Button */}
         <Button 
-          variant="outline" 
+          variant="default" 
           size={isScrolled ? 'sm' : 'default'}
           onClick={() => navigate('/')} 
-          className="animate-fade-in hover-scale transition-all duration-300" 
+          className="animate-fade-in hover-scale transition-all duration-300 -ml-[0.3cm]" 
           aria-label="Go to homepage" 
           data-lovable-lock="permanent"
         >
