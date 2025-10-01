@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
@@ -560,6 +560,72 @@ export type Database = {
           },
         ]
       }
+      hotline_call_sessions: {
+        Row: {
+          ani_hash: string
+          call_sid: string
+          call_status: string
+          completed_at: string | null
+          consent_given: boolean | null
+          created_at: string
+          id: string
+          language: string
+          route_taken: string | null
+        }
+        Insert: {
+          ani_hash: string
+          call_sid: string
+          call_status: string
+          completed_at?: string | null
+          consent_given?: boolean | null
+          created_at?: string
+          id?: string
+          language?: string
+          route_taken?: string | null
+        }
+        Update: {
+          ani_hash?: string
+          call_sid?: string
+          call_status?: string
+          completed_at?: string | null
+          consent_given?: boolean | null
+          created_at?: string
+          id?: string
+          language?: string
+          route_taken?: string | null
+        }
+        Relationships: []
+      }
+      hotline_consent_audit: {
+        Row: {
+          ani_hash: string
+          call_sid: string
+          consent_status: string
+          created_at: string
+          dtmf_input: string | null
+          id: string
+          language: string
+        }
+        Insert: {
+          ani_hash: string
+          call_sid: string
+          consent_status: string
+          created_at?: string
+          dtmf_input?: string | null
+          id?: string
+          language: string
+        }
+        Update: {
+          ani_hash?: string
+          call_sid?: string
+          consent_status?: string
+          created_at?: string
+          dtmf_input?: string | null
+          id?: string
+          language?: string
+        }
+        Relationships: []
+      }
       hotline_numbers: {
         Row: {
           agent_name: string
@@ -597,6 +663,72 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      hotline_rate_limit_ani: {
+        Row: {
+          ani_hash: string
+          block_count: number
+          block_until: string | null
+          created_at: string
+          id: string
+          request_count: number
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          ani_hash: string
+          block_count?: number
+          block_until?: string | null
+          created_at?: string
+          id?: string
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          ani_hash?: string
+          block_count?: number
+          block_until?: string | null
+          created_at?: string
+          id?: string
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      hotline_rate_limit_ip: {
+        Row: {
+          block_count: number
+          block_until: string | null
+          created_at: string
+          id: string
+          ip_hash: string
+          request_count: number
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          block_count?: number
+          block_until?: string | null
+          created_at?: string
+          id?: string
+          ip_hash: string
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          block_count?: number
+          block_until?: string | null
+          created_at?: string
+          id?: string
+          ip_hash?: string
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
       }
       hotline_voice_prefs: {
         Row: {
@@ -1347,6 +1479,10 @@ export type Database = {
         Args: { org_id_param: string }
         Returns: boolean
       }
+      check_hotline_rate_limit: {
+        Args: { p_ani_hash: string; p_ip_hash: string }
+        Returns: Json
+      }
       citext: {
         Args: { "": boolean } | { "": string } | { "": unknown }
         Returns: string
@@ -1370,6 +1506,10 @@ export type Database = {
       citextsend: {
         Args: { "": string }
         Returns: string
+      }
+      cleanup_hotline_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       cleanup_old_analytics_events: {
         Args: Record<PropertyKey, never>
