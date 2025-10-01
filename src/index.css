@@ -18,16 +18,16 @@
 }
 
 html {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -38,15 +38,21 @@ body {
 }
 
 #root {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   min-height: 100vh;
 }
 
 main#main {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   display: block;
+}
+
+/* PERMANENT LOCK: Header must be flush with browser top */
+header[class*="sticky"] {
+  top: 0 !important;
+  margin-top: 0 !important;
 }
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
