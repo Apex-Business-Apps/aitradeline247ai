@@ -46,10 +46,17 @@ export const Header: React.FC = () => {
   }, []);
   return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
       <div className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
-        {/* Logo Home Link */}
-        <Link to="/" className="flex items-center gap-2 animate-fade-in hover-scale transition-all duration-300" aria-label="Go to homepage" data-lovable-lock="permanent">
-          <Logo variant="full" size={isScrolled ? 'sm' : 'md'} />
-        </Link>
+        {/* Home Button */}
+        <Button 
+          variant="outline" 
+          size={isScrolled ? 'sm' : 'default'}
+          onClick={() => navigate('/')} 
+          className="animate-fade-in hover-scale transition-all duration-300" 
+          aria-label="Go to homepage" 
+          data-lovable-lock="permanent"
+        >
+          Home
+        </Button>
         
         {/* Badge with Animation */}
         <div className="animate-fade-in hidden sm:block" data-lovable-lock="permanent" style={{ animationDelay: '100ms' }}>
