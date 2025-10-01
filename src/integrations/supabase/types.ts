@@ -707,6 +707,27 @@ export type Database = {
         }
         Relationships: []
       }
+      hotline_allowlist: {
+        Row: {
+          added_by: string | null
+          created_at: string
+          e164: string
+          label: string | null
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string
+          e164: string
+          label?: string | null
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string
+          e164?: string
+          label?: string | null
+        }
+        Relationships: []
+      }
       hotline_call_sessions: {
         Row: {
           ani_hash: string
@@ -770,6 +791,24 @@ export type Database = {
           dtmf_input?: string | null
           id?: string
           language?: string
+        }
+        Relationships: []
+      }
+      hotline_geo_config: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
         }
         Relationships: []
       }
@@ -1634,6 +1673,10 @@ export type Database = {
         Args: { org_id_param: string }
         Returns: boolean
       }
+      check_hotline_geo: {
+        Args: { p_e164: string }
+        Returns: Json
+      }
       check_hotline_rate_limit: {
         Args: { p_ani_hash: string; p_ip_hash: string }
         Returns: Json
@@ -1822,6 +1865,10 @@ export type Database = {
       }
       is_autoheal_allowed: {
         Args: { p_action_type: string }
+        Returns: boolean
+      }
+      is_hotline_allowlisted: {
+        Args: { p_e164: string }
         Returns: boolean
       }
       is_org_member: {
