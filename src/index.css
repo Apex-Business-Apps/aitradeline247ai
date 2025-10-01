@@ -24,6 +24,7 @@ html {
 }
 
 body {
+  margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -219,7 +220,7 @@ All colors MUST be HSL.
 
 /* Enhanced security monitoring styles */
 body.session-warning {
-  border-top: 0 !important;
+  border-top: 3px solid hsl(var(--destructive));
 }
 
 body.session-warning::before {
