@@ -4,6 +4,9 @@ import "./index.css";
 import "./styles/roi-table.css";
 import "./styles/micro-interactions.css";
 import "./i18n/config";
+import "./styles/reset.css";
+import "./styles/layout.css";
+import "./styles/header-lock.css"; // must be last
 import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";

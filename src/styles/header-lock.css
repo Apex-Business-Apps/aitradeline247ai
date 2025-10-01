@@ -1,0 +1,22 @@
+/* Header flush guards — safe to re-run */
+html, body, #root, main#main { margin:0 !important; padding:0 !important; }
+*, *::before, *::after { box-sizing:border-box; }
+
+/* Remove inline-media baseline gaps inside nav */
+img, svg, video, canvas { display:block; vertical-align:middle; }
+
+/* Any top banner must reserve space (never fixed) */
+[data-banner]{ position:sticky; top:0; z-index:1100; }
+
+/* Header: absolutely flush to top, never pushed down */
+header[data-site-header]{
+  position:sticky;
+  top:0 !important;
+  margin-top:0 !important;
+  padding-top:0;
+  z-index:1000;
+  border-top-left-radius:0; border-top-right-radius:0; /* neutralize rounded classes */
+}
+
+/* First content block never "jumps" under the header */
+main#main{ margin-top:0 !important; padding-top:0 !important; }
