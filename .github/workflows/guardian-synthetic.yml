@@ -1,0 +1,64 @@
+name: Guardian Synthetic Checks
+
+on:
+  schedule:
+    # Every 6 minutes with jitter (run at :00, :06, :12, :18, :24, :30, :36, :42, :48, :54)
+    - cron: '0,6,12,18,24,30,36,42,48,54 * * * *'
+  
+  workflow_dispatch:
+    # Manual trigger for testing
+
+concurrency:
+  group: guardian-synthetic-check
+  cancel-in-progress: false
+
+jobs:
+  synthetic-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Add jitter delay
+        run: |
+          # Random delay 0-60 seconds for jitter
+          JITTER=$((RANDOM % 60))
+          echo "Adding ${JITTER}s jitter delay..."
+          sleep $JITTER
+      
+      - name: Run synthetic check
+        env:
+          SUPABASE_URL: https://hysvqdwmhxnblxfqnszn.supabase.co
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "🔍 Triggering Guardian synthetic check..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            -H "Content-Type: application/json" \
+            "${SUPABASE_URL}/functions/v1/guardian-synthetic-check")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "Response: $BODY"
+          
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "❌ Synthetic check failed with status $HTTP_CODE"
+            exit 1
+          fi
+          
+          # Check if any checks failed
+          FAILED=$(echo "$BODY" | jq -r '.checks_failed // 0')
+          if [ "$FAILED" -gt 0 ]; then
+            echo "⚠️ $FAILED checks failed"
+            exit 1
+          fi
+          
+          echo "✅ Synthetic check completed successfully"
+      
+      - name: Report failure
+        if: failure()
+        run: |
+          echo "❌ Guardian synthetic check workflow failed"
+          echo "This may indicate service degradation"
