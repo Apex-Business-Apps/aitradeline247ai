@@ -44,25 +44,27 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header data-site-header className={cn('sticky w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')}>
-      <div className="container flex h-14 items-center justify-between">
+  return <header data-site-header data-lovable-lock="permanent" className={cn('sticky w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{ top: 0 }}>
+      <div className="container flex h-14 items-center justify-between" data-lovable-lock="permanent">
         {/* Badge and Home Button */}
-        <div className="flex items-center gap-3 animate-fade-in">
+        <div className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
             className="h-10 w-auto"
             loading="eager"
+            data-lovable-lock="permanent"
           />
           <Button 
             asChild 
             variant="default" 
             size={isScrolled ? 'sm' : 'default'}
             className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium shadow-md"
+            data-lovable-lock="permanent"
           >
-            <Link to="/" className="flex items-center gap-2">
-              <Home className="w-4 h-4" />
-              <span className="hidden sm:inline">Home</span>
+            <Link to="/" className="flex items-center gap-2" data-lovable-lock="permanent">
+              <Home className="w-4 h-4" data-lovable-lock="permanent" />
+              <span className="hidden sm:inline" data-lovable-lock="permanent">Home</span>
             </Link>
           </Button>
         </div>
@@ -70,7 +72,7 @@ export const Header: React.FC = () => {
         {/* Desktop Navigation */}
         <nav aria-label="Primary" className="hidden md:flex animate-fade-in" style={{
         animationDelay: '200ms'
-      }}>
+      }} data-lovable-lock="permanent">
           <NavigationMenu>
             <NavigationMenuList>
             {navigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
@@ -99,9 +101,9 @@ export const Header: React.FC = () => {
         {/* Enhanced CTA Button & Mobile Menu */}
         <div className="flex items-center gap-2 animate-fade-in" style={{
         animationDelay: '400ms'
-      }}>
+      }} data-lovable-lock="permanent">
           <LanguageSwitcher />
-          {user ? <div className="flex items-center gap-2">
+          {user ? <div className="flex items-center gap-2" data-lovable-lock="permanent">
               <div className="flex flex-col items-end">
                 <span className="text-sm text-muted-foreground hidden sm:block">
                   Welcome, {user.user_metadata?.display_name || user.email}
