@@ -11,7 +11,6 @@ import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HelmetProvider } from 'react-helmet-async';
 import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
-import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -45,7 +44,7 @@ const AppWithMonitoring = () => {
   useSessionSecurity();
 
   return (
-    <ErrorBoundary>
+    <>
       <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
@@ -73,7 +72,7 @@ const AppWithMonitoring = () => {
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>
-    </ErrorBoundary>
+    </>
   );
 };
 

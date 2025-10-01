@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
@@ -560,258 +560,6 @@ export type Database = {
           },
         ]
       }
-      guardian_autoheal_actions: {
-        Row: {
-          action_type: string
-          created_at: string
-          id: string
-          metadata: Json | null
-          mode: string
-          status: string
-          trigger_reason: string
-        }
-        Insert: {
-          action_type: string
-          created_at?: string
-          id?: string
-          metadata?: Json | null
-          mode?: string
-          status: string
-          trigger_reason: string
-        }
-        Update: {
-          action_type?: string
-          created_at?: string
-          id?: string
-          metadata?: Json | null
-          mode?: string
-          status?: string
-          trigger_reason?: string
-        }
-        Relationships: []
-      }
-      guardian_circuit_breaker_events: {
-        Row: {
-          created_at: string
-          failure_count: number
-          id: string
-          metadata: Json | null
-          previous_state: string | null
-          reason: string | null
-          service_name: string
-          state: string
-          success_count: number
-        }
-        Insert: {
-          created_at?: string
-          failure_count?: number
-          id?: string
-          metadata?: Json | null
-          previous_state?: string | null
-          reason?: string | null
-          service_name: string
-          state: string
-          success_count?: number
-        }
-        Update: {
-          created_at?: string
-          failure_count?: number
-          id?: string
-          metadata?: Json | null
-          previous_state?: string | null
-          reason?: string | null
-          service_name?: string
-          state?: string
-          success_count?: number
-        }
-        Relationships: []
-      }
-      guardian_concurrency_locks: {
-        Row: {
-          acquired_at: string
-          lock_key: string
-          lock_ttl_seconds: number
-          worker_id: string
-        }
-        Insert: {
-          acquired_at?: string
-          lock_key: string
-          lock_ttl_seconds?: number
-          worker_id: string
-        }
-        Update: {
-          acquired_at?: string
-          lock_key?: string
-          lock_ttl_seconds?: number
-          worker_id?: string
-        }
-        Relationships: []
-      }
-      guardian_config: {
-        Row: {
-          key: string
-          updated_at: string
-          value: Json
-        }
-        Insert: {
-          key: string
-          updated_at?: string
-          value: Json
-        }
-        Update: {
-          key?: string
-          updated_at?: string
-          value?: Json
-        }
-        Relationships: []
-      }
-      guardian_synthetic_checks: {
-        Row: {
-          check_run_id: string
-          check_type: string
-          created_at: string
-          error_message: string | null
-          id: string
-          response_time_ms: number | null
-          status_code: number | null
-          success: boolean
-          target_id: string
-          target_url: string
-          validation_results: Json | null
-        }
-        Insert: {
-          check_run_id: string
-          check_type: string
-          created_at?: string
-          error_message?: string | null
-          id?: string
-          response_time_ms?: number | null
-          status_code?: number | null
-          success: boolean
-          target_id: string
-          target_url: string
-          validation_results?: Json | null
-        }
-        Update: {
-          check_run_id?: string
-          check_type?: string
-          created_at?: string
-          error_message?: string | null
-          id?: string
-          response_time_ms?: number | null
-          status_code?: number | null
-          success?: boolean
-          target_id?: string
-          target_url?: string
-          validation_results?: Json | null
-        }
-        Relationships: []
-      }
-      hotline_allowlist: {
-        Row: {
-          added_by: string | null
-          created_at: string
-          e164: string
-          label: string | null
-        }
-        Insert: {
-          added_by?: string | null
-          created_at?: string
-          e164: string
-          label?: string | null
-        }
-        Update: {
-          added_by?: string | null
-          created_at?: string
-          e164?: string
-          label?: string | null
-        }
-        Relationships: []
-      }
-      hotline_call_sessions: {
-        Row: {
-          ani_hash: string
-          call_sid: string
-          call_status: string
-          completed_at: string | null
-          consent_given: boolean | null
-          created_at: string
-          id: string
-          language: string
-          route_taken: string | null
-        }
-        Insert: {
-          ani_hash: string
-          call_sid: string
-          call_status: string
-          completed_at?: string | null
-          consent_given?: boolean | null
-          created_at?: string
-          id?: string
-          language?: string
-          route_taken?: string | null
-        }
-        Update: {
-          ani_hash?: string
-          call_sid?: string
-          call_status?: string
-          completed_at?: string | null
-          consent_given?: boolean | null
-          created_at?: string
-          id?: string
-          language?: string
-          route_taken?: string | null
-        }
-        Relationships: []
-      }
-      hotline_consent_audit: {
-        Row: {
-          ani_hash: string
-          call_sid: string
-          consent_status: string
-          created_at: string
-          dtmf_input: string | null
-          id: string
-          language: string
-        }
-        Insert: {
-          ani_hash: string
-          call_sid: string
-          consent_status: string
-          created_at?: string
-          dtmf_input?: string | null
-          id?: string
-          language: string
-        }
-        Update: {
-          ani_hash?: string
-          call_sid?: string
-          consent_status?: string
-          created_at?: string
-          dtmf_input?: string | null
-          id?: string
-          language?: string
-        }
-        Relationships: []
-      }
-      hotline_geo_config: {
-        Row: {
-          key: string
-          updated_at: string
-          value: Json
-        }
-        Insert: {
-          key: string
-          updated_at?: string
-          value: Json
-        }
-        Update: {
-          key?: string
-          updated_at?: string
-          value?: Json
-        }
-        Relationships: []
-      }
       hotline_numbers: {
         Row: {
           agent_name: string
@@ -849,72 +597,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      hotline_rate_limit_ani: {
-        Row: {
-          ani_hash: string
-          block_count: number
-          block_until: string | null
-          created_at: string
-          id: string
-          request_count: number
-          updated_at: string
-          window_start: string
-        }
-        Insert: {
-          ani_hash: string
-          block_count?: number
-          block_until?: string | null
-          created_at?: string
-          id?: string
-          request_count?: number
-          updated_at?: string
-          window_start?: string
-        }
-        Update: {
-          ani_hash?: string
-          block_count?: number
-          block_until?: string | null
-          created_at?: string
-          id?: string
-          request_count?: number
-          updated_at?: string
-          window_start?: string
-        }
-        Relationships: []
-      }
-      hotline_rate_limit_ip: {
-        Row: {
-          block_count: number
-          block_until: string | null
-          created_at: string
-          id: string
-          ip_hash: string
-          request_count: number
-          updated_at: string
-          window_start: string
-        }
-        Insert: {
-          block_count?: number
-          block_until?: string | null
-          created_at?: string
-          id?: string
-          ip_hash: string
-          request_count?: number
-          updated_at?: string
-          window_start?: string
-        }
-        Update: {
-          block_count?: number
-          block_until?: string | null
-          created_at?: string
-          id?: string
-          ip_hash?: string
-          request_count?: number
-          updated_at?: string
-          window_start?: string
-        }
-        Relationships: []
       }
       hotline_voice_prefs: {
         Row: {
@@ -1653,14 +1335,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      acquire_guardian_lock: {
-        Args: {
-          p_lock_key: string
-          p_ttl_seconds?: number
-          p_worker_id: string
-        }
-        Returns: boolean
-      }
       anonymize_ip_address: {
         Args: { ip: unknown }
         Returns: unknown
@@ -1672,14 +1346,6 @@ export type Database = {
       can_view_appointment_summary: {
         Args: { org_id_param: string }
         Returns: boolean
-      }
-      check_hotline_geo: {
-        Args: { p_e164: string }
-        Returns: Json
-      }
-      check_hotline_rate_limit: {
-        Args: { p_ani_hash: string; p_ip_hash: string }
-        Returns: Json
       }
       citext: {
         Args: { "": boolean } | { "": string } | { "": unknown }
@@ -1704,10 +1370,6 @@ export type Database = {
       citextsend: {
         Args: { "": string }
         Returns: string
-      }
-      cleanup_hotline_rate_limits: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
       }
       cleanup_old_analytics_events: {
         Args: Record<PropertyKey, never>
@@ -1767,10 +1429,6 @@ export type Database = {
       }
       get_dashboard_data_optimized: {
         Args: Record<PropertyKey, never>
-        Returns: Json
-      }
-      get_guardian_metrics: {
-        Args: { p_end_time: string; p_start_time: string }
         Returns: Json
       }
       get_latest_consent_status: {
@@ -1861,14 +1519,6 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
-        Returns: boolean
-      }
-      is_autoheal_allowed: {
-        Args: { p_action_type: string }
-        Returns: boolean
-      }
-      is_hotline_allowlisted: {
-        Args: { p_e164: string }
         Returns: boolean
       }
       is_org_member: {
@@ -1980,10 +1630,6 @@ export type Database = {
           p_payload: Json
         }
         Returns: undefined
-      }
-      release_guardian_lock: {
-        Args: { p_lock_key: string; p_worker_id: string }
-        Returns: boolean
       }
       resolve_greeting: {
         Args: { p_phone_e164: string }

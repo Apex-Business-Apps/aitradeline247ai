@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Logo } from '@/components/ui/logo';
 import { Button } from '@/components/ui/button';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
-import { Menu, X, LogOut, Home } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
@@ -44,35 +44,22 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header data-site-header data-lovable-lock="permanent" className={cn('sticky w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{ top: 0 }}>
-      <div className="container flex h-14 items-center justify-between" data-lovable-lock="permanent">
-        {/* Badge and Home Button */}
-        <div className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
+  return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')}>
+      <div className="container flex h-14 items-center justify-between">
+        {/* Badge with Animation */}
+        <div className="animate-fade-in">
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
             className="h-10 w-auto"
             loading="eager"
-            data-lovable-lock="permanent"
           />
-          <Button 
-            asChild 
-            variant="default" 
-            size={isScrolled ? 'sm' : 'default'}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium shadow-md"
-            data-lovable-lock="permanent"
-          >
-            <Link to="/" className="flex items-center gap-2" data-lovable-lock="permanent">
-              <Home className="w-4 h-4" data-lovable-lock="permanent" />
-              <span className="hidden sm:inline" data-lovable-lock="permanent">Home</span>
-            </Link>
-          </Button>
         </div>
 
         {/* Desktop Navigation */}
         <nav aria-label="Primary" className="hidden md:flex animate-fade-in" style={{
         animationDelay: '200ms'
-      }} data-lovable-lock="permanent">
+      }}>
           <NavigationMenu>
             <NavigationMenuList>
             {navigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
@@ -101,9 +88,9 @@ export const Header: React.FC = () => {
         {/* Enhanced CTA Button & Mobile Menu */}
         <div className="flex items-center gap-2 animate-fade-in" style={{
         animationDelay: '400ms'
-      }} data-lovable-lock="permanent">
+      }}>
           <LanguageSwitcher />
-          {user ? <div className="flex items-center gap-2" data-lovable-lock="permanent">
+          {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
                 <span className="text-sm text-muted-foreground hidden sm:block">
                   Welcome, {user.user_metadata?.display_name || user.email}

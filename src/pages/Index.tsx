@@ -23,7 +23,7 @@ const Index = () => {
   return (
     <>
       <LayoutCanon />
-      <div className="min-h-screen flex flex-col relative" data-lovable-lock="permanent">
+      <div className="min-h-screen flex flex-col relative">
       {/* Background Image Layer */}
       <div 
         className="fixed inset-0 z-0"
@@ -33,12 +33,11 @@ const Index = () => {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
         }}
-        data-lovable-lock="permanent"
       />
       
       {/* Content with translucency */}
-      <div className="relative z-10" data-lovable-lock="permanent">
-        <SEOHead
+      <div className="relative z-10">
+        <SEOHead 
           title="TradeLine 24/7 - Your 24/7 AI Receptionist!"
           description="Get fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
           keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
@@ -92,30 +91,30 @@ const Index = () => {
         />
         <OrganizationSchema />
         
-        <div className="backdrop-blur-sm bg-background/80" data-lovable-lock="permanent">
+        <div className="backdrop-blur-sm bg-background/80">
           <Header />
         </div>
         
-        <main className="flex-1" data-lovable-lock="permanent">
-          <div className="backdrop-blur-sm bg-background/75" data-lovable-lock="permanent">
+        <main className="flex-1">
+          <div className="backdrop-blur-sm bg-background/75">
             <HeroRoiDuo />
           </div>
-          <div className="backdrop-blur-sm bg-background/75" data-lovable-lock="permanent">
+          <div className="backdrop-blur-sm bg-background/75">
             <BenefitsGrid />
           </div>
-        <div className="backdrop-blur-sm bg-background/70" data-lovable-lock="permanent">
+        <div className="backdrop-blur-sm bg-background/70">
           <ImpactStrip />
         </div>
-        <div className="backdrop-blur-sm bg-background/70" data-lovable-lock="permanent">
+        <div className="backdrop-blur-sm bg-background/70">
           <HowItWorks />
         </div>
         </main>
         
-        <div className="backdrop-blur-sm bg-background/70" data-lovable-lock="permanent">
+        <div className="backdrop-blur-sm bg-background/70">
           <TrustBadgesSlim />
         </div>
         
-        <div className="backdrop-blur-sm bg-background/80" data-lovable-lock="permanent">
+        <div className="backdrop-blur-sm bg-background/80">
           <Footer />
         </div>
         
