@@ -560,6 +560,153 @@ export type Database = {
           },
         ]
       }
+      guardian_autoheal_actions: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          mode: string
+          status: string
+          trigger_reason: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          mode?: string
+          status: string
+          trigger_reason: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          mode?: string
+          status?: string
+          trigger_reason?: string
+        }
+        Relationships: []
+      }
+      guardian_circuit_breaker_events: {
+        Row: {
+          created_at: string
+          failure_count: number
+          id: string
+          metadata: Json | null
+          previous_state: string | null
+          reason: string | null
+          service_name: string
+          state: string
+          success_count: number
+        }
+        Insert: {
+          created_at?: string
+          failure_count?: number
+          id?: string
+          metadata?: Json | null
+          previous_state?: string | null
+          reason?: string | null
+          service_name: string
+          state: string
+          success_count?: number
+        }
+        Update: {
+          created_at?: string
+          failure_count?: number
+          id?: string
+          metadata?: Json | null
+          previous_state?: string | null
+          reason?: string | null
+          service_name?: string
+          state?: string
+          success_count?: number
+        }
+        Relationships: []
+      }
+      guardian_concurrency_locks: {
+        Row: {
+          acquired_at: string
+          lock_key: string
+          lock_ttl_seconds: number
+          worker_id: string
+        }
+        Insert: {
+          acquired_at?: string
+          lock_key: string
+          lock_ttl_seconds?: number
+          worker_id: string
+        }
+        Update: {
+          acquired_at?: string
+          lock_key?: string
+          lock_ttl_seconds?: number
+          worker_id?: string
+        }
+        Relationships: []
+      }
+      guardian_config: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      guardian_synthetic_checks: {
+        Row: {
+          check_run_id: string
+          check_type: string
+          created_at: string
+          error_message: string | null
+          id: string
+          response_time_ms: number | null
+          status_code: number | null
+          success: boolean
+          target_id: string
+          target_url: string
+          validation_results: Json | null
+        }
+        Insert: {
+          check_run_id: string
+          check_type: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          response_time_ms?: number | null
+          status_code?: number | null
+          success: boolean
+          target_id: string
+          target_url: string
+          validation_results?: Json | null
+        }
+        Update: {
+          check_run_id?: string
+          check_type?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          response_time_ms?: number | null
+          status_code?: number | null
+          success?: boolean
+          target_id?: string
+          target_url?: string
+          validation_results?: Json | null
+        }
+        Relationships: []
+      }
       hotline_call_sessions: {
         Row: {
           ani_hash: string
@@ -1467,6 +1614,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      acquire_guardian_lock: {
+        Args: {
+          p_lock_key: string
+          p_ttl_seconds?: number
+          p_worker_id: string
+        }
+        Returns: boolean
+      }
       anonymize_ip_address: {
         Args: { ip: unknown }
         Returns: unknown
@@ -1571,6 +1726,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_guardian_metrics: {
+        Args: { p_end_time: string; p_start_time: string }
+        Returns: Json
+      }
       get_latest_consent_status: {
         Args: { p_channel?: string; p_e164?: string }
         Returns: {
@@ -1659,6 +1818,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_autoheal_allowed: {
+        Args: { p_action_type: string }
         Returns: boolean
       }
       is_org_member: {
@@ -1770,6 +1933,10 @@ export type Database = {
           p_payload: Json
         }
         Returns: undefined
+      }
+      release_guardian_lock: {
+        Args: { p_lock_key: string; p_worker_id: string }
+        Returns: boolean
       }
       resolve_greeting: {
         Args: { p_phone_e164: string }
