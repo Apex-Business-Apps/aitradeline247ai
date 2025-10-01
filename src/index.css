@@ -219,13 +219,10 @@ All colors MUST be HSL.
 }
 
 /* Enhanced security monitoring styles */
-body.session-warning {
-  border-top: 3px solid hsl(var(--destructive));
-}
-
+/* Session warning banner follows [data-banner] pattern - see header-lock.css */
 body.session-warning::before {
   content: "⚠️ Session expiring soon - Please save your work";
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -235,7 +232,7 @@ body.session-warning::before {
   padding: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  z-index: 9999;
+  z-index: 1100;
   animation: pulse 2s infinite;
 }
 
