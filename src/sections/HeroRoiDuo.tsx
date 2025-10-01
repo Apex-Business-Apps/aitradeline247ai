@@ -48,7 +48,7 @@ export default function HeroRoiDuo() {
               height="396"
               className="h-[12.75rem] md:h-[16.4rem] w-auto opacity-80" 
               style={{ 
-                transform: 'translateY(-19px) scale(1.748)',
+                transform: 'scale(1.748)',
                 aspectRatio: '1/1',
                 filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))',
                 willChange: 'transform'
