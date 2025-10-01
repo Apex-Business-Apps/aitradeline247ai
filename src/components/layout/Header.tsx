@@ -62,7 +62,7 @@ export const Header: React.FC = () => {
           variant="default" 
           size={isScrolled ? 'sm' : 'default'}
           onClick={() => navigate('/')} 
-          className="animate-fade-in hover-scale transition-all duration-300 -ml-[0.6cm]" 
+          className="animate-fade-in hover-scale transition-all duration-300 -translate-x-[0.6cm]" 
           aria-label="Go to homepage" 
           data-lovable-lock="permanent"
         >
