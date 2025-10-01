@@ -1,0 +1,37 @@
+name: Guardian Weekly Report
+
+on:
+  schedule:
+    - cron: "0 9 * * 0"   # Sun 09:00 UTC (03:00 America/Edmonton during MDT; acceptable DST drift)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  GUARDIAN_WEEKLY_ENABLED: "true"
+
+jobs:
+  report:
+    if: env.GUARDIAN_WEEKLY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      
+      - name: Generate report
+        run: node scripts/reporting/generate_guardian_report.mjs
+      
+      - name: Commit report
+        run: |
+          set -e
+          git config user.name "guardian-bot"
+          git config user.email "guardian-bot@users.noreply.github.com"
+          git add docs/guardian/weekly/
+          git commit -m "chore(guardian): weekly report" || echo "No changes"
+          git push || true
