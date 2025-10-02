@@ -58,7 +58,7 @@ export const Header: React.FC = () => {
         </div>
         
         {/* Home Button */}
-        <div className="-ml-[1cm]" data-lovable-lock="permanent">
+        <div className="-ml-[1.3cm]" data-lovable-lock="permanent">
           <Button 
             variant="default" 
             size={isScrolled ? 'sm' : 'default'}
