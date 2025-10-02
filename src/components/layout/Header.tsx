@@ -46,8 +46,18 @@ export const Header: React.FC = () => {
   }, []);
   return <header data-site-header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
       <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
-        {/* Badge with Animation */}
-        <div data-slot="left" className="animate-fade-in" data-lovable-lock="permanent">
+        {/* Home Button & Badge */}
+        <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
+          <Button 
+            variant="default" 
+            size={isScrolled ? 'sm' : 'default'}
+            onClick={() => navigate('/')} 
+            className="hover-scale transition-all duration-300" 
+            aria-label="Go to homepage" 
+            data-lovable-lock="permanent"
+          >
+            Home
+          </Button>
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
@@ -55,20 +65,6 @@ export const Header: React.FC = () => {
             loading="eager"
             data-lovable-lock="permanent"
           />
-        </div>
-        
-        {/* Home Button */}
-        <div className="-ml-[1.3cm]" data-lovable-lock="permanent">
-          <Button 
-            variant="default" 
-            size={isScrolled ? 'sm' : 'default'}
-            onClick={() => navigate('/')} 
-            className="animate-fade-in hover-scale transition-all duration-300" 
-            aria-label="Go to homepage" 
-            data-lovable-lock="permanent"
-          >
-            Home
-          </Button>
         </div>
 
         {/* Desktop Navigation */}
