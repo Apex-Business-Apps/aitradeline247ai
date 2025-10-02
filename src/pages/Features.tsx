@@ -134,7 +134,10 @@ const Features = () => {
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of businesses already using TradeLine 24/7 to grow their customer relationships
             </p>
-            <Button size="lg" className="shadow-lg" onClick={handleCTAClick}>
+            <Button size="lg" className="shadow-lg" onClick={() => {
+              handleCTAClick();
+              window.location.href = '/auth';
+            }}>
               Grow Now
             </Button>
           </div>
