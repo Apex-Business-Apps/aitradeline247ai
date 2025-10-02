@@ -44,10 +44,10 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
-      <div className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
+  return <header data-site-header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
+      <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
         {/* Badge with Animation */}
-        <div className="animate-fade-in" data-lovable-lock="permanent">
+        <div data-slot="left" className="animate-fade-in" data-lovable-lock="permanent">
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
@@ -72,7 +72,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <nav aria-label="Primary" className="hidden md:flex animate-fade-in ml-[0.5cm]" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
+        <nav data-slot="center" aria-label="Primary" className="hidden md:flex animate-fade-in ml-[0.5cm]" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
           <NavigationMenu data-lovable-lock="permanent">
             <NavigationMenuList data-lovable-lock="permanent">
             {navigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
@@ -99,7 +99,7 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Enhanced CTA Button & Mobile Menu */}
-        <div className="flex items-center gap-2 animate-fade-in ml-[0.5cm]" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
+        <div data-slot="right" className="flex items-center gap-2 animate-fade-in ml-[0.5cm]" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
           <LanguageSwitcher data-lovable-lock="permanent" />
           {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
