@@ -4,7 +4,7 @@ import { useSessionSecurity } from "@/hooks/useSessionSecurity";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
 import { WebVitalsTracker } from "@/components/monitoring/WebVitalsTracker";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
@@ -52,6 +52,7 @@ const AppWithMonitoring = () => {
       <Routes>
         <Route path="/" element={<main id="main"><Index /></main>} />
         <Route path="/auth" element={<main id="main"><Auth /></main>} />
+        <Route path="/signup" element={<Navigate to="/auth" replace />} />
         <Route path="/features" element={<main id="main"><Features /></main>} />
         <Route path="/pricing" element={<main id="main"><Pricing /></main>} />
         <Route path="/faq" element={<main id="main"><FAQ /></main>} />
