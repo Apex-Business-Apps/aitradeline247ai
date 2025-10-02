@@ -365,14 +365,14 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
                       )}
                     </Button>
                     
-                    <Button 
-                      size="lg" 
-                      variant="outline" 
+                    <Button
+                      size="lg"
+                      variant="outline"
                       className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                       type="button"
-                      onClick={() => window.location.href = '/contact'}
+                      asChild
                     >
-                      Schedule Demo Call
+                      <a href="/contact">Schedule Demo Call</a>
                     </Button>
                   </div>
                 </div>

@@ -141,9 +141,9 @@ const Pricing = () => {
                       className="w-full" 
                       variant={plan.popular ? "default" : "outline"}
                       size="lg"
-                      onClick={() => window.location.href = plan.link}
+                      asChild
                     >
-                      {plan.cta}
+                      <a href={plan.link}>{plan.cta}</a>
                     </Button>
                   </CardContent>
                 </Card>

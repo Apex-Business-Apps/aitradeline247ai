@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Clock, Loader2 } from "lucide-react";
+import { Mail, Phone, Clock, MessageCircle, Loader2 } from "lucide-react";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,25 +24,25 @@ const contactFormSchema = z.object({
 
 const contactMethods = [
   {
+    icon: Phone,
+    title: "Call",
+    description: "Talk to our team",
+    contact: "+1 (431) 990-0222",
+    action: "tel:+14319900222"
+  },
+  {
     icon: Mail,
-    title: "Email Us",
-    description: "Get in touch via email",
-    contact: "info@tradeline247ai.com",
-    action: "mailto:info@tradeline247ai.com"
+    title: "Email",
+    description: "Send us a message",
+    contact: "hello@tradeline247ai.com",
+    action: "mailto:hello@tradeline247ai.com"
   },
   {
-    icon: Phone, 
-    title: "Call Us",
-    description: "Speak with our team",
-    contact: "+15877428885",
-    action: "tel:+15877428885"
-  },
-  {
-    icon: MapPin,
-    title: "Location",
-    description: "Based in Canada",
-    contact: "Edmonton, AB",
-    action: "#location"
+    icon: MessageCircle,
+    title: "Chat",
+    description: "Leave a message",
+    contact: "Quick response",
+    action: "chat"
   }
 ];
 
@@ -58,7 +58,51 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
   const { toast } = useToast();
+
+  const handleContactAction = (action: string) => {
+    if (action === 'chat') {
+      setShowChatModal(true);
+    } else {
+      window.location.href = action;
+    }
+  };
+
+  const handleChatSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const leadData = {
+        name: `${contactFormData.firstName} ${contactFormData.lastName}`.trim(),
+        email: contactFormData.email,
+        company: contactFormData.company || 'N/A',
+        notes: contactFormData.message,
+        source: 'contact-chat'
+      };
+
+      const { error } = await supabase.from('leads').insert(leadData);
+
+      if (error) throw error;
+
+      toast({
+        title: "Message Sent!",
+        description: "We'll get back to you within 2 hours.",
+      });
+
+      setContactFormData({ firstName: "", lastName: "", email: "", company: "", phone: "", subject: "", message: "" });
+      setShowChatModal(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,7 +195,11 @@ const Contact = () => {
           <div className="container">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
               {contactMethods.map((method, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow group">
+                <Card 
+                  key={index} 
+                  className="text-center hover:shadow-lg transition-shadow cursor-pointer group"
+                  onClick={() => handleContactAction(method.action)}
+                >
                   <CardHeader>
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
                       <method.icon className="w-6 h-6 text-primary" />
@@ -160,12 +208,9 @@ const Contact = () => {
                     <CardDescription>{method.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <a 
-                      href={method.action}
-                      className="text-primary hover:text-primary/80 font-medium transition-colors"
-                    >
+                    <div className="text-primary font-medium">
                       {method.contact}
-                    </a>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -348,6 +393,73 @@ const Contact = () => {
       </main>
       
       <Footer />
+
+      {/* Chat Modal */}
+      {showChatModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setShowChatModal(false)}>
+          <Card className="max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <CardHeader>
+              <CardTitle>Leave a Message</CardTitle>
+              <CardDescription>We'll get back to you within 2 hours</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleChatSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="chat-name">Full Name</Label>
+                  <Input
+                    id="chat-name"
+                    value={`${contactFormData.firstName} ${contactFormData.lastName}`.trim()}
+                    onChange={(e) => {
+                      const parts = e.target.value.split(' ');
+                      setContactFormData(prev => ({
+                        ...prev,
+                        firstName: parts[0] || '',
+                        lastName: parts.slice(1).join(' ') || ''
+                      }));
+                    }}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="chat-email">Email</Label>
+                  <Input
+                    id="chat-email"
+                    type="email"
+                    value={contactFormData.email}
+                    onChange={(e) => setContactFormData(prev => ({ ...prev, email: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="chat-message">Message</Label>
+                  <Textarea
+                    id="chat-message"
+                    value={contactFormData.message}
+                    onChange={(e) => setContactFormData(prev => ({ ...prev, message: e.target.value }))}
+                    required
+                    className="min-h-[100px]"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button type="submit" disabled={isSubmitting} className="flex-1">
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
+                  </Button>
+                  <Button type="button" variant="outline" onClick={() => setShowChatModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

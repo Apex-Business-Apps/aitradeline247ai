@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSecureAnalytics } from './useSecureAnalytics';
+import { featureFlags } from '@/config/featureFlags';
 
 interface ABTestVariant {
   [key: string]: any;
@@ -34,12 +35,20 @@ const getOrCreateSessionId = (): string => {
 
 export const useSecureABTest = (testName: string) => {
   const [variant, setVariant] = useState<string>('A');
-  const [variantData, setVariantData] = useState<ABTestVariant>({});
-  const [loading, setLoading] = useState(true);
+  const [variantData, setVariantData] = useState<ABTestVariant>({ text: 'Grow Now', color: 'primary' });
+  const [loading, setLoading] = useState(false);
   const analytics = useSecureAnalytics();
 
   // Get user's assigned variant from secure server-side assignment
   const getSecureVariant = useCallback(async () => {
+    // Feature flag: short-circuit A/B testing when disabled
+    if (!featureFlags.AB_ENABLED) {
+      setVariant('A');
+      setVariantData({ text: 'Grow Now', color: 'primary' });
+      setLoading(false);
+      return;
+    }
+
     try {
       const sessionId = getOrCreateSessionId();
 
@@ -94,8 +103,13 @@ export const useSecureABTest = (testName: string) => {
     loadSecureTest();
   }, [testName, getSecureVariant]);
 
-  // Mark conversion through secure endpoint with signed cookies
+  // Track conversion (e.g., form submission, purchase)
   const convert = useCallback(async (conversionValue?: number) => {
+    // Feature flag: no-op when A/B testing is disabled
+    if (!featureFlags.AB_ENABLED) {
+      return;
+    }
+
     try {
       const { error } = await supabase.functions.invoke('ab-convert', {
         body: {

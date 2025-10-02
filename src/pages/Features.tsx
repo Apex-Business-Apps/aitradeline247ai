@@ -83,11 +83,8 @@ const Features = () => {
               <p className="text-lg md:text-xl text-muted-foreground mb-8">
                 Everything you need for fast and reliable customer interaction automation
               </p>
-              <Button size="lg" className="shadow-lg" onClick={() => {
-                handleCTAClick();
-                window.location.href = '/auth';
-              }}>
-                Start Free Trial
+              <Button size="lg" className="shadow-lg" onClick={handleCTAClick} asChild>
+                <a href="/auth">Start Free Trial</a>
               </Button>
             </div>
           </div>
@@ -134,11 +131,8 @@ const Features = () => {
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of businesses already using TradeLine 24/7 to grow their customer relationships
             </p>
-            <Button size="lg" className="shadow-lg" onClick={() => {
-              handleCTAClick();
-              window.location.href = '/auth';
-            }}>
-              Grow Now
+            <Button size="lg" className="shadow-lg" onClick={handleCTAClick} asChild>
+              <a href="/auth">Grow Now</a>
             </Button>
           </div>
         </section>

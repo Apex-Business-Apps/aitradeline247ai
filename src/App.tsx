@@ -11,6 +11,9 @@ import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HelmetProvider } from 'react-helmet-async';
 import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
+import { AppErrorBoundary } from '@/components/errors/ErrorBoundary';
+import { SmokeChecks } from '@/components/testing/SmokeChecks';
+import { PWAInstallBanner } from '@/components/PWAInstallBanner';
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -49,6 +52,7 @@ const AppWithMonitoring = () => {
       <AnalyticsTracker />
       <WebVitalsTracker />
       <LayoutCanon />
+      <SmokeChecks />
       <Routes>
         <Route path="/" element={<main id="main"><Index /></main>} />
         <Route path="/auth" element={<main id="main"><Auth /></main>} />
@@ -85,11 +89,14 @@ const App = () => (
         <Toaster />
         <Sonner />
         {import.meta.env.VITE_SPLASH_ENABLED !== "false" && <StartupSplash />}
-        <BrowserRouter>
-          <AppWithMonitoring />
-          <InstallPrompt />
-          <MiniChat />
-        </BrowserRouter>
+        <AppErrorBoundary>
+          <BrowserRouter>
+            <AppWithMonitoring />
+            <InstallPrompt />
+            <MiniChat />
+            <PWAInstallBanner />
+          </BrowserRouter>
+        </AppErrorBoundary>
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>
