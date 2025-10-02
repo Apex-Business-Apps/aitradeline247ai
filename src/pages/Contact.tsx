@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Clock, MessageCircle, Loader2 } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Loader2 } from "lucide-react";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -38,11 +38,11 @@ const contactMethods = [
     action: "tel:+15877428885"
   },
   {
-    icon: MessageCircle,
-    title: "Live Chat",
-    description: "Chat with support",
-    contact: "Available 24/7",
-    action: "#"
+    icon: MapPin,
+    title: "Location",
+    description: "Based in Canada",
+    contact: "Edmonton, AB",
+    action: "#location"
   }
 ];
 

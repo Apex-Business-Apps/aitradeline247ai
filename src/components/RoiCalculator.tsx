@@ -182,10 +182,12 @@ const RoiCalculator = () => {
               </Badge>
 
               <div className="space-y-2 pt-2">
-                <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => window.location.href = '/auth?plan=commission'}>Start Zero-Monthly</Button>
+                <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+                  <a href="/auth?plan=commission">Start Zero-Monthly</a>
+                </Button>
                 
-                <Button size="lg" variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={() => window.location.href = '/auth?plan=core'}>
-                  Choose Predictable
+                <Button size="lg" variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground" asChild>
+                  <a href="/auth?plan=core">Choose Predictable</a>
                 </Button>
               </div>
             </div>
