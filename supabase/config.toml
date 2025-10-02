@@ -48,10 +48,10 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.track-session-activity]
-verify_jwt = false
+verify_jwt = true
 
 [functions.chat]
-verify_jwt = false
+verify_jwt = true
 
 [functions.register-ab-session]
 verify_jwt = false
@@ -60,4 +60,4 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.dashboard-summary]
-verify_jwt = false
+verify_jwt = true
