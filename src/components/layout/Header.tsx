@@ -72,7 +72,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <nav aria-label="Primary" className="hidden md:flex animate-fade-in mr-[0.5cm]" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
+        <nav aria-label="Primary" className="hidden md:flex animate-fade-in ml-[0.5cm]" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
           <NavigationMenu data-lovable-lock="permanent">
             <NavigationMenuList data-lovable-lock="permanent">
             {navigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
@@ -99,7 +99,7 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Enhanced CTA Button & Mobile Menu */}
-        <div className="flex items-center gap-2 animate-fade-in mr-[0.5cm]" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
+        <div className="flex items-center gap-2 animate-fade-in ml-[0.5cm]" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
           <LanguageSwitcher data-lovable-lock="permanent" />
           {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
