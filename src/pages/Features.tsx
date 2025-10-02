@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CheckCircle, Phone, MessageSquare, Brain, Zap, Shield, Clock } from "lucide-react";
@@ -84,7 +85,7 @@ const Features = () => {
                 Everything you need for fast and reliable customer interaction automation
               </p>
               <Button size="lg" className="shadow-lg" onClick={handleCTAClick} asChild>
-                <a href="/auth">Start Free Trial</a>
+                <Link to="/auth">Start Free Trial</Link>
               </Button>
             </div>
           </div>
@@ -132,7 +133,7 @@ const Features = () => {
               Join thousands of businesses already using TradeLine 24/7 to grow their customer relationships
             </p>
             <Button size="lg" className="shadow-lg" onClick={handleCTAClick} asChild>
-              <a href="/auth">Grow Now</a>
+              <Link to="/auth">Grow Now</Link>
             </Button>
           </div>
         </section>

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import officialLogo from '@/assets/official-logo.svg';
 
 export const HeroSection = () => {
@@ -50,15 +51,17 @@ export const HeroSection = () => {
               size="lg" 
               className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-12 py-6 rounded-full transition-all duration-300 hover-scale shadow-lg hover:shadow-xl hover:shadow-primary/25" 
               style={{boxShadow: 'var(--premium-glow)'}}
+              asChild
             >
-              Start free trial
+              <Link to="/auth">Start free trial</Link>
             </Button>
             <Button 
               variant="outline" 
               size="lg"
               className="text-lg px-8 py-6 rounded-full border-2 hover:bg-primary/5 transition-all duration-300 hover-scale"
+              asChild
             >
-              See how it works
+              <Link to="/features">See how it works</Link>
             </Button>
           </div>
           <p className="text-sm text-muted-foreground animate-pulse">
