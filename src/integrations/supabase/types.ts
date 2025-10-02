@@ -1823,6 +1823,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_failed_auth_summary: {
+        Args: { time_window?: unknown }
+        Returns: {
+          recent_failures: Json
+          top_ip: string
+          total_failures: number
+          unique_ips: number
+          unique_users: number
+        }[]
+      }
       get_guardian_metrics: {
         Args: { p_end_time: string; p_start_time: string }
         Returns: Json
@@ -1874,6 +1884,16 @@ export type Database = {
           time_period: string
         }[]
       }
+      get_pii_access_summary: {
+        Args: { time_window?: unknown }
+        Returns: {
+          by_access_type: Json
+          by_table: Json
+          recent_accesses: Json
+          total_accesses: number
+          unique_users: number
+        }[]
+      }
       get_profile_with_restrictions: {
         Args: { profile_user_id: string }
         Returns: {
@@ -1883,6 +1903,15 @@ export type Database = {
           phone_e164_full: string
           phone_e164_masked: string
           updated_at: string
+        }[]
+      }
+      get_rate_limit_stats: {
+        Args: { time_window?: unknown }
+        Returns: {
+          active_blocks: number
+          hotline_ani_blocks: number
+          hotline_ip_blocks: number
+          support_ticket_limits: number
         }[]
       }
       get_secure_appointment: {
@@ -1901,6 +1930,21 @@ export type Database = {
           status: string
           tz: string
         }[]
+      }
+      get_security_alerts_summary: {
+        Args: { time_window?: unknown }
+        Returns: {
+          by_type: Json
+          critical_alerts: number
+          high_alerts: number
+          recent_alerts: Json
+          total_alerts: number
+          unresolved_alerts: number
+        }[]
+      }
+      get_security_dashboard_data: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       get_user_role: {
         Args: { _user_id: string }
