@@ -10,6 +10,7 @@ import { Mail, Phone, Clock, MessageCircle, Loader2 } from "lucide-react";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { FormErrorFallback } from "@/components/errors/FormErrorFallback";
 import { z } from "zod";
 
 const contactFormSchema = z.object({
@@ -59,6 +60,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleContactAction = (action: string) => {
@@ -121,6 +123,7 @@ const Contact = () => {
     }
     
     setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
       // Combine first and last name for lead submission
@@ -157,11 +160,9 @@ const Contact = () => {
 
     } catch (error: any) {
       console.error("Contact form error:", error);
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again or call us directly.",
-        variant: "destructive"
-      });
+      
+      // Set error for FormErrorFallback
+      setSubmitError('Unable to send message at this time.');
     } finally {
       setIsSubmitting(false);
     }
@@ -234,6 +235,16 @@ const Contact = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
+                    {submitError && (
+                      <FormErrorFallback 
+                        error={submitError} 
+                        onRetry={() => {
+                          setSubmitError(null);
+                          handleSubmit(new Event('submit') as any);
+                        }} 
+                      />
+                    )}
+                    
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

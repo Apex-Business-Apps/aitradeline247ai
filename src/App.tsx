@@ -21,6 +21,7 @@ import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
 import ClientDashboard from "./pages/ClientDashboard";
 import Auth from "./pages/Auth";
+import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
@@ -55,6 +56,7 @@ const AppWithMonitoring = () => {
       <Routes>
         <Route path="/" element={<main id="main"><Index /></main>} />
         <Route path="/auth" element={<main id="main"><Auth /></main>} />
+        <Route path="/thank-you" element={<main id="main"><ThankYou /></main>} />
         <Route path="/signup" element={<Navigate to="/auth" replace />} />
         <Route path="/features" element={<main id="main"><Features /></main>} />
         <Route path="/pricing" element={<main id="main"><Pricing /></main>} />

@@ -164,11 +164,11 @@ const Auth = () => {
       } else {
         setError(error.message);
       }
+      setLoading(false);
     } else {
-      setMessage('Check your email for a confirmation link!');
+      // Redirect to thank you page
+      navigate('/thank-you');
     }
-    
-    setLoading(false);
   };
 
   const handleSignIn = async (e: React.FormEvent) => {

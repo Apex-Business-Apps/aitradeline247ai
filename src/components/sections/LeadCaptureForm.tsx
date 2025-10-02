@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useSecureABTest } from "@/hooks/useSecureABTest";
 import { useSecureFormSubmission } from "@/hooks/useSecureFormSubmission";
+import { FormErrorFallback } from "@/components/errors/FormErrorFallback";
 import { z } from "zod";
 // Client-side validation schema matching server-side
 const leadFormSchema = z.object({
@@ -46,6 +47,7 @@ export const LeadCaptureForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<LeadFormData>({
     name: "",
     email: "",
@@ -134,14 +136,13 @@ export const LeadCaptureForm = () => {
       }, 3000);
     } catch (error: any) {
       console.error("Lead submission error:", error);
+      
+      // Set error for FormErrorFallback
+      setSubmitError(error?.message || 'Unable to submit form at this time.');
+      
       trackFormSubmission('lead_capture', false, {
         error: error.message || 'unknown_error',
         variant: variant
-      });
-      toast({
-        title: "Oops! Something went wrong",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive"
       });
     } finally {
       setIsSubmitting(false);
@@ -218,6 +219,16 @@ export const LeadCaptureForm = () => {
             </div>
           </CardHeader>
           <CardContent className="-mt-8">
+            {submitError && (
+              <FormErrorFallback 
+                error={submitError} 
+                onRetry={() => {
+                  setSubmitError(null);
+                  handleSubmit(new Event('submit') as any);
+                }} 
+              />
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
                 <Label htmlFor="lead-name">Your name *</Label>
