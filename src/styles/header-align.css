@@ -20,6 +20,12 @@ header[data-site-header] [data-slot="right"] {
   min-width: max-content;
 }
 
+/* Explicitly push right slot to far right edge */
+header[data-site-header] [data-slot="right"] {
+  justify-self: end;
+  margin-left: auto;
+}
+
 /* Center slot can shrink/collapse */
 header[data-site-header] [data-slot="center"] {
   justify-self: center;
