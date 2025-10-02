@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,7 @@ interface LeadFormData {
   notes: string;
 }
 export const LeadCaptureForm = () => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState<LeadFormData>({
@@ -126,17 +128,10 @@ export const LeadCaptureForm = () => {
         description: "Thanks! Check your email. We'll follow up within 2 hours."
       });
 
-      // Reset form after success
+      // Redirect to auth page after 3 seconds
       setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          company: "",
-          notes: ""
-        });
-        setIsSuccess(false);
-      }, 5000);
+        navigate('/auth');
+      }, 3000);
     } catch (error: any) {
       console.error("Lead submission error:", error);
       trackFormSubmission('lead_capture', false, {
@@ -182,13 +177,17 @@ export const LeadCaptureForm = () => {
                   Our team will contact you within <strong>2 hours</strong> to get you started.
                 </p>
               </div>
+              <div className="bg-accent/10 p-4 rounded-lg animate-fade-in" style={{ animationDelay: '500ms' }}>
+                <p className="text-sm font-medium text-center">
+                  Redirecting to sign up page in 3 seconds...
+                </p>
+              </div>
               <Button 
-                variant="outline" 
-                onClick={() => setIsSuccess(false)} 
+                onClick={() => navigate('/auth')} 
                 className="w-full hover-scale transition-all duration-300 animate-fade-in" 
                 style={{ animationDelay: '600ms' }}
               >
-                Submit Another Lead
+                Create Account Now
               </Button>
             </CardContent>
           </Card>

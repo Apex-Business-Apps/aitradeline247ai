@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -114,10 +115,10 @@ const FAQ = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="shadow-lg" asChild>
-                <a href="/contact">Contact Sales</a>
+                <Link to="/contact">Contact Sales</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <a href="/contact">Schedule Demo</a>
+                <Link to="/contact">Schedule Demo</Link>
               </Button>
             </div>
           </div>

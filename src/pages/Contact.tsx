@@ -65,6 +65,7 @@ const Contact = () => {
     if (action === 'chat') {
       setShowChatModal(true);
     } else {
+      // Use direct assignment for tel: and mailto: links (browser handles these)
       window.location.href = action;
     }
   };
