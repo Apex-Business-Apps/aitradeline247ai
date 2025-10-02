@@ -218,6 +218,23 @@ All colors MUST be HSL.
   min-height: 44px;
 }
 
+/* Responsive tables: full-width, scrollable on overflow */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-wrapper,
+.overflow-x-auto {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table.min-w-full {
+  min-width: 100%;
+}
+
 /* Enhanced security monitoring styles */
 body.session-warning {
   border-top: 3px solid hsl(var(--destructive));

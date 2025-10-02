@@ -204,14 +204,25 @@ export const MiniChat: React.FC = () => {
     setIsOpen(false);
   };
 
+  // Handle Esc key to close chat
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        closeChat();
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [isOpen]);
+
   return (
     <>
-      {/* Chat Launcher Button */}
+      {/* Chat Launcher Button - relocated on mobile to avoid nav/footer clash */}
       <button
         onClick={openChat}
         aria-expanded={isOpen}
         aria-controls="mini-chat-dialog"
-        className="fixed right-4 bottom-4 z-[60] rounded-full shadow-lg p-3 bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 hover:scale-105"
+        className="fixed right-4 bottom-4 sm:bottom-4 max-sm:bottom-20 z-[60] rounded-full shadow-lg p-3 bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 hover:scale-105"
       >
         <span className="sr-only">Open chat</span>
         <MessageCircle width={22} height={22} aria-hidden="true" />
