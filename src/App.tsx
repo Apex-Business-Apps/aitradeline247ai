@@ -13,7 +13,6 @@ import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
 import { AppErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { SmokeChecks } from '@/components/testing/SmokeChecks';
-import { PWAInstallBanner } from '@/components/PWAInstallBanner';
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -94,7 +93,6 @@ const App = () => (
             <AppWithMonitoring />
             <InstallPrompt />
             <MiniChat />
-            <PWAInstallBanner />
           </BrowserRouter>
         </AppErrorBoundary>
       </TooltipProvider>
