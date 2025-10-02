@@ -85,7 +85,7 @@ const Features = () => {
               </p>
               <Button size="lg" className="shadow-lg" onClick={() => {
                 handleCTAClick();
-                window.location.href = '/signup';
+                window.location.href = '/auth';
               }}>
                 Start Free Trial
               </Button>

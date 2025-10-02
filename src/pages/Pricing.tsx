@@ -19,7 +19,7 @@ const plans = [
     cta: "Start with $200 wallet",
     popular: false,
     id: "no-monthly",
-    link: "/signup?plan=commission"
+    link: "/auth?plan=commission"
   },
   {
     name: "Predictable Plan (Core)",
@@ -33,7 +33,7 @@ const plans = [
     cta: "Choose Core",
     popular: true,
     id: "monthly-core",
-    link: "/signup?plan=core"
+    link: "/auth?plan=core"
   }
 ];
 
@@ -67,7 +67,7 @@ const Pricing = () => {
                 "unitText": "per qualified appointment"
               },
               "description": "Pay only for results - no monthly fees",
-              "url": "https://www.tradeline247ai.com/signup?plan=commission"
+              "url": "https://www.tradeline247ai.com/auth?plan=commission"
             },
             {
               "@type": "Offer", 
@@ -81,7 +81,7 @@ const Pricing = () => {
                 "unitText": "per month"
               },
               "description": "Fixed monthly pricing with transparent overages",
-              "url": "https://www.tradeline247ai.com/signup?plan=core"
+              "url": "https://www.tradeline247ai.com/auth?plan=core"
             }
           ]
         }}
