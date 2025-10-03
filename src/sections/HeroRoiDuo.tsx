@@ -29,7 +29,7 @@ import { LeadCaptureCard } from "../components/sections/LeadCaptureCard";
 import RoiCalculator from "../components/RoiCalculator";
 import officialLogo from '@/assets/official-logo.svg';
 export default function HeroRoiDuo() {
-  return <section className="bg-gradient-orange-subtle section-heavy" style={{
+  return <section data-qa="hero" className="bg-gradient-orange-subtle section-heavy" style={{
     paddingTop: 'max(env(safe-area-inset-top, 0), 5rem)',
     paddingBottom: 'max(env(safe-area-inset-bottom, 0), 5rem)',
     paddingLeft: 'env(safe-area-inset-left, 0)',
