@@ -6,8 +6,6 @@ export const HeroSection = () => {
   return (
     <section className="relative bg-gradient-orange-subtle pt-2 pb-32 text-center overflow-hidden">
       {/* Multi-layered Background System for Premium Translucency */}
-      {/* Hero background image (bottom-most) */}
-      <div className="absolute inset-0" style={{backgroundImage: 'var(--hero-bg-url)', backgroundSize: 'cover', backgroundPosition: 'center'}}></div>
       {/* Premium base gradient (bottom-most) */}
       <div className="absolute inset-0" style={{background: 'var(--gradient-premium)'}}></div>
       {/* Soft background fade (reduced opacity further) */}
