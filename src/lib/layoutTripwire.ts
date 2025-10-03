@@ -111,18 +111,20 @@ function runTripwireChecks() {
     }
 
     // 4. Check form width calculation
-    const gutter = parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue('--mobile-gutter') || '16'
-    );
+    // Compute gutter: clamp(16px, 4vw, 28px)
+    const viewportWidth = window.innerWidth;
+    const gutterPreferred = viewportWidth * 0.04; // 4vw
+    const gutter = Math.max(16, Math.min(28, gutterPreferred));
+    
     const safeGap = parseFloat(
       getComputedStyle(document.documentElement).getPropertyValue('--chat-bubble-safe-gap') || '96'
     );
     
-    const expectedWidth = window.innerWidth - (gutter * 2) - safeGap;
+    const expectedWidth = viewportWidth - (gutter * 2) - safeGap;
     const actualWidth = leadForm.getBoundingClientRect().width;
     const widthDiff = Math.abs(expectedWidth - actualWidth);
     
-    console.log(`[Tripwire] Width check: expected=${expectedWidth.toFixed(0)}px, actual=${actualWidth.toFixed(0)}px, diff=${widthDiff.toFixed(0)}px`);
+    console.log(`[Tripwire] Width check: gutter=${gutter.toFixed(0)}px, safeGap=${safeGap.toFixed(0)}px, expected=${expectedWidth.toFixed(0)}px, actual=${actualWidth.toFixed(0)}px, diff=${widthDiff.toFixed(0)}px`);
     
     if (widthDiff > 8) {
       violations.push({
