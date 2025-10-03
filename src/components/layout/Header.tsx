@@ -19,6 +19,9 @@ const navigationItems = [{
 }, {
   name: 'Contact',
   href: '/contact'
+}, {
+  name: 'Docs',
+  href: '/documentation'
 }];
 const adminNavigationItems = [{
   name: 'Call Center',
@@ -26,6 +29,9 @@ const adminNavigationItems = [{
 }, {
   name: 'Dashboard',
   href: '/dashboard'
+}, {
+  name: 'Security',
+  href: '/security-monitoring'
 }];
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
