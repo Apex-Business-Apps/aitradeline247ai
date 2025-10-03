@@ -200,7 +200,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
   }
 
   return (
-    <div className={"text-center " + (compact ? "" : "mb-8") }>
+    <div data-qa="lead-form" className={"text-center " + (compact ? "" : "mb-8") }>
       {!compact && (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
