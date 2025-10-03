@@ -351,6 +351,85 @@ export type Database = {
           },
         ]
       }
+      command_execution_results: {
+        Row: {
+          command_id: string
+          content_id: string
+          content_type: Database["public"]["Enums"]["embedding_content_type"]
+          created_at: string
+          error_message: string | null
+          id: string
+          success: boolean
+        }
+        Insert: {
+          command_id: string
+          content_id: string
+          content_type: Database["public"]["Enums"]["embedding_content_type"]
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          success: boolean
+        }
+        Update: {
+          command_id?: string
+          content_id?: string
+          content_type?: Database["public"]["Enums"]["embedding_content_type"]
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          success?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "command_execution_results_command_id_fkey"
+            columns: ["command_id"]
+            isOneToOne: false
+            referencedRelation: "semantic_commands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      command_execution_tokens: {
+        Row: {
+          command_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          plan_data: Json
+          token: string
+          used: boolean
+          used_at: string | null
+        }
+        Insert: {
+          command_id: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          plan_data: Json
+          token?: string
+          used?: boolean
+          used_at?: string | null
+        }
+        Update: {
+          command_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          plan_data?: Json
+          token?: string
+          used?: boolean
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "command_execution_tokens_command_id_fkey"
+            columns: ["command_id"]
+            isOneToOne: false
+            referencedRelation: "semantic_commands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consent_logs: {
         Row: {
           channel: string
@@ -451,6 +530,103 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      content_folders: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          parent_folder_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          parent_folder_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          parent_folder_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_folders_parent_folder_id_fkey"
+            columns: ["parent_folder_id"]
+            isOneToOne: false
+            referencedRelation: "content_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_tag_assignments: {
+        Row: {
+          content_id: string
+          content_type: Database["public"]["Enums"]["embedding_content_type"]
+          created_at: string
+          id: string
+          organization_id: string
+          tag_id: string
+        }
+        Insert: {
+          content_id: string
+          content_type: Database["public"]["Enums"]["embedding_content_type"]
+          created_at?: string
+          id?: string
+          organization_id: string
+          tag_id: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: Database["public"]["Enums"]["embedding_content_type"]
+          created_at?: string
+          id?: string
+          organization_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "content_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_tags: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          organization_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          organization_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          organization_id?: string
+        }
+        Relationships: []
       }
       data_access_audit: {
         Row: {
@@ -1476,6 +1652,57 @@ export type Database = {
         }
         Relationships: []
       }
+      semantic_commands: {
+        Row: {
+          command_embedding: string | null
+          command_text: string
+          confidence: number
+          created_at: string
+          error_message: string | null
+          executed_at: string | null
+          execution_time_ms: number | null
+          id: string
+          metadata: Json | null
+          operation: string
+          organization_id: string
+          status: string
+          target_count: number
+          user_id: string
+        }
+        Insert: {
+          command_embedding?: string | null
+          command_text: string
+          confidence: number
+          created_at?: string
+          error_message?: string | null
+          executed_at?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          metadata?: Json | null
+          operation: string
+          organization_id: string
+          status?: string
+          target_count?: number
+          user_id: string
+        }
+        Update: {
+          command_embedding?: string | null
+          command_text?: string
+          confidence?: number
+          created_at?: string
+          error_message?: string | null
+          executed_at?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          metadata?: Json | null
+          operation?: string
+          organization_id?: string
+          status?: string
+          target_count?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -1612,25 +1839,37 @@ export type Database = {
       }
       transcripts: {
         Row: {
+          archived: boolean | null
+          archived_at: string | null
           call_sid: string
           content: string
           created_at: string
+          folder_id: string | null
           id: string
           org_id: string
+          priority: string | null
         }
         Insert: {
+          archived?: boolean | null
+          archived_at?: string | null
           call_sid: string
           content: string
           created_at?: string
+          folder_id?: string | null
           id?: string
           org_id: string
+          priority?: string | null
         }
         Update: {
+          archived?: boolean | null
+          archived_at?: string | null
           call_sid?: string
           content?: string
           created_at?: string
+          folder_id?: string | null
           id?: string
           org_id?: string
+          priority?: string | null
         }
         Relationships: [
           {
@@ -1639,6 +1878,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "calls"
             referencedColumns: ["call_sid"]
+          },
+          {
+            foreignKeyName: "transcripts_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "content_folders"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "transcripts_org_id_fkey"
@@ -1787,6 +2033,10 @@ export type Database = {
       citextsend: {
         Args: { "": string }
         Returns: string
+      }
+      cleanup_expired_tokens: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       cleanup_hotline_rate_limits: {
         Args: Record<PropertyKey, never>
