@@ -143,13 +143,6 @@ export type Database = {
             referencedRelation: "appointments"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "appointment_events_appointment_id_fkey"
-            columns: ["appointment_id"]
-            isOneToOne: false
-            referencedRelation: "appointments_safe"
-            referencedColumns: ["id"]
-          },
         ]
       }
       appointments: {
@@ -1686,51 +1679,7 @@ export type Database = {
       }
     }
     Views: {
-      appointments_safe: {
-        Row: {
-          created_at: string | null
-          end_at: string | null
-          has_email: boolean | null
-          has_name: boolean | null
-          has_phone: boolean | null
-          id: string | null
-          note: string | null
-          organization_id: string | null
-          source: string | null
-          start_at: string | null
-          status: string | null
-          tz: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          end_at?: string | null
-          has_email?: never
-          has_name?: never
-          has_phone?: never
-          id?: string | null
-          note?: string | null
-          organization_id?: string | null
-          source?: string | null
-          start_at?: string | null
-          status?: string | null
-          tz?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          end_at?: string | null
-          has_email?: never
-          has_name?: never
-          has_phone?: never
-          id?: string | null
-          note?: string | null
-          organization_id?: string | null
-          source?: string | null
-          start_at?: string | null
-          status?: string | null
-          tz?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       acquire_guardian_lock: {
