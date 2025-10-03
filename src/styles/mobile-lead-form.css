@@ -1,4 +1,4 @@
-/* ===== Mobile/Tablet Lead Form Fix ===== */
+/* ===== Mobile/Tablet Lead Form Spacing Fix ===== */
 /* Target: Hero section and lead form only */
 /* Scope: ≤1024px viewports only */
 /* Desktop: Zero changes */
@@ -6,45 +6,34 @@
 :root {
   /* JS runtime computes from chat launcher width */
   --chat-bubble-safe-gap: 96px;
-  /* Side gutters for mobile/tablet */
-  --mobile-gutter: clamp(16px, 4vw, 28px);
 }
 
 /* Mobile/Tablet Only (≤1024px) */
 @media (max-width: 1024px) {
-  /* 1) Hero section: proper bottom padding to avoid chat overlap */
+  /* 1) Hero section: right padding for chat safe gap */
   [data-qa="hero"] {
-    padding-bottom: max(calc(var(--chat-bubble-safe-gap) + 24px), 120px) !important;
+    padding-right: calc(var(--chat-bubble-safe-gap) + 16px) !important;
+    padding-bottom: calc(var(--chat-bubble-safe-gap) + 24px) !important;
   }
 
-  /* 2) Lead form container: centered, full safe width */
+  /* 2) Lead form: expand within available space */
   [data-qa="lead-form"] {
-    width: 100%;
-    max-width: calc(100vw - (var(--mobile-gutter) * 2) - var(--chat-bubble-safe-gap));
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 0;
-    padding-right: 0;
+    margin-left: clamp(16px, 4vw, 28px);
+    margin-right: clamp(16px, 4vw, 28px);
   }
 
-  /* 3) Form card itself: no shrinking, proper width */
-  [data-qa="lead-form"] > * {
-    width: 100%;
-    max-width: none;
-  }
-
-  /* 4) Headings: tighter spacing for keyboard visibility */
+  /* 3) Headings: tighter spacing for keyboard visibility */
   [data-qa="lead-form"] h2 {
-    margin-top: clamp(12px, 3vw, 24px);
-    margin-bottom: clamp(8px, 2vw, 16px);
+    margin-top: clamp(12px, 3vw, 20px);
+    margin-bottom: clamp(8px, 2vw, 14px);
   }
 
   [data-qa="lead-form"] h3 {
-    margin-top: clamp(8px, 2vw, 16px);
-    margin-bottom: clamp(6px, 1.5vw, 12px);
+    margin-top: clamp(8px, 2vw, 14px);
+    margin-bottom: clamp(6px, 1.5vw, 10px);
   }
 
-  /* 5) Form inputs: proper tap targets (≥44px height) */
+  /* 4) Form inputs: proper tap targets (≥44px height) */
   [data-qa="lead-form"] input[type="text"],
   [data-qa="lead-form"] input[type="email"],
   [data-qa="lead-form"] textarea {
@@ -52,13 +41,12 @@
     font-size: 16px; /* Prevents iOS zoom */
   }
 
-  /* 6) Submit button: proper tap target */
+  /* 5) Submit button: proper tap target */
   [data-qa="lead-form"] button[type="submit"] {
     min-height: 44px;
-    width: 100%;
   }
 
-  /* 7) Checkbox: proper tap target */
+  /* 6) Checkbox: proper tap target */
   [data-qa="lead-form"] input[type="checkbox"] {
     min-width: 20px;
     min-height: 20px;
@@ -71,20 +59,15 @@
     cursor: pointer;
   }
 
-  /* 8) Prevent horizontal scroll */
-  [data-qa="hero"],
-  [data-qa="lead-form"] {
-    overflow-x: hidden;
+  /* 7) Consent row: tighter spacing */
+  [data-qa="lead-form"] [class*="consent"],
+  [data-qa="lead-form"] [class*="checkbox"] {
+    margin-top: clamp(8px, 2vw, 12px);
+    margin-bottom: clamp(8px, 2vw, 12px);
   }
 }
 
 /* Desktop: Absolutely no changes (≥1025px) */
 @media (min-width: 1025px) {
-  [data-qa="lead-form"] {
-    /* Reset all mobile overrides */
-    width: auto;
-    max-width: none;
-    margin: inherit;
-    padding: inherit;
-  }
+  /* No overrides needed - desktop uses default styles */
 }

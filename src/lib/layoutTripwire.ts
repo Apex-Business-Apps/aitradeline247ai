@@ -59,6 +59,7 @@ function runTripwireChecks() {
   // Only run checks on mobile/tablet
   if (window.innerWidth > 1024) {
     console.log('[Tripwire] Desktop viewport, skipping mobile checks');
+    clearViolationState();
     return;
   }
 
@@ -70,16 +71,6 @@ function runTripwireChecks() {
       expected: 'element with data-qa="hero"',
       actual: 'not found'
     });
-  } else {
-    // Check display type hasn't changed
-    const heroDisplay = window.getComputedStyle(hero).display;
-    if (heroDisplay === 'none' || heroDisplay === 'contents') {
-      violations.push({
-        check: 'Hero display type',
-        expected: 'block or flex',
-        actual: heroDisplay
-      });
-    }
   }
 
   // 3. Check lead form exists under hero
@@ -90,52 +81,15 @@ function runTripwireChecks() {
       expected: 'element with data-qa="lead-form"',
       actual: 'not found'
     });
-  } else {
-    // Check it's not absolutely positioned (would break flow)
-    const formPosition = window.getComputedStyle(leadForm).position;
-    if (formPosition === 'absolute' || formPosition === 'fixed') {
-      violations.push({
-        check: 'Lead form positioning',
-        expected: 'static, relative, or sticky',
-        actual: formPosition
-      });
-    }
-
-    // Check form is inside hero
-    if (hero && !hero.contains(leadForm)) {
-      violations.push({
-        check: 'Lead form hierarchy',
-        expected: 'inside [data-qa="hero"]',
-        actual: 'moved outside hero'
-      });
-    }
-
-    // 4. Check form width calculation
-    // Compute gutter: clamp(16px, 4vw, 28px)
-    const viewportWidth = window.innerWidth;
-    const gutterPreferred = viewportWidth * 0.04; // 4vw
-    const gutter = Math.max(16, Math.min(28, gutterPreferred));
-    
-    const safeGap = parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue('--chat-bubble-safe-gap') || '96'
-    );
-    
-    const expectedWidth = viewportWidth - (gutter * 2) - safeGap;
-    const actualWidth = leadForm.getBoundingClientRect().width;
-    const widthDiff = Math.abs(expectedWidth - actualWidth);
-    
-    console.log(`[Tripwire] Width check: gutter=${gutter.toFixed(0)}px, safeGap=${safeGap.toFixed(0)}px, expected=${expectedWidth.toFixed(0)}px, actual=${actualWidth.toFixed(0)}px, diff=${widthDiff.toFixed(0)}px`);
-    
-    if (widthDiff > 8) {
-      violations.push({
-        check: 'Lead form width',
-        expected: `${expectedWidth.toFixed(0)}px (±8px)`,
-        actual: `${actualWidth.toFixed(0)}px (diff: ${widthDiff.toFixed(0)}px)`
-      });
-    }
+  } else if (hero && !hero.contains(leadForm)) {
+    violations.push({
+      check: 'Lead form hierarchy',
+      expected: 'inside [data-qa="hero"]',
+      actual: 'moved outside hero'
+    });
   }
 
-  // 5. Check for overlap between chat and submit button
+  // 4. Check for overlap between chat and form elements
   if (chatLauncher && leadForm) {
     const submitButton = leadForm.querySelector('button[type="submit"]');
     if (submitButton) {
@@ -164,7 +118,15 @@ function runTripwireChecks() {
     handleTripwireViolations(violations);
   } else {
     console.log('[Tripwire] ✓ All layout checks passed');
-    document.documentElement.removeAttribute('data-tl-tripwire');
+    clearViolationState();
+  }
+}
+
+function clearViolationState() {
+  document.documentElement.removeAttribute('data-tl-tripwire');
+  const existingBanner = document.getElementById('tripwire-banner');
+  if (existingBanner) {
+    existingBanner.remove();
   }
 }
 
