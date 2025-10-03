@@ -1019,45 +1019,71 @@ export type Database = {
         }
         Relationships: []
       }
+      org_integration_secrets: {
+        Row: {
+          created_at: string
+          gcal_service: Json | null
+          organization_id: string
+          slack_webhook_url: string | null
+          teams_webhook_url: string | null
+          updated_at: string
+          zap_outgoing_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          gcal_service?: Json | null
+          organization_id: string
+          slack_webhook_url?: string | null
+          teams_webhook_url?: string | null
+          updated_at?: string
+          zap_outgoing_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          gcal_service?: Json | null
+          organization_id?: string
+          slack_webhook_url?: string | null
+          teams_webhook_url?: string | null
+          updated_at?: string
+          zap_outgoing_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_integration_secrets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_settings: {
         Row: {
           business_hours: Json | null
           calendly_url: string | null
           emergency_number: string | null
-          gcal_service: Json | null
           language: string | null
           organization_id: string
-          slack_webhook_url: string | null
-          teams_webhook_url: string | null
           updated_at: string
           voice_id: string | null
-          zap_outgoing_url: string | null
         }
         Insert: {
           business_hours?: Json | null
           calendly_url?: string | null
           emergency_number?: string | null
-          gcal_service?: Json | null
           language?: string | null
           organization_id: string
-          slack_webhook_url?: string | null
-          teams_webhook_url?: string | null
           updated_at?: string
           voice_id?: string | null
-          zap_outgoing_url?: string | null
         }
         Update: {
           business_hours?: Json | null
           calendly_url?: string | null
           emergency_number?: string | null
-          gcal_service?: Json | null
           language?: string | null
           organization_id?: string
-          slack_webhook_url?: string | null
-          teams_webhook_url?: string | null
           updated_at?: string
           voice_id?: string | null
-          zap_outgoing_url?: string | null
         }
         Relationships: [
           {
