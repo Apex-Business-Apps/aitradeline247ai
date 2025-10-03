@@ -61,12 +61,19 @@ export const Header: React.FC = () => {
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="w-auto inline-block"
+            className="w-auto inline-block align-middle"
             style={{ height: '28.8px' }}
             loading="eager"
             data-badge="built-canadian"
             data-lovable-lock="permanent"
           />
+          <style>{`
+            @media (min-width: 640px) {
+              [data-badge="built-canadian"] {
+                height: 38.4px !important;
+              }
+            }
+          `}</style>
         </div>
 
         {/* Desktop Navigation */}
