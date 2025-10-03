@@ -1,45 +1,56 @@
-/* ===== Hero tables: mobile/tablet safe-width only ===== */
+/* ===== Hero tables: mobile/tablet safe-width only (no shrink) ===== */
 :root {
-  /* Safe space to keep between hero tables and chat bubble (launcher ~64px + margins). */
-  --chat-bubble-safe-gap: 88px;
+  /* Fallback; JS sets the real value at runtime */
+  --chat-bubble-safe-gap: 96px;
+  --hero-padding-x: clamp(16px, 4vw, 32px);
 }
 
-/* Phone + tablet only */
 @media (max-width: 1024px) {
-  /* Scope strictly to hero section to avoid global shifts */
+  /* Lock scope to the hero only; do not affect other areas */
   .hero, [data-qa="hero"], section.hero {
-    /* Ensure the hero itself can grow without pushing siblings */
+    position: relative;
     contain: layout style paint;
   }
 
-  /* Target only the two tagged hero tables */
+  /* If the hero uses a container, remove max-width clamping only here */
+  .hero .container, [data-qa="hero"] .container, section.hero .container {
+    max-width: none !important;
+    padding-left: var(--hero-padding-x);
+    padding-right: var(--hero-padding-x);
+  }
+
+  /* The two hero tables: expand width; no auto-margins that cause shrinking */
   [data-qa="hero-table-1"],
   [data-qa="hero-table-2"] {
-    /* Allow table to expand but keep a right-side safe gap for the chat bubble */
-    max-width: calc(100vw - var(--chat-bubble-safe-gap));
-    width: auto;               /* grow if there is room */
-    margin-right: min(4vw, var(--chat-bubble-safe-gap));
-    margin-left: auto;         /* keep alignment consistent without shifting other content */
+    display: block;                 /* prevent table inline shrink quirks */
+    table-layout: fixed;            /* prevent layout oscillation */
+    /* Full viewport width minus hero padding and chat gap */
+    width: calc(100vw - (var(--hero-padding-x) * 2) - var(--chat-bubble-safe-gap)) !important;
+    max-width: none !important;
+    min-width: 320px;               /* guard against micro devices */
+    margin: 0 !important;           /* remove prior auto margins */
   }
 
-  /* If tables live inside a wrapper, ensure wrapper doesn't clamp width */
-  [data-qa="hero-table-1"]::before,
-  [data-qa="hero-table-2"]::before {
-    content: '';
+  /* Keep a visual gutter on the right for the chat bubble */
+  .hero,
+  [data-qa="hero"],
+  section.hero {
+    padding-right: calc(var(--hero-padding-x) + var(--chat-bubble-safe-gap));
   }
 
-  /* Defensive: prevent unintended layout shifts elsewhere */
-  .hero > *:not([data-qa="hero-table-1"]):not([data-qa="hero-table-2"]) {
-    position: relative; /* no layout change; just increases selector specificity */
+  /* Safety: if content still overflows, allow horizontal scroll only on the tables */
+  [data-qa="hero-table-1"],
+  [data-qa="hero-table-2"] {
+    overflow-x: auto;
   }
 }
 
-/* Desktop: no change */
+/* Desktop: absolutely no changes */
 @media (min-width: 1025px) {
   [data-qa="hero-table-1"],
   [data-qa="hero-table-2"] {
-    max-width: none;
-    margin-right: 0;
-    margin-left: 0;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
   }
 }
