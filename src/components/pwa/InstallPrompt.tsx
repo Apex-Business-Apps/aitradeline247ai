@@ -47,8 +47,9 @@ export const InstallPrompt: React.FC = () => {
 
   return (
     <Card 
-      className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:w-80 border-0"
+      className="fixed left-4 z-[59] max-w-xs sm:max-w-sm border-0"
       style={{ 
+        bottom: 'max(1rem, env(safe-area-inset-bottom))',
         boxShadow: 'var(--premium-shadow-strong)',
         background: 'linear-gradient(135deg, hsl(var(--card) / 0.98) 0%, hsl(var(--card) / 0.95) 100%)'
       }}
