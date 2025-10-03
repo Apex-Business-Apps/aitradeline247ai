@@ -402,6 +402,56 @@ export type Database = {
         }
         Relationships: []
       }
+      content_embeddings: {
+        Row: {
+          content_date: string | null
+          content_id: string
+          content_summary: string | null
+          content_text: string
+          content_type: Database["public"]["Enums"]["embedding_content_type"]
+          created_at: string
+          embedding: string
+          id: string
+          metadata: Json | null
+          organization_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content_date?: string | null
+          content_id: string
+          content_summary?: string | null
+          content_text: string
+          content_type: Database["public"]["Enums"]["embedding_content_type"]
+          created_at?: string
+          embedding: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content_date?: string | null
+          content_id?: string
+          content_summary?: string | null
+          content_text?: string
+          content_type?: Database["public"]["Enums"]["embedding_content_type"]
+          created_at?: string
+          embedding?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       data_access_audit: {
         Row: {
           access_type: string
@@ -1694,6 +1744,10 @@ export type Database = {
         Args: { ip: unknown }
         Returns: unknown
       }
+      binary_quantize: {
+        Args: { "": string } | { "": unknown }
+        Returns: unknown
+      }
       can_access_customer_pii: {
         Args: { _user_id: string }
         Returns: boolean
@@ -1929,12 +1983,44 @@ export type Database = {
         Args: { p_test_name: string; p_variant: string }
         Returns: Json
       }
+      halfvec_avg: {
+        Args: { "": number[] }
+        Returns: unknown
+      }
+      halfvec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      halfvec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      halfvec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      hnsw_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnsw_sparsevec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      hnswhandler: {
+        Args: { "": unknown }
+        Returns: unknown
       }
       is_autoheal_allowed: {
         Args: { p_action_type: string }
@@ -1947,6 +2033,26 @@ export type Database = {
       is_org_member: {
         Args: { p_org_id: string }
         Returns: boolean
+      }
+      ivfflat_bit_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflat_halfvec_support: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      ivfflathandler: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      l2_norm: {
+        Args: { "": unknown } | { "": unknown }
+        Returns: number
+      }
+      l2_normalize: {
+        Args: { "": string } | { "": unknown } | { "": unknown }
+        Returns: string
       }
       log_ab_test_access: {
         Args: { p_access_type?: string; p_test_name: string; p_variant: string }
@@ -2077,17 +2183,81 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      search_embeddings: {
+        Args: {
+          filter_content_type?: Database["public"]["Enums"]["embedding_content_type"]
+          filter_date_from?: string
+          filter_date_to?: string
+          filter_org_id?: string
+          filter_user_id?: string
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          content_id: string
+          content_summary: string
+          content_text: string
+          content_type: Database["public"]["Enums"]["embedding_content_type"]
+          created_at: string
+          id: string
+          metadata: Json
+          similarity: number
+        }[]
+      }
       share_org: {
         Args: { _user_a: string; _user_b: string }
         Returns: boolean
+      }
+      sparsevec_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      sparsevec_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      sparsevec_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
       }
       validate_security_post_upgrade: {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      vector_avg: {
+        Args: { "": number[] }
+        Returns: string
+      }
+      vector_dims: {
+        Args: { "": string } | { "": unknown }
+        Returns: number
+      }
+      vector_norm: {
+        Args: { "": string }
+        Returns: number
+      }
+      vector_out: {
+        Args: { "": string }
+        Returns: unknown
+      }
+      vector_send: {
+        Args: { "": string }
+        Returns: string
+      }
+      vector_typmod_in: {
+        Args: { "": unknown[] }
+        Returns: number
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator"
+      embedding_content_type:
+        | "email"
+        | "transcript"
+        | "thread"
+        | "appointment"
+        | "note"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2216,6 +2386,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "moderator"],
+      embedding_content_type: [
+        "email",
+        "transcript",
+        "thread",
+        "appointment",
+        "note",
+      ],
     },
   },
 } as const
