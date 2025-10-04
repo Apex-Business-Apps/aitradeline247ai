@@ -58,96 +58,27 @@ export const MiniChat: React.FC = () => {
     try {
       console.log('Sending chat request with', messages.length + 1, 'messages');
       
-      // Use fetch directly for streaming support
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({
+      // Use Supabase client for proper authentication
+      const { data, error: functionError } = await supabase.functions.invoke('chat', {
+        body: {
           messages: [...messages, userMessage].map(m => ({
             role: m.role,
             content: m.content
           }))
-        })
+        }
       });
 
-      console.log('Response status:', response.status);
+      console.log('Chat function invoked');
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        console.error('Chat API error:', errorData);
-        throw new Error(errorData.error || `HTTP ${response.status}`);
+      if (functionError) {
+        console.error('Chat API error:', functionError);
+        throw new Error(functionError.message || 'Chat function error');
       }
 
-      // Add assistant message to UI immediately
-      setMessages(prev => [...prev, assistantMessage]);
-
-      // Handle streaming response
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('Streaming not supported');
-      }
-
-      console.log('Starting stream processing...');
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          console.log('Stream completed');
-          break;
-        }
-
-        buffer += decoder.decode(value, { stream: true });
-        
-        // Process complete lines
-        let newlineIndex;
-        while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
-          const line = buffer.slice(0, newlineIndex);
-          buffer = buffer.slice(newlineIndex + 1);
-
-          if (line.trim() === '' || line.startsWith(':')) continue;
-          if (!line.startsWith('data: ')) continue;
-
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === '[DONE]') {
-            console.log('Received stream end marker');
-            break;
-          }
-
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
-            
-            if (content) {
-              assistantContent += content;
-              setMessages(prev => 
-                prev.map(msg => 
-                  msg.id === assistantMessage.id 
-                    ? { ...msg, content: assistantContent }
-                    : msg
-                )
-              );
-            }
-          } catch (parseError) {
-            console.warn('Failed to parse SSE data:', parseError, 'Line:', jsonStr);
-          }
-        }
-      }
-
-      // Ensure message has content
-      if (!assistantContent.trim()) {
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === assistantMessage.id 
-              ? { ...msg, content: 'I apologize, but I didn\'t receive a complete response. Please try asking again.' }
-              : msg
-          )
-        );
-      }
+      // Add assistant message with the response
+      assistantContent = data?.content || data?.message || 'I apologize, but I didn\'t receive a complete response. Please try asking again.';
+      
+      setMessages(prev => [...prev, { ...assistantMessage, content: assistantContent }]);
 
       console.log('Chat request completed successfully');
 
