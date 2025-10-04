@@ -200,7 +200,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
   }
 
   return (
-    <div data-qa="lead-form" className={"text-center " + (compact ? "" : "mb-8") }>
+    <div className={"text-center " + (compact ? "" : "mb-8") }>
       {!compact && (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -212,7 +212,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
         </>
       )}
 
-      <Card data-qa="hero-table-2" className="w-full bg-card/95 backdrop-blur-sm border-primary/20">
+      <Card className="w-full bg-card/95 backdrop-blur-sm border-primary/20">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-lg md:text-xl text-foreground mb-1">
             Start Your Free Trial

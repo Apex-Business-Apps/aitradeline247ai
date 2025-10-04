@@ -19,9 +19,6 @@ const navigationItems = [{
 }, {
   name: 'Contact',
   href: '/contact'
-}, {
-  name: 'Docs',
-  href: '/documentation'
 }];
 const adminNavigationItems = [{
   name: 'Call Center',
@@ -29,9 +26,6 @@ const adminNavigationItems = [{
 }, {
   name: 'Dashboard',
   href: '/dashboard'
-}, {
-  name: 'Security',
-  href: '/security-monitoring'
 }];
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,7 +45,7 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   return <header data-site-header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
-      <div data-header-inner className="container flex h-14 items-center gap-3 md:gap-4 px-4 md:px-6 lg:px-8" data-lovable-lock="permanent">
+      <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
         {/* Home Button & Badge */}
         <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
           <Button 
@@ -67,19 +61,10 @@ export const Header: React.FC = () => {
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="w-auto inline-block align-middle"
-            style={{ height: '28.8px' }}
+            className="h-6 sm:h-8 w-auto"
             loading="eager"
-            data-badge="built-canadian"
             data-lovable-lock="permanent"
           />
-          <style>{`
-            @media (min-width: 640px) {
-              [data-badge="built-canadian"] {
-                height: 38.4px !important;
-              }
-            }
-          `}</style>
         </div>
 
         {/* Desktop Navigation */}
@@ -110,7 +95,7 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Enhanced CTA Button & Mobile Menu */}
-        <div data-slot="right" className="ml-auto flex items-center gap-2 md:gap-3 animate-fade-in" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
+        <div data-slot="right" className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
           <LanguageSwitcher data-lovable-lock="permanent" />
           {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">

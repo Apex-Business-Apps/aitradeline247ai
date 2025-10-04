@@ -11,7 +11,6 @@ export const VALID_ROUTES = [
   '/privacy',
   '/terms',
   '/auth',
-  '/thank-you',
   '/dashboard',
   '/dashboard/integrations/crm',
   '/dashboard/integrations/email',
@@ -22,9 +21,7 @@ export const VALID_ROUTES = [
   '/design-tokens',
   '/components',
   '/call-center',
-  '/admin/kb',
-  '/documentation',
-  '/security-monitoring'
+  '/admin/kb'
 ] as const;
 
 export type ValidRoute = typeof VALID_ROUTES[number];

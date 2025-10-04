@@ -143,6 +143,13 @@ export type Database = {
             referencedRelation: "appointments"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "appointment_events_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       appointments: {
@@ -351,85 +358,6 @@ export type Database = {
           },
         ]
       }
-      command_execution_results: {
-        Row: {
-          command_id: string
-          content_id: string
-          content_type: Database["public"]["Enums"]["embedding_content_type"]
-          created_at: string
-          error_message: string | null
-          id: string
-          success: boolean
-        }
-        Insert: {
-          command_id: string
-          content_id: string
-          content_type: Database["public"]["Enums"]["embedding_content_type"]
-          created_at?: string
-          error_message?: string | null
-          id?: string
-          success: boolean
-        }
-        Update: {
-          command_id?: string
-          content_id?: string
-          content_type?: Database["public"]["Enums"]["embedding_content_type"]
-          created_at?: string
-          error_message?: string | null
-          id?: string
-          success?: boolean
-        }
-        Relationships: [
-          {
-            foreignKeyName: "command_execution_results_command_id_fkey"
-            columns: ["command_id"]
-            isOneToOne: false
-            referencedRelation: "semantic_commands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      command_execution_tokens: {
-        Row: {
-          command_id: string
-          created_at: string
-          expires_at: string
-          id: string
-          plan_data: Json
-          token: string
-          used: boolean
-          used_at: string | null
-        }
-        Insert: {
-          command_id: string
-          created_at?: string
-          expires_at?: string
-          id?: string
-          plan_data: Json
-          token?: string
-          used?: boolean
-          used_at?: string | null
-        }
-        Update: {
-          command_id?: string
-          created_at?: string
-          expires_at?: string
-          id?: string
-          plan_data?: Json
-          token?: string
-          used?: boolean
-          used_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "command_execution_tokens_command_id_fkey"
-            columns: ["command_id"]
-            isOneToOne: false
-            referencedRelation: "semantic_commands"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       consent_logs: {
         Row: {
           channel: string
@@ -478,153 +406,6 @@ export type Database = {
           first_name?: string | null
           id?: string
           wa_capable?: boolean | null
-        }
-        Relationships: []
-      }
-      content_embeddings: {
-        Row: {
-          content_date: string | null
-          content_id: string
-          content_summary: string | null
-          content_text: string
-          content_type: Database["public"]["Enums"]["embedding_content_type"]
-          created_at: string
-          embedding: string
-          id: string
-          metadata: Json | null
-          organization_id: string | null
-          user_id: string | null
-        }
-        Insert: {
-          content_date?: string | null
-          content_id: string
-          content_summary?: string | null
-          content_text: string
-          content_type: Database["public"]["Enums"]["embedding_content_type"]
-          created_at?: string
-          embedding: string
-          id?: string
-          metadata?: Json | null
-          organization_id?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          content_date?: string | null
-          content_id?: string
-          content_summary?: string | null
-          content_text?: string
-          content_type?: Database["public"]["Enums"]["embedding_content_type"]
-          created_at?: string
-          embedding?: string
-          id?: string
-          metadata?: Json | null
-          organization_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "content_embeddings_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      content_folders: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          organization_id: string
-          parent_folder_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          organization_id: string
-          parent_folder_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          organization_id?: string
-          parent_folder_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "content_folders_parent_folder_id_fkey"
-            columns: ["parent_folder_id"]
-            isOneToOne: false
-            referencedRelation: "content_folders"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      content_tag_assignments: {
-        Row: {
-          content_id: string
-          content_type: Database["public"]["Enums"]["embedding_content_type"]
-          created_at: string
-          id: string
-          organization_id: string
-          tag_id: string
-        }
-        Insert: {
-          content_id: string
-          content_type: Database["public"]["Enums"]["embedding_content_type"]
-          created_at?: string
-          id?: string
-          organization_id: string
-          tag_id: string
-        }
-        Update: {
-          content_id?: string
-          content_type?: Database["public"]["Enums"]["embedding_content_type"]
-          created_at?: string
-          id?: string
-          organization_id?: string
-          tag_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "content_tag_assignments_tag_id_fkey"
-            columns: ["tag_id"]
-            isOneToOne: false
-            referencedRelation: "content_tags"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      content_tags: {
-        Row: {
-          color: string | null
-          created_at: string
-          id: string
-          name: string
-          organization_id: string
-        }
-        Insert: {
-          color?: string | null
-          created_at?: string
-          id?: string
-          name: string
-          organization_id: string
-        }
-        Update: {
-          color?: string | null
-          created_at?: string
-          id?: string
-          name?: string
-          organization_id?: string
         }
         Relationships: []
       }
@@ -1238,71 +1019,45 @@ export type Database = {
         }
         Relationships: []
       }
-      org_integration_secrets: {
-        Row: {
-          created_at: string
-          gcal_service: Json | null
-          organization_id: string
-          slack_webhook_url: string | null
-          teams_webhook_url: string | null
-          updated_at: string
-          zap_outgoing_url: string | null
-        }
-        Insert: {
-          created_at?: string
-          gcal_service?: Json | null
-          organization_id: string
-          slack_webhook_url?: string | null
-          teams_webhook_url?: string | null
-          updated_at?: string
-          zap_outgoing_url?: string | null
-        }
-        Update: {
-          created_at?: string
-          gcal_service?: Json | null
-          organization_id?: string
-          slack_webhook_url?: string | null
-          teams_webhook_url?: string | null
-          updated_at?: string
-          zap_outgoing_url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "org_integration_secrets_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: true
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       org_settings: {
         Row: {
           business_hours: Json | null
           calendly_url: string | null
           emergency_number: string | null
+          gcal_service: Json | null
           language: string | null
           organization_id: string
+          slack_webhook_url: string | null
+          teams_webhook_url: string | null
           updated_at: string
           voice_id: string | null
+          zap_outgoing_url: string | null
         }
         Insert: {
           business_hours?: Json | null
           calendly_url?: string | null
           emergency_number?: string | null
+          gcal_service?: Json | null
           language?: string | null
           organization_id: string
+          slack_webhook_url?: string | null
+          teams_webhook_url?: string | null
           updated_at?: string
           voice_id?: string | null
+          zap_outgoing_url?: string | null
         }
         Update: {
           business_hours?: Json | null
           calendly_url?: string | null
           emergency_number?: string | null
+          gcal_service?: Json | null
           language?: string | null
           organization_id?: string
+          slack_webhook_url?: string | null
+          teams_webhook_url?: string | null
           updated_at?: string
           voice_id?: string | null
+          zap_outgoing_url?: string | null
         }
         Relationships: [
           {
@@ -1652,57 +1407,6 @@ export type Database = {
         }
         Relationships: []
       }
-      semantic_commands: {
-        Row: {
-          command_embedding: string | null
-          command_text: string
-          confidence: number
-          created_at: string
-          error_message: string | null
-          executed_at: string | null
-          execution_time_ms: number | null
-          id: string
-          metadata: Json | null
-          operation: string
-          organization_id: string
-          status: string
-          target_count: number
-          user_id: string
-        }
-        Insert: {
-          command_embedding?: string | null
-          command_text: string
-          confidence: number
-          created_at?: string
-          error_message?: string | null
-          executed_at?: string | null
-          execution_time_ms?: number | null
-          id?: string
-          metadata?: Json | null
-          operation: string
-          organization_id: string
-          status?: string
-          target_count?: number
-          user_id: string
-        }
-        Update: {
-          command_embedding?: string | null
-          command_text?: string
-          confidence?: number
-          created_at?: string
-          error_message?: string | null
-          executed_at?: string | null
-          execution_time_ms?: number | null
-          id?: string
-          metadata?: Json | null
-          operation?: string
-          organization_id?: string
-          status?: string
-          target_count?: number
-          user_id?: string
-        }
-        Relationships: []
-      }
       subscriptions: {
         Row: {
           created_at: string
@@ -1839,37 +1543,25 @@ export type Database = {
       }
       transcripts: {
         Row: {
-          archived: boolean | null
-          archived_at: string | null
           call_sid: string
           content: string
           created_at: string
-          folder_id: string | null
           id: string
           org_id: string
-          priority: string | null
         }
         Insert: {
-          archived?: boolean | null
-          archived_at?: string | null
           call_sid: string
           content: string
           created_at?: string
-          folder_id?: string | null
           id?: string
           org_id: string
-          priority?: string | null
         }
         Update: {
-          archived?: boolean | null
-          archived_at?: string | null
           call_sid?: string
           content?: string
           created_at?: string
-          folder_id?: string | null
           id?: string
           org_id?: string
-          priority?: string | null
         }
         Relationships: [
           {
@@ -1878,13 +1570,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "calls"
             referencedColumns: ["call_sid"]
-          },
-          {
-            foreignKeyName: "transcripts_folder_id_fkey"
-            columns: ["folder_id"]
-            isOneToOne: false
-            referencedRelation: "content_folders"
-            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "transcripts_org_id_fkey"
@@ -1975,7 +1660,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      appointments_safe: {
+        Row: {
+          created_at: string | null
+          end_at: string | null
+          has_email: boolean | null
+          has_name: boolean | null
+          has_phone: boolean | null
+          id: string | null
+          note: string | null
+          organization_id: string | null
+          source: string | null
+          start_at: string | null
+          status: string | null
+          tz: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          end_at?: string | null
+          has_email?: never
+          has_name?: never
+          has_phone?: never
+          id?: string | null
+          note?: string | null
+          organization_id?: string | null
+          source?: string | null
+          start_at?: string | null
+          status?: string | null
+          tz?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          end_at?: string | null
+          has_email?: never
+          has_name?: never
+          has_phone?: never
+          id?: string | null
+          note?: string | null
+          organization_id?: string | null
+          source?: string | null
+          start_at?: string | null
+          status?: string | null
+          tz?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       acquire_guardian_lock: {
@@ -1988,10 +1717,6 @@ export type Database = {
       }
       anonymize_ip_address: {
         Args: { ip: unknown }
-        Returns: unknown
-      }
-      binary_quantize: {
-        Args: { "": string } | { "": unknown }
         Returns: unknown
       }
       can_access_customer_pii: {
@@ -2033,10 +1758,6 @@ export type Database = {
       citextsend: {
         Args: { "": string }
         Returns: string
-      }
-      cleanup_expired_tokens: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
       }
       cleanup_hotline_rate_limits: {
         Args: Record<PropertyKey, never>
@@ -2233,44 +1954,12 @@ export type Database = {
         Args: { p_test_name: string; p_variant: string }
         Returns: Json
       }
-      halfvec_avg: {
-        Args: { "": number[] }
-        Returns: unknown
-      }
-      halfvec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      halfvec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      halfvec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
-      }
-      hnsw_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_sparsevec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnswhandler: {
-        Args: { "": unknown }
-        Returns: unknown
       }
       is_autoheal_allowed: {
         Args: { p_action_type: string }
@@ -2283,26 +1972,6 @@ export type Database = {
       is_org_member: {
         Args: { p_org_id: string }
         Returns: boolean
-      }
-      ivfflat_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflat_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflathandler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      l2_norm: {
-        Args: { "": unknown } | { "": unknown }
-        Returns: number
-      }
-      l2_normalize: {
-        Args: { "": string } | { "": unknown } | { "": unknown }
-        Returns: string
       }
       log_ab_test_access: {
         Args: { p_access_type?: string; p_test_name: string; p_variant: string }
@@ -2433,81 +2102,17 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
-      search_embeddings: {
-        Args: {
-          filter_content_type?: Database["public"]["Enums"]["embedding_content_type"]
-          filter_date_from?: string
-          filter_date_to?: string
-          filter_org_id?: string
-          filter_user_id?: string
-          match_count?: number
-          match_threshold?: number
-          query_embedding: string
-        }
-        Returns: {
-          content_id: string
-          content_summary: string
-          content_text: string
-          content_type: Database["public"]["Enums"]["embedding_content_type"]
-          created_at: string
-          id: string
-          metadata: Json
-          similarity: number
-        }[]
-      }
       share_org: {
         Args: { _user_a: string; _user_b: string }
         Returns: boolean
-      }
-      sparsevec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      sparsevec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      sparsevec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
       }
       validate_security_post_upgrade: {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
-      vector_avg: {
-        Args: { "": number[] }
-        Returns: string
-      }
-      vector_dims: {
-        Args: { "": string } | { "": unknown }
-        Returns: number
-      }
-      vector_norm: {
-        Args: { "": string }
-        Returns: number
-      }
-      vector_out: {
-        Args: { "": string }
-        Returns: unknown
-      }
-      vector_send: {
-        Args: { "": string }
-        Returns: string
-      }
-      vector_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator"
-      embedding_content_type:
-        | "email"
-        | "transcript"
-        | "thread"
-        | "appointment"
-        | "note"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2636,13 +2241,6 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user", "moderator"],
-      embedding_content_type: [
-        "email",
-        "transcript",
-        "thread",
-        "appointment",
-        "note",
-      ],
     },
   },
 } as const

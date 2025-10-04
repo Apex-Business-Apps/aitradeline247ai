@@ -74,7 +74,7 @@ const RoiCalculator = () => {
       bestPlan
     });
   }, [calls, currentAnswer, conv, value, tlCapture]);
-  return <Card data-qa="hero-table-1" className="w-full bg-card/95 backdrop-blur-sm border-primary/20">
+  return <Card className="w-full bg-card/95 backdrop-blur-sm border-primary/20">
       <CardHeader className="text-center pb-2">
         <CardTitle className="text-lg md:text-xl text-foreground mb-1">
           Calculate Your ROI

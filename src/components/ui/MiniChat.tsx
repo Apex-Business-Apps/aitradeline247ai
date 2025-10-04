@@ -219,7 +219,6 @@ export const MiniChat: React.FC = () => {
     <>
       {/* Chat Launcher Button - relocated on mobile to avoid nav/footer clash */}
       <button
-        data-qa="chat-launcher"
         onClick={openChat}
         aria-expanded={isOpen}
         aria-controls="mini-chat-dialog"
