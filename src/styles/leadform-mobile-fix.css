@@ -5,6 +5,11 @@
     padding-right: calc(var(--chat-bubble-safe-gap) + 16px) !important;
     padding-bottom: calc(var(--chat-bubble-safe-gap) + 24px) !important;
   }
+  
+  /* Shift encircled hero content 0.8cm (30px) to the right */
+  [data-qa="hero"] .text-center {
+    padding-left: 30px;
+  }
 }
 
 /* Desktop: no changes */
