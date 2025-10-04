@@ -1,0 +1,45 @@
+/* ==== Mobile/Tablet Centering & Chat-Clear (final) ==== */
+:root{
+  /* Fallback; your runtime can overwrite this var if present */
+  --chat-bubble-safe-gap: 96px;
+  --gutter: clamp(16px, 4vw, 28px);
+}
+
+@media (max-width: 1024px){
+
+  /* Keep the chat pinned & predictable */
+  [data-qa="chat-launcher"]{
+    position: fixed;
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 60;
+  }
+
+  /* Give the whole hero enough room on the right & bottom for chat */
+  [data-qa="hero"]{
+    box-sizing: border-box;
+    padding-left: var(--gutter) !important;
+    padding-right: calc(var(--gutter) + var(--chat-bubble-safe-gap)) !important;
+    padding-bottom: calc(24px + var(--chat-bubble-safe-gap)) !important;
+  }
+
+  /* CENTER THE CARD — no width math, no grid changes */
+  [data-qa="lead-form"]{
+    box-sizing: border-box;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: auto !important;          /* let it size naturally */
+    max-width: 680px !important;     /* cap so it feels balanced on tablets */
+  }
+
+  /* Comfortable taps */
+  [data-qa="lead-form"] input[type="checkbox"],
+  [data-qa="lead-form"] button{
+    min-height: 44px;
+  }
+}
+
+/* Desktop untouched */
+@media (min-width: 1025px){
+  [data-qa="lead-form"]{ max-width: none; }
+}
