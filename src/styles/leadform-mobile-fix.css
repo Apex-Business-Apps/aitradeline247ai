@@ -1,0 +1,39 @@
+/* ===== Lead Form Mobile/Tablet Fix (scoped) ===== */
+:root{
+  --hero-gutter: clamp(16px, 4vw, 28px);
+  --chat-bubble-safe-gap: 96px; /* runtime will update this */
+}
+
+/* Phone + tablet only */
+@media (max-width:1024px){
+
+  /* 3.1 Keep the entire hero content clear of the chat bubble */
+  [data-qa="hero"]{
+    padding-right: calc(var(--hero-gutter) + var(--chat-bubble-safe-gap)) !important;
+    padding-left: var(--hero-gutter) !important;
+    padding-bottom: calc(24px + var(--chat-bubble-safe-gap)) !important; /* consent/submit never under chat */
+    position: relative;
+    contain: layout style paint; /* prevents outside shifts */
+  }
+
+  /* 3.2 Let the form expand to max usable width (no overlap, no scroll) */
+  [data-qa="lead-form"]{
+    display:block;
+    max-width: none !important;
+    width: calc(100vw - (var(--hero-gutter)*2) - var(--chat-bubble-safe-gap)) !important;
+    margin: 0 !important;               /* stop auto-centering that caused squeeze */
+    overflow-x: hidden;                 /* belt & suspenders */
+  }
+
+  /* 3.3 Keep consent row readable & tappable */
+  [data-qa="lead-form"] input[type="checkbox"],
+  [data-qa="lead-form"] button{
+    min-height:44px;
+  }
+}
+
+/* Desktop unchanged */
+@media (min-width:1025px){
+  [data-qa="hero"]{ padding-right: initial; padding-left: initial; padding-bottom: initial; }
+  [data-qa="lead-form"]{ width:auto !important; }
+}

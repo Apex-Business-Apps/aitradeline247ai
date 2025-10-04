@@ -5,6 +5,7 @@ import "./styles/roi-table.css";
 import "./styles/header-align.css";
 import "./styles/overrides.css";
 import "./styles/mobile-lead-form.css";
+import "./styles/leadform-mobile-fix.css";
 import "./i18n/config";
 import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
