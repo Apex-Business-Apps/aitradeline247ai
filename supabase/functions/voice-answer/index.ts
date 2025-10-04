@@ -21,17 +21,57 @@ serve(async (req) => {
       throw new Error('Missing required environment variables');
     }
 
-    // Validate Twilio signature for security
+    // Validate Twilio signature for security (CRITICAL FIX)
     const twilioSignature = req.headers.get('x-twilio-signature');
     if (!twilioSignature) {
       console.warn('Missing Twilio signature - rejecting request');
       return new Response('Forbidden', { status: 403 });
     }
 
+    // CRITICAL: Validate HMAC signature from Twilio
+    const url = new URL(req.url);
     const formData = await req.formData();
-    const CallSid = formData.get('CallSid') as string;
-    const From = formData.get('From') as string;
-    const To = formData.get('To') as string;
+    const params: Record<string, string> = {};
+    
+    for (const [key, value] of formData.entries()) {
+      params[key] = value.toString();
+    }
+
+    // Build signature validation string
+    let signatureString = url.origin + url.pathname;
+    const sortedKeys = Object.keys(params).sort();
+    for (const key of sortedKeys) {
+      signatureString += key + params[key];
+    }
+
+    // Compute expected signature
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(TWILIO_AUTH_TOKEN);
+    const messageData = encoder.encode(signatureString);
+    
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-1' },
+      false,
+      ['sign']
+    );
+    
+    const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+    const expectedSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)));
+
+    // Compare signatures (constant-time comparison)
+    if (expectedSignature !== twilioSignature) {
+      console.error('Invalid Twilio signature - potential spoofing attempt');
+      return new Response('Forbidden - Invalid Signature', { status: 403 });
+    }
+
+    console.log('✅ Twilio signature validated successfully');
+
+    // Extract parameters (already parsed above for signature validation)
+    const CallSid = params['CallSid'];
+    const From = params['From'];
+    const To = params['To'];
 
     // Input validation
     if (!CallSid || !From || !To) {

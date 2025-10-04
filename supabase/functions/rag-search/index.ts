@@ -1,6 +1,9 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import { createRequestContext, logWithContext, createResponseHeaders } from '../_shared/requestId.ts';
+import { fetchWithRetry } from '../_shared/retry.ts';
+import { globalCircuitBreaker } from '../_shared/circuitBreaker.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -19,8 +22,10 @@ serve(async (req) => {
   }
 
   const startTime = Date.now();
+  const requestCtx = createRequestContext(req);
 
   try {
+    logWithContext(requestCtx, 'info', 'RAG search request received');
     // Get auth header
     const authHeader = req.headers.get('authorization');
     if (!authHeader) {
@@ -46,20 +51,33 @@ serve(async (req) => {
       );
     }
 
-    // Rate limiting check (60 req/min per user)
+    // Rate limiting check (60 req/min per user) - FIXED
     const rateLimitKey = `rag_search:${user.id}`;
-    const { data: rateLimitData, error: rateLimitError } = await supabase
-      .rpc('secure-rate-limit', {
-        identifier: rateLimitKey,
-        max_requests: 60,
-        window_seconds: 60
-      });
+    
+    try {
+      const { data: rateLimitData, error: rateLimitError } = await supabase
+        .rpc('secure_rate_limit', {  // Fixed: was 'secure-rate-limit'
+          identifier: rateLimitKey,
+          max_requests: 60,
+          window_seconds: 60
+        });
 
-    if (rateLimitError || (rateLimitData && !rateLimitData.allowed)) {
-      return new Response(
-        JSON.stringify({ ok: false, error: 'Rate limit exceeded. Max 60 requests per minute.' }),
-        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      if (rateLimitError) {
+        console.error('Rate limit check error:', rateLimitError);
+        // Fail open for rate limit errors to avoid blocking legitimate users
+      } else if (rateLimitData && !rateLimitData.allowed) {
+        return new Response(
+          JSON.stringify({ 
+            ok: false, 
+            error: 'Rate limit exceeded. Max 60 requests per minute.',
+            reset_at: rateLimitData.reset_at 
+          }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    } catch (rateLimitErr) {
+      console.error('Rate limit exception:', rateLimitErr);
+      // Continue execution - fail open
     }
 
     // Parse and validate request body
@@ -101,25 +119,39 @@ serve(async (req) => {
       );
     }
 
-    const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'text-embedding-3-small',
-        input: queryText,
-        dimensions: 1536,
-      }),
-    });
+    // Generate embedding with circuit breaker and retry logic
+    const embeddingResponse = await globalCircuitBreaker.execute('openai-embeddings', () =>
+      fetchWithRetry('https://api.openai.com/v1/embeddings', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openaiApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'text-embedding-3-small',
+          input: queryText,
+          dimensions: 1536,
+        }),
+      }, {
+        maxAttempts: 3,
+        initialDelayMs: 1000,
+        timeoutMs: 30000
+      })
+    );
 
     if (!embeddingResponse.ok) {
       const errorText = await embeddingResponse.text();
-      console.error('OpenAI embedding error:', errorText);
+      logWithContext(requestCtx, 'error', 'OpenAI embedding error', { status: embeddingResponse.status, error: errorText });
       return new Response(
         JSON.stringify({ ok: false, error: 'Failed to generate embedding' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          status: 500, 
+          headers: { 
+            ...corsHeaders, 
+            ...createResponseHeaders(requestCtx),
+            'Content-Type': 'application/json' 
+          } 
+        }
       );
     }
 
@@ -164,13 +196,22 @@ serve(async (req) => {
       query_length: queryText.length,
     }));
 
+    logWithContext(requestCtx, 'info', 'RAG search completed', { hits_count: hits.length, latency_ms });
+
     return new Response(
       JSON.stringify({
         ok: true,
         latency_ms,
         hits,
       }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { 
+        status: 200, 
+        headers: { 
+          ...corsHeaders, 
+          ...createResponseHeaders(requestCtx),
+          'Content-Type': 'application/json' 
+        } 
+      }
     );
 
   } catch (error) {

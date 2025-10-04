@@ -1,6 +1,9 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import { createRequestContext, logWithContext, createResponseHeaders } from '../_shared/requestId.ts';
+import { fetchWithRetry } from '../_shared/retry.ts';
+import { globalCircuitBreaker } from '../_shared/circuitBreaker.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -46,20 +49,33 @@ serve(async (req) => {
       );
     }
 
-    // Rate limiting check (60 req/min per user)
+    // Rate limiting check (60 req/min per user) - FIXED
     const rateLimitKey = `rag_answer:${user.id}`;
-    const { data: rateLimitData, error: rateLimitError } = await supabase
-      .rpc('secure-rate-limit', {
-        identifier: rateLimitKey,
-        max_requests: 60,
-        window_seconds: 60
-      });
+    
+    try {
+      const { data: rateLimitData, error: rateLimitError } = await supabase
+        .rpc('secure_rate_limit', {  // Fixed: was 'secure-rate-limit'
+          identifier: rateLimitKey,
+          max_requests: 60,
+          window_seconds: 60
+        });
 
-    if (rateLimitError || (rateLimitData && !rateLimitData.allowed)) {
-      return new Response(
-        JSON.stringify({ ok: false, error: 'Rate limit exceeded. Max 60 requests per minute.' }),
-        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      if (rateLimitError) {
+        console.error('Rate limit check error:', rateLimitError);
+        // Fail open for rate limit errors to avoid blocking legitimate users
+      } else if (rateLimitData && !rateLimitData.allowed) {
+        return new Response(
+          JSON.stringify({ 
+            ok: false, 
+            error: 'Rate limit exceeded. Max 60 requests per minute.',
+            reset_at: rateLimitData.reset_at 
+          }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    } catch (rateLimitErr) {
+      console.error('Rate limit exception:', rateLimitErr);
+      // Continue execution - fail open
     }
 
     // Parse and validate request body
