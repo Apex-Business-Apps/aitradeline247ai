@@ -72,12 +72,21 @@ serve(async (req) => {
       );
     }
 
+    // Guardrail: enforce max query_text length
+    const maxQueryLength = 2000;
+    let queryText = body.query_text.trim();
+    if (queryText.length > maxQueryLength) {
+      queryText = queryText.substring(0, maxQueryLength);
+      console.log(`Query truncated from ${body.query_text.length} to ${maxQueryLength} chars`);
+    }
+
     const top_k = body.top_k ?? 8;
     const filters = body.filters ?? {};
 
-    if (typeof top_k !== 'number' || top_k < 1 || top_k > 50) {
+    // Guardrail: enforce max top_k
+    if (typeof top_k !== 'number' || top_k < 1 || top_k > 20) {
       return new Response(
-        JSON.stringify({ ok: false, error: 'top_k must be a number between 1 and 50' }),
+        JSON.stringify({ ok: false, error: 'top_k must be a number between 1 and 20' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -100,7 +109,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'text-embedding-3-small',
-        input: body.query_text,
+        input: queryText,
         dimensions: 1536,
       }),
     });
@@ -132,11 +141,34 @@ serve(async (req) => {
       );
     }
 
-    // Calculate confidence based on average relevance score
+    // Hard rule: if 0 hits, return snippets_only with empty citations
     const matchedResults = matches || [];
-    const avgScore = matchedResults.length > 0
-      ? matchedResults.reduce((sum: number, m: any) => sum + m.score, 0) / matchedResults.length
-      : 0;
+    if (matchedResults.length === 0) {
+      const latency_ms = Date.now() - startTime;
+      console.log(JSON.stringify({
+        request_id: crypto.randomUUID(),
+        user_id: user.id,
+        latency_ms,
+        confidence: 'low',
+        mode: 'snippets_only',
+        hits_count: 0,
+      }));
+      
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          latency_ms,
+          mode: 'snippets_only',
+          confidence: 'low',
+          answer_draft: null,
+          citations: [],
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Calculate confidence based on average relevance score
+    const avgScore = matchedResults.reduce((sum: number, m: any) => sum + m.score, 0) / matchedResults.length;
 
     let confidence: 'high' | 'medium' | 'low';
     if (avgScore >= 0.75) {
@@ -157,19 +189,28 @@ serve(async (req) => {
     }
     const deduplicatedMatches = Array.from(sourceMap.values());
 
-    // Build citations
+    // Build citations with chunk_id included
     const citations = deduplicatedMatches.slice(0, 5).map((match: any) => ({
+      chunk_id: match.chunk_id,
       source_id: match.source_id,
-      source_type: match.source_type,
       uri: match.uri,
-      snippet: match.snippet,
       score: match.score,
+      snippet: match.snippet,
     }));
 
     const latency_ms = Date.now() - startTime;
 
     // If confidence is low, return snippets-only mode
     if (confidence === 'low') {
+      console.log(JSON.stringify({
+        request_id: crypto.randomUUID(),
+        user_id: user.id,
+        latency_ms,
+        confidence,
+        mode: 'snippets_only',
+        hits_count: matchedResults.length,
+      }));
+
       return new Response(
         JSON.stringify({
           ok: true,
@@ -178,11 +219,6 @@ serve(async (req) => {
           confidence,
           answer_draft: null,
           citations,
-          context_used: {
-            chunks_retrieved: matchedResults.length,
-            unique_sources: deduplicatedMatches.length,
-            avg_relevance: avgScore,
-          },
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -225,7 +261,7 @@ ${contextChunks}`;
         model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: body.query_text }
+          { role: 'user', content: queryText }
         ],
         temperature: 0.7,
         max_tokens: 800,
@@ -259,6 +295,17 @@ ${contextChunks}`;
     const llmData = await llmResponse.json();
     const answerDraft = llmData.choices?.[0]?.message?.content || null;
 
+    // Logging for observability
+    console.log(JSON.stringify({
+      request_id: crypto.randomUUID(),
+      user_id: user.id,
+      latency_ms,
+      confidence,
+      mode: 'answer',
+      hits_count: matchedResults.length,
+      answer_length: answerDraft?.length || 0,
+    }));
+
     return new Response(
       JSON.stringify({
         ok: true,
@@ -267,19 +314,15 @@ ${contextChunks}`;
         confidence,
         answer_draft: answerDraft,
         citations,
-        context_used: {
-          chunks_retrieved: matchedResults.length,
-          unique_sources: deduplicatedMatches.length,
-          avg_relevance: avgScore,
-        },
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
     console.error('rag-answer error:', error);
+    // Don't expose stack traces
     return new Response(
-      JSON.stringify({ ok: false, error: error instanceof Error ? error.message : 'Internal server error' }),
+      JSON.stringify({ ok: false, error: 'An unexpected error occurred' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

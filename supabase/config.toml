@@ -67,3 +67,6 @@ verify_jwt = true
 
 [functions.rag-answer]
 verify_jwt = true
+
+[functions.ragz]
+verify_jwt = false

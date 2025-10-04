@@ -72,12 +72,21 @@ serve(async (req) => {
       );
     }
 
+    // Guardrail: enforce max query_text length
+    const maxQueryLength = 2000;
+    let queryText = body.query_text.trim();
+    if (queryText.length > maxQueryLength) {
+      queryText = queryText.substring(0, maxQueryLength);
+      console.log(`Query truncated from ${body.query_text.length} to ${maxQueryLength} chars`);
+    }
+
     const top_k = body.top_k ?? 8;
     const filters = body.filters ?? {};
 
-    if (typeof top_k !== 'number' || top_k < 1 || top_k > 50) {
+    // Guardrail: enforce max top_k
+    if (typeof top_k !== 'number' || top_k < 1 || top_k > 20) {
       return new Response(
-        JSON.stringify({ ok: false, error: 'top_k must be a number between 1 and 50' }),
+        JSON.stringify({ ok: false, error: 'top_k must be a number between 1 and 20' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -100,7 +109,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'text-embedding-3-small',
-        input: body.query_text,
+        input: queryText,
         dimensions: 1536,
       }),
     });
@@ -145,6 +154,16 @@ serve(async (req) => {
       meta: match.meta || {},
     }));
 
+    // Logging for observability
+    console.log(JSON.stringify({
+      request_id: crypto.randomUUID(),
+      user_id: user.id,
+      latency_ms,
+      hits_count: hits.length,
+      top_k,
+      query_length: queryText.length,
+    }));
+
     return new Response(
       JSON.stringify({
         ok: true,
@@ -156,8 +175,9 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('rag-search error:', error);
+    // Don't expose stack traces
     return new Response(
-      JSON.stringify({ ok: false, error: error instanceof Error ? error.message : 'Internal server error' }),
+      JSON.stringify({ ok: false, error: 'An unexpected error occurred' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
