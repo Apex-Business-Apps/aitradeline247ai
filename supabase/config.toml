@@ -71,5 +71,5 @@ verify_jwt = true
 [functions.ragz]
 verify_jwt = false
 
-[functions.rag-ingest]
-verify_jwt = false
+# rag-ingest now requires service_role key - NOT public
+# Call with: Authorization: Bearer <SERVICE_ROLE_KEY>

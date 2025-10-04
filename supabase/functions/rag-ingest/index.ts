@@ -81,8 +81,26 @@ serve(async (req) => {
   }
 
   try {
+    // SECURITY: Only allow service_role key (NOT anon key)
+    const authHeader = req.headers.get('authorization');
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    
+    if (!authHeader || !authHeader.includes(serviceRoleKey)) {
+      console.error('Unauthorized ingestion attempt - service_role key required');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Unauthorized', 
+          message: 'RAG ingestion requires service_role key. Never use anon key for ingestion.' 
+        }), 
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseKey = serviceRoleKey;
     const openaiKey = Deno.env.get('OPENAI_API_KEY');
     
     if (!openaiKey) {

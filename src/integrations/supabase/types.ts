@@ -2173,6 +2173,17 @@ export type Database = {
         Args: { p_ani_hash: string; p_ip_hash: string }
         Returns: Json
       }
+      check_rag_health: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          chunks_without_embeddings: number
+          health_status: string
+          last_ingestion: string
+          total_chunks: number
+          total_embeddings: number
+          total_sources: number
+        }[]
+      }
       citext: {
         Args: { "": boolean } | { "": string } | { "": unknown }
         Returns: string
