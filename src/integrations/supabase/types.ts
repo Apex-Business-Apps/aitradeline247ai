@@ -2211,6 +2211,10 @@ export type Database = {
         Args: { "": string }
         Returns: string
       }
+      cleanup_expired_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_expired_tokens: {
         Args: Record<PropertyKey, never>
         Returns: undefined

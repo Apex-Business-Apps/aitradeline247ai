@@ -16,22 +16,28 @@ export const useSecureFormSubmission = (options: SecureSubmissionOptions = {}) =
     if (!rateLimitKey) return true;
     
     try {
-      // Use server-side rate limiting via edge function
-      const { data, error } = await supabase.functions.invoke('secure-rate-limit', {
-        body: {
-          identifier: rateLimitKey,
-          endpoint: 'form_submission',
-          maxRequests: maxAttemptsPerHour,
-          windowMinutes: 60
-        }
+      // Use server-side rate limiting via RPC function
+      const { data, error } = await supabase.rpc('secure_rate_limit', {
+        identifier: rateLimitKey,
+        max_requests: maxAttemptsPerHour,
+        window_seconds: 3600
       });
 
-      if (error || !data?.allowed) {
-        console.warn('Rate limit exceeded:', error?.message || 'Too many requests');
+      if (error) {
+        console.error('Rate limit check error:', error);
+        // Fail closed - deny on error to prevent bypass
         return false;
       }
 
-      setAttempts(data.requestCount || 0);
+      // Parse the response - RPC returns Json type
+      const result = data as { allowed: boolean; remaining: number; limit: number };
+      
+      if (!result?.allowed) {
+        console.warn('Rate limit exceeded for:', rateLimitKey);
+        return false;
+      }
+
+      setAttempts(maxAttemptsPerHour - (result.remaining || 0));
       return true;
     } catch (error) {
       console.error('Rate limit check failed:', error);

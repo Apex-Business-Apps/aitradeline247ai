@@ -56,35 +56,39 @@ export const useSessionSecurity = () => {
     }
   }, [user]);
 
-  // Monitor for suspicious activity
+  // Monitor for critical suspicious activity only (removed invasive monitoring)
   const monitorSuspiciousActivity = useCallback(() => {
-    const suspiciousEvents = [
-      'copy', 'cut', 'paste',
-      'contextmenu', 'selectstart',
-      'dragstart', 'drop'
-    ];
+    // Only monitor truly suspicious events, not normal user actions
+    const criticalEvents = ['contextmenu'];
+    let eventCount = 0;
+    const threshold = 10;
 
     const logSuspiciousActivity = (event: Event) => {
-      console.warn(`🚨 Suspicious activity detected: ${event.type}`);
-      // Log to analytics for security monitoring
-      supabase.functions.invoke('secure-analytics', {
-        body: {
-          event_type: 'suspicious_activity',
-          event_data: {
-            activity_type: event.type,
-            timestamp: new Date().toISOString(),
-            user_agent: navigator.userAgent
+      eventCount++;
+      
+      // Only log if threshold exceeded (prevents false positives)
+      if (eventCount > threshold) {
+        console.warn(`🚨 Suspicious activity pattern detected: ${event.type}`);
+        supabase.functions.invoke('secure-analytics', {
+          body: {
+            event_type: 'suspicious_activity_pattern',
+            event_data: {
+              activity_type: event.type,
+              event_count: eventCount,
+              timestamp: new Date().toISOString()
+            }
           }
-        }
-      });
+        });
+        eventCount = 0; // Reset after logging
+      }
     };
 
-    suspiciousEvents.forEach(eventType => {
+    criticalEvents.forEach(eventType => {
       document.addEventListener(eventType, logSuspiciousActivity);
     });
 
     return () => {
-      suspiciousEvents.forEach(eventType => {
+      criticalEvents.forEach(eventType => {
         document.removeEventListener(eventType, logSuspiciousActivity);
       });
     };
