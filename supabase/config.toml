@@ -70,3 +70,6 @@ verify_jwt = true
 
 [functions.ragz]
 verify_jwt = false
+
+[functions.rag-ingest]
+verify_jwt = false
