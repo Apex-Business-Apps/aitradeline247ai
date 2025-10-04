@@ -30,10 +30,10 @@ import RoiCalculator from "../components/RoiCalculator";
 import officialLogo from '@/assets/official-logo.svg';
 export default function HeroRoiDuo() {
   return <section data-qa="hero" className="bg-gradient-orange-subtle section-heavy" style={{
-    paddingTop: 'max(env(safe-area-inset-top, 0), 5rem)',
-    paddingBottom: 'max(env(safe-area-inset-bottom, 0), 5rem)',
-    paddingLeft: 'env(safe-area-inset-left, 0)',
-    paddingRight: 'env(safe-area-inset-right, 0)'
+    paddingTop: 'calc(env(safe-area-inset-top, 0px) + 5rem)',
+    paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 5rem)',
+    paddingLeft: 'calc(env(safe-area-inset-left, 0px) + 1rem)',
+    paddingRight: 'calc(env(safe-area-inset-right, 0px) + 1rem)'
   }} data-lovable-lock="permanent">
       <div className="container" data-lovable-lock="permanent">
         {/* Hero Content */}
