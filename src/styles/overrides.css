@@ -31,12 +31,7 @@
     margin: 0 !important;           /* remove prior auto margins */
   }
 
-  /* Keep a visual gutter on the right for the chat bubble */
-  .hero,
-  [data-qa="hero"],
-  section.hero {
-    padding-right: calc(var(--hero-padding-x) + var(--chat-bubble-safe-gap));
-  }
+  /* Chat bubble safe gap removed - handled by leadform-mobile-fix.css */
 
   /* Safety: if content still overflows, allow horizontal scroll only on the tables */
   [data-qa="hero-table-1"],
