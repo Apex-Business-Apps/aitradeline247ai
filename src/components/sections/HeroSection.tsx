@@ -4,7 +4,7 @@ import officialLogo from '@/assets/official-logo.svg';
 
 export const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-orange-subtle pt-2 pb-32 text-center overflow-hidden">
+    <section className="relative bg-gradient-orange-subtle hero-safe-area text-center overflow-hidden">
       {/* Multi-layered Background System for Premium Translucency */}
       {/* Premium base gradient (bottom-most) */}
       <div className="absolute inset-0" style={{background: 'var(--gradient-premium)'}}></div>

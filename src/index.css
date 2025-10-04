@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Safe Area Support for Hero Sections */
+.hero-safe-area {
+  padding-top: max(0.5rem, env(safe-area-inset-top)) !important;
+  padding-bottom: max(8rem, env(safe-area-inset-bottom)) !important;
+  padding-left: max(1rem, env(safe-area-inset-left)) !important;
+  padding-right: max(1rem, env(safe-area-inset-right)) !important;
+}
+
 @font-face {
   font-family: 'BrandFont';
   src: url('/assets/fonts/BrandFont.woff2') format('woff2');
