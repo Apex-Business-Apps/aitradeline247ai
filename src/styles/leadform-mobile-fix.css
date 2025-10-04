@@ -6,9 +6,9 @@
     padding-bottom: calc(var(--chat-bubble-safe-gap) + 24px) !important;
   }
   
-  /* Shift encircled hero content 0.3cm (11px) to the right */
+  /* Shift encircled hero content 0.4cm (15px) to the right */
   [data-qa="hero"] .text-center {
-    padding-left: 11px;
+    padding-left: 15px;
   }
 }
 

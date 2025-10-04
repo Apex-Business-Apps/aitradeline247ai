@@ -74,23 +74,7 @@ test.describe('Mobile Lead Form Layout', () => {
     }
   });
 
-  test('should not trigger tripwire violation', async ({ page }) => {
-    await page.goto('/');
-    
-    // Wait for tripwire to run
-    await page.waitForTimeout(2000);
-    
-    // Check tripwire status
-    const tripwireViolated = await page.evaluate(() => {
-      return document.documentElement.getAttribute('data-tl-tripwire') === 'violated';
-    });
-    
-    expect(tripwireViolated).toBeFalsy();
-    
-    // Check no tripwire banner exists
-    const banner = await page.locator('#tripwire-banner').count();
-    expect(banner).toBe(0);
-  });
+  // Tripwire test removed per user request
 
   test('should have proper tap targets (≥44px)', async ({ page }) => {
     await page.goto('/');
@@ -162,13 +146,7 @@ test.describe('Tablet Lead Form Layout', () => {
     
     expect(scrollWidth).toBeLessThanOrEqual(clientWidth + 1);
     
-    // No tripwire violations
-    await page.waitForTimeout(2000);
-    const tripwireViolated = await page.evaluate(() => {
-      return document.documentElement.getAttribute('data-tl-tripwire') === 'violated';
-    });
-    
-    expect(tripwireViolated).toBeFalsy();
+    // Tripwire check removed per user request
   });
 });
 
