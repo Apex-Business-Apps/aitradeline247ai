@@ -61,3 +61,9 @@ verify_jwt = false
 
 [functions.dashboard-summary]
 verify_jwt = true
+
+[functions.rag-search]
+verify_jwt = true
+
+[functions.rag-answer]
+verify_jwt = true

@@ -1,0 +1,164 @@
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+interface SearchRequest {
+  query_text: string;
+  top_k?: number;
+  filters?: Record<string, any>;
+}
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  const startTime = Date.now();
+
+  try {
+    // Get auth header
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Authorization required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Initialize Supabase client with user's JWT
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    // Verify user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Invalid or expired token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Rate limiting check (60 req/min per user)
+    const rateLimitKey = `rag_search:${user.id}`;
+    const { data: rateLimitData, error: rateLimitError } = await supabase
+      .rpc('secure-rate-limit', {
+        identifier: rateLimitKey,
+        max_requests: 60,
+        window_seconds: 60
+      });
+
+    if (rateLimitError || (rateLimitData && !rateLimitData.allowed)) {
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Rate limit exceeded. Max 60 requests per minute.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Parse and validate request body
+    const body: SearchRequest = await req.json();
+    
+    if (!body.query_text || typeof body.query_text !== 'string' || body.query_text.trim().length === 0) {
+      return new Response(
+        JSON.stringify({ ok: false, error: 'query_text is required and must be a non-empty string' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const top_k = body.top_k ?? 8;
+    const filters = body.filters ?? {};
+
+    if (typeof top_k !== 'number' || top_k < 1 || top_k > 50) {
+      return new Response(
+        JSON.stringify({ ok: false, error: 'top_k must be a number between 1 and 50' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Generate embedding with OpenAI
+    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openaiApiKey) {
+      console.error('OPENAI_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Service configuration error' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'text-embedding-3-small',
+        input: body.query_text,
+        dimensions: 1536,
+      }),
+    });
+
+    if (!embeddingResponse.ok) {
+      const errorText = await embeddingResponse.text();
+      console.error('OpenAI embedding error:', errorText);
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Failed to generate embedding' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const embeddingData = await embeddingResponse.json();
+    const queryVector = embeddingData.data[0].embedding;
+
+    // Call rag_match RPC
+    const { data: matches, error: matchError } = await supabase.rpc('rag_match', {
+      query_vector: queryVector,
+      top_k: top_k,
+      filter: filters,
+    });
+
+    if (matchError) {
+      console.error('rag_match RPC error:', matchError);
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Search query failed' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const latency_ms = Date.now() - startTime;
+
+    // Format response
+    const hits = (matches || []).map((match: any) => ({
+      chunk_id: match.chunk_id,
+      source_id: match.source_id,
+      score: match.score,
+      snippet: match.snippet,
+      source_type: match.source_type,
+      uri: match.uri,
+      meta: match.meta || {},
+    }));
+
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        latency_ms,
+        hits,
+      }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    console.error('rag-search error:', error);
+    return new Response(
+      JSON.stringify({ ok: false, error: error instanceof Error ? error.message : 'Internal server error' }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+});
