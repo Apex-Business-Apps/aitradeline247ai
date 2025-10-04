@@ -2216,6 +2216,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      cleanup_old_ab_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_old_analytics_events: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -2686,6 +2690,14 @@ export type Database = {
           metadata: Json
           similarity: number
         }[]
+      }
+      secure_rate_limit: {
+        Args: {
+          identifier: string
+          max_requests: number
+          window_seconds: number
+        }
+        Returns: Json
       }
       share_org: {
         Args: { _user_a: string; _user_b: string }
