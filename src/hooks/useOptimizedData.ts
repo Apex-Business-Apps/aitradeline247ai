@@ -14,7 +14,11 @@ interface OptimizedDataOptions {
   retryAttempts?: number;
 }
 
+// Production-ready cache with size management
+const MAX_CACHE_SIZE = 50; // Prevent memory leaks
+const MAX_CACHE_AGE = 30 * 60 * 1000; // 30 minutes absolute max
 const dataCache = new Map<string, CacheEntry<any>>();
+const pendingRequests = new Map<string, Promise<any>>(); // Request deduplication
 
 export function useOptimizedData<T>(
   key: string,
@@ -71,6 +75,20 @@ export function useOptimizedData<T>(
       setIsLoading(true);
     }
 
+    // Request deduplication - prevent duplicate simultaneous requests
+    const pendingRequest = pendingRequests.get(key);
+    if (pendingRequest && !isRefetch) {
+      try {
+        const result = await pendingRequest;
+        setData(result);
+        setError(null);
+        setIsLoading(false);
+        return;
+      } catch (err) {
+        // If pending request failed, continue with new request
+      }
+    }
+
     // Cancel any ongoing request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -91,7 +109,11 @@ export function useOptimizedData<T>(
         }
       }
 
-      const result = await fetcher();
+      // Create request promise for deduplication
+      const requestPromise = fetcher();
+      pendingRequests.set(key, requestPromise);
+
+      const result = await requestPromise;
       
       // Check if request was aborted
       if (abortControllerRef.current?.signal.aborted) {
@@ -128,8 +150,29 @@ export function useOptimizedData<T>(
         setData(cachedData);
       }
     } finally {
+      // Clean up pending request
+      pendingRequests.delete(key);
       setIsLoading(false);
       setIsRefetching(false);
+      
+      // Proactive cache cleanup to prevent memory leaks
+      if (dataCache.size > MAX_CACHE_SIZE) {
+        const entries = Array.from(dataCache.entries());
+        const now = Date.now();
+        
+        // Remove oldest or expired entries
+        const sortedEntries = entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+        for (let i = 0; i < entries.length - MAX_CACHE_SIZE; i++) {
+          dataCache.delete(sortedEntries[i][0]);
+        }
+        
+        // Also remove very old entries regardless of size
+        entries.forEach(([cacheKey, entry]) => {
+          if (now - entry.timestamp > MAX_CACHE_AGE) {
+            dataCache.delete(cacheKey);
+          }
+        });
+      }
     }
   }, [key, fetcher, getCachedData, setCachedData, isStale, retryAttempts, data]);
 
@@ -202,4 +245,14 @@ export function preloadData<T>(key: string, fetcher: () => Promise<T>) {
 // Clear all cache utility
 export function clearDataCache() {
   dataCache.clear();
+  pendingRequests.clear();
+}
+
+// Get cache statistics for monitoring
+export function getCacheStats() {
+  return {
+    size: dataCache.size,
+    pendingRequests: pendingRequests.size,
+    maxSize: MAX_CACHE_SIZE
+  };
 }

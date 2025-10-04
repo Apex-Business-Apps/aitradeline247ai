@@ -7,6 +7,7 @@ import "./i18n/config";
 import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";
+import { performanceMonitor } from "./lib/performanceMonitor";
 
 createRoot(document.getElementById("root")!).render(<App />);
 
@@ -18,4 +19,14 @@ if (typeof window !== 'undefined') {
   window.addEventListener('load', () => {
     setTimeout(initHeroGuardian, 1500);
   });
+  
+  // Production performance monitoring
+  if (import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const summary = performanceMonitor.getMetricsSummary();
+        console.log('📊 Performance Summary:', summary);
+      }, 3000);
+    });
+  }
 }
