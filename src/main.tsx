@@ -11,14 +11,14 @@ import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";
 import { initChatSafeGap } from "./ux/chat-safe-gap";
-import { initLayoutTripwire } from "./lib/layoutTripwire";
+// Tripwire removed per user request
 
 createRoot(document.getElementById("root")!).render(<App />);
 
 watchRoiTableCanon();
 initPWAInstall();
 initChatSafeGap();
-initLayoutTripwire(); // Initialize tripwire guard (dev/CI only)
+// Tripwire removed per user request
 
 // Initialize hero guardian for permanent safeguards
 if (typeof window !== 'undefined') {
