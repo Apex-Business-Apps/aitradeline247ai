@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { useSessionSecurity } from "@/hooks/useSessionSecurity";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -13,6 +13,8 @@ import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
 import { AppErrorBoundary } from '@/components/errors/ErrorBoundary';
 import { SmokeChecks } from '@/components/testing/SmokeChecks';
+import { RagSearchFab } from "@/components/rag/RagSearchFab";
+import { RagSearchDrawer } from "@/components/rag/RagSearchDrawer";
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -83,23 +85,44 @@ const AppWithMonitoring = () => {
 };
 
 
-const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {import.meta.env.VITE_SPLASH_ENABLED !== "false" && <StartupSplash />}
-        <AppErrorBoundary>
-          <BrowserRouter>
-            <AppWithMonitoring />
-            <InstallPrompt />
-            <MiniChat />
-          </BrowserRouter>
-        </AppErrorBoundary>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </HelmetProvider>
-);
+const App = () => {
+  const [ragDrawerOpen, setRagDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setRagDrawerOpen(prev => !prev);
+      }
+      if (e.key === 'Escape' && ragDrawerOpen) {
+        setRagDrawerOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [ragDrawerOpen]);
+
+  return (
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          {import.meta.env.VITE_SPLASH_ENABLED !== "false" && <StartupSplash />}
+          <AppErrorBoundary>
+            <BrowserRouter>
+              <AppWithMonitoring />
+              <InstallPrompt />
+              <MiniChat />
+              <RagSearchFab onClick={() => setRagDrawerOpen(true)} />
+              <RagSearchDrawer open={ragDrawerOpen} onOpenChange={setRagDrawerOpen} />
+            </BrowserRouter>
+          </AppErrorBoundary>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  );
+};
 
 export default App;
