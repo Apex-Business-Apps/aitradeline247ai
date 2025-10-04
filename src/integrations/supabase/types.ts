@@ -143,6 +143,13 @@ export type Database = {
             referencedRelation: "appointments"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "appointment_events_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       appointments: {
@@ -2087,7 +2094,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      appointments_safe: {
+        Row: {
+          created_at: string | null
+          e164_masked: string | null
+          email_masked: string | null
+          end_at: string | null
+          first_name_masked: string | null
+          id: string | null
+          note: string | null
+          organization_id: string | null
+          source: string | null
+          start_at: string | null
+          status: string | null
+          tz: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          e164_masked?: never
+          email_masked?: never
+          end_at?: string | null
+          first_name_masked?: never
+          id?: string | null
+          note?: string | null
+          organization_id?: string | null
+          source?: string | null
+          start_at?: string | null
+          status?: string | null
+          tz?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          e164_masked?: never
+          email_masked?: never
+          end_at?: string | null
+          first_name_masked?: never
+          id?: string | null
+          note?: string | null
+          organization_id?: string | null
+          source?: string | null
+          start_at?: string | null
+          status?: string | null
+          tz?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       acquire_guardian_lock: {
@@ -2200,6 +2251,16 @@ export type Database = {
           start_at: string
           status: string
           tz: string
+        }[]
+      }
+      get_contact_summary_secure: {
+        Args: { contact_id_param: string }
+        Returns: {
+          created_at: string
+          first_name: string
+          id: string
+          phone_masked: string
+          wa_capable: boolean
         }[]
       }
       get_customer_contact_info: {
