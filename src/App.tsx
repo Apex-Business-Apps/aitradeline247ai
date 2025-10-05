@@ -42,6 +42,7 @@ import MobileIntegration from "./pages/integrations/MobileIntegration";
 import AutomationIntegration from "./pages/integrations/AutomationIntegration";
 import ComponentShowcase from "./pages/ComponentShowcase";
 import CallCenter from "./pages/CallCenter";
+import SMSDeliveryDashboard from "./pages/SMSDeliveryDashboard";
 import AdminKB from "./pages/AdminKB";
 
 
@@ -82,6 +83,7 @@ const AppWithMonitoring = () => {
         <Route path="/dashboard/integrations/mobile" element={<main id="main"><MobileIntegration /></main>} />
         <Route path="/dashboard/integrations/automation" element={<main id="main"><AutomationIntegration /></main>} />
         <Route path="/call-center" element={<main id="main"><CallCenter /></main>} />
+        <Route path="/sms-delivery" element={<main id="main"><SMSDeliveryDashboard /></main>} />
         <Route path="/components" element={<main id="main"><ComponentShowcase /></main>} />
         <Route path="/admin/kb" element={<main id="main"><AdminKB /></main>} />
         

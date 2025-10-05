@@ -1872,6 +1872,57 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_delivery_log: {
+        Row: {
+          body_preview: string | null
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          from_e164: string | null
+          id: string
+          message_sid: string
+          num_segments: number | null
+          price: number | null
+          price_unit: string | null
+          status: string
+          status_updated_at: string
+          to_e164: string
+          updated_at: string
+        }
+        Insert: {
+          body_preview?: string | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          from_e164?: string | null
+          id?: string
+          message_sid: string
+          num_segments?: number | null
+          price?: number | null
+          price_unit?: string | null
+          status: string
+          status_updated_at?: string
+          to_e164: string
+          updated_at?: string
+        }
+        Update: {
+          body_preview?: string | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          from_e164?: string | null
+          id?: string
+          message_sid?: string
+          num_segments?: number | null
+          price?: number | null
+          price_unit?: string | null
+          status?: string
+          status_updated_at?: string
+          to_e164?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -2489,6 +2540,17 @@ export type Database = {
       get_security_dashboard_data: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      get_sms_delivery_stats: {
+        Args: { hours_ago?: number }
+        Returns: {
+          common_errors: Json
+          delivered: number
+          delivery_rate: number
+          failed: number
+          pending: number
+          total_messages: number
+        }[]
       }
       get_transcript_secure: {
         Args: { transcript_id: string }

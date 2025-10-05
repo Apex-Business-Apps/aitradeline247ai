@@ -53,12 +53,30 @@ serve(async (req) => {
     const to = params.To;
     const errorCode = params.ErrorCode;
     const errorMessage = params.ErrorMessage;
+    const price = params.Price;
+    const priceUnit = params.PriceUnit;
 
-    console.log('SMS status update:', { messageSid, messageStatus, errorCode });
+    console.log('SMS status update:', { messageSid, messageStatus, errorCode, price });
 
-    // Log to Supabase
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Update delivery log table
+    await supabase.from('sms_delivery_log').upsert({
+      message_sid: messageSid,
+      to_e164: to,
+      from_e164: from,
+      status: messageStatus,
+      status_updated_at: new Date().toISOString(),
+      error_code: errorCode || null,
+      error_message: errorMessage || null,
+      price: price ? parseFloat(price) : null,
+      price_unit: priceUnit || 'USD',
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'message_sid'
+    });
     
+    // Also log to analytics_events for historical tracking
     await supabase.from('analytics_events').insert({
       event_type: 'sms_status',
       event_data: {
@@ -68,6 +86,8 @@ serve(async (req) => {
         to,
         error_code: errorCode,
         error_message: errorMessage,
+        price,
+        price_unit: priceUnit,
         timestamp: new Date().toISOString()
       },
       severity: errorCode ? 'error' : 'info'
