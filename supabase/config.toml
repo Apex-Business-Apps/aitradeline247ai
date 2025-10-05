@@ -1,6 +1,8 @@
 project_id = "hysvqdwmhxnblxfqnszn"
 
 # Edge Functions Configuration
+[functions.unsubscribe]
+verify_jwt = false  # Public endpoint for email unsubscribe
 [functions.sms-inbound]
 verify_jwt = false  # Twilio webhook
 
