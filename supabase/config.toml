@@ -1,1 +1,59 @@
 project_id = "hysvqdwmhxnblxfqnszn"
+
+# Edge Functions Configuration
+[functions.secure-lead-submission]
+verify_jwt = false  # Public form submission
+
+[functions.send-lead-email]
+verify_jwt = false  # Public email sending
+
+[functions.voice-answer]
+verify_jwt = false  # Twilio webhook
+
+[functions.voice-status]
+verify_jwt = false  # Twilio webhook
+
+[functions.chat]
+verify_jwt = true  # Requires authentication
+
+[functions.dashboard-summary]
+verify_jwt = true  # Requires authentication
+
+[functions.rag-search]
+verify_jwt = true  # Requires authentication
+
+[functions.rag-answer]
+verify_jwt = true  # Requires authentication
+
+[functions.rag-ingest]
+verify_jwt = true  # Admin only
+
+[functions.ragz]
+verify_jwt = true  # Requires authentication
+
+[functions.secure-analytics]
+verify_jwt = false  # Public analytics tracking
+
+[functions.secure-ab-assign]
+verify_jwt = false  # Public A/B testing
+
+[functions.ab-convert]
+verify_jwt = false  # Public conversion tracking
+
+[functions.register-ab-session]
+verify_jwt = false  # Public session registration
+
+[functions.track-session-activity]
+verify_jwt = false  # Public session tracking
+
+[functions.validate-session]
+verify_jwt = true  # Requires authentication
+
+[functions.threat-detection-scan]
+verify_jwt = true  # Admin only
+
+[functions.check-password-breach]
+verify_jwt = true  # Requires authentication
+
+[functions.secure-rate-limit]
+verify_jwt = false  # Public rate limit checking
