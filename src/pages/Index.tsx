@@ -108,9 +108,6 @@ const Index = () => {
         <div className="backdrop-blur-sm bg-background/70">
           <HowItWorks />
         </div>
-        <div className="backdrop-blur-sm bg-background/80">
-          <LeadCaptureForm />
-        </div>
         </main>
         
         <div className="backdrop-blur-sm bg-background/70">
