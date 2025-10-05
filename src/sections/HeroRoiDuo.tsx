@@ -61,6 +61,11 @@ export default function HeroRoiDuo() {
           <p className="mb-8 max-w-3xl mx-auto font-semibold text-[#1e556b]" style={{ fontSize: 'clamp(1rem, 2vw + 0.5rem, 2.5rem)', lineHeight: '1.5' }} data-lovable-lock="permanent">
             Never miss a call. Work while you sleep.
           </p>
+          <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm md:text-base">
+            <a href="/security" className="text-primary hover:underline font-medium">🔒 Enterprise Security</a>
+            <span className="text-muted-foreground">•</span>
+            <a href="/compare" className="text-primary hover:underline font-medium">📊 Compare Services</a>
+          </div>
           
           {/* Premium Phone Number */}
           <a 

@@ -21,6 +21,13 @@ serve(async (req) => {
       throw new Error('Missing required environment variables');
     }
 
+    // CRITICAL: Enforce E.164 format for bridge target (fail fast on invalid config)
+    const e164Regex = /^\+[1-9]\d{1,14}$/;
+    if (!e164Regex.test(FORWARD_TARGET_E164)) {
+      console.error('CRITICAL: BUSINESS_TARGET_E164 is not in valid E.164 format:', FORWARD_TARGET_E164);
+      throw new Error('Invalid bridge target configuration - must be E.164 format');
+    }
+
     // Validate Twilio signature for security (CRITICAL FIX)
     const twilioSignature = req.headers.get('x-twilio-signature');
     if (!twilioSignature) {

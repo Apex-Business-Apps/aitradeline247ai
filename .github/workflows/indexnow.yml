@@ -1,0 +1,44 @@
+name: IndexNow Submission
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  submit-indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit URLs to IndexNow
+        run: |
+          # IndexNow API endpoint
+          INDEXNOW_ENDPOINT="https://api.indexnow.org/indexnow"
+          
+          # Site domain
+          DOMAIN="tradeline247ai.com"
+          
+          # IndexNow key (generated UUID - store in repo for verification)
+          INDEXNOW_KEY="8f4b2c1a-9e3d-4f7b-a1c5-6d8e2f9b3a7c"
+          
+          # URLs to submit
+          URLS='[
+            "https://www.tradeline247ai.com/",
+            "https://www.tradeline247ai.com/pricing",
+            "https://www.tradeline247ai.com/contact",
+            "https://www.tradeline247ai.com/demo",
+            "https://www.tradeline247ai.com/security",
+            "https://www.tradeline247ai.com/compare"
+          ]'
+          
+          # Submit to IndexNow
+          curl -X POST "$INDEXNOW_ENDPOINT" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"host\": \"$DOMAIN\",
+              \"key\": \"$INDEXNOW_KEY\",
+              \"urlList\": $URLS
+            }" \
+            -v
+          
+          echo "✅ IndexNow submission complete"

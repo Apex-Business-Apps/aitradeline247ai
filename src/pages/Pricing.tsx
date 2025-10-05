@@ -155,7 +155,9 @@ const Pricing = () => {
               <h3 className="text-2xl font-bold mb-4">All Plans Include</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
                 <div>
-                  <h4 className="font-semibold mb-2">Security & Compliance</h4>
+                  <h4 className="font-semibold mb-2">
+                    <a href="/security" className="text-primary hover:underline">Security & Compliance</a>
+                  </h4>
                   <p className="text-muted-foreground">SOC 2 compliant, GDPR ready, bank-level security</p>
                 </div>
                 <div>
@@ -163,8 +165,10 @@ const Pricing = () => {
                   <p className="text-muted-foreground">Never miss a call or message, even on weekends</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Easy Setup</h4>
-                  <p className="text-muted-foreground">Get started in minutes with our guided onboarding</p>
+                  <h4 className="font-semibold mb-2">
+                    <a href="/compare" className="text-primary hover:underline">Why Choose Us?</a>
+                  </h4>
+                  <p className="text-muted-foreground">See how we compare to traditional services</p>
                 </div>
               </div>
             </div>
