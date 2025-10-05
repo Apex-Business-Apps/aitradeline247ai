@@ -44,7 +44,6 @@ import ComponentShowcase from "./pages/ComponentShowcase";
 import CallCenter from "./pages/CallCenter";
 import SMSDeliveryDashboard from "./pages/SMSDeliveryDashboard";
 import AdminKB from "./pages/AdminKB";
-import IconShowcase from "./pages/IconShowcase";
 
 
 const queryClient = new QueryClient();
@@ -87,7 +86,6 @@ const AppWithMonitoring = () => {
         <Route path="/sms-delivery" element={<main id="main"><SMSDeliveryDashboard /></main>} />
         <Route path="/components" element={<main id="main"><ComponentShowcase /></main>} />
         <Route path="/admin/kb" element={<main id="main"><AdminKB /></main>} />
-        <Route path="/icons" element={<main id="main"><IconShowcase /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
