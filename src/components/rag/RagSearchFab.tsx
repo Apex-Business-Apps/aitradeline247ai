@@ -24,7 +24,7 @@ export function RagSearchFab({ onClick }: RagSearchFabProps) {
       className={`fixed shadow-lg z-40 h-14 w-14 rounded-full ${
         isMobile 
           ? 'bottom-4 left-4' 
-          : 'left-6 top-1/2 -translate-y-1/2'
+          : 'left-6 bottom-6'
       }`}
       aria-label="Open search"
     >
