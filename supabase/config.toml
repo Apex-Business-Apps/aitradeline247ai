@@ -1,6 +1,12 @@
 project_id = "hysvqdwmhxnblxfqnszn"
 
 # Edge Functions Configuration
+[functions.sms-inbound]
+verify_jwt = false  # Twilio webhook
+
+[functions.sms-status]
+verify_jwt = false  # Twilio webhook
+
 [functions.secure-lead-submission]
 verify_jwt = false  # Public form submission
 
