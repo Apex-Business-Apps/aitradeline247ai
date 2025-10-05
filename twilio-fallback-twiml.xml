@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <!-- Empty TwiML response for SMS fallback handler -->
+  <!-- Twilio accepts the message silently without sending a reply -->
+  <!-- Status callbacks will still fire for delivery tracking -->
+</Response>

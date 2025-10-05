@@ -1,7 +1,11 @@
 # SMS Fallback & TTL Configuration ✅
 
+**⚠️ RECOMMENDED APPROACH UPDATED:** For production, use **Twilio-managed fallback (TwiML Bin)** instead of the Supabase edge function approach. See `SMS_TWILIO_MANAGED_FALLBACK.md` for details.
+
 ## Overview
-This document covers Task 07: Fallback resilience and Time-To-Live (TTL) policy for SMS operations.
+This document covers Task 07 (Track B): Supabase edge function fallback resilience and Time-To-Live (TTL) policy for SMS operations.
+
+**Alternative (Recommended):** See `SMS_TWILIO_MANAGED_FALLBACK.md` for Track A (Twilio-managed fallback) - simpler and more reliable.
 
 ## 1. Fallback Webhook
 
@@ -181,11 +185,31 @@ Incoming SMS → Twilio
 
 ## 10. Next Steps
 
-1. ✅ Configure fallback URL in Twilio Console (Messaging Service → Integration)
-2. ✅ Keep TTL at default (14,400 seconds) unless business requirements dictate otherwise
-3. ✅ Set up monitoring for `sms_inbound_fallback` events
-4. ⏳ Schedule quarterly review of TTL policy based on delivery metrics
+1. ✅ **Option A (Recommended):** Configure Twilio-managed fallback (see `SMS_TWILIO_MANAGED_FALLBACK.md`)
+   - Create TwiML Bin with content from `twilio-fallback-twiml.xml`
+   - Set Fallback URL in Messaging Service to TwiML Bin URL
+   - Test with simulated primary failure
+   
+2. ✅ **Option B (Alternative):** Use Supabase edge function fallback (current document)
+   - Configure fallback URL in Twilio Console (Messaging Service → Integration)
+   - Keep TTL at default (14,400 seconds) unless business requirements dictate otherwise
+   - Set up monitoring for `sms_inbound_fallback` events
+
+3. ⏳ Schedule quarterly review of TTL policy based on delivery metrics
+
+## 11. Approach Comparison
+
+| Factor | Track A: Twilio-Managed | Track B: Supabase Edge Function |
+|--------|-------------------------|----------------------------------|
+| **Reliability** | ✅ 99.95% (Twilio infrastructure) | ⚠️ Depends on Supabase uptime |
+| **Response Time** | ✅ <100ms (no cold starts) | ⚠️ 100-300ms (cold starts possible) |
+| **Setup** | ✅ Copy TwiML, paste URL | ⚠️ Already deployed (but more complex) |
+| **Monitoring** | ✅ Twilio Monitor Logs | ✅ Supabase Edge Function Logs |
+| **Cost** | ✅ Free (TwiML Bin) | ✅ Free (Supabase tier) |
+| **Custom Logic** | ⚠️ Limited (TwiML only) | ✅ Full TypeScript support |
+
+**Recommendation:** Use Track A (Twilio-managed) for production unless custom fallback logic is required.
 
 ---
 
-**Status**: Fallback webhook deployed, TTL policy documented. Awaiting Twilio Console configuration.
+**Status**: Both approaches implemented. Track A (Twilio-managed) recommended for production.
