@@ -470,6 +470,7 @@ export type Database = {
           e164: string
           first_name: string | null
           id: string
+          organization_id: string | null
           wa_capable: boolean | null
         }
         Insert: {
@@ -477,6 +478,7 @@ export type Database = {
           e164: string
           first_name?: string | null
           id?: string
+          organization_id?: string | null
           wa_capable?: boolean | null
         }
         Update: {
@@ -484,9 +486,18 @@ export type Database = {
           e164?: string
           first_name?: string | null
           id?: string
+          organization_id?: string | null
           wa_capable?: boolean | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contacts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       content_embeddings: {
         Row: {
@@ -2296,6 +2307,7 @@ export type Database = {
           created_at: string
           first_name: string
           id: string
+          organization_id: string
           phone_masked: string
           wa_capable: boolean
         }[]
