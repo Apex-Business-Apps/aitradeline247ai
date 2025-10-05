@@ -11,10 +11,10 @@ export const FormErrorFallback = ({ error, onRetry }: FormErrorFallbackProps) =>
   return (
     <Alert variant="destructive" className="my-4">
       <AlertTriangle className="h-4 w-4" />
-      <AlertTitle>Something went wrong</AlertTitle>
+      <AlertTitle>Oops!</AlertTitle>
       <AlertDescription className="space-y-4 mt-2">
         <p>
-          {error || "We couldn't process your request. Please try again or contact us directly."}
+          {error || "That didn't work. Try again or just give us a call."}
         </p>
         
         <div className="flex flex-col sm:flex-row gap-2 pt-2">
@@ -53,7 +53,7 @@ export const FormErrorFallback = ({ error, onRetry }: FormErrorFallbackProps) =>
         </div>
         
         <p className="text-xs text-muted-foreground pt-2">
-          We're here to help! Our support team typically responds within 2 hours during business hours.
+          We're here to help. Usually get back within 2 hours.
         </p>
       </AlertDescription>
     </Alert>

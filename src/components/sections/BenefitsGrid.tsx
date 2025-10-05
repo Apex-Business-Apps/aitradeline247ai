@@ -5,19 +5,19 @@ export const BenefitsGrid = () => {
   const benefits = [{
     icon: Zap,
     title: "Lightning Speed",
-    description: "Answer in 2-3 rings so people stay.",
+    description: "We pick up in 2-3 rings. No one likes waiting.",
     color: "text-brand-orange",
     gradient: "from-orange-500/20 to-orange-600/10"
   }, {
     icon: User,
     title: "Personal Touch", 
-    description: "A friendly, on-brand script that sounds like your team.",
+    description: "We match your vibe. Friendly, on-brand, and sounds just like you.",
     color: "text-primary",
     gradient: "from-blue-500/20 to-blue-600/10"
   }, {
     icon: Target,
     title: "Cleaner Follow-through",
-    description: "A short summary lands in your inbox with next steps included.",
+    description: "Quick summary + next steps, straight to your inbox.",
     color: "text-accent-foreground", 
     gradient: "from-green-500/20 to-green-600/10"
   }];

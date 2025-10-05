@@ -4,17 +4,17 @@ const steps = [{
   icon: Phone,
   step: "01",
   title: "Connect Your Channels",
-  description: "Integrate your phone, email, SMS, WhatsApp, and other communication channels in minutes. Our AI instantly starts learning your business context."
+  description: "Hook up your phone, email, SMS, and WhatsApp in minutes. We'll learn your business as we go."
 }, {
   icon: Brain,
   step: "02",
-  title: "AI Learns Your Business",
-  description: "Our intelligent system analyzes your business information, FAQs, and preferences to create personalized responses that match your brand voice."
+  title: "We Learn Your Business",
+  description: "We pick up on your FAQs, your style, and what makes your business tick—then match it perfectly."
 }, {
   icon: Zap,
   step: "03",
   title: "Start Growing 24/7",
-  description: "Your AI receptionist handles inquiries, books appointments, captures leads, and escalates when needed - all while you focus on growing your business."
+  description: "We handle inquiries, book appointments, and grab leads while you sleep. If something needs you, we'll pass it along."
 }];
 export const HowItWorks = () => {
   return <section className="py-20 bg-gradient-to-br from-secondary/10 to-accent/5">
@@ -24,7 +24,7 @@ export const HowItWorks = () => {
             How It Works
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Get your AI receptionist up and running in three simple steps
+            Get up and running in three simple steps
           </p>
         </div>
         

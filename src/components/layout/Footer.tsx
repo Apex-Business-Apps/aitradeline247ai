@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
               <a href="mailto:info@tradeline247ai.com">info@tradeline247ai.com</a>
             </address>
             <div className="flex items-center gap-3 text-sm text-muted-foreground mt-2">
-              <span>© 2025 TradeLine 24/7. Never miss a call. We've got it.</span>
+              <span>© 2025 TradeLine 24/7. Never miss a call. We got it.</span>
             </div>
           </div>
           

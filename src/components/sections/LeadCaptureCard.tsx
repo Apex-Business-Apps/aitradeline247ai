@@ -174,16 +174,16 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
           <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
             <CheckCircle className="w-8 h-8 text-white" />
           </div>
-          <CardTitle className="text-2xl animate-fade-in">🎉 Welcome Aboard!</CardTitle>
+          <CardTitle className="text-2xl animate-fade-in">Got it!</CardTitle>
           <CardDescription className="animate-fade-in" style={{ animationDelay: '200ms' }}>
-            Thanks! Check your email. We'll follow up within 2 hours.
+            Check your email. We'll get back to you within 2 hours.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="bg-primary/5 p-4 rounded-lg animate-fade-in" style={{ animationDelay: '400ms' }}>
             <p className="text-sm text-muted-foreground">
               <Sparkles className="w-4 h-4 inline mr-1" />
-              Our team will contact you within <strong>2 hours</strong> to get you started.
+              We'll reach out within <strong>2 hours</strong> to get you set up.
             </p>
           </div>
           <Button 
@@ -204,10 +204,10 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
       {!compact && (
         <>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Tell us a bit about you
+            Tell us about your business
           </h2>
           <p className="text-lg mb-8 text-[#1e556b]">
-            Get started with your free trial today.
+            Start your free trial today.
           </p>
         </>
       )}
@@ -218,7 +218,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
             Start Your Free Trial
           </CardTitle>
           <p className="text-muted-foreground">
-            Tell us about your business and we'll set up your service
+            Tell us about your business and we'll get you set up
           </p>
         </CardHeader>
         
@@ -294,7 +294,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
                         className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
                       />
                       <span>
-                        I agree to get emails about setup and updates.
+                        I'm cool with emails about setup and updates. Unsubscribe anytime.
                       </span>
                     </label>
                   </div>

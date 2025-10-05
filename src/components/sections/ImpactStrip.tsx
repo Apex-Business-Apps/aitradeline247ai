@@ -22,7 +22,7 @@ export const ImpactStrip = () => {
       <div className="container">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Let Ai Grow you, not replace you.
+            Grow your business, not your payroll.
           </h2>
         </div>
         
@@ -59,7 +59,7 @@ export const ImpactStrip = () => {
         animationDelay: '600ms'
       }}>
           <p className="text-muted-foreground font-medium text-xl text-center">
-            If you can't beat 'em, hire 'em!
+            Can't beat 'em? Hire 'em.
           </p>
         </div>
       </div>
