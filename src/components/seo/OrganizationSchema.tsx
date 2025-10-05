@@ -34,7 +34,7 @@ export const OrganizationSchema: React.FC = () => {
     "keywords": "AI receptionist, customer service automation, business phone answering, lead capture, CRM integration",
     "areaServed": {
       "@type": "Country",
-      "name": "United States"
+      "name": "Canada"
     },
     "serviceType": "AI Customer Service Solutions"
   };

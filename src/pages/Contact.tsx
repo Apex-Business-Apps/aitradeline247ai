@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, Clock, MessageCircle, Loader2 } from "lucide-react";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { FormErrorFallback } from "@/components/errors/FormErrorFallback";
@@ -176,6 +177,7 @@ const Contact = () => {
         keywords="contact TradeLine 24/7, AI receptionist support, business automation contact, customer service demo"
         canonical="https://www.tradeline247ai.com/contact"
       />
+      <LocalBusinessSchema />
       
       <Header />
       

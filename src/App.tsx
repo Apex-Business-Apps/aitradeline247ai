@@ -31,6 +31,9 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Demo from "./pages/Demo";
+import Security from "./pages/Security";
+import Compare from "./pages/Compare";
 import CRMIntegration from "./pages/integrations/CRMIntegration";
 import EmailIntegration from "./pages/integrations/EmailIntegration";
 import PhoneIntegration from "./pages/integrations/PhoneIntegration";
@@ -65,6 +68,9 @@ const AppWithMonitoring = () => {
         <Route path="/pricing" element={<main id="main"><Pricing /></main>} />
         <Route path="/faq" element={<main id="main"><FAQ /></main>} />
         <Route path="/contact" element={<main id="main"><Contact /></main>} />
+        <Route path="/demo" element={<main id="main"><Demo /></main>} />
+        <Route path="/security" element={<main id="main"><Security /></main>} />
+        <Route path="/compare" element={<main id="main"><Compare /></main>} />
         <Route path="/privacy" element={<main id="main"><Privacy /></main>} />
         <Route path="/terms" element={<main id="main"><Terms /></main>} />
         <Route path="/design-tokens" element={<main id="main"><DesignTokens /></main>} />
