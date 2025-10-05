@@ -4,6 +4,9 @@ project_id = "hysvqdwmhxnblxfqnszn"
 [functions.sms-inbound]
 verify_jwt = false  # Twilio webhook
 
+[functions.sms-inbound-fallback]
+verify_jwt = false  # Twilio webhook fallback
+
 [functions.sms-status]
 verify_jwt = false  # Twilio webhook
 
