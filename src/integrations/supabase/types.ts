@@ -2357,6 +2357,10 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_my_security_summary: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       get_org_appointments_secure: {
         Args: { limit_count?: number; org_id: string }
         Returns: {
@@ -2446,6 +2450,20 @@ export type Database = {
       get_security_dashboard_data: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      get_transcript_secure: {
+        Args: { transcript_id: string }
+        Returns: {
+          archived: boolean
+          archived_at: string
+          call_sid: string
+          content: string
+          created_at: string
+          folder_id: string
+          id: string
+          org_id: string
+          priority: string
+        }[]
       }
       get_user_role: {
         Args: { _user_id: string }
