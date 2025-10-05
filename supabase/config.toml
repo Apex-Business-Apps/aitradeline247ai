@@ -7,6 +7,9 @@ verify_jwt = false  # Twilio webhook
 [functions.sms-status]
 verify_jwt = false  # Twilio webhook
 
+[functions.lookup-number]
+verify_jwt = true  # Requires authentication
+
 [functions.secure-lead-submission]
 verify_jwt = false  # Public form submission
 
