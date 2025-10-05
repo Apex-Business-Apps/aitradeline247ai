@@ -20,7 +20,19 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           
-          <nav className="flex items-center gap-6">
+          <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+            <a 
+              href="/security" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Security
+            </a>
+            <a 
+              href="/compare" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Compare
+            </a>
             <a 
               href="/privacy" 
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -37,7 +49,7 @@ export const Footer: React.FC = () => {
               href="mailto:info@tradeline247ai.com" 
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              info@tradeline247ai.com
+              Contact
             </a>
           </nav>
         </div>

@@ -14,6 +14,12 @@ const navigationItems = [{
   name: 'Pricing',
   href: '/pricing#no-monthly'
 }, {
+  name: 'Compare',
+  href: '/compare'
+}, {
+  name: 'Security',
+  href: '/security'
+}, {
   name: 'FAQ',
   href: '/faq'
 }, {

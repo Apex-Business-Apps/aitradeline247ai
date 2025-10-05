@@ -6,51 +6,51 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, Lock, FileCheck, Globe, Server, Eye } from "lucide-react";
 
 const Security = () => {
-  const securityFeatures = [
+  const platformOverview = [
     {
       icon: Shield,
-      title: "SOC 2 Compliance",
-      description: "Enterprise-grade security controls and regular audits ensure your data is protected.",
-      badge: "Certified"
-    },
-    {
-      icon: Lock,
-      title: "End-to-End Encryption",
-      description: "All data is encrypted in transit and at rest using industry-standard AES-256 encryption.",
-      badge: "AES-256"
+      title: "Platform Infrastructure",
+      description: "Supabase is SOC 2 Type 2 certified. However, compliance does not transfer to our application layer.",
+      badge: "SOC 2 Type 2"
     },
     {
       icon: FileCheck,
-      title: "GDPR & Privacy Compliance",
-      description: "Full compliance with GDPR, PIPEDA, and PIPA regulations for Canadian and international data protection.",
+      title: "Canadian Recording Consent",
+      description: "All call recordings comply with Canadian consent requirements and are provided to customers.",
       badge: "Compliant"
     },
     {
+      icon: Lock,
+      title: "Transcript Delivery",
+      description: "Email-only transcripts are in production. Dashboard transcript viewing is currently in beta.",
+      badge: "Production"
+    },
+    {
       icon: Globe,
-      title: "Canadian Data Residency",
-      description: "Your data is hosted exclusively in Canadian data centers, ensuring compliance with local regulations.",
+      title: "Data Hosting",
+      description: "Infrastructure is hosted on enterprise-grade cloud platforms with Canadian data residency options.",
       badge: "Canada"
     },
     {
       icon: Server,
-      title: "Regular Security Audits",
-      description: "Continuous monitoring and regular third-party security assessments to maintain the highest standards.",
-      badge: "Audited"
+      title: "Security Monitoring",
+      description: "Continuous monitoring and logging of all system activities with real-time threat detection.",
+      badge: "24/7"
     },
     {
       icon: Eye,
-      title: "Access Controls",
-      description: "Role-based access controls and comprehensive audit logs track all data access.",
-      badge: "RBAC"
+      title: "Access & Privacy",
+      description: "Strict access controls and privacy measures protect your business and customer data.",
+      badge: "Protected"
     }
   ];
 
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead 
-        title="Security & Compliance - TradeLine 24/7"
-        description="TradeLine 24/7 provides SOC 2 compliant, GDPR ready AI receptionist services with bank-level security. Canadian-hosted with end-to-end encryption."
-        keywords="AI receptionist security, SOC 2 compliance, GDPR compliance, data encryption, Canadian data hosting, business security"
+        title="Security & Platform - TradeLine 24/7"
+        description="TradeLine 24/7 platform overview: Supabase SOC 2 Type 2 infrastructure, Canadian consent compliance, and secure transcript delivery."
+        keywords="AI receptionist security, platform infrastructure, Canadian compliance, call recording consent, secure transcripts"
         canonical="https://www.tradeline247ai.com/security"
       />
       
@@ -64,16 +64,16 @@ const Security = () => {
               <Shield className="w-16 h-16 text-primary" />
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Enterprise-Grade Security
+              Security & Platform
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Your customers' data deserves the highest level of protection. TradeLine 24/7 delivers bank-level security with full compliance.
+              Built on enterprise infrastructure with Canadian compliance and secure data handling practices.
             </p>
             <div className="flex justify-center gap-3 flex-wrap">
-              <Badge className="px-4 py-2 text-sm">SOC 2 Certified</Badge>
-              <Badge className="px-4 py-2 text-sm">GDPR Compliant</Badge>
-              <Badge className="px-4 py-2 text-sm">Canadian Hosted</Badge>
-              <Badge className="px-4 py-2 text-sm">AES-256 Encrypted</Badge>
+              <Badge className="px-4 py-2 text-sm">Supabase SOC 2 Type 2</Badge>
+              <Badge className="px-4 py-2 text-sm">Canadian Consent</Badge>
+              <Badge className="px-4 py-2 text-sm">Secure Transcripts</Badge>
+              <Badge className="px-4 py-2 text-sm">24/7 Monitoring</Badge>
             </div>
           </div>
         </section>
@@ -82,14 +82,14 @@ const Security = () => {
         <section className="py-20">
           <div className="container">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">How We Protect Your Data</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Platform Overview</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Multi-layered security architecture designed to protect your business and customer information.
+                Transparent infrastructure and compliance information for our AI receptionist platform.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {securityFeatures.map((feature, index) => (
+              {platformOverview.map((feature, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
@@ -111,42 +111,48 @@ const Security = () => {
           </div>
         </section>
 
-        {/* Compliance Details */}
+        {/* Platform Details */}
         <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/5">
           <div className="container">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12">Compliance & Certifications</h2>
+              <h2 className="text-3xl font-bold text-center mb-12">Platform & Compliance Details</h2>
               
               <div className="space-y-8">
                 <Card>
                   <CardHeader>
-                    <CardTitle>SOC 2 Type II Compliance</CardTitle>
+                    <CardTitle>Infrastructure Security</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">
-                      We maintain SOC 2 Type II certification, demonstrating our commitment to security, availability, processing integrity, confidentiality, and privacy. Annual audits by independent third parties ensure ongoing compliance.
+                    <p className="text-muted-foreground mb-4">
+                      Our platform is built on Supabase, which holds SOC 2 Type 2 certification. This certification applies to the underlying infrastructure layer.
+                    </p>
+                    <p className="text-sm text-muted-foreground italic">
+                      Important: SOC 2 compliance does not automatically transfer to our application layer. We implement additional security controls at the application level to protect your data.
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>GDPR & Canadian Privacy Laws</CardTitle>
+                    <CardTitle>Canadian Recording Consent</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground">
-                      Full compliance with GDPR (General Data Protection Regulation), PIPEDA (Personal Information Protection and Electronic Documents Act), and PIPA (Personal Information Protection Act) ensures your data handling meets the highest international standards.
+                      All call recordings comply with Canadian consent requirements. Callers are informed of recording, and consent is obtained before recording begins. All recordings and transcripts are provided to customers.
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Data Residency</CardTitle>
+                    <CardTitle>Transcript Delivery Status</CardTitle>
                   </CardHeader>
                   <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      <strong>Production:</strong> Email-only transcript delivery is fully operational and production-ready.
+                    </p>
                     <p className="text-muted-foreground">
-                      All customer data is stored exclusively in Canadian data centers. This ensures compliance with Canadian data sovereignty requirements and provides you with full control over your data jurisdiction.
+                      <strong>Beta:</strong> Dashboard transcript viewing is currently in beta testing. Features and availability may change.
                     </p>
                   </CardContent>
                 </Card>
@@ -155,35 +161,35 @@ const Security = () => {
           </div>
         </section>
 
-        {/* Security Practices */}
+        {/* Operational Practices */}
         <section className="py-20">
           <div className="container">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12">Our Security Practices</h2>
+              <h2 className="text-3xl font-bold text-center mb-12">Operational Security</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-6 bg-muted/30 rounded-lg">
-                  <h3 className="font-semibold mb-3">Regular Security Updates</h3>
+                  <h3 className="font-semibold mb-3">Data Encryption</h3>
                   <p className="text-sm text-muted-foreground">
-                    Automated security patches and updates ensure protection against emerging threats.
+                    All data is encrypted in transit (TLS 1.3) and at rest using industry-standard encryption.
                   </p>
                 </div>
                 <div className="p-6 bg-muted/30 rounded-lg">
-                  <h3 className="font-semibold mb-3">24/7 Monitoring</h3>
+                  <h3 className="font-semibold mb-3">Access Controls</h3>
                   <p className="text-sm text-muted-foreground">
-                    Real-time threat detection and incident response systems monitor all activity.
+                    Role-based access controls ensure team members only access data necessary for their role.
                   </p>
                 </div>
                 <div className="p-6 bg-muted/30 rounded-lg">
-                  <h3 className="font-semibold mb-3">Employee Training</h3>
+                  <h3 className="font-semibold mb-3">Activity Logging</h3>
                   <p className="text-sm text-muted-foreground">
-                    Regular security awareness training for all team members handling customer data.
+                    Comprehensive audit logs track all system access and data modifications.
                   </p>
                 </div>
                 <div className="p-6 bg-muted/30 rounded-lg">
-                  <h3 className="font-semibold mb-3">Incident Response</h3>
+                  <h3 className="font-semibold mb-3">Regular Backups</h3>
                   <p className="text-sm text-muted-foreground">
-                    Documented incident response procedures with 24/7 security team availability.
+                    Automated daily backups ensure data recovery capabilities in case of incidents.
                   </p>
                 </div>
               </div>
