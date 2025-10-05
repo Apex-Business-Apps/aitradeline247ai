@@ -14,19 +14,17 @@ const navigationItems = [{
   name: 'Pricing',
   href: '/pricing#no-monthly'
 }, {
+  name: 'Compare',
+  href: '/compare'
+}, {
+  name: 'Security',
+  href: '/security'
+}, {
   name: 'FAQ',
   href: '/faq'
 }, {
   name: 'Contact',
   href: '/contact'
-}];
-
-const centerNavigationItems = [{
-  name: '🔒 Enterprise Security',
-  href: '/security'
-}, {
-  name: '📊 Compare Services',
-  href: '/compare'
 }];
 const adminNavigationItems = [{
   name: 'Call Center',
@@ -53,7 +51,7 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   return <header data-site-header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
-      <div data-header-inner className="container flex h-14 items-center gap-4" data-lovable-lock="permanent">
+      <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
         {/* Home Button & Badge */}
         <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
           <Button 
@@ -75,24 +73,8 @@ export const Header: React.FC = () => {
           />
         </div>
 
-        {/* Center Navigation - Security & Compare */}
-        <nav data-slot="center" aria-label="Primary" className="hidden md:flex flex-1 justify-center animate-fade-in" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
-          <div className="flex items-center gap-4" data-lovable-lock="permanent">
-            {centerNavigationItems.map((item, index) => (
-              <Link 
-                key={item.name}
-                to={item.href} 
-                className="inline-flex h-10 items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none story-link hover-scale" 
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-        </nav>
-
-        {/* Desktop Navigation - Right Side */}
-        <nav data-slot="right-nav" aria-label="Secondary" className="hidden md:flex animate-fade-in" style={{ animationDelay: '300ms' }} data-lovable-lock="permanent">
+        {/* Desktop Navigation */}
+        <nav data-slot="center" aria-label="Primary" className="hidden md:flex animate-fade-in" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
           <NavigationMenu data-lovable-lock="permanent">
             <NavigationMenuList data-lovable-lock="permanent">
             {navigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
@@ -148,21 +130,14 @@ export const Header: React.FC = () => {
       {/* Enhanced Mobile Navigation with Slide Animation */}
       {isMobileMenuOpen && <div className="md:hidden border-t bg-background/95 backdrop-blur animate-slide-in-right">
           <nav className="container py-4 space-y-2">
-            {/* Center Navigation Items - Mobile */}
-            {centerNavigationItems.map((item, index) => <Link key={item.name} to={item.href} className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-300 hover-scale animate-fade-in" onClick={() => setIsMobileMenuOpen(false)} style={{
-          animationDelay: `${index * 100}ms`
-        }}>
-                {item.name}
-              </Link>)}
-            {/* Regular Navigation Items - Mobile */}
             {navigationItems.map((item, index) => <Link key={item.name} to={item.href} className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-300 hover-scale animate-fade-in" onClick={() => setIsMobileMenuOpen(false)} style={{
-          animationDelay: `${(centerNavigationItems.length + index) * 100}ms`
+          animationDelay: `${index * 100}ms`
         }}>
                 {item.name}
               </Link>)}
             {/* Admin-only mobile navigation items */}
             {isAdmin() && adminNavigationItems.map((item, index) => <Link key={item.name} to={item.href} className="block px-4 py-2 text-sm font-medium rounded-md bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 hover-scale animate-fade-in" onClick={() => setIsMobileMenuOpen(false)} style={{
-          animationDelay: `${(centerNavigationItems.length + navigationItems.length + index) * 100}ms`
+          animationDelay: `${(navigationItems.length + index) * 100}ms`
         }}>
                 {item.name}
               </Link>)}
