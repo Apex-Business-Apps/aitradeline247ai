@@ -133,9 +133,13 @@ export function monitorHeroPerformance(route: string): Promise<HeroMetrics> {
       for (const entry of list.getEntries() as any[]) {
         // Check if shift affects hero
         if (entry.sources) {
-          const heroShift = entry.sources.some((source: any) =>
-            source.node?.closest('section.bg-gradient-orange-subtle, section.hero-section')
-          );
+          const heroShift = entry.sources.some((source: any) => {
+            // Ensure node is a DOM element before calling closest
+            if (source.node && source.node instanceof Element && typeof source.node.closest === 'function') {
+              return source.node.closest('section.bg-gradient-orange-subtle, section.hero-section');
+            }
+            return false;
+          });
           if (heroShift) {
             cls += entry.value;
             
