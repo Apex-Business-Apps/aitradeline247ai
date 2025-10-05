@@ -46,8 +46,9 @@ const RoiCalculator = () => {
     // qualifiedAppts = recoveredByTL * (conv/100)
     const qualifiedAppts = recoveredByTL * (conv / 100);
 
-    // Commission cost = qualifiedAppts * 149
-    const commissionCost = qualifiedAppts * 149;
+    // Commission cost = 149 setup (amortized over 12 months) + qualifiedAppts * 0
+    // For first month comparison, include full setup fee
+    const commissionCost = 149;
 
     // Monthly revenue gained = qualifiedAppts * value
     const monthlyRevenue = qualifiedAppts * value;
@@ -55,12 +56,14 @@ const RoiCalculator = () => {
     // ROI (Commission) = (revenue - commissionCost) / max(commissionCost,1)
     const roiCommission = (monthlyRevenue - commissionCost) / Math.max(commissionCost, 1);
 
-    // ROI (Predictable) = (revenue - 249) / 249
-    const roiPredictable = (monthlyRevenue - 249) / 249;
+    // ROI (Predictable) = (revenue - (69 + 249)) / (69 + 249)
+    // First month includes setup fee
+    const predictableCost = 69 + 249;
+    const roiPredictable = (monthlyRevenue - predictableCost) / predictableCost;
 
     // Best value logic
     const netCommission = monthlyRevenue - commissionCost;
-    const netPredictable = monthlyRevenue - 249;
+    const netPredictable = monthlyRevenue - predictableCost;
     const bestPlan = netCommission === netPredictable ? "Predictable" : netCommission > netPredictable ? "Commission" : "Predictable";
     setResults({
       answeredNow,
@@ -162,8 +165,8 @@ const RoiCalculator = () => {
                 </div>
 
                 <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-sm text-muted-foreground">Cost (Predictable)</span>
-                  <span className="font-medium text-foreground">{cad.format(249)}</span>
+                  <span className="text-sm text-muted-foreground">Cost (Predictable) - 1st month</span>
+                  <span className="font-medium text-foreground">{cad.format(318)}</span>
                 </div>
 
                 <div className="flex justify-between items-center py-2 border-b border-border">

@@ -8,29 +8,33 @@ import { SEOHead } from "@/components/seo/SEOHead";
 
 const plans = [
   {
-    name: "No Monthly. Pay per appointment.",
-    price: "$149 / Qualified Appointment",
-    description: "Pay only for results - no monthly fees",
+    name: "Zero-Monthly Plan (Pilot)",
+    price: "$149 CAD setup fee",
+    description: "One-time setup, then pay only for results",
     features: [
+      "$149 CAD one-time setup fee",
+      "No monthly fees - pay per qualified appointment",
       "Prepaid wallet: $200 minimum (auto-recharge)",
       "Qualified = unique caller • >60s talk time • in service area • not duplicate (30d) • real intent",
       "Transcript emailed every time"
     ],
-    cta: "Start with $200 wallet",
+    cta: "Start Zero-Monthly",
     popular: false,
     id: "no-monthly",
     link: "/auth?plan=commission"
   },
   {
-    name: "Predictable Plan (Core)",
-    price: "$249 / month", 
-    description: "Fixed monthly pricing with transparent overages",
+    name: "Predictable Plan",
+    price: "$69 CAD setup + $249 CAD/month", 
+    description: "Fixed monthly pricing with one-time setup",
     features: [
+      "$69 CAD one-time setup fee",
+      "$249 CAD per month",
       "Includes AI minutes & routed calls",
       "Simple overage pricing",  
       "Add-ons: bilingual, human fallback, CRM push"
     ],
-    cta: "Choose Core",
+    cta: "Choose Predictable",
     popular: true,
     id: "monthly-core",
     link: "/auth?plan=core"
@@ -57,30 +61,54 @@ const Pricing = () => {
           "offers": [
             {
               "@type": "Offer",
-              "name": "No Monthly. Pay per appointment.",
+              "name": "Zero-Monthly Plan (Pilot)",
               "price": "149",
               "priceCurrency": "CAD",
               "priceSpecification": {
                 "@type": "UnitPriceSpecification",
                 "price": "149",
                 "priceCurrency": "CAD",
-                "unitText": "per qualified appointment"
+                "unitText": "one-time setup fee"
               },
-              "description": "Pay only for results - no monthly fees",
+              "description": "One-time setup, then pay only for results",
               "url": "https://www.tradeline247ai.com/auth?plan=commission"
             },
             {
               "@type": "Offer", 
-              "name": "Predictable Plan (Core)",
-              "price": "249",
+              "name": "Predictable Plan",
+              "price": "318",
               "priceCurrency": "CAD",
               "priceSpecification": {
-                "@type": "UnitPriceSpecification",
-                "price": "249",
+                "@type": "AggregateOffer",
+                "lowPrice": "69",
+                "highPrice": "249",
                 "priceCurrency": "CAD",
-                "unitText": "per month"
+                "offers": [
+                  {
+                    "@type": "Offer",
+                    "price": "69",
+                    "priceCurrency": "CAD",
+                    "priceSpecification": {
+                      "@type": "UnitPriceSpecification",
+                      "price": "69",
+                      "priceCurrency": "CAD",
+                      "unitText": "one-time setup fee"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "price": "249",
+                    "priceCurrency": "CAD",
+                    "priceSpecification": {
+                      "@type": "UnitPriceSpecification",
+                      "price": "249",
+                      "priceCurrency": "CAD",
+                      "unitText": "per month"
+                    }
+                  }
+                ]
               },
-              "description": "Fixed monthly pricing with transparent overages",
+              "description": "Fixed monthly pricing with one-time setup",
               "url": "https://www.tradeline247ai.com/auth?plan=core"
             }
           ]
@@ -185,8 +213,8 @@ const Pricing = () => {
                 <p className="text-muted-foreground text-sm">Yes, you can upgrade or downgrade your plan at any time. Changes take effect at your next billing cycle.</p>
               </div>
               <div>
-                <h3 className="font-semibold mb-2">Is there a setup fee?</h3>
-                <p className="text-muted-foreground text-sm">No setup fees. All plans include free onboarding and training to get you started quickly.</p>
+                <h3 className="font-semibold mb-2">What are the setup fees?</h3>
+                <p className="text-muted-foreground text-sm">Zero-Monthly Plan: $149 CAD one-time setup. Predictable Plan: $69 CAD one-time setup. All plans include onboarding and training.</p>
               </div>
               <div>
                 <h3 className="font-semibold mb-2">What happens if I exceed my limits?</h3>
