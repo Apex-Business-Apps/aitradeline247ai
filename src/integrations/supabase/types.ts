@@ -1833,6 +1833,45 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_consent: {
+        Row: {
+          business_relationship: string | null
+          consent_method: string | null
+          consent_source: string | null
+          created_at: string
+          e164: string
+          id: string
+          opted_in: boolean
+          opted_in_at: string | null
+          opted_out_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_relationship?: string | null
+          consent_method?: string | null
+          consent_source?: string | null
+          created_at?: string
+          e164: string
+          id?: string
+          opted_in?: boolean
+          opted_in_at?: string | null
+          opted_out_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_relationship?: string | null
+          consent_method?: string | null
+          consent_source?: string | null
+          created_at?: string
+          e164?: string
+          id?: string
+          opted_in?: boolean
+          opted_in_at?: string | null
+          opted_out_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -2520,6 +2559,10 @@ export type Database = {
         Args: { p_e164: string }
         Returns: boolean
       }
+      is_opted_in: {
+        Args: { phone_e164: string }
+        Returns: boolean
+      }
       is_org_member: {
         Args: { p_org_id: string }
         Returns: boolean
@@ -2682,6 +2725,19 @@ export type Database = {
           p_uri?: string
         }
         Returns: string
+      }
+      record_opt_in: {
+        Args: {
+          method?: string
+          phone_e164: string
+          relationship?: string
+          source?: string
+        }
+        Returns: undefined
+      }
+      record_opt_out: {
+        Args: { phone_e164: string }
+        Returns: undefined
       }
       release_guardian_lock: {
         Args: { p_lock_key: string; p_worker_id: string }
