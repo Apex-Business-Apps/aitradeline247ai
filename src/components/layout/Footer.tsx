@@ -10,10 +10,9 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <Logo variant="text" size="sm" />
             </div>
-            <address className="not-italic">
-              <strong>Apex Business Systems</strong><br />
-              Edmonton, AB, Canada<br />
-              <a href="mailto:info@tradeline247ai.com">info@tradeline247ai.com</a>
+            <address className="not-italic text-sm">
+              <strong>Apex Business Systems</strong> • Edmonton, Alberta • Built Canadian<br />
+              <a href="mailto:info@tradeline247ai.com" className="hover:text-foreground transition-colors">info@tradeline247ai.com</a>
             </address>
             <div className="flex items-center gap-3 text-sm text-muted-foreground mt-2">
               <span>© 2025 TradeLine 24/7. Never miss a call. We got it.</span>
