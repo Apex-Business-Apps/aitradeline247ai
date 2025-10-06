@@ -222,17 +222,34 @@ curl -X POST \
       "sent": 50,
       "pending": 0,
       "failed": 0,
+      "delivered": 0,
+      "bounces": 0,
+      "complaints": 0,
       "unsubscribed": 2
     },
     "metrics": {
       "send_rate": "96.15%",
-      "failure_rate": "0.00%"
+      "failure_rate": "0.00%",
+      "bounce_rate": "0.00%",
+      "complaint_rate": "0.00%",
+      "unsubscribe_rate": "4.00%"
+    },
+    "gates_status": {
+      "bounce_plus_complaint_under_2pct": null,
+      "complaint_under_0_3pct": null
+    },
+    "notes": {
+      "delivered_tracking": "Requires Resend webhook for resend.emails.delivered",
+      "bounce_tracking": "Requires Resend webhook for resend.emails.bounced",
+      "complaint_tracking": "Requires Resend webhook for resend.emails.complained"
     },
     "csv_filename": "relaunch_canada_2025-10-06.csv"
   },
   "csv_content": "..."
 }
 ```
+
+**Note:** Delivered/bounce/complaint tracking requires Resend webhook integration.
 
 ---
 

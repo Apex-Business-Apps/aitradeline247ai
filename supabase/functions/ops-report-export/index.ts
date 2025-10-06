@@ -66,10 +66,14 @@ serve(async (req) => {
       total: members?.length || 0,
       sent: members?.filter(m => m.status === 'sent').length || 0,
       pending: members?.filter(m => m.status === 'pending').length || 0,
-      failed: members?.filter(m => m.status === 'failed').length || 0
+      failed: members?.filter(m => m.status === 'failed').length || 0,
+      // Note: delivered/bounce/complaint require Resend webhook integration
+      delivered: 0, // Requires webhook: resend.emails.delivered
+      bounces: 0,   // Requires webhook: resend.emails.bounced
+      complaints: 0 // Requires webhook: resend.emails.complained
     };
 
-    // Get recent unsubscribes
+    // Get campaign-specific unsubscribes (after campaign started)
     const { data: recentUnsubs } = await supabaseClient
       .from('unsubscribes')
       .select('*')
@@ -103,12 +107,30 @@ serve(async (req) => {
       created_at: campaign.created_at,
       subject: campaign.subject,
       stats: {
-        ...stats,
+        total: stats.total,
+        sent: stats.sent,
+        pending: stats.pending,
+        failed: stats.failed,
+        delivered: stats.delivered,
+        bounces: stats.bounces,
+        complaints: stats.complaints,
         unsubscribed: unsubCount
       },
       metrics: {
         send_rate: stats.total > 0 ? ((stats.sent / stats.total) * 100).toFixed(2) + '%' : '0%',
-        failure_rate: stats.sent > 0 ? ((stats.failed / stats.sent) * 100).toFixed(2) + '%' : '0%'
+        failure_rate: stats.total > 0 ? ((stats.failed / stats.total) * 100).toFixed(2) + '%' : '0%',
+        bounce_rate: stats.sent > 0 ? ((stats.bounces / stats.sent) * 100).toFixed(2) + '%' : '0%',
+        complaint_rate: stats.sent > 0 ? ((stats.complaints / stats.sent) * 100).toFixed(2) + '%' : '0%',
+        unsubscribe_rate: stats.sent > 0 ? ((unsubCount / stats.sent) * 100).toFixed(2) + '%' : '0%'
+      },
+      gates_status: {
+        bounce_plus_complaint_under_2pct: stats.sent > 0 ? (((stats.bounces + stats.complaints) / stats.sent) * 100) < 2.0 : null,
+        complaint_under_0_3pct: stats.sent > 0 ? ((stats.complaints / stats.sent) * 100) < 0.3 : null
+      },
+      notes: {
+        delivered_tracking: 'Requires Resend webhook for resend.emails.delivered',
+        bounce_tracking: 'Requires Resend webhook for resend.emails.bounced',
+        complaint_tracking: 'Requires Resend webhook for resend.emails.complained'
       },
       export_timestamp: new Date().toISOString(),
       csv_filename: `relaunch_canada_${new Date().toISOString().split('T')[0]}.csv`
