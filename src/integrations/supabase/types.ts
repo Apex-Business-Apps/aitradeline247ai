@@ -2353,6 +2353,36 @@ export type Database = {
         }
         Relationships: []
       }
+      support_tickets_secure: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string | null
+          message: string | null
+          status: string | null
+          subject: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: never
+          id?: string | null
+          message?: string | null
+          status?: string | null
+          subject?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: never
+          id?: string | null
+          message?: string | null
+          status?: string | null
+          subject?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       v_sendable_members: {
         Row: {
           body_template: string | null
@@ -2877,6 +2907,10 @@ export type Database = {
           p_step: string
         }
         Returns: undefined
+      }
+      mask_email: {
+        Args: { email_address: string; requesting_user_id: string }
+        Returns: string
       }
       mask_phone_number: {
         Args: { phone_e164: string; requesting_user_id: string }

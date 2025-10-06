@@ -10,8 +10,10 @@ interface CreateTicketParams {
 
 /**
  * Secure hook for creating support tickets
- * Automatically includes user_id for authenticated users
- * Prevents email-based enumeration attacks
+ * - Automatically includes user_id for authenticated users
+ * - Prevents email-based enumeration attacks
+ * - Uses masked email view (support_tickets_secure) to prevent email leakage
+ * - Admins see full emails, regular users see masked emails (a***@domain.com)
  */
 export const useSupportTickets = () => {
   const { toast } = useToast();
@@ -67,8 +69,9 @@ export const useSupportTickets = () => {
 
   const getUserTickets = async () => {
     try {
+      // Use secure view that automatically masks emails for non-admins
       const { data, error } = await supabase
-        .from('support_tickets')
+        .from('support_tickets_secure')
         .select('*')
         .order('created_at', { ascending: false });
 
