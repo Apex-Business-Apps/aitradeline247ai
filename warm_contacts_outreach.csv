@@ -1,0 +1,1517 @@
+company,first_name,last_name,email,phone,domain,industry,city,province,country,notes,source_file,priority_bucket
+None,AAA,Ontario,aaa@ontario.org,+14164881122,,Business Association,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Canpages,Alberta,ab@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,YellowPages,Alberta,ab@yellowpages.ca,+14032282000,,Directory,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Accessoires,Beaudoin,accessoiresbeaudoin@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Accurate,Plumbing & Heating,accurateplumbing@mymts.net,+12047271234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Actuel,,actuel@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Adrenaline,,adrenaline@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,AFC,Plumbing,afcplumbing@mymts.net,+12046615678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Agence,De Voyages Transat,agence@transat.com,+15149876000,,Travel,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Aire,Ouverte,aireouverte@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Aliments,Natural,alimentsnatural@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ambiance,,ambiance@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,A.M.,Plumbing & Heating,amplumbing@mymts.net,+12043398901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Andi,Czarniecki AC,andezarnecki@gmail.com,+12049527644,,HVAC,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Animaux,De Compagnie,animauxdecompagnie@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Anne-Sophie,,annesophie@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Apex,Plumbing & Heating,apexplumbing@mymts.net,+12048884567,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,A,Propos,apropos@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Arlequin,,arlequin@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,A,Little Art Boutique,art@alittleart.ca,+12047928723,,Retail,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Artisan,,artisan@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Art,Moderne,artmoderne@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Arts,Decoratifs,artsdecoratifs@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Asie,,asie@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Aspen,Plumbing & Heating,aspenplumbing@mymts.net,+12043456789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Association,Des Hotels,associationhotels@qc.ca,+15149338000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Atelier,,atelier@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Atelier,De Sculpture,atelierdesculpture@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Atelier,De Verre,atelierdeverre@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Scott's,Atlantic Directory,atlantic@scottsdirectories.com,+19024218800,,Business Directory,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Auberge,Des Gouverneurs,auberge@desgouverneurs.com,+15148495000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,,auberge@qc.ca,+15147613000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Du Vieux Port,auberge@vieuxport.com,+15149336000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,De Jeunesse,aubergedjeunesse@qc.ca,+15142884000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Internationale,aubergeinternationale@qc.ca,+15148427000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Le Baluchon,aubergelebaluchon@qc.ca,+15145248000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Les Passants,aubergelespassants@qc.ca,+15142882000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Les Peupliers,aubergelespeupliers@qc.ca,+15148493000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Mont-Ste-Anne,aubergemontsteanne@qc.ca,+15149334000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,St-Antoine,aubergestantoine@qc.ca,+15148425000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,St-Pierre,aubergestpierre@qc.ca,+15145246000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Sur Mer,aubergesurmer@qc.ca,+15149877000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Le Nordet,auberglenordet@qc.ca,+15149879000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Auberge,Le St-Laurent,auberglestlaurent@qc.ca,+15147611000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Aurora,Chamber of Commerce,aurora@aurorachamber.on.ca,+19057276389,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Aventure,Eco,aventureeco@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Avenue,,avenue@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Bambou,,bambou@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Bateau,,bateau@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,BBB,Ontario,bbb@bbb.org,+14169217272,,Business Bureau,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Canpages,British Columbia,bc@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,YellowPages,British Columbia,bc@yellowpages.ca,+16042912000,,Directory,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Beau,Regard,beauregard@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Bernier,Heating & Cooling,bernier1949@gmail.com,+12048782198,,HVAC,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Bijouterie,,bijouterie@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Bistro,,bistro@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Blanc,,blanc@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Bleu,,bleu@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Blue,Sky Plumbing,blueskyplumbing@mymts.net,+12045551234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Boilers,& More,boilersmore@mymts.net,+12042223334,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Boutique,,boutique@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Brandon,Plumbing,brandonplumbing@mymts.net,+12047278901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Access,Nova Scotia,business@novascotia.ca,+19024245200,,Business Services,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Cameleon,,cameleon@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Canard,,canard@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,C,& C Plumbing,candcplumbing@mymts.net,+12046612345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Canoe,,canoe@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Caprice,,caprice@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Carre,,carre@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Charlottetown,Area Chamber of Commerce,chamber@charlottetownchamber.com,+19023682330,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Fredericton,Chamber of Commerce,chamber@frederictonchamber.ca,+15064588000,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Halifax,Chamber of Commerce,chamber@halifaxchamber.com,+19024811234,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,London,Chamber of Commerce,chamber@londonchamber.com,+15194324410,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,West,Prince Chamber of Commerce,chamber@westprincechamber.com,+19028537030,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Whitehorse,Chamber of Commerce,chamber@whitehorsechamber.ca,+18676677545,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Ciel,,ciel@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Cineplex,,cineplex@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Cirque,,cirque@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Citron,,citron@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Clair,,clair@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Classique,,classique@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Clef,,clef@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Coco,,coco@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Coffre,,coffre@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Colibri,,colibri@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Comptoir,,comptoir@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Concerto,,concerto@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,A.S.K.,Sandler Training Centre,contact@asksandler.com,+12046123456,,Sales Training,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Cible,Retour a l'Emploi,contact@cibleretour.com,+14186596299,,Job Services,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Solopreneur,Yukon,contact@solopreneuryukon.ca,+18676688800,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Cordon,,cordon@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Corne,,corne@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Corona,,corona@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Yukon,Business Services,corporateaffairs@yukon.ca,+18676675314,,Government Registry,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Cote,,cote@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Coupole,,coupole@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Courant,,courant@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Cours,,cours@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Couture,,couture@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Crane,,crane@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Creme,,creme@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Crescent,,crescent@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Croc,,croc@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Crystal,Plumbing,crystalplumbing@mymts.net,+12043395678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Cupidon,,cupidon@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Cycle,,cycle@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Cygne,,cygne@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dame,,dame@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Danse,,danse@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dave’s,Plumbing,davesplumbing@mymts.net,+12048889012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Decouverte,,decouverte@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Delice,,delice@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Delta,Plumbing,deltaplumbing@mymts.net,+12043452345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Demi-Lune,,demilune@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Desert,,desert@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Destin,,destin@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Detail,,detail@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Devis,,devis@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Diamant,,diamant@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Diamond,Plumbing,diamondplumbing@mymts.net,+12045556789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Digue,,digue@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dinosaure,,dinosaure@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Direct,,direct@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Discotheque,,discotheque@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Disque,,disque@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Divin,,divin@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dix,,dix@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dun,& Bradstreet Quebec,dnb@ca.dnb.com,+15148755432,,Business Info,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dun,& Bradstreet NB,dnb@nb.ca,+15068583333,,Business Info,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Dolce,,dolce@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Domaine,,domaine@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dome,,dome@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Domino,,domino@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Donjon,,donjon@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dormant,,dormant@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dos,,dos@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dossier,,dossier@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Douceur,,douceur@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dragon,,dragon@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Drap,,drap@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dune,,dune@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Duplicata,,duplicata@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dur,,dur@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dure,,dure@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Dynamique,,dynamique@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Eau,,eau@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ecarlate,,ecarlate@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Eclair,,eclair@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Eclat,,eclat@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ecole,,ecole@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ecorce,,ecorce@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ecrit,,ecrit@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Eden,,eden@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Effet,,effet@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Egal,,egal@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Elan,,elan@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Elegant,,elegant@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Elite,Plumbing,eliteplumbing@mymts.net,+12047273456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Eloquence,,eloquence@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Emerald,Plumbing,emeraldplumbing@mymts.net,+12046618901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Emoi,,emoi@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Encre,,encre@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Endroit,,endroit@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Energie,,energie@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Enfant,,enfant@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Enigme,,enigme@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Enjoliveur,,enjoliveur@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Enluminure,,enluminure@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Enseigne,,enseigne@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Enterprise,Toronto,enterprisetoronto@toronto.ca,+14163928080,,Business Support,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Entree,,entree@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Envol,,envol@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Epee,,epee@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Epi,,epi@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Epice,,epice@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Eponge,,eponge@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Epreuve,,epreuve@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Equinoxe,,equinoxe@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ere,,ere@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Espace,,espace@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Esprit,,esprit@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Essence,,essence@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Esthetique,,esthetique@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Etage,,etage@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Etoile,,etoile@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Etude,,etude@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Eure,,eure@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Evasion,,evasion@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Evenement,,evenement@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Everest,Plumbing,everestplumbing@mymts.net,+12043391234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Evidement,,evidement@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Evolution,,evolution@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Excellence,,excellence@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Excel,Plumbing,excelplumbing@mymts.net,+12048885678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Exotique,,exotique@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Experience,,experience@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Expert,,expert@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Exploration,,exploration@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Expression,,expression@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Extra,,extra@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fabrique,,fabrique@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Facette,,facette@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Facon,,facon@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fahrenheit,,fahrenheit@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fantaisie,,fantaisie@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fascination,,fascination@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Faste,,faste@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Faucon,,faucon@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Faveur,,faveur@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Feline,,feline@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Femme,,femme@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fer,,fer@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fete,,fete@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Feu,,feu@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Feuille,,feuille@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fibre,,fibre@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fidele,,fidele@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fier,,fier@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Figure,,figure@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fil,,fil@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fille,,fille@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Filon,,filon@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Finance,,finance@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Finir,,finir@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fireside,Plumbing,firesideplumbing@mymts.net,+12043459012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Flambeau,,flambeau@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Flamme,,flamme@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Flanelle,,flanelle@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Flèche,,fleche@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fleur,,fleur@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fleuve,,fleuve@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Flex,,flex@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Flocon,,flocon@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Floral,,floral@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Flow,Plumbing,flowplumbing@mymts.net,+12045552345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Fluide,,fluide@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Focus,,focus@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Folie,,folie@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fond,,fond@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fontaine,,fontaine@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Force,,force@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Forme,,forme@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fortune,,fortune@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fosse,,fosse@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Foudre,,foudre@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fouet,,fouet@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fougeres,,fougeres@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Foulard,,foulard@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fountainebleau,,fountainebleau@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Foyer,,foyer@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fragile,,fragile@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Frais,,frais@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Franc,,franc@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Franchise,,franchise@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Franco,,franco@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Frange,,frange@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fraternite,,fraternite@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Frein,,frein@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fresque,,fresque@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Froid,,froid@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Front,,front@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Frost,Plumbing,frostplumbing@mymts.net,+12047276789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,FS,Local Quebec,fslocal@qc.ca,+14186596299,,Local Directory,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fusain,,fusain@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Fusée,,fusee@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Galerie,,galerie@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Galet,,galet@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gamme,,gamme@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,G,& G Plumbing,gandgplumbing@mymts.net,+12046613456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Garage,,garage@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Garde,,garde@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Garniture,,garniture@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gasoil,,gasoil@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gastronomie,,gastronomie@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gauche,,gauche@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gemme,,gemme@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Genie,,genie@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Genou,,genou@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gentil,,gentil@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Geste,,geste@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ghetto,,ghetto@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Givre,,givre@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Glace,,glace@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Glamour,,glamour@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Globe,,globe@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gloire,,gloire@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Glycine,,glycine@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gnome,,gnome@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gobelin,,gobelin@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Godet,,godet@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Golden,Plumbing,goldenplumbing@mymts.net,+12043398901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Gomme,,gomme@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gondole,,gondole@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gorge,,gorge@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gouache,,gouache@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gourmand,,gourmand@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Goutte,,goutte@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gracieux,,gracieux@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Graffiti,,graffiti@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Grain,,grain@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Grand,,grand@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Grange,,grange@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Granit,,granit@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Graphique,,graphique@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gravier,,gravier@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Grec,,grec@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Green,Leaf Plumbing,greenleafplumbing@mymts.net,+12048881234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Griffe,,griffe@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Grillon,,grillon@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gris,,gris@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gros,,gros@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Grotte,,grotte@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gueule,,gueule@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Guimauve,,guimauve@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Guitare,,guitare@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gymnase,,gymnase@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Gyro,,gyro@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hache,,hache@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Haie,,haie@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hameau,,hameau@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hamecon,,hamecon@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hampe,,hampe@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hanap,,hanap@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,H,& H Plumbing,handhplumbing@mymts.net,+12043455678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Happe,,happe@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Haras,,haras@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hardi,,hardi@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Harmonie,,harmonie@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Harmony,Plumbing,harmonyplumbing@mymts.net,+12045559012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Harnais,,harnais@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Harpe,,harpe@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Haut,,haut@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Haven,Plumbing,havenplumbing@mymts.net,+12047272345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Havre,,havre@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hebreu,,hebreu@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hectare,,hectare@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Helice,,helice@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Helium,,helium@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hematite,,hematite@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hemisphere,,hemisphere@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Herbe,,herbe@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Heritage,,heritage@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Heritage,Plumbing,heritageplumbing@mymts.net,+12046616789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Hermes,,hermes@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Heron,,heron@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Heros,,heros@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hibou,,hibou@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hier,,hier@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Highland,Plumbing,highlandplumbing@mymts.net,+12043393456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Himalaya,,himalaya@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hirondelle,,hirondelle@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hiver,,hiver@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hobby,,hobby@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hockey,,hockey@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hodometer,,hodometer@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Homme,,homme@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Honneur,,honneur@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Horizon,,horizon@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Horizon,Plumbing,horizonplumbing@mymts.net,+12048888901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Horreur,,horreur@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hote,,hote@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Houle,,houle@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Housse,,housse@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hublot,,hublot@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Huile,,huile@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Humain,,humain@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Humeur,,humeur@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Humide,,humide@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Humus,,humus@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hure,,hure@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hutte,,hutte@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hygiene,,hygiene@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Hyperbole,,hyperbole@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,I,& I Plumbing,iandiplumbing@mymts.net,+12043451234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Ibis,,ibis@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ideal,,ideal@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ignition,,ignition@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ile,,ile@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Illusion,,illusion@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Image,,image@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Immense,,immense@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Immeuble,,immeuble@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Immortal,,immortal@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Impact,,impact@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Impact,Plumbing,impactplumbing@mymts.net,+12045555678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Imperiale,,imperiale@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Impression,,impression@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Inca,,inca@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Indien,,indien@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Indigo,,indigo@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Industrie,,industrie@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Inerte,,inerte@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Infini,,infini@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Infinity,Plumbing,infinityplumbing@mymts.net,+12047279012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Inflexible,,inflexible@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,1000,Plateaux,info@1000plateaux.com,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Abbotsford,Chamber of Commerce,info@abbotsfordchamber.com,+16048546166,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Abbotsford,Homes,info@abbotsfordhomes.com,+16048546666,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Abbotsford,Marketing Pros,info@abbotsfordmarketing.com,+16048544444,,Marketing,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Access,Community Capital Fund,info@accesscommunitycapitalfund.com,+14169475665,,Finance,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Access,Credit Union,info@accesscu.ca,+12043275822,,Finance,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Airdrie,Chamber of Commerce,info@airdriechamber.ab.ca,+14039483380,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Airdrie,Real Estate,info@airdriehomes.com,+14039482222,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Alberta,Small Business Network,info@albertasbn.com,+14032288888,,Small Business,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Albert,County Chamber of Commerce,info@albertcountychamber.com,+15064321000,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Alberton,Chamber of Commerce,info@albertonchamber.com,+19028532345,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Amherst,Area Chamber of Commerce,info@amherstchamber.com,+19026677200,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Antigonish,Chamber of Commerce,info@antigonishchamberofcommerce.ca,+19028631560,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Annapolis,Valley Chamber of Commerce,info@avchamber.ca,+19026814467,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Banff,& Lake Louise Chamber of Commerce,info@banfflakelouise.com,+14037623777,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Banff,Realty Group,info@banffrealty.com,+14037625555,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Barrie,Chamber of Commerce,info@barriechamber.com,+17057211900,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Bathurst,Chamber of Commerce,info@bathurstchamber.com,+15065480410,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Bay,Roberts Business Directory,info@bayroberts.com,+17097865500,,Municipal,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Burnaby,Board of Trade,info@bbot.ca,+16049371155,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,BC,Small Business Network,info@bcsbn.com,+16046838888,,Small Business,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Business,Development Bank of Canada,info@bdc.ca,+14163639646,,Finance,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Bedford,Chamber of Commerce,info@bedfordchamber.com,+19028358888,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Belleville,Chamber of Commerce,info@bellevillechamber.ca,+16139624597,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Bell,Island Chamber of Commerce,info@bellislandchamber.com,+17094881122,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Greater,Vancouver Board of Trade,info@boardoftrade.com,+16046812111,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Bonavista,Chamber of Commerce,info@bonavistachamber.com,+17094682233,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Borden-Carleton,Chamber of Commerce,info@bordencarletonchamber.com,+19024376666,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Toronto,Region Board of Trade,info@bot.com,+14163666811,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Brampton,Board of Trade,info@bramptonbot.com,+19054511122,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Brantford,Chamber of Commerce,info@brantfordchamber.com,+15197594150,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Bridgewater,Area Chamber of Commerce,info@bridgewaterchamber.ca,+19025436144,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Burgeo,Chamber of Commerce,info@burgeochamber.com,+17098862345,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Burin,Chamber of Commerce,info@burinchamber.com,+17098913456,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Burnaby,Digital Agency,info@burnabydigital.com,+16049371111,,Marketing,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Burnaby,Real Estate Board,info@burnabyrealtors.com,+16044384455,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Surrey,Board of Trade,info@businessinsurrey.com,+16045817130,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Calgary,Chamber of Commerce,info@calgarychamber.com,+14037500400,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Calgary,Business Consultants,info@calgaryconsult.com,+14037509999,,Consulting,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Cambridge,Chamber of Commerce,info@cambridgechamber.com,+15196222223,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Campbellton,Chamber of Commerce,info@campbelltonchamber.com,+15067532324,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Camrose,Chamber of Commerce,info@camrosechamber.ca,+17806723173,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Canad,Inns,info@canadinns.com,+12047756000,,Accommodation,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Canmore,Chamber of Commerce,info@canmorechamber.com,+14036785184,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Canmore,Properties,info@canmoreproperties.com,+14036784444,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Caraquet,Chamber of Commerce,info@caraquetchamber.com,+15067274681,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Carbonear,Chamber of Commerce,info@carbonearchamber.com,+17095966677,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Cardigan,Chamber of Commerce,info@cardiganchamber.com,+19025832200,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Cape,Breton Chamber of Commerce,info@cbchamber.com,+19025397860,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,C.B.N.,Board of Trade,info@cbnboardoftrade.com,+17095764567,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Chatham-Kent,Chamber of Commerce,info@chathamkentchamber.com,+15193547272,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Chester,Chamber of Commerce,info@chesterchamber.com,+19022753490,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Chilliwack,Chamber of Commerce,info@chilliwackchamber.com,+16047926868,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Chilliwack,Realty,info@chilliwackrealty.com,+16047927777,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Chilliwack,Tech Solutions,info@chilliwacktech.com,+16047925555,,Tech,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Clarenville,Chamber of Commerce,info@clarenvillechamber.com,+17094667788,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Coastal,Labrador Economic Development Board,info@coastallabrador.ca,+17098968899,,Economic Development,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Cold,Lake Chamber of Commerce,info@coldlakechamber.com,+17805944494,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Cold,Lake Homes,info@coldlakehomes.com,+17805946666,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Conquest,Built,info@conquestbuilt.com,+18663000222,,Construction,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Corner,Brook Board of Trade,info@cornerbrookboardoftrade.com,+17096345555,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Cornwall,Chamber of Commerce,info@cornwallchamber.com,+16139330074,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Courtenay,Chamber of Commerce,info@courtenaychamber.com,+12503343234,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Courtenay,Consultants,info@courtenayconsult.com,+12503346666,,Consulting,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Courtenay,Properties,info@courtenayproperties.com,+12503348888,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Calgary,Real Estate Board,info@creb.ca,+14032286456,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Cumberland,Chamber of Commerce,info@cumberlandchamber.com,+19026673240,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Dalhousie,Chamber of Commerce,info@dalhousiechamber.com,+15066843033,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Dawson,Business Services,info@dawsonbusiness.ca,+18679936677,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Business Consultants,info@dawsonbusinessconsult.com,+18679932222,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Business Network,info@dawsonbusinessnetwork.com,+18679931111,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Business Pros,info@dawsonbusinesspros.com,+18679936666,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,City Chamber of Commerce,info@dawsonchamber.org,+18679935566,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Consultants Network,info@dawsonconsultantsnetwork.com,+18679936666,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Creative Agency,info@dawsoncreative.com,+18679938899,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Digital Marketing,info@dawsondigital.ca,+18679936677,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Digital Consultants,info@dawsondigitalconsult.com,+18679935555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Digital Network,info@dawsondigitalnetwork.com,+18679932222,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Digital Pros,info@dawsondigitalpros.com,+18679938888,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Marketing Pros,info@dawsonmarketingpros.com,+18679939999,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,City Real Estate,info@dawsonrealestate.com,+18679934455,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Realtors,info@dawsonrealtors.com,+18679936677,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Realtors Association,info@dawsonrealtorsassociation.com,+18679937777,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Real Estate Network,info@dawsonrenetwork.com,+18679938888,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Real Estate Pros,info@dawsonrepros.com,+18679936666,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Solopreneur Group,info@dawsonsolopreneurgroup.com,+18679935555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Solopreneur Network,info@dawsonsolopreneurnetwork.com,+18679934444,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Solopreneur Pros,info@dawsonsolopreneurpros.com,+18679934444,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Solopreneurs,info@dawsonsolopreneurs.com,+18679931111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Tech Solutions,info@dawsontech.com,+18679938899,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Tech Consultants,info@dawsontechconsult.com,+18679934444,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Tech Network,info@dawsontechnetwork.com,+18679934444,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Dawson,Tech Pros,info@dawsontechpros.com,+18679933333,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Deer,Lake Chamber of Commerce,info@deerlakechamber.com,+17096356666,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Delta,Chamber of Commerce,info@deltachamber.ca,+16045919999,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Delta,Digital Network,info@deltadigital.com,+16045917777,,Marketing,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Delta,Realtors,info@deltarealtors.com,+16045919999,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Dieppe,Chamber of Commerce,info@dieppechamber.com,+15068571975,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Digby,Area Chamber of Commerce,info@digbyareachamber.com,+19022455662,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Drumheller,Chamber of Commerce,info@drumhellerchamber.com,+14038238100,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Drumheller,Realty,info@drumhellerrealty.com,+14038237777,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Durham,Region Board of Trade,info@durhamregionboardoftrade.com,+19055799000,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Econo,Lodge,info@econolodge.com,+12047755100,,Accommodation,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Edmonton,Chamber of Commerce,info@edmontonchamber.com,+17804264620,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Edmonton,Marketing Pros,info@edmontonmarketing.com,+17804261111,,Marketing,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Edmundston,Chamber of Commerce,info@edmundstonchamber.com,+15067359550,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Eganville,Chamber of Commerce,info@eganvillechamber.com,+16136282415,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Edmonton,Realtors Association,info@ereb.com,+17804485533,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Estevan,Business Network,info@estevanbusiness.com,+13066344444,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Business Network,info@estevanbusinessnetwork.com,+13066349999,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Business Consultants,info@estevanconsult.com,+13066344444,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Digital Network,info@estevandigital.com,+13066341111,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Digital Pros,info@estevandigitalpros.com,+13066347777,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Marketing Pros,info@estevanmarketing.com,+13066348888,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Marketing Network,info@estevanmarketingnetwork.com,+13066348888,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Marketing Pros,info@estevanmarketingpros.com,+13066346666,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Properties,info@estevanproperties.com,+13066346666,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Realtors Network,info@estevanrenetwork.com,+13066346666,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Realtors Pros,info@estevanrepros.com,+13066345555,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Solopreneurs,info@estevansolopreneurs.com,+13066341111,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Tech Solutions,info@estevantech.com,+13066343333,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Tech Network,info@estevantechnetwork.com,+13066342222,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Estevan,Chamber of Commerce,info@esvan.com,+13066345400,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Faro,Adventure Guides,info@faroadventure.com,+18679948899,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Adventure Consultants,info@faroadventureconsult.com,+18679941111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Business Network,info@farobusiness.com,+18679946677,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Business Consultants,info@farobusinessconsult.com,+18679946666,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Business Network,info@farobusinessnetwork.com,+18679942222,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Business Pros,info@farobusinesspros.com,+18679942222,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Chamber of Commerce,info@farochamber.com,+18679942222,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Mining Consultants,info@faroconsulting.com,+18679946677,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Digital Agency,info@farodigital.com,+18679944444,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Digital Network,info@farodigitalnetwork.com,+18679945555,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Eco Consultants,info@faroeco.com,+18679943344,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Financial Advisors,info@farofinance.com,+18679948899,,Finance,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Marketing Consultants,info@faromarketingconsult.com,+18679941111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Marketing Network,info@faromarketingnetwork.com,+18679946666,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Marketing Pros,info@faromarketingpros.com,+18679947777,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Realtors,info@farorealtors.com,+18679947777,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Real Estate Group,info@faroregroup.com,+18679943333,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Real Estate Network,info@farorenetwork.com,+18679947777,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Real Estate Pros,info@farorepros.com,+18679945555,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Solopreneur Network,info@farosolopreneurnetwork.com,+18679947777,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Solopreneur Pros,info@farosolopreneurpros.com,+18679945555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Solopreneurs,info@farosolopreneurs.com,+18679942222,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Tech Consultants,info@farotech.com,+18679943344,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Tech Hub,info@farotechhub.com,+18679946666,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Tech Network,info@farotechnetwork.com,+18679943333,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Faro,Tech Pros,info@farotechpros.com,+18679941111,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Ferryland,Chamber of Commerce,info@ferrylandchamber.com,+17094327777,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Fort,McMurray Chamber of Commerce,info@fmchamber.ca,+17807432400,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Fort,McMurray Realtors,info@fmrealtors.com,+17807913333,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Fort,McMurray Tech Hub,info@fmtechhub.com,+17807432222,,Tech,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Fogo,Island Chamber of Commerce,info@fogoislandchamber.com,+17092668888,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Town,of Gander Directory,info@gandercanada.com,+17092561111,,Municipal,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Gander,& Area Chamber of Commerce,info@ganderchamber.com,+17092569999,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Georgetown,Chamber of Commerce,info@georgetownchamber.com,+19026522866,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Grand,Falls-Windsor Chamber of Commerce,info@gfwchamber.com,+17094893333,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Glovertown,Chamber of Commerce,info@glovertownchamber.com,+17095331111,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Grande,Prairie Chamber of Commerce,info@gpchamber.com,+17805325340,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Grande,Prairie Realty,info@gpmls.com,+17805321111,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Grande,Prairie Solopreneurs,info@gpsolopreneurs.com,+17805323333,,Consulting,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Grand,Bank Chamber of Commerce,info@grandbankchamber.com,+17098322222,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Grand,Bay-Westfield Chamber of Commerce,info@grandbaywestfieldchamber.com,+15067378355,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Grand,Falls Chamber of Commerce,info@grandfallschamber.com,+15064736346,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Grand,Manan Chamber of Commerce,info@grandmananchamber.com,+15066623080,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Greater,Barrie Chamber of Commerce,info@greaterbarriechamber.com,+17057212500,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Greater,Sudbury Chamber of Commerce,info@greatersudbury.on.ca,+17056737130,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Guelph,Chamber of Commerce,info@guelphchamber.com,+15198215565,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Haines,Junction Adventure Network,info@hainesadventurenetwork.com,+18673321111,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Adventure Pros,info@hainesadventurepros.com,+18673329999,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Business Hub,info@hainesbusiness.com,+18673326677,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Business Network,info@hainesbusinessnetwork.com,+18673327777,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Business Pros,info@hainesbusinesspros.com,+18673326666,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Consultants,info@hainesconsult.com,+18673323344,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Consultants Network,info@hainesconsultantsnetwork.com,+18673325555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Consultants Pros,info@hainesconsultantspros.com,+18673321111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Digital Consultants,info@hainesdigitalconsult.com,+18673321111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Chamber of Commerce,info@hainesjunctionchamber.com,+18673322666,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Marketing,info@hainesmarketing.com,+18673325555,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Marketing Network,info@hainesmarketingnetwork.com,+18673329999,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Marketing Pros,info@hainesmarketingpros.com,+18673324444,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Real Estate,info@hainesre.com,+18673328899,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Realtors,info@hainesrealtors.com,+18673326677,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Real Estate Network,info@hainesrenetwork.com,+18673323333,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Solopreneur Network,info@hainessolopreneurnetwork.com,+18673322222,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Solopreneurs,info@hainessolopreneurs.com,+18673324444,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Tech,info@hainestech.com,+18673329999,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Tech Network,info@hainestechnetwork.com,+18673326666,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Tech Pros,info@hainestechpros.com,+18673327777,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Haines,Junction Tours,info@hainestours.com,+18673328899,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Halifax,Partnership,info@halifaxpartnership.com,+19024217200,,Economic Development,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Hamilton,Chamber of Commerce,info@hamiltonchamber.on.ca,+19055221151,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Hampton,Chamber of Commerce,info@hamptonchamber.com,+15068324444,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Hants,Chamber of Commerce,info@hantschamber.com,+19027922770,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Town,of Happy Valley-Goose Bay,info@happyvalley-goosebay.com,+17098962222,,Municipal,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Town,of Harbour Breton,info@harbourbreton.com,+17098853333,,Municipal,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Harbour,Breton Chamber of Commerce,info@harbourbretonchamber.com,+17098854444,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Harbour,Grace Chamber of Commerce,info@harbourgracechamber.com,+17097865555,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Harvey,Chamber of Commerce,info@harveychamber.com,+15063666080,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,High,River Chamber of Commerce,info@highriverchamber.com,+14036520030,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,High,River Realtors,info@highriverrealtors.com,+14036528888,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Haines,Junction Small Business,info@hjsmallbusiness.com,+18673328899,,Small Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Hospitality,Newfoundland and Labrador,info@hnl.ca,+17097226666,,Hospitality Directory,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Humboldt,Marketing Network,info@humboldmarketing.com,+13066827777,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Marketing Pros,info@humboldmarketingpros.com,+13066826666,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Business Pros,info@humboldtbusiness.com,+13066829999,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Chamber of Commerce,info@humboldtchamber.com,+13066822600,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Digital Pros,info@humboldtdigital.com,+13066825555,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Digital Network,info@humboldtdigitalnetwork.com,+13066824444,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Tech Solutions,info@humboldtech.com,+13066823333,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Tech Pros,info@humboldtechpros.com,+13066828888,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Marketing Network,info@humboldtmarketingnetwork.com,+13066822222,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Business Network,info@humboldtnetwork.com,+13066821111,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Real Estate,info@humboldtre.com,+13066828888,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Real Estate Network,info@humboldtrenetwork.com,+13066829999,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Real Estate Pros,info@humboldtrepros.com,+13066823333,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Humboldt,Tech Network,info@humboldttechnetwork.com,+13066821111,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Huntsville,Chamber of Commerce,info@huntsvillechamber.com,+17057891200,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Innovation,Guelph,info@innovationguelph.ca,+15198265979,,Business Support,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Burlington,Economic Development,info@investburlington.ca,+19053336000,,Economic Development,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Invest,Nova Scotia,info@investnovascotia.ca,+19024246650,,Investment,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Kamloops,Business Hub,info@kamloopsbusiness.com,+12503728888,,Business Support,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Greater,Kamloops Chamber of Commerce,info@kamloopschamber.ca,+12503727722,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Kamloops,Real Estate,info@kamloopsre.com,+12503721111,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Kawartha,Chamber of Commerce,info@kawarthachamber.ca,+17056522553,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Kelowna,Chamber of Commerce,info@kelownachamber.org,+12504694400,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Kelowna,Realtors,info@kelownarealtors.com,+12508615555,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Kelowna,Tech Hub,info@kelownatech.com,+12504692222,,Tech,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Kennebecasis,Valley Chamber of Commerce,info@kennebecasisvalleychamber.com,+15068472010,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Kensington,Chamber of Commerce,info@kensingtonchamber.com,+19028363168,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Kent,Chamber of Commerce,info@kentchamber.com,+15067438800,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Kings,Chamber of Commerce,info@kingschamber.com,+19026814467,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Greater,Kingston Chamber of Commerce,info@kingstonchamber.ca,+16135446644,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Kitchener,Chamber of Commerce,info@kitchenerchamber.ca,+15195714545,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Labrador,City Chamber of Commerce,info@labradorcitychamber.com,+17099447777,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Lacombe,Chamber of Commerce,info@lacombechamber.com,+14037823126,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Lacombe,Real Estate,info@lacombeproperties.com,+14037829999,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Greater,Langley Chamber of Commerce,info@langley-chamber.com,+16043713770,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Langley,Homes,info@langleyhomes.com,+16043712222,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Langley,Marketing,info@langleymarketing.com,+16043719999,,Marketing,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Leduc,Chamber of Commerce,info@leducchamber.com,+17809865510,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Leduc,Realty,info@leducrealty.com,+17809861111,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Lethbridge,Chamber of Commerce,info@lethbridgechamber.ab.ca,+14033271607,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Lethbridge,Digital Agency,info@lethbridgedigital.com,+14033274444,,Marketing,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Lewisporte,Chamber of Commerce,info@lewisporte.com,+17095358888,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Lunenburg,Chamber of Commerce,info@lunenburgchamber.com,+19026343440,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Mahone,Bay Chamber of Commerce,info@mahonebay.com,+19026249890,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Maple,Ridge Chamber of Commerce,info@mapleridgechamber.com,+16044677755,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Markham,Board of Trade,info@markhamboard.com,+19054777000,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Town,of Marystown,info@marystown.ca,+17092794444,,Municipal,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Marystown,Chamber of Commerce,info@marystownchamber.com,+17092799999,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Mayo,Adventure Tours,info@mayoadventure.com,+18679964444,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Adventure Network,info@mayoadventurenetwork.com,+18679966666,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Adventure Pros,info@mayoadventurepros.com,+18679965555,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Business Advisors,info@mayobusiness.com,+18679961111,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Chamber of Commerce,info@mayochamber.com,+18679962333,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Consultants Association,info@mayoconsultants.com,+18679963333,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Consultants Network,info@mayoconsultantsnetwork.com,+18679961111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Consultants Pros,info@mayoconsultantspros.com,+18679961111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Digital Marketing,info@mayodigital.com,+18679969999,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Digital Network,info@mayodigitalnetwork.com,+18679964444,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Digital Pros,info@mayodigitalpros.com,+18679962222,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Economic Development,info@mayoedo.ca,+18679962244,,Economic Development,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Marketing,info@mayomarketing.com,+18679966677,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Marketing Network,info@mayomarketingnetwork.com,+18679963333,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Marketing Pros,info@mayomarketingpros.com,+18679963333,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Mining Services,info@mayomining.ca,+18679968899,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Real Estate,info@mayore.com,+18679966677,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Realtors,info@mayorealtors.com,+18679962222,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Real Estate Network,info@mayorenetwork.com,+18679967777,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Real Estate Pros,info@mayorepros.com,+18679964444,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Small Business Network,info@mayosmallbusiness.com,+18679966666,,Small Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Solopreneurs,info@mayosolopreneurs.com,+18679968899,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Tech Hub,info@mayotech.com,+18679968899,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Mayo,Tech Consultants,info@mayotechconsult.com,+18679965555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Medicine,Hat Chamber of Commerce,info@medicinehatchamber.com,+14035275214,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Melfort,Business Network,info@melfortbusiness.com,+13067524444,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Business Network,info@melfortbusinessnetwork.com,+13067526666,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Business Pros,info@melfortbusinesspros.com,+13067521111,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Chamber of Commerce,info@melfortchamber.com,+13067525722,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Business Consultants,info@melfortconsult.com,+13067524444,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Digital Pros,info@melfortdigital.com,+13067522222,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Marketing Agency,info@melfortmarketing.com,+13067521111,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Marketing Network,info@melfortmarketingnetwork.com,+13067528888,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Realty,info@melfortrealty.com,+13067529999,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Real Estate Network,info@melfortrenetwork.com,+13067526666,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Real Estate Pros,info@melfortrepros.com,+13067527777,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Solopreneur Pros,info@melfortsolopreneurpros.com,+13067529999,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Solopreneur Network,info@melfortsolopreneurs.com,+13067522222,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Tech Consultants,info@melforttechconsult.com,+13067528888,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Melfort,Tech Network,info@melforttechnetwork.com,+13067525555,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Medicine,Hat Business Network,info@mhbusinessnetwork.com,+14035275555,,Business Support,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Middleton,& Area Chamber of Commerce,info@middletonchamber.com,+19028252598,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Miramichi,Chamber of Commerce,info@miramichichamber.com,+15066223555,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Mission,Chamber of Commerce,info@missionchamber.bc.ca,+16048266914,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Mississauga,Board of Trade,info@mississaugaboard.com,+19052736151,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Lethbridge,Real Estate Board,info@mls.ca,+14033287355,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Moncton,Chamber of Commerce,info@monctonchamber.com,+15068533530,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Montague,Chamber of Commerce,info@montaguechamber.com,+19028382611,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Moose,Jaw Business Network,info@moosejawbusiness.com,+13066921111,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Business Network,info@moosejawbusinessnetwork.com,+13066923333,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Business Pros,info@moosejawbusinesspros.com,+13066927777,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Chamber of Commerce,info@moosejawchamber.com,+13066921011,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Consultants Network,info@moosejawconsultnetwork.com,+13066922222,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Consultants Pros,info@moosejawconsultpros.com,+13066929999,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Digital Network,info@moosejawdigital.com,+13066929999,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Digital Network,info@moosejawdigitalnetwork.com,+13066925555,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Digital Pros,info@moosejawdigitalpros.com,+13066927777,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Homes,info@moosejawhomes.com,+13066945555,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Small Business Hub,info@moosejawsbh.com,+13066925555,,Small Business,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Small Business Network,info@moosejawsbn.com,+13066924444,,Small Business,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Solopreneurs,info@moosejawsolopreneurs.com,+13066927777,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Tech Hub,info@moosejawtech.com,+13066923333,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Moose,Jaw Tech Network,info@moosejawtechnetwork.com,+13066923333,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Mount,Pearl Chamber of Commerce,info@mountpearlchamber.com,+17093681111,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Grand,Lake Municipality,info@municipalityofgrandlake.ca,+15063632600,,Municipal,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Nackawic,Chamber of Commerce,info@nackawicchamber.com,+15065752080,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Nain,Chamber of Commerce,info@nainchamber.com,+17099222222,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Greater,Nanaimo Chamber of Commerce,info@nanaimochamber.bc.ca,+12507561210,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Nanaimo,Realty,info@nanaimorealty.com,+12507563333,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Nanaimo,Tech Pros,info@nanaimotech.com,+12507561111,,Tech,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,North,Battleford Business Pros,info@nbbusinesspros.com,+13064454444,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Chamber of Commerce,info@nbchamber.com,+13064452725,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Consultants Group,info@nbconsultgroup.com,+13064459999,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Consultants Network,info@nbconsultnetwork.com,+13064457777,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Digital Agency,info@nbdigital.com,+13064455555,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Digital Network,info@nbdigitalnetwork.com,+13064451111,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Digital Pros,info@nbdigitalpros.com,+13064455555,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Marketing,info@nbmarketing.com,+13064452222,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Marketing Network,info@nbmarketingnetwork.com,+13064458888,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Marketing Pros,info@nbmarketingpros.com,+13064452222,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Realtors,info@nbrealty.com,+13064457777,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Solopreneur Network,info@nbsolopreneurnetwork.com,+13064459999,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Solopreneurs,info@nbsolopreneurs.com,+13064453333,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Tech Network,info@nbtechnetwork.com,+13064457777,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Tech Pros,info@nbtechpros.com,+13064456666,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,North,Battleford Tech Solutions,info@nbtechsolutions.com,+13064459999,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Nelson,Chamber of Commerce,info@nelsonchamber.com,+12503523433,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,New,Brunswick Business Directory,info@newbrunswickbusinessdirectory.com,+15064446666,,Directory,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,New,Glasgow Chamber of Commerce,info@newglasgowchamber.com,+19027558621,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Newmarket,Chamber of Commerce,info@newmarketchamber.ca,+19058953467,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,New,Maryland Chamber of Commerce,info@newmarylandchamber.com,+15064511919,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,New,Westminster Chamber of Commerce,info@newwestchamber.com,+16045217781,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Greater,Niagara Chamber of Commerce,info@niagarachamber.ca,+19056842361,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,N.L.,Construction Association,info@nlca.ca,+17095763333,,Construction,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,N.L.,Federation of Labour,info@nlfederationoflabour.com,+17097534444,,Labour,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,N.L.,Outfitters Association,info@nloa.ca,+17097225555,,Outfitters,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,North,Bay Chamber of Commerce,info@northbaychamber.com,+17054728480,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Northern,Adventure Consultants,info@northernadventureconsult.com,+18676686666,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Adventure Network,info@northernadventurenetwork.com,+18676682222,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Adventure Pros,info@northernadventurepros.com,+18676682222,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Business Advisors,info@northernbusiness.ca,+18676688899,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Business Consultants,info@northernbusinessconsult.com,+18676681111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Business Network,info@northernbusinessnetwork.com,+18676682222,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Business Pros,info@northernbusinesspros.com,+18676685555,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Consultants Group,info@northernconsultgroup.com,+18676686677,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Digital Agency,info@northerndigital.ca,+18676685566,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Lights Realtors,info@northernlightsrealtors.com,+18676671234,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Marketing Network,info@northernmarketingnetwork.com,+18676684444,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Marketing Pros,info@northernmarketingpros.com,+18676687777,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Real Estate Group,info@northernre.com,+18676686677,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Real Estate Consultants,info@northernreconsult.com,+18676689999,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Real Estate Network,info@northernrenetwork.com,+18676688888,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Real Estate Pros,info@northernrepros.com,+18676683333,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Solopreneur Group,info@northernsolopreneurgroup.com,+18676684444,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Solopreneur Network,info@northernsolopreneurnetwork.com,+18676687777,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Yukon Solopreneurs,info@northernsolopreneurs.ca,+18676685566,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Tech Consultants,info@northerntconsult.com,+18676681111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Tech Group,info@northerntechg.com,+18676685555,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Tech Network,info@northerntnetwork.com,+18676685555,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Northern,Tech Pros,info@northerntpros.com,+18676681111,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,North,Vancouver Chamber of Commerce,info@northvancc.org,+16049874488,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,North,York Chamber of Commerce,info@northyorkchamber.com,+14163987771,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Nova,Scotia Business Directory,info@novascotiabusinessdirectory.com,+19024247777,,Directory,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Oakville,Chamber of Commerce,info@oakvillechamber.com,+19058450087,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Okotoks,& District Chamber of Commerce,info@okotokschamber.com,+14039383622,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Okotoks,Homes,info@okotokshomes.com,+14039382222,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,O'Leary,Chamber of Commerce,info@olearychamber.com,+19028592020,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Ontario,East Economic Development,info@ontarioeast.ca,+16133324237,,Economic Development,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Orillia,Chamber of Commerce,info@orilliachamber.com,+17053254900,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Oromocto,Chamber of Commerce,info@oromoctochamber.com,+15063570777,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Oshawa,Chamber of Commerce,info@oshawachamber.com,+19057281683,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Ottawa,Board of Trade,info@ottawaboradtrade.com,+16132363631,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Greater,Ottawa Chamber of Commerce,info@ottawachamber.ca,+16132363631,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Owen,Sound Chamber of Commerce,info@owensoundchamber.com,+15193760487,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Oxford,Chamber of Commerce,info@oxfordchamber.com,+19024472050,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Prince,Albert Solopreneur Network,info@pabolopreneurnetwork.com,+13067642222,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Solopreneurs,info@pabolopreneurs.com,+13067642222,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Realty,info@pabrealty.com,+13067634444,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Business Network,info@pabusinessnetwork.com,+13067645555,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Business Pros,info@pabusinesspros.com,+13067648888,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Chamber of Commerce,info@pachamber.com,+13067646222,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Digital Agency,info@padigital.com,+13067644444,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Digital Network,info@padigitalnetwork.com,+13067643333,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Marketing Network,info@pamarketing.net,+13067641111,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Marketing Network,info@pamarketingnetwork.com,+13067646666,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Marketing Pros,info@pamarketingpros.com,+13067648888,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Parry,Sound Chamber of Commerce,info@parrysoundchamber.com,+17057464213,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Prince,Albert Tech Hub,info@patechhub.com,+13067646666,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Prince,Albert Tech Network,info@patechnetwork.com,+13067645555,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Peace,River Chamber of Commerce,info@peaceriverchamber.com,+17806243366,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Peace,River Properties,info@peaceriverrealty.com,+17806243333,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,PEI,Business Directory,info@peibusinessdirectory.net,+19029405927,,Directory,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,PEI,Local,info@peilocal.com,+19025662155,,Local Directory,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Penticton,& Wine Country Chamber of Commerce,info@pentictonchamber.com,+12504934055,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Penticton,Consultants,info@pentictonconsult.com,+12504932222,,Consulting,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Penticton,Realtors,info@pentictonrealtors.com,+12504934444,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Peterborough,Chamber of Commerce,info@peterboroughchamber.com,+17057453512,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Prince,George Chamber of Commerce,info@pgchamber.bc.ca,+12505623677,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Prince,George Digital Agency,info@pgdigital.com,+12505623333,,Marketing,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Prince,George Properties,info@pgproperties.com,+12505625555,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Pickering,Chamber of Commerce,info@pickeringchamber.ca,+19055090090,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Pictou,Chamber of Commerce,info@pictouchamber.com,+19024858846,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Placentia,Area Chamber of Commerce,info@placentiaareachamber.com,+17092277777,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Port,aux Basques Chamber of Commerce,info@portauxbasqueschamber.com,+17096958888,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Port,aux Choix Chamber of Commerce,info@portauxchoixchamber.com,+17098619999,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Port,Coquitlam Chamber of Commerce,info@portcoquitlamchamber.bc.ca,+16049422211,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Port,Hawkesbury Chamber of Commerce,info@porthawkesburychamber.com,+19026253700,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Port,Saunders Chamber of Commerce,info@portsaunderschamber.com,+17098611111,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Queens,Chamber of Commerce,info@queenschamber.com,+19023545555,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Quispamsis,Chamber of Commerce,info@quispamsischamber.com,+15068495588,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Red,Deer Tech Solutions,info@rdtechsolutions.com,+14033476666,,Tech,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Vancouver,Realtors Association,info@realtorlink.com,+16047303000,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Red,Deer Chamber of Commerce,info@reddeerchamber.com,+14033474491,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Red,Deer Realtors,info@reddeerrealtors.com,+14033466655,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Regina,Chamber of Commerce,info@reginachamber.com,+13067572650,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Business Consultants,info@reginaconsult.com,+13067574444,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Consultants Network,info@reginaconsultnetwork.com,+13067577777,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Consultants Pros,info@reginaconsultpros.com,+13067574444,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Digital Network,info@reginadigital.com,+13067579999,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Digital Network,info@reginadigitalnetwork.com,+13067575555,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Digital Pros,info@reginadigitalpros.com,+13067578888,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Realtors Association,info@reginarealtors.com,+13067891122,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Small Business Network,info@reginasbn.com,+13067575555,,Small Business,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Small Business Pros,info@reginasbpros.com,+13067573333,,Small Business,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Solopreneur Hub,info@reginasolopreneur.com,+13067578888,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Tech Network,info@reginatech.com,+13067576666,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Tech Network,info@reginatechnetwork.com,+13067572222,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Tech Pros,info@reginatechpros.com,+13067573333,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Marketing Network,info@reginmarketingnetwork.com,+13067571111,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Regina,Marketing Pros,info@reginmarketingpros.com,+13067572222,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Restigouche,Chamber of Commerce,info@restigouchechamber.com,+15066843030,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Richibucto,Chamber of Commerce,info@richibuctochamber.com,+15065236666,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Richmond,Chamber of Commerce,info@richmondchamber.ca,+16042782822,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Richmond,Hill Chamber of Commerce,info@richmondhillchamber.ca,+19057713343,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Richmond,Real Estate,info@richmondre.com,+16042786666,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Richmond,Small Biz Network,info@richmondsbn.com,+16042784444,,Small Business,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Riverview,Chamber of Commerce,info@riverviewchamber.com,+15063864242,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Rocky,Mountain House Chamber of Commerce,info@rockymountainchamber.com,+14038455885,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Rocky,Mountain Realty,info@rockymountainrealty.com,+14038454444,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Rothesay,Chamber of Commerce,info@rothesaychamber.com,+15068470303,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Saanich,Chamber of Commerce,info@saanichchamber.com,+12507442487,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Saanich,Homes,info@saanichhomes.com,+12507447777,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Saanich,Tech Solutions,info@saanichtech.com,+12507445555,,Tech,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Sackville,Chamber of Commerce,info@sackvillechamber.com,+15065364040,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Saint,Andrews Chamber of Commerce,info@saintandrewschamber.com,+15065293456,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,St.,Anthony Chamber of Commerce,info@saintanthonychamber.com,+17094544444,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Saint,Stephen Chamber of Commerce,info@saintstephenchamber.com,+15064667171,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Sarnia,Chamber of Commerce,info@sarniachamber.com,+15193321820,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Saskatoon,Business Network,info@saskatoonbusiness.com,+13062443333,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Business Network,info@saskatoonbusinessnetwork.com,+13062447777,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Business Pros,info@saskatoonbusinesspros.com,+13062442222,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Chamber of Commerce,info@saskatoonchamber.com,+13062442151,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Consultants Group,info@saskatoonconsultgroup.com,+13062441111,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Consultants Network,info@saskatoonconsultnetwork.com,+13062441111,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Digital Agency,info@saskatoondigital.com,+13062445555,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Marketing Agency,info@saskatoonmarketing.com,+13062447777,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Marketing Network,info@saskatoonmarketingnetwork.com,+13062448888,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Marketing Pros,info@saskatoonmarketingpros.com,+13062444444,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Real Estate Board,info@saskatoonrealestate.com,+13063736655,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Real Estate Network,info@saskatoonrenetwork.com,+13062446666,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Real Estate Pros,info@saskatoonrepros.com,+13062443333,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Tech Pros,info@saskatoontech.com,+13062449999,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Tech Network,info@saskatoontechnetwork.com,+13062449999,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatoon,Tech Pros,info@saskatoontechpros.com,+13062445555,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Saskatchewan,Small Business Network,info@sasksmallbiz.com,+13066643333,,Small Business,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Scarborough,Chamber of Commerce,info@scarboroughchamber.on.ca,+14164384160,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Scott's,Directories,info@scottsdirectories.com,+18006658459,,Business Directory,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Spruce,Grove Chamber of Commerce,info@sgchamber.com,+17809623997,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Spruce,Grove Marketing,info@sgmarketing.com,+17809628888,,Marketing,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Shelburne,Chamber of Commerce,info@shelburnechamber.com,+19028754547,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Sherwood,Park Consultants,info@sherwoodconsult.com,+17804647777,,Consulting,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Sherwood,Park & District Chamber of Commerce,info@sherwoodparkchamber.com,+17804644754,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Sherwood,Park Realtors,info@sherwoodrealtors.com,+17804645555,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Shippagan,Chamber of Commerce,info@shippaganchamber.com,+15063368999,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Simcoe,Chamber of Commerce,info@simcoechamber.com,+15194264770,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Saint,John Board of Trade,info@sjboardoftrade.com,+15066348338,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Souris,Chamber of Commerce,info@sourischamber.com,+19026872244,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Springdale,Chamber of Commerce,info@springdalechamber.com,+17096733333,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Springhill,Chamber of Commerce,info@springhillchamber.com,+19025972666,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Spruce,Grove Homes,info@sprucegrovehomes.com,+17809626666,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Squamish,Business Pros,info@squamishbusiness.com,+16048926666,,Business Support,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Squamish,Chamber of Commerce,info@squamishchamber.com,+16048925244,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Squamish,Realtors,info@squamishrealtors.com,+16048928888,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Sault,Ste. Marie Chamber of Commerce,info@ssmcoc.com,+17059497152,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,St.,Albert Chamber of Commerce,info@stalbertchamber.com,+17804591717,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,St.,Albert Digital Pros,info@stalbertdigital.com,+17804599999,,Marketing,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,St.,Albert Realty,info@stalbertrealty.com,+17804597777,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,St.,Catharines Chamber of Commerce,info@stcatharineschamber.com,+19056842361,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Stellarton,Chamber of Commerce,info@stellartongchamber.com,+19027558686,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Stephenville,Chamber of Commerce,info@stephenvillechamber.com,+17096438888,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Stettler,Chamber of Commerce,info@stettlerchamber.com,+14037422432,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Stettler,Properties,info@stettlerproperties.com,+14037428888,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,St.,George Chamber of Commerce,info@stgeorgechamber.com,+15067555555,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,St.,George’s Chamber of Commerce,info@stgeorgeschamber.com,+17096475555,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,St.,Lawrence Chamber of Commerce,info@stlawrencechamber.com,+17098737777,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Stratford,Chamber of Commerce,info@stratfordchamber.com,+15192711971,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Strathmore,Chamber of Commerce,info@strathmorechamber.com,+14039343133,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Strathmore,Realtors,info@strathmorerealtors.com,+14039349999,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,St.,Stephen Chamber of Commerce,info@ststephenchamber.com,+15064667171,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Summerside,Area Chamber of Commerce,info@summersidechamber.com,+19024365544,,Chamber,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Surrey,Marketing Network,info@surreymarketing.com,+16045817777,,Marketing,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Surrey,Realty,info@surreyrealty.com,+16045819999,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Sussex,Chamber of Commerce,info@sussexchamber.com,+15064332233,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Swift,Current Business Pros,info@swiftcurrentbusiness.com,+13067733333,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Business Network,info@swiftcurrentbusinessnetwork.com,+13067731111,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Chamber of Commerce,info@swiftcurrentchamber.com,+13067735656,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Consultants,info@swiftcurrentconsult.com,+13067733333,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Consultants Network,info@swiftcurrentconsultnetwork.com,+13067738888,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Marketing Pros,info@swiftcurrentmarketing.com,+13067737777,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Marketing Network,info@swiftcurrentmarketingnetwork.com,+13067736666,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Realtors,info@swiftcurrentre.com,+13067731111,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Real Estate Pros,info@swiftcurrentrepros.com,+13067739999,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Small Biz Network,info@swiftcurrentsbn.com,+13067735555,,Small Business,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Tech Solutions,info@swiftcurrenttech.com,+13067732222,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Tech Network,info@swiftcurrenttechnetwork.com,+13067735555,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Swift,Current Tech Pros,info@swiftcurrenttechpros.com,+13067739999,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Sydney,Chamber of Commerce,info@sydneycc.com,+19025395555,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Sylvan,Lake Chamber of Commerce,info@sylvanlakechamber.com,+14038875555,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Sylvan,Lake Real Estate,info@sylvanlakere.com,+14038871111,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Taber,Chamber of Commerce,info@taberchamber.ab.ca,+14032234266,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Taber,Realty,info@taberrealty.com,+14032232222,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Terrace,Chamber of Commerce,info@terracechamber.com,+12506352063,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Terrace,Consultants,info@terraceconsult.com,+12506358888,,Consulting,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Terrace,Properties,info@terraceproperties.com,+12506351111,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Terra,Nova Chamber of Commerce,info@terranovachamber.com,+17095439999,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Thunder,Bay Chamber of Commerce,info@thunderbaychamber.com,+18076242621,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Timmins,Chamber of Commerce,info@timminschamber.com,+17053601900,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Greater,Toronto Area Realtors,info@torontorealestateboard.com,+14164438100,,Real Estate,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Tracadie,Chamber of Commerce,info@tracadiechamber.com,+15063955000,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Greater,Trail Chamber of Commerce,info@trailchamber.com,+12503686321,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Tr'ondëk,Hwëch'in Business Directory,info@trondek.ca,+18679935350,,Indigenous Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Truro,Chamber of Commerce,info@trurochamber.com,+19028952544,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Vancouver,Business Consultants,info@vancouverconsult.com,+16046819999,,Consulting,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Vaughan,Chamber of Commerce,info@vaughanchamber.ca,+19056691983,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Vermilion,Chamber of Commerce,info@vermilionchamber.com,+17808535533,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Vermilion,Homes,info@vermilionhomes.com,+17808533333,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Vernon,Chamber of Commerce,info@vernonchamber.ca,+12505450773,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Vernon,Digital Pros,info@vernondigital.com,+12505459999,,Marketing,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Vernon,Real Estate,info@vernonre.com,+12505452222,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Victoria,Chamber of Commerce,info@victoriachamber.ca,+12503837191,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Victoria,Solopreneurs,info@victoriasolopreneurs.com,+12503833333,,Consulting,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Victoria,Real Estate Board,info@vrebonline.com,+12503857766,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Wabush,Chamber of Commerce,info@wabushchamber.com,+17099445555,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Wainwright,Chamber of Commerce,info@wainwrightchamber.com,+17808425979,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Wainwright,Realtors,info@wainwrightrealtors.com,+17808424444,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Waterloo,Region Chamber of Commerce,info@waterloochamber.com,+15195791982,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Watson,Lake Adventure,info@watsonadventure.com,+18675363344,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Adventure Network,info@watsonadventurenetwork.com,+18675363333,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Business Advisors,info@watsonbusinessadvisors.com,+18675366666,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Business Network,info@watsonbusinessnetwork.com,+18675368888,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Business Pros,info@watsonbusinesspros.com,+18675364444,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Consultants,info@watsonconsult.com,+18675364455,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Consultants Network,info@watsonconsultantsnetwork.com,+18675366666,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Consultants Pros,info@watsonconsultantspros.com,+18675366666,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Digital Solutions,info@watsondigital.com,+18675361111,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Digital Network,info@watsondigitalnetwork.com,+18675364444,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Business Network,info@watsonlakebusiness.com,+18675366677,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Chamber of Commerce,info@watsonlakechamber.com,+18675367777,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Marketing,info@watsonmarketing.com,+18675365555,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Marketing Network,info@watsonmarketingnetwork.com,+18675362222,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Marketing Pros,info@watsonmarketingpros.com,+18675361111,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Mining,info@watsonmining.com,+18675363344,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Real Estate,info@watsonre.com,+18675366677,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Realtors,info@watsonrealtors.com,+18675362222,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Real Estate Network,info@watsonrenetwork.com,+18675361111,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Small Biz,info@watsonsmallbiz.com,+18675368888,,Small Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Solopreneur Network,info@watsonsolopreneurnetwork.com,+18675367777,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Solopreneur Pros,info@watsonsolopreneurpros.com,+18675369999,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Tech Hub,info@watsontech.com,+18675369999,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Tech Consultants,info@watsontechconsult.com,+18675367777,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Tech Network,info@watsontechnetwork.com,+18675369999,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Watson,Lake Tech Pros,info@watsontechpros.com,+18675362222,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Welland,Chamber of Commerce,info@wellandchamber.com,+19057354490,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,West,Coast Chamber of Commerce,info@westcoastchamber.com,+17096346666,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Western,Newfoundland Chamber of Commerce,info@westernnewfoundlandchamber.com,+17096377777,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Westlock,Chamber of Commerce,info@westlockchamber.com,+17803497219,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Westlock,Properties,info@westlockproperties.com,+17803495555,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Westville,Chamber of Commerce,info@westvillechamber.com,+19023964646,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Wetaskiwin,Chamber of Commerce,info@wetaskiwinchamber.com,+17803527301,,Chamber,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Wetaskiwin,Real Estate,info@wetaskiwinre.com,+17803526666,,Real Estate,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,Weyburn,Business Network,info@weyburnbusiness.com,+13068428888,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Business Network,info@weyburnbusinessnetwork.com,+13068424444,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Business Pros,info@weyburnbusinesspros.com,+13068427777,,Business Support,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Chamber of Commerce,info@weyburnchamber.com,+13068423355,,Chamber,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Consultants Network,info@weyburnconsultnetwork.com,+13068423333,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Consultants Pros,info@weyburnconsultpros.com,+13068421111,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Digital Agency,info@weyburndigital.com,+13068426666,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Homes,info@weyburnhomes.com,+13068422222,,Real Estate,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Marketing Network,info@weyburnmarketingnetwork.com,+13068423333,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Marketing Pros,info@weyburnmarketingpros.com,+13068426666,,Marketing,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Solopreneurs,info@weyburnsolopreneurs.com,+13068421111,,Consulting,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Tech Hub,info@weyburntech.com,+13068424444,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Tech Network,info@weyburntechnetwork.com,+13068424444,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Weyburn,Tech Pros,info@weyburntechpros.com,+13068429999,,Tech,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Whistler,Chamber of Commerce,info@whistlerchamber.com,+16049325922,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Whistler,Homes,info@whistlerhomes.com,+16049323333,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Whistler,Tech Hub,info@whistlertech.com,+16049321111,,Tech,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Whitby,Chamber of Commerce,info@whitbychamber.org,+19056688505,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Whitehorse,Adventure Tours,info@whitehorseadventure.com,+18673932222,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Adventure Consultants,info@whitehorseadventureconsult.com,+18673935555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Adventure Network,info@whitehorseadventurenetwork.com,+18673936666,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Adventure Pros,info@whitehorseadventurepros.com,+18673935555,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Business Centre,info@whitehorsebusiness.ca,+18673937000,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Business Network,info@whitehorsebusinessnetwork.com,+18673938888,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Business Pros,info@whitehorsebusinesspros.com,+18673932222,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Consultants Group,info@whitehorseconsultgroup.com,+18673931111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Digital Consultants,info@whitehorsedigital.com,+18673936677,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Marketing Agency,info@whitehorsemarketing.com,+18673936666,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Marketing Network,info@whitehorsemarketingnetwork.com,+18673934444,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Marketing Pros,info@whitehorsemarketingpros.com,+18673931111,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Realtors Association,info@whitehorserealtors.com,+18673933344,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Small Biz Network,info@whitehorsesmallbiz.com,+18673938899,,Small Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Solopreneur Hub,info@whitehorsesolopreneur.com,+18673934444,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Solopreneur Network,info@whitehorsesolopreneurnetwork.com,+18673933333,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Solopreneur Pros,info@whitehorsesolopreneurpros.com,+18673933333,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Startup Hub,info@whitehorsestartup.ca,+18673938899,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Tech Solutions,info@whitehorsetech.com,+18673939999,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Tech Network,info@whitehorsetechnetwork.com,+18673937777,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Tech Pros,info@whitehorsetechpros.com,+18673939999,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Whitehorse,Web Developers,info@whitehorseweb.com,+18673936677,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Williams,Lake Business Network,info@williamslakebusiness.com,+12503922222,,Business Support,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Williams,Lake Chamber of Commerce,info@williamslakechamber.com,+12503925025,,Chamber,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Williams,Lake Realtors,info@williamslakerealtors.com,+12503924444,,Real Estate,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Windsor,Chamber of Commerce,info@windsorchamber.org,+15199663696,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Windsor-West,Hants Chamber of Commerce,info@windsorwesthantschamber.com,+19027983619,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Watson,Lake Tourism Consultants,info@wltconsulting.com,+18675364455,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Wolfville,Area Chamber of Commerce,info@wolfvillebusiness.com,+19025427777,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Woodstock,Chamber of Commerce,info@woodstockchamber.com,+15063288440,,Chamber,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Yarmouth,Area Chamber of Commerce,info@yarmouthchamber.com,+19027422145,,Chamber,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Yukon,First Nations Chamber of Commerce,info@yfncc.ca,+18673933700,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,York,Region Chamber of Commerce,info@yorkregionchamber.com,+19058815563,,Chamber,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Yukon,Adventure Tours,info@yukonadventure.com,+18676678899,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Adventure Consultants,info@yukonadventureconsult.com,+18674562222,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Adventure Network,info@yukonadventurenetwork.com,+18676678888,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Adventure Pros,info@yukonadventurepros.com,+18676679999,,Tourism,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Business Network,info@yukonbusiness.net,+18676671111,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Business Consultants,info@yukonbusinessconsult.com,+18674567788,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Business Network,info@yukonbusinessnetwork.com,+18676671111,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Business Pros,info@yukonbusinesspros.com,+18676676666,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Chamber of Commerce,info@yukonchamber.com,+18676677545,,Chamber,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Consultants Association,info@yukonconsultants.com,+18674565555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Consultants Network,info@yukonconsultantsnetwork.com,+18674567777,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Consultants Pros,info@yukonconsultantspros.com,+18674568888,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Digital Solutions,info@yukondigital.com,+18676676677,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Digital Consultants,info@yukondigitalconsult.com,+18674566666,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Digital Network,info@yukondigitalnetwork.com,+18674566666,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Digital Pros,info@yukondigitalpros.com,+18674565555,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Freelance Consultants,info@yukonfreelance.com,+18674563344,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Freelance Network,info@yukonfreelance.net,+18676675555,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Freelance Group,info@yukonfreelancegroup.com,+18674561111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Freelance Network,info@yukonfreelancenetwork.com,+18676673333,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Freelance Pros,info@yukonfreelancepros.com,+18676673333,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Gold Rush Realtors,info@yukongoldrealtors.com,+18676673344,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Innovation Hub,info@yukoninnovation.ca,+18674567890,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Marketing Pros,info@yukonmarketing.com,+18676673344,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Marketing Network,info@yukonmarketing.net,+18676679999,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Marketing Association,info@yukonmarketingassociation.com,+18674563333,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Marketing Network,info@yukonmarketingnetwork.com,+18676679999,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Marketing Pros,info@yukonmarketingpros.com,+18676675555,,Marketing,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Real Estate Group,info@yukonre.group,+18674562222,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Real Estate Network,info@yukonre.net,+18674568888,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Realtors Association,info@yukonrealtors.com,+18676677655,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Real Estate Experts,info@yukonreexperts.com,+18676678899,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Real Estate Network,info@yukonrenetwork.com,+18676676666,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Real Estate Pros,info@yukonrepros.com,+18676677777,,Real Estate,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Small Business Hub,info@yukonsmallbusiness.com,+18674569999,,Small Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Small Business Network,info@yukonsmallbusinessnetwork.com,+18674567777,,Small Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Small Business Pros,info@yukonsmallbusinesspros.com,+18674566666,,Small Business,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Solopreneur Network,info@yukonsolopreneur.com,+18674566677,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Startup Advisors,info@yukonstartup.com,+18674563344,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Tech Network,info@yukontech.net,+18676674444,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Tech Consultants,info@yukontechconsult.com,+18674567788,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Tech Network,info@yukontechnetwork.com,+18674561111,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Yukon,Tech Pros,info@yukontechpros.com,+18676672222,,Tech,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Infusion,,infusion@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ingenieux,,ingenieux@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Innocent,,innocent@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Inox,,inox@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Insulaire,,insulaire@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Intense,,intense@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Interieur,,interieur@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Intime,,intime@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Intrigue,,intrigue@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Iode,,iode@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Iris,,iris@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ivoire,,ivoire@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ivy,,ivy@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jade,,jade@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jade,Plumbing,jadeplumbing@mymts.net,+12043396789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Jais,,jais@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jalon,,jalon@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jalousie,,jalousie@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jambe,,jambe@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,J,& J Plumbing,jandjplumbing@mymts.net,+12046612345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Jardin,,jardin@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jasmin,,jasmin@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jauge,,jauge@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jeans,,jeans@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jet,Plumbing,jetplumbing@mymts.net,+12048883456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Jeu,,jeu@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jeune,,jeune@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Joie,,joie@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jonction,,jonction@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jouet,,jouet@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Journal,,journal@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Joute,,joute@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Joyau,,joyau@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jubile,,jubile@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Juge,,juge@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jungle,,jungle@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Jupiter,,jupiter@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Juriste,,juriste@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Justice,,justice@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Kaki,,kaki@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Kangourou,,kangourou@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Kermesse,,kermesse@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Keystone,Plumbing,keystoneplumbing@mymts.net,+12043458901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Kilo,,kilo@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Kingston,Plumbing,kingstonplumbing@mymts.net,+12045551234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Kiosque,,kiosque@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Koala,,koala@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lac,,lac@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lacet,,lacet@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lagon,,lagon@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Laine,,laine@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lait,,lait@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lakeside,Plumbing,lakesideplumbing@mymts.net,+12047275678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Lampe,,lampe@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lande,,lande@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Landmark,Plumbing,landmarkplumbing@mymts.net,+12046619012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Langue,,langue@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lanterne,,lanterne@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lapin,,lapin@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Large,,large@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Larve,,larve@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lasagne,,lasagne@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Latte,,latte@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Laurel,,laurel@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lave,,lave@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lavis,,lavis@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Layette,,layette@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lazuli,,lazuli@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lea,,lea@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,LFBB,D New Brunswick,leads@lfbbd.com,+15066334455,,Lead Gen,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Lechage,,lechage@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,LEDC,Business Directory,ledc@ledc.com,+15194333491,,Economic Development,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Legacy,Plumbing,legacyplumbing@mymts.net,+12043392345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Legende,,legende@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Legume,,legume@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lendemain,,lendemain@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lent,,lent@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lente,,lente@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lepine,,lepine@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Leslie,,leslie@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lest,,lest@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lettre,,lettre@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Levant,,levant@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Levee,,levee@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Levier,,levier@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Liaison,,liaison@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Libelle,,libelle@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Liberty,Plumbing,libertyplumbing@mymts.net,+12048886789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Licence,,licence@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lien,,lien@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lierre,,lierre@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lieu,,lieu@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ligne,,ligne@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lilas,,lilas@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lime,,lime@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Limite,,limite@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Limpide,,limpide@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Linceul,,linceul@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Linge,,linge@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lion,,lion@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Liquide,,liquide@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lisiere,,lisiere@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lisse,,lisse@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Liste,,liste@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Litre,,litre@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Livre,,livre@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Loge,,loge@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Loisir,,loisir@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lombaire,,lombaire@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Long,,long@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lorette,,lorette@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Loriot,,loriot@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Loup,,loup@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Loutre,,loutre@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lubrifiant,,lubrifiant@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lucarne,,lucarne@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lueur,,lueur@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Luge,,luge@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lumiere,,lumiere@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lune,,lune@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lutin,,lutin@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Luxe,,luxe@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lymphatique,,lymphatique@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Lys,,lys@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Macadam,,macadam@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Machine,,machine@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Magasin,,magasin@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Magie,,magie@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Magnolia,,magnolia@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Maharadjah,,maharadjah@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mail,,mail@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Main,,main@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Maison,,maison@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Majestueux,,majestueux@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Malachite,,malachite@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Malice,,malice@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Malle,,malle@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mamelon,,mamelon@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Manche,,manche@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mandarine,,mandarine@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mangeoire,,mangeoire@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Manne,,manne@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Manteau,,manteau@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Maple,Leaf Plumbing,mapleleafplumbing@mymts.net,+12043453456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Marais,,marais@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Marathon,Plumbing,marathonplumbing@mymts.net,+12045558901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Marbre,,marbre@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Marchand,,marchand@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Marche,,marche@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Marin,,marin@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Marionnette,,marionnette@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Marqueterie,,marqueterie@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Marquis,,marquis@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Martre,,martre@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Masque,,masque@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Massif,,massif@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Master,,master@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mat,,mat@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Matelot,,matelot@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Materiau,,materiau@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Matin,,matin@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Matinee,,matinee@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Matrice,,matrice@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mauve,,mauve@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Maxi,,maxi@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Medaille,,medaille@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Medecin,,medecin@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Meditation,,meditation@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mehari,,mehari@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Melange,,melange@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Melodie,,melodie@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,St.,John’s Board of Trade,members@stjohnsbot.ca,+17097266666,,Chamber,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Memoire,,memoire@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Menage,,menage@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Menhir,,menhir@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Menthe,,menthe@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Menu,,menu@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mercure,,mercure@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mercury,Plumbing,mercuryplumbing@mymts.net,+12047271234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Meridien,,meridien@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Merle,,merle@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mesange,,mesange@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Message,,message@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Messager,,messager@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Metallique,,metallique@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Meteor,,meteor@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Methode,,methode@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Metro,,metro@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Meuble,,meuble@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Meunier,,meunier@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Midwest,Plumbing,midwestplumbing@mymts.net,+12046615678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Miel,,miel@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mignon,,mignon@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mille,,mille@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mimosa,,mimosa@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mineraux,,mineraux@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mini,,mini@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Minuit,,minuit@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Miracle,,miracle@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Miroir,,miroir@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mirror,Me Photo Booth,mirrorme@pe.ca,+12047829012,,Event Services,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Mode,,mode@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moderato,,moderato@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moelle,,moelle@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moins,,moins@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mois,,mois@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mole,,mole@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mollusque,,mollusque@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moment,,moment@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Monarque,,monarque@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Monde,,monde@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mont,,mont@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Montagne,,montagne@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Monte,,monte@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Monument,,monument@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moral,,moral@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Morelle,,morelle@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Morgue,,morgue@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Morue,,morue@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mosaïque,,mosaique@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mot,,mot@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moteur,,moteur@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moule,,moule@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mousse,,mousse@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mouton,,mouton@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Moyen,,moyen@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mozaique,,mozaique@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Muguet,,muguet@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mulot,,mulot@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mur,,mur@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Muse,,muse@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Musique,,musique@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mystere,,mystere@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Mythique,,mythique@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nacre,,nacre@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Naif,,naif@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nain,,nain@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Naja,,naja@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nappe,,nappe@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Narval,,narval@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nasique,,nasique@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Natte,,natte@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nature,,nature@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nautilus,,nautilus@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Innovation,PEI,navigator@innovationpei.com,+19023686300,,Business Support,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Canpages,New Brunswick,nb@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Kompass,New Brunswick,nb@kompass.com,+15068582222,,Business Directory,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,YellowPages,New Brunswick,nb@yellowpages.ca,+15066882000,,Directory,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Neige,,neige@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nerveux,,nerveux@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Net,,net@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Neuf,,neuf@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Neutre,,neutre@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nez,,nez@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nid,,nid@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Niger,,niger@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nimbus,,nimbus@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Canpages,Newfoundland,nl@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,YellowPages,Newfoundland,nl@yellowpages.ca,+17097262000,,Directory,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,NLOWE,Member Directory,nlowe@nlowe.org,+17097546666,,Women's Business,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Noble,,noble@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Noeud,,noeud@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Noir,,noir@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nomade,,nomade@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nopal,,nopal@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nord,,nord@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Norme,,norme@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Northern,Lights Plumbing,northernlightsplumbing@mymts.net,+12043399012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Nostalgie,,nostalgie@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Note,,note@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nouveau,,nouveau@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nouvelle,,nouvelle@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nova,Plumbing,novaplumbing@mymts.net,+12048882345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Novice,,novice@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Noyer,,noyer@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Canpages,Nova Scotia,ns@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,YellowPages,Nova Scotia,ns@yellowpages.ca,+19024682000,,Directory,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,ZoomInfo,Nova Scotia,ns@zoominfo.com,+19024219900,,Lead Gen,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,Nuage,,nuage@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nuit,,nuit@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Numero,,numero@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Nymphe,,nymphe@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oak,Ridge Plumbing,oakridgeplumbing@mymts.net,+12043456789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Oasis,,oasis@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oasis,Plumbing,oasisplumbing@mymts.net,+12045553456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Obelisque,,obelisque@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Objet,,objet@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ontario,Business Registry,obr@ontario.ca,+14163269320,,Government Registry,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Obsidienne,,obsidienne@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ocean,,ocean@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Octave,,octave@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ode,,ode@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Odyssee,,odyssee@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Offrande,,offrande@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oignon,,oignon@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oiseau,,oiseau@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Olive,,olive@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ombre,,ombre@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ombrelle,,ombrelle@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ombrellino,,ombrellino@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Omnibus,,omnibus@qc.ca,+15145244000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Onagre,,onagre@qc.ca,+15149875000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oncle,,oncle@qc.ca,+15147616000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ondee,,ondee@qc.ca,+15142887000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ondulation,,ondulation@qc.ca,+15148498000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Opale,,opale@qc.ca,+15148421000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Opaque,,opaque@qc.ca,+15149339000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Opera,,opera@qc.ca,+15145242000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Opulence,,opulence@qc.ca,+15149873000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Orage,,orage@qc.ca,+15147614000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oranger,,oranger@qc.ca,+15142885000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Orbite,,orbite@qc.ca,+15148496000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Orchestre,,orchestre@qc.ca,+15149337000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ordre,,ordre@qc.ca,+15148428000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oreille,,oreille@qc.ca,+15145249000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Orient,,orient@qc.ca,+15149871000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Origami,,origami@qc.ca,+15147612000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Orme,,orme@qc.ca,+15148494000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ornement,,ornement@qc.ca,+15142883000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ornemental,,ornemental@qc.ca,+15149335000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oro,,oro@qc.ca,+15148426000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Os,,os@qc.ca,+15145247000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oscillation,,oscillation@qc.ca,+15149878000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Oseille,,oseille@qc.ca,+15147619000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Osier,,osier@qc.ca,+15142881000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Osmose,,osmose@qc.ca,+15148492000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ostentation,,ostentation@qc.ca,+15149333000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ostrace,,ostrace@qc.ca,+15148424000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ours,,ours@qc.ca,+15145245000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Outarde,,outarde@qc.ca,+15149876000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ovale,,ovale@qc.ca,+15147617000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ovation,,ovation@qc.ca,+15142888000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Ovoide,,ovoide@qc.ca,+15148499000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pacha,,pacha@qc.ca,+15149331000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pacifique,,pacifique@qc.ca,+15148422000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Paddock,,paddock@qc.ca,+15145243000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Page,,page@qc.ca,+15149874000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Paillage,,paillage@qc.ca,+15147615000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Paille,,paille@qc.ca,+15142886000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pain,,pain@qc.ca,+15148497000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Paire,,paire@qc.ca,+15149338000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Palais,,palais@qc.ca,+15148429000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pale,,pale@qc.ca,+15145241000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Palet,,palet@qc.ca,+15149872000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Palette,,palette@qc.ca,+15147613000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Palier,,palier@qc.ca,+15142884000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pampa,,pampa@qc.ca,+15148495000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Panache,,panache@qc.ca,+15149336000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Panca,,panca@qc.ca,+15148427000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pancarte,,pancarte@qc.ca,+15145248000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pandore,,pandore@qc.ca,+15149879000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Panier,,panier@qc.ca,+15147611000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Panorama,,panorama@qc.ca,+15142882000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Panse,,panse@qc.ca,+15148493000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Pantheon,,pantheon@qc.ca,+15149334000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Papaye,,papaye@qc.ca,+15148425000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Papier,,papier@qc.ca,+15145246000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Papillon,,papillon@qc.ca,+15149877000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Papyrus,,papyrus@qc.ca,+15147618000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Paradis,,paradis@qc.ca,+15142889000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Parapet,,parapet@qc.ca,+15148491000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Paresse,,paresse@qc.ca,+15149332000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Parfum,,parfum@qc.ca,+15148423000,,Retail,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Canpages,PEI,pei@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Live,Business PEI,pei@livebusiness.ca,+19028924455,,Directory,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,YellowPages,PEI,pei@yellowpages.ca,+19025665555,,Directory,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Pinnacle,Plumbing,pinnacleplumbing@mymts.net,+12047278901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Plum,Coulee Inn,plum@mymts.net,+12048293243,,Accommodation,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Polaris,Plumbing,polarisplumbing@mymts.net,+12046611234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Precision,Plumbing,precisionplumbing@mymts.net,+12043395678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Prime,Plumbing,primeplumbing@mymts.net,+12048889012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Prism,Plumbing,prismplumbing@mymts.net,+12043452345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Radiant,Plumbing,radiantplumbing@mymts.net,+12045556789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Royal,Bank of Canada,rbc@royalbank.com,+12049445500,,Finance,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Red,River Plumbing,redriverplumbing@mymts.net,+12047273456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Alberta,Business Registry,registry@alberta.ca,+17804272382,,Government Registry,,,,,Canada_Business_Directories.xlsx::Alberta,CA: email
+None,British,Columbia Business Registry,registry@gov.bc.ca,+16046607055,,Government Registry,,,,,Canada_Business_Directories.xlsx::British Columbia,CA: email
+None,Registry,of Companies NL,registry@gov.nl.ca,+17097292222,,Government Registry,,,,,Canada_Business_Directories.xlsx::Newfoundland and Labrador,CA: email
+None,Registry,of Joint Stock Companies,registry@novascotia.ca,+19024247770,,Government Registry,,,,,Canada_Business_Directories.xlsx::Nova Scotia,CA: email
+None,PEI,Corporate Registry,registry@princeedwardisland.ca,+19023684500,,Government Registry,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Saskatchewan,Business Registry,registry@saskatchewan.ca,+13067872962,,Government Registry,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Corporate,Registry NB,registry@snb.ca,+15064532441,,Government Registry,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Ridgeway,Plumbing,ridgewayplumbing@mymts.net,+12046618901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Riverbend,Plumbing,riverbendplumbing@mymts.net,+12043391234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Rositha,Gift Shop,rositha@mymts.net,+12047928723,,Retail,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Royal,Plumbing,royalplumbing@mymts.net,+12048885678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Sapphire,Plumbing,sapphireplumbing@mymts.net,+12043459012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Small,Business Owners of Ontario,sbo@smallbusinessontario.ca,+14164108855,,Association,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Silver,Lining Plumbing,silverliningplumbing@mymts.net,+12045552345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Canpages,Saskatchewan,sk@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,YellowPages,Saskatchewan,sk@yellowpages.ca,+13066652000,,Directory,,,,,Canada_Business_Directories.xlsx::Saskatchewan,CA: email
+None,Skyline,Plumbing,skylineplumbing@mymts.net,+12047276789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Yukon,College Small Business Centre,smallbusiness@yukonu.ca,+18676688880,,Business Support,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: email
+None,Service,New Brunswick,snb@nb.ca,+15064521240,,Government Services,,,,,Canada_Business_Directories.xlsx::New Brunswick,CA: email
+None,Summit,Plumbing,summitplumbing@mymts.net,+12046613456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Sunrise,Plumbing,sunriseplumbing@mymts.net,+12043398901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Montreal,InVivo Directory,support@biotechgate.com,+15148755432,,Life Sciences,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,BookYourData,Quebec,support@bookyourdata.com,+18551234567,,Lead Gen,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,Canpages,Ontario,support@canpages.ca,+18004657295,,Directory,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,FamilySearch,PEI Directories,support@familysearch.org,+19023141599,,Historical Directory,,,,,Canada_Business_Directories.xlsx::Prince Edward Island,CA: email
+None,Jasmin,Directory Quebec,support@jasminedirectory.com,+14186596299,,Regional Directory,,,,,Canada_Business_Directories.xlsx::Quebec,CA: email
+None,T,& T Plumbing,tandtplumbing@mymts.net,+12048881234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Titan,Plumbing,titanplumbing@mymts.net,+12043455678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Topaz,Plumbing,topazplumbing@mymts.net,+12045559012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Trident,Plumbing,tridentplumbing@mymts.net,+12047272345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,True,North Plumbing,truenorthplumbing@mymts.net,+12046616789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Twilight,Plumbing,twilightplumbing@mymts.net,+12043393456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Union,Plumbing,unionplumbing@mymts.net,+12048888901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Unity,Plumbing,unityplumbing@mymts.net,+12043451234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Utopia,Plumbing,utopiaplumbing@mymts.net,+12045555678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Valor,Plumbing,valorplumbing@mymts.net,+12047279012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Vanguard,Plumbing,vanguardplumbing@mymts.net,+12046612345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Velocity,Plumbing,velocityplumbing@mymts.net,+12043396789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Venture,Plumbing,ventureplumbing@mymts.net,+12048883456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Verdant,Plumbing,verdantplumbing@mymts.net,+12043458901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Vibrant,Plumbing,vibrantplumbing@mymts.net,+12045551234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Victory,Plumbing,victoryplumbing@mymts.net,+12047275678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Viking,Plumbing,vikingplumbing@mymts.net,+12046619012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Vision,Plumbing,visionplumbing@mymts.net,+12043392345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Vitality,Plumbing,vitalityplumbing@mymts.net,+12048886789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Voyage,Plumbing,voyageplumbing@mymts.net,+12043453456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Watermark,Plumbing,watermarkplumbing@mymts.net,+12047271234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Watershed,Plumbing,watershedplumbing@mymts.net,+12046615678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Wave,Plumbing,waveplumbing@mymts.net,+12043399012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,West,End Plumbing,westendplumbing@mymts.net,+12048882345,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Wildwood,Plumbing,wildwoodplumbing@mymts.net,+12043456789,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Willow,Plumbing,willowplumbing@mymts.net,+12045553456,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Windmill,Plumbing,windmillplumbing@mymts.net,+12047278901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Winter,Plumbing,winterplumbing@mymts.net,+12046611234,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,Woodland,Plumbing,woodlandplumbing@mymts.net,+12043395678,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,W,& W Plumbing,wwplumbing@mymts.net,+12045558901,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,YellowPages,Ontario,yp@yellowpages.ca,+14164882000,,Directory,,,,,Canada_Business_Directories.xlsx::Ontario,CA: email
+None,Zenith,Plumbing,zenithplumbing@mymts.net,+12048889012,,Plumbing,,,,,Canada_Business_Directories.xlsx::Manitoba,CA: email
+None,,,,+14319900222,tradeline247ai.com,,Edmonton,Alberta,Canada,,TradeLine_Canada_Biz_Directories_Leadpack.xlsx::Profile_Template,CA: phone only
+None,Haines,Junction Tech Consultants,,+18673321111,,Consulting,,,,,Canada_Business_Directories.xlsx::NWT • Yukon • Nunavut,CA: phone only

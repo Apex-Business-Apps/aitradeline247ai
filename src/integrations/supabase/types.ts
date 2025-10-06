@@ -358,6 +358,64 @@ export type Database = {
           },
         ]
       }
+      campaign_followups: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          followup_number: number
+          halted_reason: string | null
+          id: string
+          member_id: string
+          scheduled_at: string
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          followup_number?: number
+          halted_reason?: string | null
+          id?: string
+          member_id: string
+          scheduled_at: string
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          followup_number?: number
+          halted_reason?: string | null
+          id?: string
+          member_id?: string
+          scheduled_at?: string
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_followups_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_followups_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_followups_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "v_sendable_members"
+            referencedColumns: ["member_id"]
+          },
+        ]
+      }
       campaign_members: {
         Row: {
           campaign_id: string
@@ -1285,34 +1343,40 @@ export type Database = {
       leads: {
         Row: {
           company: string
+          country: string | null
           created_at: string
           email: string
           id: string
           lead_score: number | null
           name: string
           notes: string | null
+          phone: string | null
           source: string
           updated_at: string
         }
         Insert: {
           company: string
+          country?: string | null
           created_at?: string
           email: string
           id?: string
           lead_score?: number | null
           name: string
           notes?: string | null
+          phone?: string | null
           source?: string
           updated_at?: string
         }
         Update: {
           company?: string
+          country?: string | null
           created_at?: string
           email?: string
           id?: string
           lead_score?: number | null
           name?: string
           notes?: string | null
+          phone?: string | null
           source?: string
           updated_at?: string
         }
