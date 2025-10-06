@@ -89,7 +89,7 @@ export default function CampaignManager() {
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Campaign Manager</h1>
+        <h1 className="text-3xl font-bold mb-2">🚀 Campaign Manager</h1>
         <p className="text-muted-foreground">Relaunch — Canada Campaign Workflow</p>
       </div>
 
