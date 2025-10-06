@@ -1,11 +1,27 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { parse } from "https://deno.land/std@0.190.0/encoding/csv.ts";
+import { checkAdminAuth } from "../_shared/adminAuth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Email validation regex
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// E.164 phone number format: +[country code][number] (max 15 digits)
+const E164_REGEX = /^\+[1-9]\d{1,14}$/;
+
+// Sanitize text fields to prevent injection
+function sanitizeText(text: string | undefined, maxLength: number): string {
+  if (!text) return '';
+  return text
+    .trim()
+    .replace(/[<>]/g, '') // Remove potential HTML/script tags
+    .substring(0, maxLength);
+}
 
 interface ImportRequest {
   csv_content: string;
@@ -24,13 +40,8 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const authHeader = req.headers.get('Authorization')!;
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user } } = await supabaseClient.auth.getUser(token);
-
-    if (!user) {
-      throw new Error('Unauthorized');
-    }
+    // Security: Verify admin access
+    const { userId } = await checkAdminAuth(req, supabaseClient);
 
     const { csv_content, list_name = 'Warm Leads — Imported' }: ImportRequest = await req.json();
 
@@ -53,19 +64,35 @@ serve(async (req) => {
 
     console.log(`Found ${unsubscribedEmails.size} unsubscribed emails`);
 
-    // Process records
+    // Process records with validation
     const validRecords = [];
     const skipped = {
       no_email_phone: 0,
       unsubscribed: 0,
-      invalid: 0
+      invalid_format: 0
     };
 
-    for (const record of records) {
-      const email = record.email?.trim();
-      const phone = record.phone?.trim();
+    for (let rowIndex = 0; rowIndex < records.length; rowIndex++) {
+      const record = records[rowIndex];
+      
+      const email = sanitizeText(record.email, 255);
+      const phone = sanitizeText(record.phone, 20);
 
-      // Skip if no email or phone
+      // Validate email format
+      if (email && !EMAIL_REGEX.test(email)) {
+        skipped.invalid_format++;
+        console.warn(`Row ${rowIndex + 1}: Invalid email format:`, email);
+        continue;
+      }
+
+      // Validate phone format if provided
+      if (phone && !E164_REGEX.test(phone)) {
+        skipped.invalid_format++;
+        console.warn(`Row ${rowIndex + 1}: Invalid phone format (must be E.164):`, phone);
+        continue;
+      }
+
+      // Must have at least email or phone
       if (!email && !phone) {
         skipped.no_email_phone++;
         continue;
@@ -77,27 +104,28 @@ serve(async (req) => {
         continue;
       }
 
-      // Build lead object
-      const firstName = record.first_name?.trim() || '';
-      const lastName = record.last_name?.trim() || '';
+      // Build lead object with sanitized data
+      const firstName = sanitizeText(record.first_name, 50);
+      const lastName = sanitizeText(record.last_name, 50);
       const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Unknown';
       
       validRecords.push({
-        name: fullName,
-        email: email || null,
-        company: record.company?.trim() || 'Unknown',
+        name: sanitizeText(fullName, 100),
+        email: email || '',
+        company: sanitizeText(record.company, 100),
+        phone: phone || null,
+        country: sanitizeText(record.country, 2),
         notes: JSON.stringify({
-          phone: phone || null,
-          domain: record.domain || null,
-          industry: record.industry || null,
-          city: record.city || null,
-          province: record.province || null,
-          country: record.country || null,
-          source_file: record.source_file || null,
-          priority_bucket: record.priority_bucket || null,
-          list_name
-        }),
-        source: 'csv_import'
+          list_name: sanitizeText(list_name, 100),
+          import_date: new Date().toISOString(),
+          original_row: rowIndex + 1,
+          domain: sanitizeText(record.domain, 100),
+          industry: sanitizeText(record.industry, 50),
+          city: sanitizeText(record.city, 50),
+          province: sanitizeText(record.province, 50)
+        }).substring(0, 2000), // Limit notes field
+        source: 'csv_import',
+        lead_score: 0
       });
     }
 
@@ -119,15 +147,16 @@ serve(async (req) => {
 
     console.log(`Upserted ${upsertedLeads?.length || 0} leads`);
 
-    // Log analytics event
+    // Log analytics event with user info
     await supabaseClient
       .from('analytics_events')
       .insert({
-        event_type: 'leads_import',
+        event_type: 'leads_imported',
+        user_id: userId,
         event_data: {
           list_name,
-          total_parsed: records.length,
-          valid_imported: validRecords.length,
+          total_rows: records.length,
+          imported: upsertedLeads?.length || 0,
           skipped,
           timestamp: new Date().toISOString()
         },

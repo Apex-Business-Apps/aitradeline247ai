@@ -1,17 +1,52 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Upload, Users, Send, Bell, FileDown, CheckCircle } from 'lucide-react';
+import { Loader2, Upload, Users, Send, Bell, FileDown, CheckCircle, ShieldAlert } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/hooks/useAuth';
 
 const CAMPAIGN_ID = 'c0000000-0000-0000-0000-000000000001';
 
 export default function CampaignManager() {
+  const navigate = useNavigate();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, any>>({});
+
+  // Security: Check admin access
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [authLoading, user, navigate]);
+
+  // Show loading state while checking auth
+  if (authLoading) {
+    return (
+      <div className="container mx-auto p-6 max-w-4xl flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  // Show access denied for non-admins
+  if (!isAdmin()) {
+    return (
+      <div className="container mx-auto p-6 max-w-4xl">
+        <Alert variant="destructive">
+          <ShieldAlert className="h-4 w-4" />
+          <AlertDescription>
+            <strong>Access Denied:</strong> This page requires administrator privileges. 
+            Campaign management operations can only be performed by admins due to security requirements.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   const executeStep = async (step: string, functionName: string, payload: any) => {
     setLoading(step);
