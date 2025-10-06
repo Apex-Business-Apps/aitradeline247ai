@@ -358,6 +358,95 @@ export type Database = {
           },
         ]
       }
+      campaign_members: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          error_message: string | null
+          id: string
+          lead_id: string
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          lead_id: string
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          lead_id?: string
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_members_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_members_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          body_template: string
+          consent_basis_filter: string[]
+          created_at: string
+          id: string
+          name: string
+          organization_id: string
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body_template: string
+          consent_basis_filter?: string[]
+          created_at?: string
+          id?: string
+          name: string
+          organization_id: string
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body_template?: string
+          consent_basis_filter?: string[]
+          created_at?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       command_execution_results: {
         Row: {
           command_id: string
@@ -2118,6 +2207,27 @@ export type Database = {
           },
         ]
       }
+      unsubscribes: {
+        Row: {
+          created_at: string
+          email: string
+          reason: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          reason?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          reason?: string | null
+          source?: string | null
+        }
+        Relationships: []
+      }
       upgrade_audit: {
         Row: {
           check_name: string
@@ -2242,6 +2352,42 @@ export type Database = {
           tz?: string | null
         }
         Relationships: []
+      }
+      v_sendable_members: {
+        Row: {
+          body_template: string | null
+          campaign_id: string | null
+          company: string | null
+          email: string | null
+          lead_id: string | null
+          member_id: string | null
+          name: string | null
+          organization_id: string | null
+          subject: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_members_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_members_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaigns_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
