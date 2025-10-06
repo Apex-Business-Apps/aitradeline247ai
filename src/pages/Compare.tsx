@@ -177,7 +177,7 @@ const Compare = () => {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      Live within 24 hours—no training periods or onboarding delays.
+                      10-minute setup—no training periods or onboarding delays.
                     </p>
                   </CardContent>
                 </Card>

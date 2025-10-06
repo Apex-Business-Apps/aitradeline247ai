@@ -334,7 +334,7 @@ export const LeadCaptureCard = ({ compact = false }: LeadCaptureCardProps) => {
 
                     <div className="flex justify-between items-center py-2 border-b border-border">
                       <span className="text-sm text-muted-foreground">Setup time</span>
-                      <span className="font-medium text-foreground">24 hours</span>
+                      <span className="font-medium text-foreground">10 minutes</span>
                     </div>
 
                     <div className="flex justify-between items-center py-2 border-b border-border">

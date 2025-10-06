@@ -367,7 +367,7 @@ const Contact = () => {
                     </CardHeader>
                     <CardContent>
                       <p className="text-muted-foreground">
-                        Get started in under 24 hours with our guided onboarding and integration support.
+                        Set up in 10 minutes with our guided onboarding and integration support.
                       </p>
                     </CardContent>
                   </Card>

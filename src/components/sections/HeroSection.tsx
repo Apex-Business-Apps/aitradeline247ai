@@ -70,7 +70,7 @@ export const HeroSection = () => {
             </Button>
           </div>
           <p className="text-sm text-muted-foreground animate-pulse">
-            No credit card required • Setup in 24 hours
+            No credit card required • 10-minute setup
           </p>
         </div>
 

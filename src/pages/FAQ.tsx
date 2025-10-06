@@ -33,7 +33,7 @@ const faqs = [
   },
   {
     question: "How quickly can I get started?",
-    answer: "Most businesses are up and running within 24 hours. Our team helps configure your service, set up integrations, and train the system with your business information."
+    answer: "About 10 minutes. Most accounts go live the same day with your current number. No number porting required to start."
   },
   {
     question: "Can I customize the responses?",
@@ -133,7 +133,7 @@ const FAQ = () => {
                 <div className="text-muted-foreground">Uptime Guarantee</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-primary mb-2">&lt;24hrs</div>
+                <div className="text-4xl font-bold text-primary mb-2">10 min</div>
                 <div className="text-muted-foreground">Setup Time</div>
               </div>
               <div>
