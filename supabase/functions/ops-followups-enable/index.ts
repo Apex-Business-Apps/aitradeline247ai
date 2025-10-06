@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { addDays, setHours, setMinutes, setSeconds } from "https://esm.sh/date-fns@3.0.0";
+import { toZonedTime, fromZonedTime } from "https://esm.sh/date-fns-tz@3.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -66,36 +68,65 @@ serve(async (req) => {
 
     console.log(`Found ${sentMembers.length} sent members`);
 
-    // Schedule follow-ups (idempotent - upsert)
+    // Schedule follow-ups at 09:15 America/Vancouver (business hours)
     const followups = [];
+    const timezone = 'America/Vancouver';
+    const targetHour = 9;
+    const targetMinute = 15;
 
     for (const member of sentMembers) {
       const sentDate = new Date(member.sent_at);
 
-      // Day 3 nudge
+      // Day 3 nudge at 09:15 Vancouver time
       if (day3_enabled) {
-        const day3Date = new Date(sentDate);
-        day3Date.setDate(day3Date.getDate() + 3);
+        // Add 3 days to sent date
+        let day3Date = addDays(sentDate, 3);
+        
+        // Convert to Vancouver timezone and set to 09:15
+        const day3Vancouver = toZonedTime(day3Date, timezone);
+        const scheduledVancouver = setSeconds(
+          setMinutes(
+            setHours(day3Vancouver, targetHour),
+            targetMinute
+          ),
+          0
+        );
+        
+        // Convert back to UTC for storage
+        const day3UTC = fromZonedTime(scheduledVancouver, timezone);
         
         followups.push({
           campaign_id,
           member_id: member.id,
           followup_number: 1,
-          scheduled_at: day3Date.toISOString(),
+          scheduled_at: day3UTC.toISOString(),
           status: 'pending'
         });
       }
 
-      // Day 7 final
+      // Day 7 final at 09:15 Vancouver time
       if (day7_enabled) {
-        const day7Date = new Date(sentDate);
-        day7Date.setDate(day7Date.getDate() + 7);
+        // Add 7 days to sent date
+        let day7Date = addDays(sentDate, 7);
+        
+        // Convert to Vancouver timezone and set to 09:15
+        const day7Vancouver = toZonedTime(day7Date, timezone);
+        const scheduledVancouver = setSeconds(
+          setMinutes(
+            setHours(day7Vancouver, targetHour),
+            targetMinute
+          ),
+          0
+        );
+        
+        // Convert back to UTC for storage
+        const day7UTC = fromZonedTime(scheduledVancouver, timezone);
         
         followups.push({
           campaign_id,
           member_id: member.id,
           followup_number: 2,
-          scheduled_at: day7Date.toISOString(),
+          scheduled_at: day7UTC.toISOString(),
           status: 'pending'
         });
       }

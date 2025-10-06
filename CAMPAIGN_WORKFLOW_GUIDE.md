@@ -144,7 +144,7 @@ curl -X POST \
 
 ### 5. Enable Follow-ups (FOLLOWUPS•ON)
 
-Enable reply-first follow-ups (Day 3 nudge, Day 7 final):
+Enable reply-first follow-ups (Day 3 nudge, Day 7 final) at 09:15 America/Vancouver:
 
 ```bash
 curl -X POST \
@@ -159,10 +159,15 @@ curl -X POST \
 ```
 
 **What it does:**
-- Schedules Day 3 nudge for all sent emails
-- Schedules Day 7 final for all sent emails
+- Schedules Day 3 nudge at 09:15 America/Vancouver time (business hours)
+- Schedules Day 7 final at 09:15 America/Vancouver time (business hours)
 - Auto-halts on reply/bounce/complaint/unsubscribe
+- Always includes one-click unsubscribe in follow-up emails
 - Idempotent - safe to re-run
+
+**Example:** If initial email sent at 2:30 PM on Monday, follow-ups will be:
+- Day 3: Thursday at 9:15 AM Vancouver time
+- Day 7: Monday at 9:15 AM Vancouver time
 
 **Expected output:**
 ```json
@@ -283,7 +288,8 @@ ORDER BY created_at DESC;
 - [ ] Check bounce/complaint rates
 - [ ] Review unsubscribe rate
 - [ ] Scale gradually if metrics pass gates
-- [ ] Set up cron for follow-up processing
+- [ ] Set up cron for follow-up processing (run hourly during business hours)
+- [ ] Verify follow-ups scheduled at 09:15 America/Vancouver
 
 ---
 
