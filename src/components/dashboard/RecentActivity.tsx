@@ -1,50 +1,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Activity, Phone, Settings, Download, MessageSquare } from 'lucide-react';
-
-const activities = [
-  {
-    id: '1',
-    type: 'call',
-    title: 'Call completed with John Smith',
-    description: 'Appointment scheduled for tomorrow at 2:00 PM',
-    time: '5 minutes ago',
-    icon: Phone
-  },
-  {
-    id: '2',
-    type: 'config',
-    title: 'AI settings updated',
-    description: 'Modified greeting message and call routing',
-    time: '1 hour ago',
-    icon: Settings
-  },
-  {
-    id: '3',
-    type: 'export',
-    title: 'Monthly report downloaded',
-    description: 'Call analytics for November 2024',
-    time: '3 hours ago',
-    icon: Download
-  },
-  {
-    id: '4',
-    type: 'support',
-    title: 'Support ticket created',
-    description: 'Issue with call forwarding resolved',
-    time: '6 hours ago',
-    icon: MessageSquare
-  },
-  {
-    id: '5',
-    type: 'call',
-    title: 'Peak hours alert',
-    description: 'High call volume detected between 10-11 AM',
-    time: '1 day ago',
-    icon: Activity
-  }
-];
+import { Activity } from 'lucide-react';
+import { useRecentActivity } from '@/hooks/useRecentActivity';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const getActivityColor = (type: string) => {
   switch (type) {
@@ -62,8 +21,28 @@ const getActivityColor = (type: string) => {
 };
 
 export const RecentActivity: React.FC = () => {
+  const { activities, isLoading, error } = useRecentActivity();
+
+  if (error) {
+    return (
+      <Card className="relative overflow-hidden border-0 bg-card/60 backdrop-blur-sm">
+        <CardHeader className="relative z-10 pb-4">
+          <CardTitle className="text-lg font-bold text-foreground flex items-center space-x-3">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5">
+              <Activity className="h-5 w-5 text-primary/70" />
+            </div>
+            <span className="tracking-tight">Recent Activity</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          <p className="text-sm text-muted-foreground">Unable to load activity. Please try again later.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card 
+    <Card
       className="relative overflow-hidden border-0 bg-card/60 backdrop-blur-sm"
       style={{ 
         boxShadow: 'var(--premium-shadow-subtle)',
@@ -83,8 +62,24 @@ export const RecentActivity: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="relative z-10">
-        <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-muted/20 scrollbar-track-transparent">
-          {activities.map((activity, index) => (
+        {isLoading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex space-x-4 p-4">
+                <Skeleton className="h-10 w-10 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-1/4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : activities.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No recent activity to display.</p>
+        ) : (
+          <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-muted/20 scrollbar-track-transparent">
+            {activities.map((activity, index) => (
             <div 
               key={activity.id} 
               className="group flex space-x-4 p-4 rounded-2xl hover:bg-gradient-to-r hover:from-muted/20 hover:to-muted/10 transition-all duration-300 hover:shadow-[var(--premium-shadow-subtle)] animate-fade-in"
@@ -107,8 +102,9 @@ export const RecentActivity: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
