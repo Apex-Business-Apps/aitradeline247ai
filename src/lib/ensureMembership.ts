@@ -17,6 +17,7 @@ export async function ensureMembership(user: User): Promise<MembershipResult> {
       .from("organization_members")
       .select("org_id")
       .eq("user_id", user.id)
+      .limit(1)
       .maybeSingle();
 
     if (memErr) {

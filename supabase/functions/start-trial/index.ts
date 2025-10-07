@@ -55,6 +55,7 @@ serve(async (req) => {
       .from("organization_members")
       .select("org_id")
       .eq("user_id", user.id)
+      .limit(1)
       .maybeSingle();
 
     if (membershipErr) {
@@ -114,9 +115,9 @@ serve(async (req) => {
     if (!existingSub) {
       const { error: createSubErr } = await supabase.from("subscriptions").insert({
         org_id: orgId,
-        plan: "trial",
+        plan: "free",
         status: "active",
-        stripe_customer_id: "trial",
+        stripe_customer_id: null,
         current_period_end: endsAt.toISOString(),
       });
       if (createSubErr) {
@@ -132,7 +133,7 @@ serve(async (req) => {
         const { error: updateSubErr } = await supabase
           .from("subscriptions")
           .update({
-            plan: "trial",
+            plan: "free",
             status: "active",
             current_period_end: endsAt.toISOString(),
           })
