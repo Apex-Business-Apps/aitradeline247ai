@@ -2120,7 +2120,7 @@ export type Database = {
           org_id: string
           plan: string
           status: string
-          stripe_customer_id: string
+          stripe_customer_id: string | null
           stripe_subscription_id: string | null
         }
         Insert: {
@@ -2130,7 +2130,7 @@ export type Database = {
           org_id: string
           plan: string
           status: string
-          stripe_customer_id: string
+          stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
         }
         Update: {
@@ -2140,7 +2140,7 @@ export type Database = {
           org_id?: string
           plan?: string
           status?: string
-          stripe_customer_id?: string
+          stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
         }
         Relationships: []
