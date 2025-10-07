@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Settings, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 export const WelcomeHeader: React.FC = () => {
   const navigate = useNavigate();
-  
-  // Mock user data - in real app, get from auth context
-  const userName = "Alex";
+  const [userName, setUserName] = useState<string>('');
   const currentTime = new Date().getHours();
+  
+  useEffect(() => {
+    async function fetchUserName() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile?.full_name) {
+          setUserName(profile.full_name);
+        } else {
+          setUserName(user.email?.split('@')[0] || 'there');
+        }
+      }
+    }
+    fetchUserName();
+  }, []);
   
   const getGreeting = () => {
     if (currentTime < 12) return "Good morning";
