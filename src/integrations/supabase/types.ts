@@ -2379,6 +2379,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          is_active: boolean
+          last_activity: string
+          session_token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          is_active?: boolean
+          last_activity: string
+          session_token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          last_activity?: string
+          session_token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_views: {
         Row: {
           created_at: string | null
