@@ -3231,6 +3231,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      validate_session: {
+        Args: { p_session_token: string; p_user_id: string }
+        Returns: Json
+      }
       vector_avg: {
         Args: { "": number[] }
         Returns: string
