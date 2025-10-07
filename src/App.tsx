@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
 import { WebVitalsTracker } from "@/components/monitoring/WebVitalsTracker";
+import { WebVitalsReporter } from "@/components/monitoring/WebVitalsReporter";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { HelmetProvider } from 'react-helmet-async';
 import { SecurityMonitor } from "@/components/security/SecurityMonitor";
@@ -59,6 +60,7 @@ const AppWithMonitoring = () => {
       <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
+      <WebVitalsReporter />
       <LayoutCanon />
       <SmokeChecks />
       <Routes>

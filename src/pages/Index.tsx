@@ -31,8 +31,11 @@ const Index = () => {
           backgroundImage: 'var(--bg-pattern-1)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundRepeat: 'no-repeat',
+          containIntrinsicSize: '100vw 100vh'
         }}
+        role="presentation"
+        aria-hidden="true"
       />
       
       {/* Content with translucency */}
