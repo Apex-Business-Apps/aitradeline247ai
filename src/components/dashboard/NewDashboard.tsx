@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WelcomeHeader } from './new/WelcomeHeader';
 import { NextActionsSection } from './new/NextActionsSection';
 import { WinsSection } from './new/WinsSection';
+import { QuickActionsCard } from './QuickActionsCard';
+import { ServiceHealth } from './ServiceHealth';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { KpiCard } from './components/KpiCard';
 import { Calendar, DollarSign, Phone, Shield } from 'lucide-react';
@@ -155,7 +157,17 @@ export const NewDashboard = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground">We'll drop new call notes here. Check back soon.</p>
+                <div className="text-center py-6 space-y-3">
+                  <p className="text-muted-foreground">Your AI receptionist hasn't logged activity yet this week.</p>
+                  <a 
+                    href="https://www.twilio.com/console" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                  >
+                    Check that your Twilio number is connected →
+                  </a>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -163,15 +175,8 @@ export const NewDashboard = () => {
         
         <div className="space-y-6">
           <WinsSection />
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">One-click shortcuts will be available here.</p>
-            </CardContent>
-          </Card>
+          <QuickActionsCard />
+          <ServiceHealth />
         </div>
       </div>
     </div>
