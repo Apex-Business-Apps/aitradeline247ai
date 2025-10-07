@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { ensureMembership } from '@/lib/ensureMembership';
 
 export type UserRole = 'admin' | 'moderator' | 'user';
 
@@ -20,7 +21,8 @@ export const useAuth = () => {
         // Fetch user role when user logs in
         if (session?.user) {
           setTimeout(() => {
-            fetchUserRole(session.user.id);
+            fetchUserRole(session.user!.id);
+            ensureMembership(session.user!);
           }, 0);
         } else {
           setUserRole(null);
@@ -37,6 +39,7 @@ export const useAuth = () => {
       
       if (session?.user) {
         fetchUserRole(session.user.id);
+        ensureMembership(session.user);
       }
       
       setLoading(false);

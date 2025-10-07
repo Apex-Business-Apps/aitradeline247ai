@@ -77,3 +77,6 @@ verify_jwt = true  # Requires authentication
 
 [functions.secure-rate-limit]
 verify_jwt = false  # Public rate limit checking
+
+[functions.start-trial]
+verify_jwt = true  # Authenticated users start/ensure trial
