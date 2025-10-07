@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { ensureMembership } from '@/lib/ensureMembership';
+import { toast } from '@/hooks/use-toast';
 
 export type UserRole = 'admin' | 'moderator' | 'user';
 
@@ -20,9 +21,16 @@ export const useAuth = () => {
         
         // Fetch user role when user logs in
         if (session?.user) {
-          setTimeout(() => {
+          setTimeout(async () => {
             fetchUserRole(session.user!.id);
-            ensureMembership(session.user!);
+            const result = await ensureMembership(session.user!);
+            if (result.error) {
+              toast({
+                variant: "destructive",
+                title: "Trial Setup Failed",
+                description: result.error,
+              });
+            }
           }, 0);
         } else {
           setUserRole(null);
@@ -39,7 +47,15 @@ export const useAuth = () => {
       
       if (session?.user) {
         fetchUserRole(session.user.id);
-        ensureMembership(session.user);
+        ensureMembership(session.user).then((result) => {
+          if (result.error) {
+            toast({
+              variant: "destructive",
+              title: "Trial Setup Failed",
+              description: result.error,
+            });
+          }
+        });
       }
       
       setLoading(false);
@@ -69,7 +85,7 @@ export const useAuth = () => {
   };
 
   const signUp = async (email: string, password: string, displayName?: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = `https://tradeline247ai.com/auth/callback`;
     
     const { error } = await supabase.auth.signUp({
       email,

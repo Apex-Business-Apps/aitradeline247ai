@@ -9,6 +9,17 @@ import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";
 import { performanceMonitor } from "./lib/performanceMonitor";
 
+// Canonical domain redirect (skip in dev)
+if (import.meta.env.PROD && typeof window !== 'undefined') {
+  const canonical = 'https://tradeline247ai.com';
+  const current = window.location.origin;
+  
+  if (current !== canonical && !window.location.pathname.startsWith('/auth/callback')) {
+    const target = canonical + window.location.pathname + window.location.search + window.location.hash;
+    window.location.replace(target);
+  }
+}
+
 createRoot(document.getElementById("root")!).render(<App />);
 
 watchRoiTableCanon();

@@ -1,11 +1,16 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
+export interface MembershipResult {
+  orgId: string | null;
+  error?: string;
+}
+
 /**
  * Ensure the given user has an organization membership and an active trial.
  * Idempotent: safe to call repeatedly. Returns orgId when available/created.
  */
-export async function ensureMembership(user: User): Promise<string | null> {
+export async function ensureMembership(user: User): Promise<MembershipResult> {
   try {
     // 1) Check existing membership (client-side RLS allows self view)
     const { data: membership, error: memErr } = await supabase
@@ -20,7 +25,7 @@ export async function ensureMembership(user: User): Promise<string | null> {
     }
 
     if (membership?.org_id) {
-      return membership.org_id as string;
+      return { orgId: membership.org_id as string };
     }
 
     // 2) Call edge function to create org + 14-day trial (idempotent server-side)
@@ -31,12 +36,18 @@ export async function ensureMembership(user: User): Promise<string | null> {
 
     if (error) {
       console.error("ensureMembership: start-trial error", error);
-      return null;
+      return { orgId: null, error: error.message || "Couldn't create trial" };
     }
 
-    return (data?.orgId as string) ?? null;
-  } catch (e) {
+    if (!data?.ok) {
+      const msg = data?.error || "Couldn't create trial";
+      console.error("ensureMembership: start-trial failed", msg);
+      return { orgId: null, error: msg };
+    }
+
+    return { orgId: (data?.orgId as string) ?? null };
+  } catch (e: any) {
     console.error("ensureMembership: unexpected error", e);
-    return null;
+    return { orgId: null, error: e?.message || "Unexpected error during trial setup" };
   }
 }

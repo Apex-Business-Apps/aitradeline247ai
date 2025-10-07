@@ -1,5 +1,5 @@
-// Service Worker v3.0.0 - Production-optimized with strategic caching
-const SW_VERSION = '3.0.0';
+// Service Worker v3.1.0 - Auth callback exclusion
+const SW_VERSION = '3.1.0';
 const CACHE_NAME = `tradeline247-v${SW_VERSION}`;
 const STATIC_CACHE = `tradeline247-static-v${SW_VERSION}`;
 const API_CACHE = `tradeline247-api-v${SW_VERSION}`;
@@ -44,8 +44,12 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET requests and chrome extensions
-  if (request.method !== 'GET' || url.protocol === 'chrome-extension:') {
+  // Skip non-GET requests, chrome extensions, and auth callbacks
+  if (
+    request.method !== 'GET' || 
+    url.protocol === 'chrome-extension:' ||
+    url.pathname.includes('/auth/callback')
+  ) {
     return;
   }
 
