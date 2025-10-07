@@ -156,18 +156,27 @@ const Auth = () => {
     setError(null);
     setMessage(null);
 
-    const { error } = await signUp(email, password, displayName);
-    
-    if (error) {
-      if (error.message.includes('already registered')) {
-        setError('This email is already registered. Please sign in instead.');
+    try {
+      const { error } = await signUp(email, password, displayName);
+      
+      if (error) {
+        if (error.message.includes('already registered')) {
+          setError('This email is already registered. Please sign in instead.');
+        } else {
+          setError(error.message);
+        }
+        setLoading(false);
       } else {
-        setError(error.message);
+        setMessage('Account created successfully! Please check your email to verify your account.');
+        setLoading(false);
+        // Clear form
+        setEmail('');
+        setPassword('');
+        setDisplayName('');
       }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during sign up');
       setLoading(false);
-    } else {
-      // Redirect to thank you page
-      navigate('/thank-you');
     }
   };
 
@@ -181,17 +190,25 @@ const Auth = () => {
     setLoading(true);
     setError(null);
 
-    const { error } = await signIn(email, password);
-    
-    if (error) {
-      if (error.message.includes('Invalid login credentials')) {
-        setError('Invalid email or password. Please check your credentials.');
+    try {
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          setError('Invalid email or password. Please check your credentials.');
+        } else {
+          setError(error.message);
+        }
+        setLoading(false);
       } else {
-        setError(error.message);
+        // Success - redirect will happen via onAuthStateChange listener
+        // But also do explicit navigation as backup
+        navigate('/');
       }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during sign in');
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   return (
