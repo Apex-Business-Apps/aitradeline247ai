@@ -67,9 +67,9 @@ export const Header: React.FC = () => {
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="h-7 sm:h-9 lg:h-10 w-auto"
-            width="120"
-            height="40"
+            className="h-9 sm:h-12 lg:h-[52px] w-auto"
+            width="156"
+            height="52"
             loading="eager"
             data-lovable-lock="permanent"
           />
