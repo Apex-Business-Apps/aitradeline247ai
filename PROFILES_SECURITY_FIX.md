@@ -1,6 +1,13 @@
 # Profiles Table Security Fix
 
-**Status**: ✅ **FIXED** - Completed on 2025-10-06
+**Status**: ✅ **FIXED** - Migration applied successfully on 2025-10-07
+
+**Verification**: 
+- ✅ Vulnerable RLS policies removed
+- ✅ Service role SELECT access revoked  
+- ✅ Secure functions created: `get_profile_masked()`, `get_profile_pii_emergency()`
+- ✅ Safe view created: `profiles_safe`
+- ✅ Comprehensive audit logging active
 
 ## Security Vulnerability
 
@@ -156,19 +163,26 @@ SELECT * FROM get_profile_pii_emergency(
 -- Returns unmasked data + generates security alert
 ```
 
-### 5. Direct Access Auditing Trigger 🚨
+### 5. Audit Logging via Secure Functions 🚨
+
+**Note**: PostgreSQL doesn't support SELECT triggers, so monitoring is implemented through the secure functions:
 
 ```sql
-CREATE TRIGGER audit_profiles_access
-  AFTER SELECT ON public.profiles
-  FOR EACH STATEMENT
-  EXECUTE FUNCTION audit_profiles_direct_access();
+-- All access through get_profile_masked() is logged
+INSERT INTO data_access_audit (
+  user_id, accessed_table, accessed_record_id, access_type
+) VALUES (auth.uid(), 'profiles', profile_user_id, 'masked_view');
+
+-- Emergency access through get_profile_pii_emergency() generates alerts
+INSERT INTO security_alerts (
+  alert_type, user_id, event_data, severity
+) VALUES ('admin_pii_access', auth.uid(), ..., 'high');
 ```
 
 **Monitoring**:
-- Logs all direct table access attempts
-- Generates **CRITICAL** severity security alerts
-- Helps detect unauthorized access patterns
+- All masked access logged to `data_access_audit`
+- Emergency PII access generates **HIGH** severity security alerts
+- Comprehensive audit trail for compliance
 
 ---
 
@@ -210,12 +224,13 @@ const { data } = await supabase
 ### ⚠️ UNSAFE: Direct Table Access
 
 ```typescript
-// ❌ NEVER DO THIS - Bypasses security
+// ❌ NEVER DO THIS - Violates RLS policies
 const { data } = await supabase
   .from('profiles')
   .select('full_name, phone_e164')
   .eq('id', userId);
-// This will trigger CRITICAL security alert
+// Will fail: RLS blocks direct access to PII fields
+// Users can only see their own profile, no PII access for others
 ```
 
 ### 🚨 EMERGENCY ONLY: Unmasked PII Access
@@ -237,17 +252,15 @@ const { data } = await supabase
 
 ### Security Alert Types
 
-1. **CRITICAL**: Direct table access detected
-   - Alert: `profiles_direct_access_detected`
-   - Action: Investigate immediately, may indicate compromise
-
-2. **HIGH**: Emergency PII access
-   - Alert: `profile_pii_emergency_access`
+1. **HIGH**: Emergency PII access
+   - Alert: `admin_pii_access`
+   - Event data includes: profile_id, access_reason, timestamp
    - Action: Review access reason, confirm legitimacy
 
-3. **CRITICAL**: Unauthorized PII access attempt
-   - Alert: `unauthorized_profile_pii_access`
-   - Action: Block user, investigate breach attempt
+2. **INFO**: Masked profile access
+   - Logged in: `data_access_audit` 
+   - Access type: `masked_view`
+   - Action: Standard monitoring, no action needed
 
 ### Audit Log Queries
 
@@ -339,12 +352,16 @@ SELECT * FROM profiles_safe WHERE id = auth.uid();
 -- Expected: full_name_masked = "J***", phone_e164_masked = "***4567"
 ```
 
-### Test 2: Verify Direct Access Blocked
+### Test 2: Verify Direct Access Protection
 
 ```sql
--- Should work but trigger alert
-SELECT full_name, phone_e164 FROM profiles WHERE id = auth.uid();
--- Check security_alerts for 'profiles_direct_access_detected'
+-- Users can only see their own basic profile
+SELECT * FROM profiles WHERE id = auth.uid();
+-- Works: Returns own profile (RLS policy: "Users can only view their own profile")
+
+-- Non-service accounts cannot see other profiles
+SELECT * FROM profiles WHERE id != auth.uid();
+-- Returns empty result: RLS blocks access to other users' profiles
 ```
 
 ### Test 3: Verify Emergency Access

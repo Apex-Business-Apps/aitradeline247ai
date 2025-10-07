@@ -2417,6 +2417,30 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles_safe: {
+        Row: {
+          created_at: string | null
+          full_name_masked: string | null
+          id: string | null
+          phone_e164_masked: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_name_masked?: never
+          id?: string | null
+          phone_e164_masked?: never
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_name_masked?: never
+          id?: string | null
+          phone_e164_masked?: never
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       support_tickets_secure: {
         Row: {
           created_at: string | null
@@ -2727,6 +2751,26 @@ export type Database = {
           recent_accesses: Json
           total_accesses: number
           unique_users: number
+        }[]
+      }
+      get_profile_masked: {
+        Args: { profile_user_id: string }
+        Returns: {
+          created_at: string
+          full_name_masked: string
+          id: string
+          phone_e164_masked: string
+          updated_at: string
+        }[]
+      }
+      get_profile_pii_emergency: {
+        Args: { access_reason: string; profile_user_id: string }
+        Returns: {
+          created_at: string
+          full_name: string
+          id: string
+          phone_e164: string
+          updated_at: string
         }[]
       }
       get_profile_with_restrictions: {
