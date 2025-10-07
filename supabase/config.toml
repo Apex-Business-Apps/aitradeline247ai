@@ -80,3 +80,27 @@ verify_jwt = false  # Public rate limit checking
 
 [functions.start-trial]
 verify_jwt = true  # Authenticated users start/ensure trial
+
+[functions.secret-encrypt]
+verify_jwt = true  # Admin-only secret encryption/decryption
+
+[functions.contact-submit]
+verify_jwt = false  # Public contact form
+
+[functions.ops-leads-import]
+verify_jwt = true  # Admin-only lead import
+
+[functions.ops-followups-enable]
+verify_jwt = true  # Admin-only followup automation
+
+[functions.ops-followups-send]
+verify_jwt = true  # Admin-only followup sending
+
+[functions.ops-report-export]
+verify_jwt = true  # Admin-only report export
+
+[functions.ops-segment-warm50]
+verify_jwt = true  # Admin-only segment operations
+
+[functions.ops-send-warm50]
+verify_jwt = true  # Admin-only warm contact sending
