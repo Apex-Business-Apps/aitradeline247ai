@@ -67,7 +67,9 @@ export const Header: React.FC = () => {
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="h-6 sm:h-8 w-auto"
+            className="h-7 sm:h-9 lg:h-10 w-auto"
+            width="120"
+            height="40"
             loading="eager"
             data-lovable-lock="permanent"
           />
@@ -103,6 +105,12 @@ export const Header: React.FC = () => {
         {/* Enhanced CTA Button & Mobile Menu */}
         <div data-slot="right" className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
           <LanguageSwitcher data-lovable-lock="permanent" />
+          
+          {/* Enhanced Mobile Menu Button */}
+          <button className="md:hidden p-2 rounded-md hover:bg-accent transition-all duration-300 hover-scale" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle mobile menu">
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
           {user ? <div className="flex items-center gap-2">
               <div className="flex flex-col items-end">
                 <span className="text-sm text-muted-foreground hidden sm:block">
@@ -116,14 +124,9 @@ export const Header: React.FC = () => {
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Sign Out</span>
               </Button>
-            </div> : <Button variant="success" size={isScrolled ? 'sm' : 'default'} onClick={() => navigate('/auth')} className="hover-scale transition-all duration-300 shadow-lg hover:shadow-xl">
+            </div> : <Button variant="success" size={isScrolled ? 'sm' : 'default'} onClick={() => navigate('/auth')} className="hover-scale transition-all duration-300 shadow-lg hover:shadow-xl min-h-[44px]">
               Login
             </Button>}
-          
-          {/* Enhanced Mobile Menu Button */}
-          <button className="md:hidden p-2 rounded-md hover:bg-accent transition-all duration-300 hover-scale" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle mobile menu">
-            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
         </div>
       </div>
 
