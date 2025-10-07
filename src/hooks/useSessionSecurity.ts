@@ -5,21 +5,11 @@ import { useAuth } from './useAuth';
 export const useSessionSecurity = () => {
   const { user, session } = useAuth();
 
-  // Track session activity
+  // Track session activity - temporarily disabled due to missing user_sessions table
   const trackActivity = useCallback(async () => {
     if (!user || !session) return;
-
-    try {
-      await supabase.functions.invoke('track-session-activity', {
-        body: {
-          user_id: user.id,
-          session_token: session.access_token,
-          activity_timestamp: new Date().toISOString()
-        }
-      });
-    } catch (error) {
-      console.error('Failed to track session activity:', error);
-    }
+    // Disabled until user_sessions table is created
+    console.log('Session tracking disabled - user_sessions table not yet created');
   }, [user, session]);
 
   // Check for concurrent sessions using analytics data
@@ -97,23 +87,17 @@ export const useSessionSecurity = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Track initial session
-    trackActivity();
+    // Temporarily disabled session tracking until database is set up properly
+    console.log('Session security monitoring temporarily disabled');
+
+    // Only keep concurrent session checks (uses existing analytics_events table)
     checkConcurrentSessions();
-
-    // Set up activity tracking
-    const activityInterval = setInterval(trackActivity, 5 * 60 * 1000); // Every 5 minutes
-    const sessionInterval = setInterval(checkConcurrentSessions, 15 * 60 * 1000); // Every 15 minutes
-
-    // Monitor suspicious activity
-    const cleanupMonitoring = monitorSuspiciousActivity();
+    const sessionInterval = setInterval(checkConcurrentSessions, 15 * 60 * 1000);
 
     return () => {
-      clearInterval(activityInterval);
       clearInterval(sessionInterval);
-      cleanupMonitoring();
     };
-  }, [user, trackActivity, checkConcurrentSessions, monitorSuspiciousActivity]);
+  }, [user, checkConcurrentSessions]);
 
   return {
     trackActivity,
