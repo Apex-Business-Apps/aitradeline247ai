@@ -35,9 +35,9 @@ const Auth = () => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Redirect authenticated users to home
+        // Redirect authenticated users to dashboard
         if (session?.user) {
-          navigate('/');
+          navigate('/dashboard');
         }
       }
     );
@@ -49,7 +49,7 @@ const Auth = () => {
       
       // Redirect if already logged in
       if (session?.user) {
-        navigate('/');
+        navigate('/dashboard');
       }
     });
 
@@ -203,7 +203,7 @@ const Auth = () => {
       } else {
         // Success - redirect will happen via onAuthStateChange listener
         // But also do explicit navigation as backup
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred during sign in');
