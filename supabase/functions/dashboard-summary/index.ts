@@ -89,8 +89,11 @@ Deno.serve(async (req) => {
 
     const orgId = membership.org_id;
 
-    // Fetch real data from database
-    const [appointmentsResult, transcriptsResult] = await Promise.all([
+    // Fetch real data from database including Twilio call events
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const [appointmentsResult, transcriptsResult, callEventsResult, weeklyCallsResult] = await Promise.all([
       supabase
         .from('appointments')
         .select('*')
@@ -103,16 +106,30 @@ Deno.serve(async (req) => {
         .select('*')
         .eq('org_id', orgId)
         .order('created_at', { ascending: false })
-        .limit(3)
+        .limit(3),
+      supabase
+        .from('analytics_events')
+        .select('*')
+        .in('event_type', ['voice_call_incoming', 'voice_call_completed', 'voice_call_failed'])
+        .order('created_at', { ascending: false })
+        .limit(100),
+      supabase
+        .from('analytics_events')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_type', 'voice_call_incoming')
+        .gte('created_at', weekAgo.toISOString())
     ]);
 
     const appointments = appointmentsResult.data || [];
     const transcripts = transcriptsResult.data || [];
+    const callEvents = callEventsResult.data || [];
+    const weeklyCallsCount = weeklyCallsResult.count || 0;
 
-    // Calculate real KPIs
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-
+    // Calculate real KPIs from Twilio call data
+    const totalCalls = callEvents.filter(e => e.event_type === 'voice_call_incoming').length;
+    const completedCalls = callEvents.filter(e => e.event_type === 'voice_call_completed').length;
+    const answerRate = totalCalls > 0 ? Math.round((completedCalls / totalCalls) * 100) : 0;
+    
     const { count: weeklyBookings } = await supabase
       .from('appointments')
       .select('*', { count: 'exact', head: true })
@@ -127,17 +144,17 @@ Deno.serve(async (req) => {
       },
       {
         id: 'payout' as const,
-        value: 0,
-        currency: 'USD'
+        value: weeklyCallsCount,
+        currency: 'calls'
       },
       {
         id: 'answerRate' as const,
-        value: 0,
+        value: answerRate,
         deltaPct: 0
       },
       {
         id: 'rescued' as const,
-        value: 0
+        value: completedCalls
       }
     ];
 
