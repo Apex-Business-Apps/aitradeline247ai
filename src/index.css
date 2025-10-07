@@ -68,13 +68,8 @@ All colors MUST be HSL.
     --premium-glass: hsl(0 0% 100% / 0.8);
     --premium-backdrop: backdrop-blur(12px) saturate(180%);
     
-    /* Canonical Background Images */
+    /* Canonical Background Image */
     --bg-pattern-1: url('/src/assets/BACKGROUND_IMAGE1.svg');
-    --bg-pattern-2: url('/src/assets/BACKGROUND_IMAGE2.svg');
-    --bg-pattern-3: url('/src/assets/BACKGROUND_IMAGE3.svg');
-    --bg-pattern-4: url('/src/assets/BACKGROUND_IMAGE4.svg');
-    --bg-pattern-5: url('/src/assets/BACKGROUND_IMAGE5.svg');
-    --bg-pattern-6: url('/src/assets/BACKGROUND_IMAGE6.svg');
     
     /* Premium Gradients - Sophisticated Color Blends */
     --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-light) / 0.25));

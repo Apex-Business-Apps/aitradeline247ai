@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { NextItem } from '@/types/dashboard';
-import { NextItemRow } from '../components/NextItemRow';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Calendar, Clock } from 'lucide-react';
 
 interface NextActionsSectionProps {
   nextItems?: NextItem[];
@@ -59,11 +60,35 @@ export const NextActionsSection: React.FC<NextActionsSectionProps> = ({
         ) : nextItems.length > 0 ? (
           <div className="space-y-3">
             {nextItems.map((item) => (
-              <NextItemRow 
-                key={item.id} 
-                item={item} 
-                onAction={handleAction}
-              />
+              <div 
+                key={item.id}
+                className="flex items-center justify-between p-3 bg-card/50 rounded-lg border hover:bg-card/70 transition-colors"
+              >
+                <div className="flex items-center space-x-3 flex-1">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">{item.name}</p>
+                    <p className="text-xs text-muted-foreground">{item.contact}</p>
+                  </div>
+                  <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    <span>{new Date(item.whenISO).toLocaleTimeString()}</span>
+                  </div>
+                </div>
+                <div className="flex space-x-2">
+                  {item.actions.map((action) => (
+                    <Button
+                      key={action}
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleAction(item.id, action)}
+                      className="text-xs"
+                    >
+                      {action}
+                    </Button>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         ) : (
