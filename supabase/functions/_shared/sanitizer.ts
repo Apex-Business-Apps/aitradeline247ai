@@ -85,29 +85,40 @@ export function sanitizeEmail(email: string | null | undefined): string {
 
 /**
  * Validate and sanitize phone number (E.164 format)
+ * NOW AUTO-FORMATS instead of rejecting for better UX
  */
-export function sanitizePhone(phone: string | null | undefined): string {
-  if (!phone) throw new Error('Phone number is required');
+export function sanitizePhone(phone: string | null | undefined): string | null {
+  // Allow null/empty phone (optional field in most forms)
+  if (!phone || phone.trim() === '') return null;
   
   // Remove all non-digit characters except leading +
   let sanitized = phone.trim().replace(/[^\d+]/g, '');
   
-  // Ensure E.164 format: +[country code][number]
+  // Handle empty after cleanup
+  if (!sanitized) return null;
+  
+  // Auto-format to E.164: +[country code][number]
   if (!sanitized.startsWith('+')) {
     // Assume North American number if no country code
     if (sanitized.length === 10) {
-      sanitized = '+1' + sanitized;
+      sanitized = '+1' + sanitized;  // (555) 123-4567 → +15551234567
     } else if (sanitized.length === 11 && sanitized.startsWith('1')) {
-      sanitized = '+' + sanitized;
+      sanitized = '+' + sanitized;   // 1-555-123-4567 → +15551234567
+    } else if (sanitized.length === 7) {
+      // Local format, needs area code - return as-is for manual review
+      console.warn('Phone appears to be local format (7 digits), cannot auto-format');
+      return null;
     } else {
-      throw new Error('Invalid phone number format. Expected E.164 format (+1234567890)');
+      // International but missing +, try adding it
+      sanitized = '+' + sanitized;
     }
   }
   
-  // Validate E.164 format strictly
-  const e164Regex = /^\+[1-9]\d{1,14}$/;
+  // Validate E.164 format (allow slightly lenient for international)
+  const e164Regex = /^\+[1-9]\d{7,14}$/;
   if (!e164Regex.test(sanitized)) {
-    throw new Error('Invalid E.164 phone number format');
+    console.warn(`Phone "${phone}" does not match E.164 after formatting: ${sanitized}`);
+    return null;  // Return null instead of throwing error
   }
   
   return sanitized;
