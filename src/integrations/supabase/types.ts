@@ -2611,6 +2611,10 @@ export type Database = {
         Args: { ip: unknown }
         Returns: unknown
       }
+      batch_encrypt_appointments: {
+        Args: { p_batch_size?: number; p_encryption_key?: string }
+        Returns: Json
+      }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
@@ -2622,6 +2626,16 @@ export type Database = {
       can_view_appointment_summary: {
         Args: { org_id_param: string }
         Returns: boolean
+      }
+      check_encryption_health: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          encrypted_records: number
+          failed_records: number
+          health_status: string
+          missing_iv_records: number
+          total_records: number
+        }[]
       }
       check_hotline_geo: {
         Args: { p_e164: string }
@@ -2997,6 +3011,13 @@ export type Database = {
         Returns: number
       }
       has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      has_role_with_fallback: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string

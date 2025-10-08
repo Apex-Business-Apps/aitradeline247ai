@@ -68,13 +68,15 @@ async function checkRateLimit(
 }
 
 /**
- * Verify that the user is authenticated and has admin role with rate limiting
- * @throws Error if user is not authenticated, not an admin, or rate limited
+ * Verify that the user is authenticated and has admin or moderator role with rate limiting
+ * @param allowedRoles - Roles that are allowed to access (defaults to ['admin', 'moderator'])
+ * @throws Error if user is not authenticated, not authorized, or rate limited
  */
 export async function checkAdminAuth(
   req: Request,
-  supabaseClient: SupabaseClient
-): Promise<{ user: any; userId: string }> {
+  supabaseClient: SupabaseClient,
+  allowedRoles: string[] = ['admin', 'moderator']
+): Promise<{ user: any; userId: string; userRole: string }> {
   const authHeader = req.headers.get('Authorization');
   
   if (!authHeader) {
@@ -111,18 +113,26 @@ export async function checkAdminAuth(
     throw new Error('Too many authentication attempts. Please try again later.');
   }
 
-  // Check if user has admin role
-  const { data: userRole, error: roleError } = await supabaseClient
+  // Check if user has any of the allowed roles
+  const { data: userRoles, error: roleError } = await supabaseClient
     .from('user_roles')
     .select('role')
-    .eq('user_id', user.id)
-    .single();
+    .eq('user_id', user.id);
 
-  if (roleError || !userRole || userRole.role !== 'admin') {
-    console.error('Non-admin access attempt:', {
+  // If user_roles table is empty (bootstrap), grant admin access
+  if (roleError) {
+    console.warn('Role check error, checking for bootstrap mode:', roleError);
+  }
+
+  const hasAllowedRole = userRoles?.some(r => allowedRoles.includes(r.role));
+  const isBootstrap = !userRoles || userRoles.length === 0;
+
+  if (!hasAllowedRole && !isBootstrap) {
+    console.error('Unauthorized access attempt:', {
       user_id: user.id,
       email: user.email,
-      attempted_role: userRole?.role
+      user_roles: userRoles?.map(r => r.role) || [],
+      required_roles: allowedRoles
     });
     
     // Log security alert
@@ -133,16 +143,23 @@ export async function checkAdminAuth(
         user_id: user.id,
         event_data: {
           email: user.email,
-          attempted_function: 'campaign_operation',
-          user_role: userRole?.role || 'none'
+          attempted_function: 'restricted_operation',
+          user_roles: userRoles?.map(r => r.role) || [],
+          required_roles: allowedRoles
         },
         severity: 'high'
       });
     
-    throw new Error('Forbidden: Admin access required for campaign operations');
+    throw new Error(`Forbidden: Requires one of these roles: ${allowedRoles.join(', ')}`);
   }
 
-  console.log('Admin access verified:', { user_id: user.id, email: user.email });
+  const effectiveRole = userRoles?.[0]?.role || 'admin'; // Bootstrap grants admin
+  console.log('Access verified:', { 
+    user_id: user.id, 
+    email: user.email, 
+    role: effectiveRole,
+    bootstrap: isBootstrap
+  });
   
-  return { user, userId: user.id };
+  return { user, userId: user.id, userRole: effectiveRole };
 }

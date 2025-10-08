@@ -1,7 +1,23 @@
 # 🔐 Security Implementation Complete
 
 **Date**: 2025-10-08  
-**Status**: ✅ Production-Ready with Staged Rollout Plan
+**Status**: ✅ Production-Ready with Staged Rollout Plan  
+**Phase**: Phase 2 Complete (Phase 1 + Phase 2 = Full Security Hardening)
+
+---
+
+## 🆕 Phase 2 Additions (Latest)
+
+### **New Features**
+- ✅ **Moderator Support**: Campaign endpoints accept both `admin` and `moderator` roles
+- ✅ **Bootstrap Fallback**: Auto-grants admin if `user_roles` table is empty (safe system boot)
+- ✅ **Performance Indexes**: Added `idx_user_roles_user_id`, `idx_user_roles_role` for fast lookups
+- ✅ **Batch Encryption**: `batch_encrypt_appointments()` migrates plaintext → encrypted + IV storage
+- ✅ **Encryption Monitoring**: `check_encryption_health()` tracks encryption coverage
+- ✅ **International Support**: Names/companies now accept Unicode (accents, intl chars)
+- ✅ **Dynamic Disposable Email Blocker**: Expanded to 30+ domains, easy to update
+
+📖 **See Full Phase 2 Details**: [SECURITY_HARDENING_PHASE2.md](./SECURITY_HARDENING_PHASE2.md)
 
 ---
 

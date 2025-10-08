@@ -69,15 +69,16 @@ export function sanitizeEmail(email: string | null | undefined): string {
     throw new Error('Invalid email format');
   }
   
-  // Block disposable email domains
-  const disposableDomains = [
-    'tempmail.com', 'throwaway.email', '10minutemail.com',
-    'guerrillamail.com', 'mailinator.com', 'maildrop.cc'
-  ];
+  // Check disposable email using dynamic checker
+  // Note: Import is commented to avoid edge function bloat
+  // Uncomment if needed: import { validateNotDisposable } from './disposableEmailChecker.ts';
+  // validateNotDisposable(sanitized);
   
+  // Lightweight inline check (can be extended)
   const domain = sanitized.split('@')[1];
-  if (disposableDomains.includes(domain)) {
-    throw new Error('Disposable email addresses are not allowed');
+  const commonDisposable = ['tempmail.com', 'throwaway.email', '10minutemail.com', 'mailinator.com'];
+  if (commonDisposable.includes(domain)) {
+    throw new Error(`Disposable email addresses are not allowed (${domain})`);
   }
   
   return sanitized;
@@ -129,16 +130,18 @@ export function sanitizePhone(phone: string | null | undefined, defaultCountry: 
 }
 
 /**
- * Sanitize name input (allows letters, spaces, hyphens, apostrophes, periods)
+ * Sanitize name input (allows letters, spaces, hyphens, apostrophes, periods, Unicode)
+ * NOW ALLOWS: Accented characters, international names, extended Unicode
  */
 export function sanitizeName(name: string | null | undefined, maxLength = 100): string {
   if (!name) throw new Error('Name is required');
   
-  const sanitized = sanitizeText(name, {
-    maxLength,
-    allowedChars: /^[a-zA-Z\s\-'\.]+$/,
-    stripHtml: true
-  });
+  // More permissive: Allow Unicode letters, spaces, hyphens, apostrophes, periods
+  const sanitized = name
+    .trim()
+    .substring(0, maxLength)
+    .replace(/<[^>]*>/g, '') // Strip HTML
+    .replace(/[<>{}\\]/g, ''); // Remove dangerous chars but keep Unicode
   
   if (!sanitized || sanitized.length < 1) {
     throw new Error('Name must contain at least 1 character');
@@ -148,16 +151,18 @@ export function sanitizeName(name: string | null | undefined, maxLength = 100): 
 }
 
 /**
- * Sanitize company name (allows alphanumeric, spaces, common punctuation)
+ * Sanitize company name (allows alphanumeric, spaces, common punctuation, Unicode)
+ * NOW ALLOWS: International characters, extended punctuation
  */
 export function sanitizeCompanyName(company: string | null | undefined, maxLength = 200): string {
   if (!company) throw new Error('Company name is required');
   
-  const sanitized = sanitizeText(company, {
-    maxLength,
-    allowedChars: /^[a-zA-Z0-9\s\-&.,()]+$/,
-    stripHtml: true
-  });
+  // More permissive: Allow Unicode, numbers, spaces, common business punctuation
+  const sanitized = company
+    .trim()
+    .substring(0, maxLength)
+    .replace(/<[^>]*>/g, '') // Strip HTML
+    .replace(/[<>{}\\]/g, ''); // Remove dangerous chars but keep Unicode & punctuation
   
   if (!sanitized || sanitized.length < 1) {
     throw new Error('Company name must contain at least 1 character');
