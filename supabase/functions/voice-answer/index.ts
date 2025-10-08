@@ -124,14 +124,13 @@ serve(async (req) => {
     let twiml: string;
 
     if (useLLM || pickupMode === 'immediate') {
-      // Canadian consent message
+      // Greeting + consent with DTMF-0 bridge option
       twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="Polly.Joanna">
-    This call may be recorded and transcribed to assist with your booking. 
-    Press 9 if you do not consent to recording, or stay on the line to continue.
-  </Say>
-  <Gather action="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-consent" numDigits="1" timeout="3">
+  <Gather action="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-action" numDigits="1" timeout="1">
+    <Say voice="Polly.Joanna">
+      Hi, you've reached TradeLine 24/7 — Your 24/7 AI Receptionist! How can I help? Press 0 to speak with someone directly.
+    </Say>
   </Gather>
   <Connect>
     <Stream url="wss://${supabaseUrl.replace('https://', '')}/functions/v1/voice-stream?callSid=${CallSid}" />
@@ -142,7 +141,7 @@ serve(async (req) => {
       twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="Polly.Joanna">
-    This call may be recorded and transcribed to assist with your booking.
+    Hi, you've reached TradeLine 24/7 — Your 24/7 AI Receptionist! Connecting you now.
   </Say>
   <Dial callerId="${To}" record="record-from-answer" recordingStatusCallback="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-status">
     <Number>${FORWARD_TARGET_E164}</Number>

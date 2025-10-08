@@ -207,15 +207,24 @@ serve(async (req) => {
       console.log('📞 Call ended');
       
       // Save transcript and captured fields
-      supabase.from('call_logs')
+      await supabase.from('call_logs')
         .update({
           transcript: transcript,
           captured_fields: capturedFields,
           ended_at: new Date().toISOString(),
           status: 'completed'
         })
-        .eq('call_sid', callSid)
-        .then();
+        .eq('call_sid', callSid);
+      
+      // Send transcript email asynchronously
+      fetch(`${supabaseUrl}/functions/v1/send-transcript`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseServiceKey}`
+        },
+        body: JSON.stringify({ callSid })
+      }).catch(err => console.error('Failed to trigger transcript email:', err));
       
       openaiWs.close();
       clearInterval(silenceCheckInterval);

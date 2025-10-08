@@ -61,6 +61,12 @@ verify_jwt = true  # Admin only
 [functions.ops-voice-slo]
 verify_jwt = true  # Admin only
 
+[functions.voice-action]
+verify_jwt = false  # Twilio DTMF callback
+
+[functions.send-transcript]
+verify_jwt = false  # Internal service call
+
 [functions.chat]
 verify_jwt = true  # Requires authentication
 

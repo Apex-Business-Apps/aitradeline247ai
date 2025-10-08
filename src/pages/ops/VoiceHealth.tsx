@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { RefreshCw, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { RefreshCw, CheckCircle, XCircle, AlertTriangle, Phone, Key } from 'lucide-react';
 
 interface VoiceHealth {
   secrets: Record<string, boolean>;
@@ -132,10 +132,56 @@ export default function VoiceHealth() {
 
       {health && (
         <>
+          {/* Test Call Panel */}
+          <Card className="border-primary">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Phone className="h-5 w-5" />
+                Place Test Call
+              </CardTitle>
+              <CardDescription>
+                Call the Twilio number to verify voice integration (V-8 Production Test)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-primary/10 p-4 rounded-lg border border-primary/20">
+                <p className="text-sm font-medium mb-2 text-muted-foreground">Test Number:</p>
+                <p className="text-3xl font-bold font-mono">
+                  {health.twilioNumbers?.[0]?.e164 || 'Not configured'}
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <h3 className="font-semibold text-sm">Test Checklist:</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-start gap-2 p-2 bg-muted rounded">
+                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
+                    <span>Greeting: "Hi, you've reached TradeLine 24/7 — Your 24/7 AI Receptionist!"</span>
+                  </div>
+                  <div className="flex items-start gap-2 p-2 bg-muted rounded">
+                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
+                    <span>LLM responds within 2 seconds</span>
+                  </div>
+                  <div className="flex items-start gap-2 p-2 bg-muted rounded">
+                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
+                    <span>Press 0 → bridges to +14319900222</span>
+                  </div>
+                  <div className="flex items-start gap-2 p-2 bg-muted rounded">
+                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
+                    <span>Transcript emailed to jrmendozaceo@apexbusiness-systems.com</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Secrets Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Environment Secrets</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Key className="h-5 w-5" />
+                Environment Secrets
+              </CardTitle>
               <CardDescription>Required environment variables (names only)</CardDescription>
             </CardHeader>
             <CardContent>
