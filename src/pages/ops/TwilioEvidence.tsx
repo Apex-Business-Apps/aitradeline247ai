@@ -116,11 +116,40 @@ export default function TwilioEvidence() {
     return <div className="p-8">Loading health metrics...</div>;
   }
 
+  // PROMPT DF-4: Watchdog telemetry thresholds
   const voiceHealthy = metrics?.voice.p95HandshakeMs! < 1500;
   const smsHealthy = metrics?.sms.deliverySuccessRate! >= 95;
+  
+  // DF-4: Alert rules
+  const p95Yellow = metrics?.voice.p95HandshakeMs! > 1500 && metrics?.voice.p95HandshakeMs! <= 2000;
+  const p95Red = metrics?.voice.p95HandshakeMs! > 2000;
+  const fallbackYellow = (metrics?.voice.streamFallbackCount / (metrics?.voice.answeredCount || 1)) > 0.05 && 
+                          (metrics?.voice.streamFallbackCount / (metrics?.voice.answeredCount || 1)) <= 0.10;
+  const fallbackRed = (metrics?.voice.streamFallbackCount / (metrics?.voice.answeredCount || 1)) > 0.10;
 
   return (
     <div className="container mx-auto py-8 space-y-6">
+      {/* PROMPT DF-4: Alert banner for threshold violations */}
+      {(p95Red || fallbackRed) && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            <div className="font-semibold">CRITICAL: Performance threshold exceeded</div>
+            {p95Red && <div>• P95 handshake &gt; 2000ms for 15m</div>}
+            {fallbackRed && <div>• Stream fallbacks &gt; 10% over 1h</div>}
+          </AlertDescription>
+        </Alert>
+      )}
+      {(p95Yellow || fallbackYellow) && !p95Red && !fallbackRed && (
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            <div className="font-semibold">WARNING: Performance degradation detected</div>
+            {p95Yellow && <div>• P95 handshake &gt; 1500ms for 15m</div>}
+            {fallbackYellow && <div>• Stream fallbacks &gt; 5% over 1h</div>}
+          </AlertDescription>
+        </Alert>
+      )}
       <div>
         <h1 className="text-3xl font-bold">Twilio Integration Evidence</h1>
         <p className="text-muted-foreground">PROMPT F: Health metrics and compliance proofs (24h)</p>
@@ -167,8 +196,8 @@ export default function TwilioEvidence() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Voice Stream</CardTitle>
-            <Badge variant={metrics?.voice.p95HandshakeMs! < 1500 ? "default" : "destructive"}>
-              P95 Target: &lt;1500ms
+            <Badge variant={p95Red ? "destructive" : p95Yellow ? "secondary" : "default"}>
+              P95: {p95Red ? "RED" : p95Yellow ? "YELLOW" : "GREEN"}
             </Badge>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -176,9 +205,14 @@ export default function TwilioEvidence() {
             <div className="text-xs text-muted-foreground">Avg Handshake</div>
             <div className="flex justify-between text-sm mt-2">
               <span className="text-muted-foreground">P95:</span>
-              <Badge variant={metrics?.voice.p95HandshakeMs! < 1500 ? "default" : "destructive"}>
+              <Badge variant={p95Red ? "destructive" : p95Yellow ? "secondary" : "default"}>
                 {metrics?.voice.p95HandshakeMs}ms
               </Badge>
+            </div>
+            <div className="text-xs text-muted-foreground mt-2">
+              <div>🟢 Target: &lt;1500ms</div>
+              <div>🟡 Warning: &gt;1500ms</div>
+              <div>🔴 Critical: &gt;2000ms</div>
             </div>
             <Button 
               variant="outline" 

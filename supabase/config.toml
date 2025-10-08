@@ -159,3 +159,16 @@ verify_jwt = true  # Admin only - port order creation
 # PROMPT H: A2P compliance
 [functions.ops-twilio-a2p]
 verify_jwt = true  # Admin only - A2P workflow
+
+# PROMPT DF-1 & DF-2: Legacy webhook aliases (permanent)
+[functions.twilio-voice]
+verify_jwt = false  # Alias to /voice-answer
+
+[functions.twilio-status]
+verify_jwt = false  # Alias to /voice-status
+
+[functions.twilio-sms]
+verify_jwt = false  # Alias to /webcomms-sms-reply
+
+[functions.twilio-sms-status]
+verify_jwt = false  # Alias to /webcomms-sms-status
