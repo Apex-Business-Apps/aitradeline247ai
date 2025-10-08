@@ -2752,7 +2752,7 @@ export type Database = {
         Returns: string
       }
       encrypt_pii_field: {
-        Args: { iv_value: string; plaintext_value: string }
+        Args: { iv_seed: string; plaintext_value: string }
         Returns: string
       }
       get_app_encryption_key: {
@@ -3322,6 +3322,14 @@ export type Database = {
       sparsevec_typmod_in: {
         Args: { "": unknown[] }
         Returns: number
+      }
+      test_encryption_roundtrip: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          details: string
+          passed: boolean
+          test_name: string
+        }[]
       }
       validate_security_post_upgrade: {
         Args: Record<PropertyKey, never>
