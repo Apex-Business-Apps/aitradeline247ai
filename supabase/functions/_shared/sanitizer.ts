@@ -86,8 +86,12 @@ export function sanitizeEmail(email: string | null | undefined): string {
 /**
  * Validate and sanitize phone number (E.164 format)
  * NOW AUTO-FORMATS instead of rejecting for better UX
+ * 
+ * NOTE: This is a simplified version for edge function compatibility.
+ * For full international validation with libphonenumber-js, use:
+ * import { validateAndFormatPhone } from './phoneValidator.ts'
  */
-export function sanitizePhone(phone: string | null | undefined): string | null {
+export function sanitizePhone(phone: string | null | undefined, defaultCountry: 'US' | 'CA' = 'US'): string | null {
   // Allow null/empty phone (optional field in most forms)
   if (!phone || phone.trim() === '') return null;
   
