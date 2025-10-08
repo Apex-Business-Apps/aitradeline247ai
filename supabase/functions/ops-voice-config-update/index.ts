@@ -43,12 +43,20 @@ serve(async (req) => {
 
     if (error) throw error;
 
+    // Determine action type for audit
+    const action = config.active_preset_id 
+      ? `preset_applied:${config.active_preset_id}`
+      : 'config_update';
+
     // Audit log
     await supabase.from('voice_config_audit').insert({
       organization_id: membership.org_id,
       user_id: user.id,
-      action: 'config_update',
-      changes: config
+      action: action,
+      changes: config,
+      reason: config.active_preset_id 
+        ? `Applied preset: ${config.active_preset_id}`
+        : undefined
     });
 
     return new Response(JSON.stringify({ success: true }), {

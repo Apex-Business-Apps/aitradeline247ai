@@ -6,18 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlertTriangle, Settings, Zap, Clock, MessageSquare, Shield, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { AlertTriangle, Settings, Zap, Clock, MessageSquare, Shield, ChevronRight, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-
-const SYSTEM_PROMPTS = {
-  "after_hours": "You are a professional after-hours answering service. Be courteous, take detailed messages, and assure callers their message will be delivered first thing in the morning.",
-  "overflow": "You are handling overflow calls during busy periods. Be efficient, capture key information, and either schedule a callback or route to the next available representative.",
-  "commercial": "You are a business receptionist for a commercial service company. Be professional, technical when needed, and focus on qualifying leads and scheduling appointments.",
-  "residential": "You are a friendly customer service representative for residential services. Be warm, patient, and focus on understanding the customer's needs and booking appointments."
-};
 
 const VOICES = [
   { value: "alloy", label: "Alloy (Neutral)" },
@@ -30,6 +25,7 @@ const VOICES = [
 
 export default function VoiceSettings() {
   const [config, setConfig] = useState<any>(null);
+  const [presets, setPresets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -38,6 +34,7 @@ export default function VoiceSettings() {
 
   useEffect(() => {
     loadConfig();
+    loadPresets();
   }, []);
 
   const loadConfig = async () => {
@@ -56,11 +53,14 @@ export default function VoiceSettings() {
         llm_voice: 'alloy',
         llm_speaking_rate: 1.0,
         llm_max_reply_seconds: 15,
-        system_prompt: SYSTEM_PROMPTS.commercial,
+        system_prompt: '',
         amd_enable: true,
         ringback_tone: 'default',
         max_ring_reroutes: 3,
-        fail_open: false
+        fail_open: false,
+        business_name: 'Apex Business Systems',
+        human_number_e164: '+14319900222',
+        active_preset_id: null
       });
       
       setPanicMode(data?.pickup_mode === 'never' && !data?.llm_enabled);
@@ -72,6 +72,20 @@ export default function VoiceSettings() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadPresets = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('voice_presets')
+        .select('*')
+        .order('id');
+
+      if (error) throw error;
+      setPresets(data || []);
+    } catch (error: any) {
+      console.error('Failed to load presets:', error);
     }
   };
 
@@ -119,8 +133,31 @@ export default function VoiceSettings() {
     });
   };
 
-  const applyPreset = (preset: keyof typeof SYSTEM_PROMPTS) => {
-    saveConfig({ system_prompt: SYSTEM_PROMPTS[preset] });
+  const applyPreset = async (presetId: string) => {
+    const preset = presets.find(p => p.id === presetId);
+    if (!preset) return;
+
+    // Resolve tokens in the prompt
+    const resolvedPrompt = resolveTokens(preset.system_prompt);
+
+    await saveConfig({ 
+      system_prompt: resolvedPrompt,
+      active_preset_id: presetId,
+      llm_max_reply_seconds: preset.max_reply_seconds,
+      llm_speaking_rate: preset.speaking_rate,
+      llm_voice: preset.voice
+    });
+
+    toast({
+      title: "Preset Applied",
+      description: `${preset.label} preset is now active`,
+    });
+  };
+
+  const resolveTokens = (text: string) => {
+    return text
+      .replace(/\{BusinessName\}/g, config?.business_name || 'Apex Business Systems')
+      .replace(/\{HumanNumberE164\}/g, config?.human_number_e164 || '+14319900222');
   };
 
   if (loading) {
@@ -301,34 +338,113 @@ export default function VoiceSettings() {
         </TabsContent>
 
         <TabsContent value="presets" className="space-y-4">
+          {/* Tokens Configuration */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                Preset Tokens
+              </CardTitle>
+              <CardDescription>
+                These tokens are replaced in all preset prompts
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Business Name</Label>
+                <Input
+                  value={config?.business_name || ''}
+                  onChange={(e) => setConfig({ ...config, business_name: e.target.value })}
+                  onBlur={() => saveConfig({ business_name: config?.business_name })}
+                  placeholder="Apex Business Systems"
+                />
+                <p className="text-xs text-muted-foreground">Token: {'{BusinessName}'}</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Human Number (E.164)</Label>
+                <Input
+                  value={config?.human_number_e164 || ''}
+                  onChange={(e) => setConfig({ ...config, human_number_e164: e.target.value })}
+                  onBlur={() => saveConfig({ human_number_e164: config?.human_number_e164 })}
+                  placeholder="+14319900222"
+                />
+                <p className="text-xs text-muted-foreground">Token: {'{HumanNumberE164}'}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Presets */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="w-5 h-5" />
-                Quick Presets
+                Prompt Presets
               </CardTitle>
               <CardDescription>
-                One-click system prompt configurations for common scenarios
+                One-click configurations with token replacement
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-3">
-              {Object.entries(SYSTEM_PROMPTS).map(([key, prompt]) => (
-                <Button
-                  key={key}
-                  variant="outline"
-                  className="justify-start h-auto py-4"
-                  onClick={() => applyPreset(key as keyof typeof SYSTEM_PROMPTS)}
-                >
-                  <div className="text-left">
-                    <div className="font-semibold capitalize">{key.replace('_', ' ')}</div>
-                    <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                      {prompt}
-                    </div>
-                  </div>
-                </Button>
-              ))}
+            <CardContent className="space-y-3">
+              {presets.map((preset) => {
+                const isActive = config?.active_preset_id === preset.id;
+                const resolvedPrompt = resolveTokens(preset.system_prompt);
+                
+                return (
+                  <Card key={preset.id} className={isActive ? "border-primary" : ""}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          <CardTitle className="text-lg">{preset.label}</CardTitle>
+                          {isActive && (
+                            <Badge variant="default" className="gap-1">
+                              <Check className="w-3 h-3" />
+                              Active
+                            </Badge>
+                          )}
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() => applyPreset(preset.id)}
+                          disabled={saving || isActive}
+                        >
+                          {isActive ? "Applied" : "Apply"}
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="text-sm text-muted-foreground">
+                        <strong>Preview (with tokens resolved):</strong>
+                      </div>
+                      <div className="text-xs bg-muted p-3 rounded-md font-mono whitespace-pre-wrap max-h-32 overflow-y-auto">
+                        {resolvedPrompt.substring(0, 300)}
+                        {resolvedPrompt.length > 300 && '...'}
+                      </div>
+                      <div className="flex gap-4 text-xs text-muted-foreground pt-2">
+                        <span>Voice: {preset.voice}</span>
+                        <span>Rate: {preset.speaking_rate}x</span>
+                        <span>Max: {preset.max_reply_seconds}s</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </CardContent>
           </Card>
+
+          {/* Global Rules */}
+          <Alert>
+            <Shield className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Global Rules (applied to all presets):</strong>
+              <ul className="list-disc list-inside mt-2 text-sm space-y-1">
+                <li>Stop recording if caller declines consent; continue with minimal notes</li>
+                <li>Silence ≥6s: brief nudge once; on second silence, bridge to human</li>
+                <li>Low confidence on ≥2 fields → offer transfer</li>
+                <li>Email transcript with subject: [Call Transcript] CallerID YYYY-MM-DD HH:mm TZ</li>
+              </ul>
+            </AlertDescription>
+          </Alert>
         </TabsContent>
 
         <TabsContent value="advanced" className="space-y-4">

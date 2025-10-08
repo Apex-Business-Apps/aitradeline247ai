@@ -2744,9 +2744,12 @@ export type Database = {
       }
       voice_config: {
         Row: {
+          active_preset_id: string | null
           amd_enable: boolean | null
+          business_name: string | null
           created_at: string
           fail_open: boolean | null
+          human_number_e164: string | null
           llm_enabled: boolean | null
           llm_max_reply_seconds: number | null
           llm_speaking_rate: number | null
@@ -2762,9 +2765,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          active_preset_id?: string | null
           amd_enable?: boolean | null
+          business_name?: string | null
           created_at?: string
           fail_open?: boolean | null
+          human_number_e164?: string | null
           llm_enabled?: boolean | null
           llm_max_reply_seconds?: number | null
           llm_speaking_rate?: number | null
@@ -2780,9 +2786,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          active_preset_id?: string | null
           amd_enable?: boolean | null
+          business_name?: string | null
           created_at?: string
           fail_open?: boolean | null
+          human_number_e164?: string | null
           llm_enabled?: boolean | null
           llm_max_reply_seconds?: number | null
           llm_speaking_rate?: number | null
@@ -2844,6 +2853,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      voice_presets: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          max_reply_seconds: number | null
+          speaking_rate: number | null
+          system_prompt: string
+          voice: string | null
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          label: string
+          max_reply_seconds?: number | null
+          speaking_rate?: number | null
+          system_prompt: string
+          voice?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          max_reply_seconds?: number | null
+          speaking_rate?: number | null
+          system_prompt?: string
+          voice?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
