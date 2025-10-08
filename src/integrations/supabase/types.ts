@@ -353,6 +353,98 @@ export type Database = {
         }
         Relationships: []
       }
+      call_logs: {
+        Row: {
+          call_sid: string
+          capture_completeness: number | null
+          captured_fields: Json | null
+          created_at: string
+          duration_sec: number | null
+          ended_at: string | null
+          fail_path: string | null
+          from_e164: string
+          handoff: boolean | null
+          handoff_reason: string | null
+          human_answered: boolean | null
+          id: string
+          mode: string | null
+          organization_id: string | null
+          pickup_mode: string | null
+          recording_url: string | null
+          ring_attempted: boolean | null
+          ring_seconds: number | null
+          started_at: string
+          status: string
+          summary: string | null
+          to_e164: string
+          transcript: string | null
+          transcript_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          call_sid: string
+          capture_completeness?: number | null
+          captured_fields?: Json | null
+          created_at?: string
+          duration_sec?: number | null
+          ended_at?: string | null
+          fail_path?: string | null
+          from_e164: string
+          handoff?: boolean | null
+          handoff_reason?: string | null
+          human_answered?: boolean | null
+          id?: string
+          mode?: string | null
+          organization_id?: string | null
+          pickup_mode?: string | null
+          recording_url?: string | null
+          ring_attempted?: boolean | null
+          ring_seconds?: number | null
+          started_at?: string
+          status?: string
+          summary?: string | null
+          to_e164: string
+          transcript?: string | null
+          transcript_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          call_sid?: string
+          capture_completeness?: number | null
+          captured_fields?: Json | null
+          created_at?: string
+          duration_sec?: number | null
+          ended_at?: string | null
+          fail_path?: string | null
+          from_e164?: string
+          handoff?: boolean | null
+          handoff_reason?: string | null
+          human_answered?: boolean | null
+          id?: string
+          mode?: string | null
+          organization_id?: string | null
+          pickup_mode?: string | null
+          recording_url?: string | null
+          ring_attempted?: boolean | null
+          ring_seconds?: number | null
+          started_at?: string
+          status?: string
+          summary?: string | null
+          to_e164?: string
+          transcript?: string | null
+          transcript_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       calls: {
         Row: {
           booked: boolean | null
@@ -2421,6 +2513,53 @@ export type Database = {
           },
         ]
       }
+      twilio_numbers: {
+        Row: {
+          capabilities: Json | null
+          created_at: string
+          friendly_name: string | null
+          is_active: boolean | null
+          organization_id: string | null
+          phone_e164: string
+          sms_url: string | null
+          updated_at: string
+          voice_status_callback: string | null
+          voice_url: string | null
+        }
+        Insert: {
+          capabilities?: Json | null
+          created_at?: string
+          friendly_name?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          phone_e164: string
+          sms_url?: string | null
+          updated_at?: string
+          voice_status_callback?: string | null
+          voice_url?: string | null
+        }
+        Update: {
+          capabilities?: Json | null
+          created_at?: string
+          friendly_name?: string | null
+          is_active?: boolean | null
+          organization_id?: string | null
+          phone_e164?: string
+          sms_url?: string | null
+          updated_at?: string
+          voice_status_callback?: string | null
+          voice_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "twilio_numbers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       unsubscribes: {
         Row: {
           created_at: string
@@ -2552,6 +2691,109 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      voice_config: {
+        Row: {
+          amd_enable: boolean | null
+          created_at: string
+          fail_open: boolean | null
+          llm_enabled: boolean | null
+          llm_max_reply_seconds: number | null
+          llm_speaking_rate: number | null
+          llm_voice: string | null
+          max_ring_reroutes: number | null
+          organization_id: string
+          pickup_mode: string
+          pickup_seconds: number | null
+          ring_target: string | null
+          ringback_tone: string | null
+          rings_before_pickup: number | null
+          system_prompt: string | null
+          updated_at: string
+        }
+        Insert: {
+          amd_enable?: boolean | null
+          created_at?: string
+          fail_open?: boolean | null
+          llm_enabled?: boolean | null
+          llm_max_reply_seconds?: number | null
+          llm_speaking_rate?: number | null
+          llm_voice?: string | null
+          max_ring_reroutes?: number | null
+          organization_id: string
+          pickup_mode?: string
+          pickup_seconds?: number | null
+          ring_target?: string | null
+          ringback_tone?: string | null
+          rings_before_pickup?: number | null
+          system_prompt?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amd_enable?: boolean | null
+          created_at?: string
+          fail_open?: boolean | null
+          llm_enabled?: boolean | null
+          llm_max_reply_seconds?: number | null
+          llm_speaking_rate?: number | null
+          llm_voice?: string | null
+          max_ring_reroutes?: number | null
+          organization_id?: string
+          pickup_mode?: string
+          pickup_seconds?: number | null
+          ring_target?: string | null
+          ringback_tone?: string | null
+          rings_before_pickup?: number | null
+          system_prompt?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_config_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voice_config_audit: {
+        Row: {
+          action: string
+          changes: Json
+          created_at: string
+          id: string
+          organization_id: string
+          reason: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          changes: Json
+          created_at?: string
+          id?: string
+          organization_id: string
+          reason?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          changes?: Json
+          created_at?: string
+          id?: string
+          organization_id?: string
+          reason?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_config_audit_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -27,11 +27,17 @@ const navigationItems = [{
   href: '/contact'
 }];
 const adminNavigationItems = [{
-  name: 'Call Center',
-  href: '/call-center'
-}, {
   name: 'Dashboard',
   href: '/dashboard'
+}, {
+  name: 'Calls',
+  href: '/calls'
+}, {
+  name: 'Phone Apps',
+  href: '/phone-apps'
+}, {
+  name: 'Settings',
+  href: '/ops/voice'
 }];
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);

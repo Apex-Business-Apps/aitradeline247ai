@@ -46,6 +46,11 @@ import SMSDeliveryDashboard from "./pages/SMSDeliveryDashboard";
 import AdminKB from "./pages/AdminKB";
 import CampaignManager from "./pages/CampaignManager";
 import CryptoInit from "./pages/ops/CryptoInit";
+import Activation from "./pages/ops/Activation";
+import VoiceSettings from "./pages/ops/VoiceSettings";
+import TwilioWire from "./pages/ops/TwilioWire";
+import CallLogs from "./pages/CallLogs";
+import PhoneApps from "./pages/PhoneApps";
 
 
 const queryClient = new QueryClient();
@@ -86,10 +91,15 @@ const AppWithMonitoring = () => {
         <Route path="/dashboard/integrations/mobile" element={<main id="main"><MobileIntegration /></main>} />
         <Route path="/dashboard/integrations/automation" element={<main id="main"><AutomationIntegration /></main>} />
         <Route path="/call-center" element={<main id="main"><CallCenter /></main>} />
+        <Route path="/calls" element={<main id="main"><CallLogs /></main>} />
+        <Route path="/phone-apps" element={<main id="main"><PhoneApps /></main>} />
         <Route path="/sms-delivery" element={<main id="main"><SMSDeliveryDashboard /></main>} />
         <Route path="/admin/kb" element={<main id="main"><AdminKB /></main>} />
         <Route path="/admin/campaigns" element={<main id="main"><CampaignManager /></main>} />
         <Route path="/ops/crypto/init" element={<main id="main"><CryptoInit /></main>} />
+        <Route path="/ops/activation" element={<main id="main"><Activation /></main>} />
+        <Route path="/ops/voice" element={<main id="main"><VoiceSettings /></main>} />
+        <Route path="/ops/twilio/wire" element={<main id="main"><TwilioWire /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
