@@ -138,3 +138,24 @@ verify_jwt = true  # Admin-only segment operations
 
 [functions.ops-send-warm50]
 verify_jwt = true  # Admin-only warm contact sending
+
+# PROMPT A & D: Canonical SMS webhooks
+[functions.webcomms-sms-reply]
+verify_jwt = false  # Twilio webhook - canonical SMS reply path
+
+[functions.webcomms-sms-status]
+verify_jwt = false  # Twilio webhook - canonical SMS status callback
+
+# PROMPT B: Number provisioning
+[functions.ops-twilio-buy-number]
+verify_jwt = true  # Admin only - buy and configure numbers
+
+[functions.ops-twilio-hosted-sms]
+verify_jwt = true  # Admin only - hosted SMS setup
+
+[functions.ops-twilio-create-port]
+verify_jwt = true  # Admin only - port order creation
+
+# PROMPT H: A2P compliance
+[functions.ops-twilio-a2p]
+verify_jwt = true  # Admin only - A2P workflow

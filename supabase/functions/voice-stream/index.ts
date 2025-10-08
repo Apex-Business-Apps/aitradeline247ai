@@ -143,21 +143,34 @@ serve(async (req) => {
     return response;
   }
 
-  // Watchdog: fail over to human dial after ~3s if handshake > SLO
+  // PROMPT C: Watchdog - 3s handshake timeout, log evidence
   const handshakeStartTime = Date.now();
   let handshakeCompleted = false;
   
-  const handshakeWatchdog = setTimeout(() => {
+  const handshakeWatchdog = setTimeout(async () => {
     if (!handshakeCompleted) {
-      console.log('⚠️ Handshake timeout (>3s), failing over to human');
-      supabase.from('call_logs')
+      const elapsedMs = Date.now() - handshakeStartTime;
+      console.log(`⚠️ Handshake timeout (${elapsedMs}ms), failing over to human`);
+      
+      // PROMPT C: Record evidence row (unique on call_sid)
+      await supabase.from('voice_stream_logs').upsert({
+        call_sid: callSid,
+        started_at: new Date(handshakeStartTime).toISOString(),
+        connected_at: null,
+        elapsed_ms: elapsedMs,
+        fell_back: true,
+        error_message: 'Handshake timeout (>3000ms)'
+      }, { onConflict: 'call_sid' });
+      
+      // Tag call with stream_fallback=true
+      await supabase.from('call_logs')
         .update({ 
           handoff: true, 
           handoff_reason: 'handshake_timeout',
-          fail_path: 'watchdog_bridge'
+          fail_path: 'watchdog_bridge',
+          captured_fields: { stream_fallback: true }
         })
-        .eq('call_sid', callSid)
-        .then();
+        .eq('call_sid', callSid);
       
       openaiWs.close();
       socket.close();
@@ -215,11 +228,20 @@ serve(async (req) => {
       const handshakeTime = Date.now() - handshakeStartTime;
       console.log(`✅ Media stream started: ${streamSid} (handshake: ${handshakeTime}ms)`);
       
+      // PROMPT C: Record successful handshake evidence
+      supabase.from('voice_stream_logs').upsert({
+        call_sid: callSid,
+        started_at: new Date(handshakeStartTime).toISOString(),
+        connected_at: new Date().toISOString(),
+        elapsed_ms: handshakeTime,
+        fell_back: false
+      }, { onConflict: 'call_sid' }).then();
+      
       // Update call log with session ID and handshake metrics
       supabase.from('call_logs')
         .update({ 
           llm_session_id: streamSid,
-          captured_fields: { handshake_ms: handshakeTime }
+          captured_fields: { handshake_ms: handshakeTime, stream_fallback: false }
         })
         .eq('call_sid', callSid)
         .then();

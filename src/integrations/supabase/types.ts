@@ -1654,6 +1654,47 @@ export type Database = {
         }
         Relationships: []
       }
+      messaging_compliance: {
+        Row: {
+          a2p_status: string
+          brand_sid: string | null
+          campaign_sid: string | null
+          created_at: string
+          messaging_service_sid: string | null
+          organization_id: string
+          updated_at: string
+          us_enabled: boolean
+        }
+        Insert: {
+          a2p_status?: string
+          brand_sid?: string | null
+          campaign_sid?: string | null
+          created_at?: string
+          messaging_service_sid?: string | null
+          organization_id: string
+          updated_at?: string
+          us_enabled?: boolean
+        }
+        Update: {
+          a2p_status?: string
+          brand_sid?: string | null
+          campaign_sid?: string | null
+          created_at?: string
+          messaging_service_sid?: string | null
+          organization_id?: string
+          updated_at?: string
+          us_enabled?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messaging_compliance_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_integration_secrets: {
         Row: {
           created_at: string
@@ -2327,6 +2368,66 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_reply_logs: {
+        Row: {
+          body: string | null
+          created_at: string
+          external_id: string
+          from_e164: string
+          id: string
+          message_sid: string
+          source: string
+          to_e164: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          external_id: string
+          from_e164: string
+          id?: string
+          message_sid: string
+          source?: string
+          to_e164: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          external_id?: string
+          from_e164?: string
+          id?: string
+          message_sid?: string
+          source?: string
+          to_e164?: string
+        }
+        Relationships: []
+      }
+      sms_status_logs: {
+        Row: {
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          message_sid: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          message_sid: string
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          message_sid?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -2557,6 +2658,97 @@ export type Database = {
           {
             foreignKeyName: "transcripts_org_id_fkey"
             columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      twilio_buy_number_logs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          number_e164: string
+          organization_id: string
+          phone_sid: string
+          subaccount_sid: string | null
+          success: boolean
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          number_e164: string
+          organization_id: string
+          phone_sid: string
+          subaccount_sid?: string | null
+          success: boolean
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          number_e164?: string
+          organization_id?: string
+          phone_sid?: string
+          subaccount_sid?: string | null
+          success?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "twilio_buy_number_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      twilio_endpoints: {
+        Row: {
+          call_status_callback: string
+          created_at: string
+          number_e164: string
+          organization_id: string
+          phone_sid: string
+          sms_status_callback: string
+          sms_url: string
+          stream_enabled: boolean
+          subaccount_sid: string | null
+          updated_at: string
+          voice_url: string
+        }
+        Insert: {
+          call_status_callback: string
+          created_at?: string
+          number_e164: string
+          organization_id: string
+          phone_sid: string
+          sms_status_callback: string
+          sms_url: string
+          stream_enabled?: boolean
+          subaccount_sid?: string | null
+          updated_at?: string
+          voice_url: string
+        }
+        Update: {
+          call_status_callback?: string
+          created_at?: string
+          number_e164?: string
+          organization_id?: string
+          phone_sid?: string
+          sms_status_callback?: string
+          sms_url?: string
+          stream_enabled?: boolean
+          subaccount_sid?: string | null
+          updated_at?: string
+          voice_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "twilio_endpoints_organization_id_fkey"
+            columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
@@ -2881,6 +3073,36 @@ export type Database = {
           speaking_rate?: number | null
           system_prompt?: string
           voice?: string | null
+        }
+        Relationships: []
+      }
+      voice_stream_logs: {
+        Row: {
+          call_sid: string
+          connected_at: string | null
+          created_at: string
+          elapsed_ms: number | null
+          error_message: string | null
+          fell_back: boolean
+          started_at: string
+        }
+        Insert: {
+          call_sid: string
+          connected_at?: string | null
+          created_at?: string
+          elapsed_ms?: number | null
+          error_message?: string | null
+          fell_back?: boolean
+          started_at?: string
+        }
+        Update: {
+          call_sid?: string
+          connected_at?: string | null
+          created_at?: string
+          elapsed_ms?: number | null
+          error_message?: string | null
+          fell_back?: boolean
+          started_at?: string
         }
         Relationships: []
       }

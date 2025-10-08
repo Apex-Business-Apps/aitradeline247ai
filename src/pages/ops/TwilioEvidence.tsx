@@ -2,26 +2,25 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, XCircle, AlertTriangle, Phone, MessageSquare, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CheckCircle2, XCircle, AlertTriangle, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
+// PROMPT F: Evidence dashboard with 24h tiles
 interface HealthMetrics {
   voice: {
-    last5mWebhook200s: number;
-    realtimeHandshakeP50: number;
-    realtimeHandshakeP95: number;
-    failoverCount: number;
-    lastTestCall: any;
+    answeredCount: number;
+    failedCount: number;
+    streamFallbackCount: number;
+    avgHandshakeMs: number;
+    p95HandshakeMs: number;
   };
   sms: {
-    inboundEcho: boolean;
-    outboundDelivery: boolean;
-    statusCallbackEvidence: any[];
+    inboundCount: number;
+    deliverySuccessRate: number;
   };
-  ports: {
-    loaSubmissions: any[];
-    approvalTimestamps: any[];
-    focDates: any[];
+  numbers: {
+    purchasedCount: number;
   };
 }
 
@@ -37,65 +36,73 @@ export default function TwilioEvidence() {
 
   const loadMetrics = async () => {
     try {
-      const { data: voiceData } = await supabase
-        .from('analytics_events')
-        .select('*')
-        .eq('event_type', 'voice_webhook_success')
-        .gte('created_at', new Date(Date.now() - 5 * 60 * 1000).toISOString())
-        .order('created_at', { ascending: false });
+      const past24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-      const { data: realtimeData } = await supabase
+      // PROMPT F: Inbound calls (answered / failed / stream-fallback count)
+      const { data: callLogs } = await supabase
         .from('call_logs')
-        .select('captured_fields')
-        .not('captured_fields->handshake_ms', 'is', null)
-        .order('created_at', { ascending: false })
-        .limit(100);
+        .select('status, captured_fields')
+        .gte('created_at', past24h);
 
-      const handshakeTimes = (realtimeData || [])
-        .map(r => (r.captured_fields as any)?.handshake_ms)
+      const answeredCount = callLogs?.filter(c => c.status === 'completed').length || 0;
+      const failedCount = callLogs?.filter(c => c.status === 'failed').length || 0;
+      const streamFallbackCount = callLogs?.filter(c => 
+        (c.captured_fields as any)?.stream_fallback === true
+      ).length || 0;
+
+      // PROMPT F: Avg handshake ms (voice stream); P95 < 1500ms
+      const { data: streamLogs } = await supabase
+        .from('voice_stream_logs')
+        .select('elapsed_ms')
+        .eq('fell_back', false)
+        .gte('created_at', past24h);
+
+      const handshakeTimes = (streamLogs || [])
+        .map(l => l.elapsed_ms)
         .filter(Boolean)
-        .sort((a: number, b: number) => a - b);
+        .sort((a, b) => a - b);
 
-      const p50 = handshakeTimes[Math.floor(handshakeTimes.length * 0.5)] || 0;
-      const p95 = handshakeTimes[Math.floor(handshakeTimes.length * 0.95)] || 0;
+      const avgHandshake = handshakeTimes.length > 0
+        ? Math.round(handshakeTimes.reduce((a, b) => a + b, 0) / handshakeTimes.length)
+        : 0;
+      const p95Handshake = handshakeTimes[Math.floor(handshakeTimes.length * 0.95)] || 0;
 
-      const { data: failoverData } = await supabase
-        .from('call_logs')
+      // PROMPT F: SMS inbound (unique SIDs) & delivery success rate
+      const { data: smsReply } = await supabase
+        .from('sms_reply_logs')
+        .select('message_sid')
+        .gte('created_at', past24h);
+
+      const { data: smsStatus } = await supabase
+        .from('sms_status_logs')
+        .select('status')
+        .gte('created_at', past24h);
+
+      const deliveredCount = smsStatus?.filter(s => s.status === 'delivered').length || 0;
+      const totalSms = smsStatus?.length || 1;
+      const deliveryRate = Math.round((deliveredCount / totalSms) * 100);
+
+      // PROMPT F: New numbers purchased (with subaccount)
+      const { data: buyLogs } = await supabase
+        .from('twilio_buy_number_logs')
         .select('*')
-        .eq('handoff', true)
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
-
-      const { data: smsDeliveryData } = await supabase
-        .from('analytics_events')
-        .select('*')
-        .eq('event_type', 'sms_delivery_confirmed')
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      const { data: portData } = await supabase
-        .from('analytics_events')
-        .select('*')
-        .in('event_type', ['port_order_created', 'loa_submitted', 'hosted_sms_approved'])
-        .order('created_at', { ascending: false })
-        .limit(20);
+        .eq('success', true)
+        .gte('created_at', past24h);
 
       setMetrics({
         voice: {
-          last5mWebhook200s: voiceData?.length || 0,
-          realtimeHandshakeP50: p50,
-          realtimeHandshakeP95: p95,
-          failoverCount: failoverData?.length || 0,
-          lastTestCall: voiceData?.[0] || null
+          answeredCount,
+          failedCount,
+          streamFallbackCount,
+          avgHandshakeMs: avgHandshake,
+          p95HandshakeMs: p95Handshake
         },
         sms: {
-          inboundEcho: true, // TODO: Implement echo test
-          outboundDelivery: (smsDeliveryData?.length || 0) > 0,
-          statusCallbackEvidence: smsDeliveryData || []
+          inboundCount: smsReply?.length || 0,
+          deliverySuccessRate: deliveryRate
         },
-        ports: {
-          loaSubmissions: portData?.filter(p => p.event_type === 'loa_submitted') || [],
-          approvalTimestamps: portData?.filter(p => p.event_type === 'hosted_sms_approved') || [],
-          focDates: portData?.filter(p => p.event_type === 'port_order_created') || []
+        numbers: {
+          purchasedCount: buyLogs?.length || 0
         }
       });
     } catch (error) {
@@ -109,153 +116,180 @@ export default function TwilioEvidence() {
     return <div className="p-8">Loading health metrics...</div>;
   }
 
-  const voiceHealthy = metrics?.voice.last5mWebhook200s! > 0 && 
-                       metrics?.voice.realtimeHandshakeP95! < 2000;
-  const smsHealthy = metrics?.sms.outboundDelivery;
+  const voiceHealthy = metrics?.voice.p95HandshakeMs! < 1500;
+  const smsHealthy = metrics?.sms.deliverySuccessRate! >= 95;
 
   return (
     <div className="container mx-auto py-8 space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Twilio Integration Evidence</h1>
-        <p className="text-muted-foreground">Health metrics and compliance proofs</p>
+        <p className="text-muted-foreground">PROMPT F: Health metrics and compliance proofs (24h)</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      {/* PROMPT F: Tiles (24h) */}
+      <div className="grid gap-6 md:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Voice</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Inbound Calls</CardTitle>
             {voiceHealthy ? (
               <CheckCircle2 className="h-5 w-5 text-green-500" />
             ) : (
               <AlertTriangle className="h-5 w-5 text-yellow-500" />
             )}
           </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">5m Webhook 200s:</span>
-              <span className="font-mono">{metrics?.voice.last5mWebhook200s}</span>
+          <CardContent className="space-y-2">
+            <div className="text-2xl font-bold">{metrics?.voice.answeredCount}</div>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <div className="flex justify-between">
+                <span>Answered:</span>
+                <span className="font-mono">{metrics?.voice.answeredCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Failed:</span>
+                <span className="font-mono text-red-500">{metrics?.voice.failedCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Stream Fallback:</span>
+                <span className="font-mono text-yellow-600">{metrics?.voice.streamFallbackCount}</span>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Handshake P50:</span>
-              <span className="font-mono">{metrics?.voice.realtimeHandshakeP50}ms</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Handshake P95:</span>
-              <Badge variant={metrics?.voice.realtimeHandshakeP95! < 2000 ? "default" : "destructive"}>
-                {metrics?.voice.realtimeHandshakeP95}ms
-              </Badge>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Failover Count (24h):</span>
-              <span className="font-mono">{metrics?.voice.failoverCount}</span>
-            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full mt-2"
+              onClick={() => window.open('https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/editor/28892', '_blank')}
+            >
+              View Logs <ExternalLink className="ml-2 h-3 w-3" />
+            </Button>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>SMS</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Voice Stream</CardTitle>
+            <Badge variant={metrics?.voice.p95HandshakeMs! < 1500 ? "default" : "destructive"}>
+              P95 Target: &lt;1500ms
+            </Badge>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="text-2xl font-bold">{metrics?.voice.avgHandshakeMs}ms</div>
+            <div className="text-xs text-muted-foreground">Avg Handshake</div>
+            <div className="flex justify-between text-sm mt-2">
+              <span className="text-muted-foreground">P95:</span>
+              <Badge variant={metrics?.voice.p95HandshakeMs! < 1500 ? "default" : "destructive"}>
+                {metrics?.voice.p95HandshakeMs}ms
+              </Badge>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full mt-2"
+              onClick={() => window.open('https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/editor/28893', '_blank')}
+            >
+              Stream Logs <ExternalLink className="ml-2 h-3 w-3" />
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">SMS</CardTitle>
             {smsHealthy ? (
               <CheckCircle2 className="h-5 w-5 text-green-500" />
             ) : (
               <XCircle className="h-5 w-5 text-red-500" />
             )}
           </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Inbound Echo:</span>
-              <Badge variant={metrics?.sms.inboundEcho ? "default" : "destructive"}>
-                {metrics?.sms.inboundEcho ? "Pass" : "Fail"}
+          <CardContent className="space-y-2">
+            <div className="text-2xl font-bold">{metrics?.sms.inboundCount}</div>
+            <div className="text-xs text-muted-foreground">Inbound Messages</div>
+            <div className="flex justify-between text-sm mt-2">
+              <span className="text-muted-foreground">Delivery Rate:</span>
+              <Badge variant={metrics?.sms.deliverySuccessRate! >= 95 ? "default" : "destructive"}>
+                {metrics?.sms.deliverySuccessRate}%
               </Badge>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Outbound Delivery:</span>
-              <Badge variant={metrics?.sms.outboundDelivery ? "default" : "destructive"}>
-                {metrics?.sms.outboundDelivery ? "Confirmed" : "No Evidence"}
-              </Badge>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Status Callbacks:</span>
-              <span className="font-mono">{metrics?.sms.statusCallbackEvidence.length}</span>
+            <div className="flex gap-2 mt-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1"
+                onClick={() => window.open('https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/editor/28894', '_blank')}
+              >
+                Reply Logs
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1"
+                onClick={() => window.open('https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/editor/28895', '_blank')}
+              >
+                Status Logs
+              </Button>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Ports/Hosted</CardTitle>
-            <FileText className="h-5 w-5" />
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Numbers</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">LOA Submissions:</span>
-              <span className="font-mono">{metrics?.ports.loaSubmissions.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Approvals:</span>
-              <span className="font-mono">{metrics?.ports.approvalTimestamps.length}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">FOC Dates:</span>
-              <span className="font-mono">{metrics?.ports.focDates.length}</span>
-            </div>
+          <CardContent className="space-y-2">
+            <div className="text-2xl font-bold">{metrics?.numbers.purchasedCount}</div>
+            <div className="text-xs text-muted-foreground">Purchased (24h)</div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full mt-4"
+              onClick={() => window.open('https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/editor/28897', '_blank')}
+            >
+              Purchase Logs <ExternalLink className="ml-2 h-3 w-3" />
+            </Button>
           </CardContent>
         </Card>
       </div>
 
+      {/* PROMPT I: Operator smoke test guidance */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Voice Evidence</CardTitle>
-          <CardDescription>Last test call and webhook confirmations</CardDescription>
+          <CardTitle>PROMPT I: Operator Smoke Tests</CardTitle>
+          <CardDescription>Evidence you can screenshot</CardDescription>
         </CardHeader>
-        <CardContent>
-          {metrics?.voice.lastTestCall ? (
-            <Alert>
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription>
-                <div className="text-sm space-y-1">
-                  <div>Last webhook: {new Date(metrics.voice.lastTestCall.created_at).toLocaleString()}</div>
-                  <div className="font-mono text-xs">
-                    {JSON.stringify(metrics.voice.lastTestCall.event_data, null, 2)}
-                  </div>
-                </div>
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>No recent test calls recorded</AlertDescription>
-            </Alert>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>SMS Delivery Evidence</CardTitle>
-          <CardDescription>Status callback confirmations from Twilio</CardDescription>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="space-y-2">
-            {metrics?.sms.statusCallbackEvidence.length! > 0 ? (
-              metrics?.sms.statusCallbackEvidence.map((evidence, i) => (
-                <div key={i} className="p-3 bg-muted rounded-lg text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="font-mono">{evidence.event_data.message_sid}</span>
-                    <Badge>Delivered</Badge>
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {new Date(evidence.created_at).toLocaleString()}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <Alert>
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>No recent delivery confirmations</AlertDescription>
-              </Alert>
-            )}
+            <div className="font-semibold">✅ Test 1: Call the newly bought number</div>
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+              <li>Hear consent voice, bridge target, call completes</li>
+              <li>Evidence: one call_logs row; if stream fallback triggered, stream_fallback=true</li>
+            </ul>
           </div>
+          <div className="space-y-2">
+            <div className="font-semibold">✅ Test 2: Send inbound SMS</div>
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+              <li>Receive template reply</li>
+              <li>Evidence: one sms_reply_logs row (source=twilio, external_id=MessageSid)</li>
+              <li>Evidence: one sms_status_logs row with "delivered"</li>
+            </ul>
+          </div>
+          <div className="space-y-2">
+            <div className="font-semibold">✅ Test 3: Console spot-check</div>
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+              <li>Number shows VoiceUrl: /functions/v1/voice-answer</li>
+              <li>Number shows SmsUrl: /functions/v1/webcomms-sms-reply</li>
+            </ul>
+          </div>
+          <div className="space-y-2">
+            <div className="font-semibold">✅ Test 4: Evidence dashboard</div>
+            <ul className="list-disc list-inside text-sm text-muted-foreground">
+              <li>All four tiles reflect increments within 60s</li>
+            </ul>
+          </div>
+          <Alert className="mt-4">
+            <CheckCircle2 className="h-4 w-4" />
+            <AlertDescription>
+              <div className="font-semibold">Acceptance: All four pass without manual DB edits</div>
+            </AlertDescription>
+          </Alert>
         </CardContent>
       </Card>
     </div>
