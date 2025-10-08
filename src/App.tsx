@@ -45,6 +45,7 @@ import CallCenter from "./pages/CallCenter";
 import SMSDeliveryDashboard from "./pages/SMSDeliveryDashboard";
 import AdminKB from "./pages/AdminKB";
 import CampaignManager from "./pages/CampaignManager";
+import CryptoInit from "./pages/ops/CryptoInit";
 
 
 const queryClient = new QueryClient();
@@ -88,6 +89,7 @@ const AppWithMonitoring = () => {
         <Route path="/sms-delivery" element={<main id="main"><SMSDeliveryDashboard /></main>} />
         <Route path="/admin/kb" element={<main id="main"><AdminKB /></main>} />
         <Route path="/admin/campaigns" element={<main id="main"><CampaignManager /></main>} />
+        <Route path="/ops/crypto/init" element={<main id="main"><CryptoInit /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
