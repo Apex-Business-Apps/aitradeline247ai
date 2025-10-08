@@ -50,6 +50,7 @@ import Activation from "./pages/ops/Activation";
 import VoiceSettings from "./pages/ops/VoiceSettings";
 import TwilioWire from "./pages/ops/TwilioWire";
 import StagingTest from "./pages/ops/StagingTest";
+import VoiceHealth from "./pages/ops/VoiceHealth";
 import CallLogs from "./pages/CallLogs";
 import PhoneApps from "./pages/PhoneApps";
 
@@ -101,9 +102,10 @@ const AppWithMonitoring = () => {
         <Route path="/ops/activation" element={<main id="main"><Activation /></main>} />
         <Route path="/ops/voice" element={<main id="main"><VoiceSettings /></main>} />
         <Route path="/ops/twilio/wire" element={<main id="main"><TwilioWire /></main>} />
-        <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
-        
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
+          <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />
+          
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>
     </>

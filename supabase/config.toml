@@ -55,6 +55,12 @@ verify_jwt = true  # Admin only
 [functions.ops-twilio-test-webhook]
 verify_jwt = true  # Admin only
 
+[functions.ops-voice-health]
+verify_jwt = true  # Admin only
+
+[functions.ops-voice-slo]
+verify_jwt = true  # Admin only
+
 [functions.chat]
 verify_jwt = true  # Requires authentication
 
