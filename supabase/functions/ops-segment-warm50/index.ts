@@ -84,8 +84,11 @@ serve(async (req) => {
       // Not unsubscribed
       if (unsubscribedEmails.has(lead.email.toLowerCase())) return false;
       
-      // CASL filter: express consent basis (csv import = existing business relationship)
-      if (!campaign.consent_basis_filter.includes('express')) return false;
+      // CASL filter: csv_import = express consent (existing business relationship)
+      // Only filter if campaign has consent_basis_filter defined
+      if (campaign.consent_basis_filter && Array.isArray(campaign.consent_basis_filter)) {
+        if (!campaign.consent_basis_filter.includes('express')) return false;
+      }
       
       return true;
     });
