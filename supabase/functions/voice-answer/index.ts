@@ -21,14 +21,14 @@ serve(async (req) => {
       throw new Error('Missing required environment variables');
     }
 
-    // CRITICAL: Enforce E.164 format for bridge target (fail fast on invalid config)
+    // CRITICAL: Enforce E.164 format for bridge target
     const e164Regex = /^\+[1-9]\d{1,14}$/;
     if (!e164Regex.test(FORWARD_TARGET_E164)) {
       console.error('CRITICAL: BUSINESS_TARGET_E164 is not in valid E.164 format:', FORWARD_TARGET_E164);
       throw new Error('Invalid bridge target configuration - must be E.164 format');
     }
 
-    // Validate Twilio signature for security (CRITICAL FIX)
+    // Validate Twilio signature for security
     const twilioSignature = req.headers.get('x-twilio-signature');
     if (!twilioSignature) {
       console.warn('Missing Twilio signature - rejecting request');
@@ -67,7 +67,7 @@ serve(async (req) => {
     const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
     const expectedSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)));
 
-    // Compare signatures (constant-time comparison)
+    // Compare signatures
     if (expectedSignature !== twilioSignature) {
       console.error('Invalid Twilio signature - potential spoofing attempt');
       return new Response('Forbidden - Invalid Signature', { status: 403 });
@@ -75,10 +75,11 @@ serve(async (req) => {
 
     console.log('✅ Twilio signature validated successfully');
 
-    // Extract parameters (already parsed above for signature validation)
+    // Extract parameters
     const CallSid = params['CallSid'];
     const From = params['From'];
     const To = params['To'];
+    const AnsweredBy = params['AnsweredBy']; // AMD result
 
     // Input validation
     if (!CallSid || !From || !To) {
@@ -86,39 +87,76 @@ serve(async (req) => {
       return new Response('Bad Request', { status: 400 });
     }
 
-    // Sanitize phone numbers (basic E.164 format check)
-    const e164Regex = /^\+[1-9]\d{1,14}$/;
+    // Sanitize phone numbers
     if (!e164Regex.test(From) || !e164Regex.test(To)) {
       console.error('Invalid phone number format');
       return new Response('Bad Request', { status: 400 });
     }
 
-    console.log('Incoming call:', { CallSid, From, To });
+    console.log('Incoming call:', { CallSid, From, To, AnsweredBy });
 
-    // Log to Supabase
+    // Get voice config
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    await supabase.from('analytics_events').insert({
-      event_type: 'twilio_call_incoming',
-      event_data: {
-        call_sid: CallSid,
-        from: From,
-        to: To,
-        timestamp: new Date().toISOString()
-      },
-      severity: 'info'
+    const { data: config } = await supabase
+      .from('voice_config')
+      .select('*')
+      .single();
+
+    // Create call log
+    await supabase.from('call_logs').insert({
+      call_sid: CallSid,
+      from_e164: From,
+      to_e164: To,
+      started_at: new Date().toISOString(),
+      status: 'initiated',
+      amd_detected: AnsweredBy === 'machine_start' || AnsweredBy === 'machine_end_beep',
     });
 
-    // Generate TwiML response with consent and forwarding
-    const twiml = `<?xml version="1.0" encoding="UTF-8"?>
+    // AMD Detection: If voicemail detected, use LLM path
+    const isVoicemail = AnsweredBy === 'machine_start' || AnsweredBy === 'machine_end_beep';
+    const pickupMode = config?.pickup_mode || 'immediate';
+    const amdEnabled = config?.amd_enable !== false;
+    const failOpen = config?.fail_open !== false;
+
+    // Determine if we should use LLM or bridge
+    const useLLM = isVoicemail && amdEnabled;
+    
+    let twiml: string;
+
+    if (useLLM || pickupMode === 'immediate') {
+      // Canadian consent message
+      twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="Polly.Joanna">
-    This call is being recorded for quality and training purposes. 
-    By staying on the line, you consent to being recorded.
+    This call may be recorded and transcribed to assist with your booking. 
+    Press 9 if you do not consent to recording, or stay on the line to continue.
+  </Say>
+  <Gather action="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-consent" numDigits="1" timeout="3">
+  </Gather>
+  <Connect>
+    <Stream url="wss://${supabaseUrl.replace('https://', '')}/functions/v1/voice-stream?callSid=${CallSid}" />
+  </Connect>
+</Response>`;
+    } else {
+      // Bridge directly to human
+      twiml = `<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="Polly.Joanna">
+    This call may be recorded and transcribed to assist with your booking.
   </Say>
   <Dial callerId="${To}" record="record-from-answer" recordingStatusCallback="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-status">
     <Number>${FORWARD_TARGET_E164}</Number>
   </Dial>
 </Response>`;
+    }
+
+    // Update call log with mode
+    await supabase.from('call_logs')
+      .update({ 
+        mode: useLLM || pickupMode === 'immediate' ? 'llm' : 'bridge',
+        pickup_mode: pickupMode 
+      })
+      .eq('call_sid', CallSid);
 
     return new Response(twiml, {
       headers: {

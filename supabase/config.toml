@@ -9,6 +9,7 @@ verify_jwt = true  # Requires authentication
 
 [functions.ops-campaigns-send]
 verify_jwt = true  # Requires authentication
+
 [functions.sms-inbound]
 verify_jwt = false  # Twilio webhook
 
@@ -32,6 +33,27 @@ verify_jwt = false  # Twilio webhook
 
 [functions.voice-status]
 verify_jwt = false  # Twilio webhook
+
+[functions.voice-stream]
+verify_jwt = false  # Twilio media stream
+
+[functions.voice-consent]
+verify_jwt = false  # Twilio consent callback
+
+[functions.ops-activate-account]
+verify_jwt = true  # Admin only
+
+[functions.ops-voice-config-update]
+verify_jwt = true  # Admin only
+
+[functions.ops-twilio-list-numbers]
+verify_jwt = true  # Admin only
+
+[functions.ops-twilio-configure-webhooks]
+verify_jwt = true  # Admin only
+
+[functions.ops-twilio-test-webhook]
+verify_jwt = true  # Admin only
 
 [functions.chat]
 verify_jwt = true  # Requires authentication

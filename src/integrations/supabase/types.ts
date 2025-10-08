@@ -355,9 +355,11 @@ export type Database = {
       }
       call_logs: {
         Row: {
+          amd_detected: boolean | null
           call_sid: string
           capture_completeness: number | null
           captured_fields: Json | null
+          consent_given: boolean | null
           created_at: string
           duration_sec: number | null
           ended_at: string | null
@@ -367,6 +369,7 @@ export type Database = {
           handoff_reason: string | null
           human_answered: boolean | null
           id: string
+          llm_session_id: string | null
           mode: string | null
           organization_id: string | null
           pickup_mode: string | null
@@ -382,9 +385,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          amd_detected?: boolean | null
           call_sid: string
           capture_completeness?: number | null
           captured_fields?: Json | null
+          consent_given?: boolean | null
           created_at?: string
           duration_sec?: number | null
           ended_at?: string | null
@@ -394,6 +399,7 @@ export type Database = {
           handoff_reason?: string | null
           human_answered?: boolean | null
           id?: string
+          llm_session_id?: string | null
           mode?: string | null
           organization_id?: string | null
           pickup_mode?: string | null
@@ -409,9 +415,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          amd_detected?: boolean | null
           call_sid?: string
           capture_completeness?: number | null
           captured_fields?: Json | null
+          consent_given?: boolean | null
           created_at?: string
           duration_sec?: number | null
           ended_at?: string | null
@@ -421,6 +429,7 @@ export type Database = {
           handoff_reason?: string | null
           human_answered?: boolean | null
           id?: string
+          llm_session_id?: string | null
           mode?: string | null
           organization_id?: string | null
           pickup_mode?: string | null
@@ -2452,6 +2461,47 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "supported_locales"
             referencedColumns: ["code"]
+          },
+        ]
+      }
+      system_prompts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string | null
+          prompt: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id?: string | null
+          prompt: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string | null
+          prompt?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_prompts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
           },
         ]
       }

@@ -3,17 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Check, Copy, Phone, MessageSquare, Loader2, AlertCircle, ExternalLink } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Check, Copy, Phone, MessageSquare, Loader2, AlertCircle, ExternalLink, Rocket } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-
-const STAGING_URL = import.meta.env.VITE_SUPABASE_URL?.replace('.supabase.co', '') || 'https://hysvqdwmhxnblxfqnszn';
-
-const WEBHOOK_URLS = {
-  voice_answer: `${STAGING_URL}.supabase.co/functions/v1/twilio/voice-answer`,
-  voice_status: `${STAGING_URL}.supabase.co/functions/v1/twilio/voice-status`,
-  sms_inbound: `${STAGING_URL}.supabase.co/functions/v1/twilio/sms-inbound`
-};
 
 export default function TwilioWire() {
   const [numbers, setNumbers] = useState<any[]>([]);
@@ -21,7 +14,19 @@ export default function TwilioWire() {
   const [loading, setLoading] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testResults, setTestResults] = useState<any>({});
+  const [environment, setEnvironment] = useState<'staging' | 'production'>('staging');
   const { toast } = useToast();
+
+  const stagingUrl = 'https://hysvqdwmhxnblxfqnszn.supabase.co';
+  const productionUrl = 'https://hysvqdwmhxnblxfqnszn.supabase.co';
+
+  const getWebhookUrls = (env: 'staging' | 'production') => ({
+    voice_answer: `${env === 'staging' ? stagingUrl : productionUrl}/functions/v1/voice-answer`,
+    voice_status: `${env === 'staging' ? stagingUrl : productionUrl}/functions/v1/voice-status`,
+    sms_inbound: `${env === 'staging' ? stagingUrl : productionUrl}/functions/v1/sms-inbound`,
+  });
+
+  const WEBHOOK_URLS = getWebhookUrls(environment);
 
   useEffect(() => {
     loadNumbers();
@@ -123,12 +128,33 @@ export default function TwilioWire() {
 
   return (
     <div className="container max-w-6xl py-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Twilio Wiring (Staging)</h1>
-        <p className="text-muted-foreground mt-2">
-          Configure webhook URLs for your Twilio phone numbers
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Twilio Wiring</h1>
+          <p className="text-muted-foreground mt-2">
+            Configure webhook URLs for staging and production
+          </p>
+        </div>
+        <Tabs value={environment} onValueChange={(v) => setEnvironment(v as any)}>
+          <TabsList>
+            <TabsTrigger value="staging">Staging</TabsTrigger>
+            <TabsTrigger value="production">
+              <Rocket className="w-4 h-4 mr-2" />
+              Production
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
+
+      {environment === 'production' && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            <strong>Production Environment:</strong> You are configuring production webhooks. 
+            Make sure staging tests pass before wiring production.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Webhook URLs */}
       <Card>

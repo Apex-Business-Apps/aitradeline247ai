@@ -9,6 +9,7 @@ import { Phone, Clock, User, MessageSquare, Download, Search, Filter, Play } fro
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
+import QuickActions from "@/components/calls/QuickActions";
 
 export default function CallLogs() {
   const [calls, setCalls] = useState<any[]>([]);
@@ -366,6 +367,9 @@ export default function CallLogs() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* Quick Actions */}
+                <QuickActions call={selectedCall} />
               </div>
             </>
           )}
