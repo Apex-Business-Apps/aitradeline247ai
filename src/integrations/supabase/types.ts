@@ -113,6 +113,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_config: {
+        Row: {
+          created_at: string
+          key_name: string
+          key_value: string
+          rotated_at: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          key_name: string
+          key_value: string
+          rotated_at?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          key_name?: string
+          key_value?: string
+          rotated_at?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       appointment_events: {
         Row: {
           appointment_id: string
@@ -165,6 +192,7 @@ export type Database = {
           id: string
           note: string | null
           organization_id: string | null
+          pii_iv: string | null
           source: string
           start_at: string
           status: string
@@ -182,6 +210,7 @@ export type Database = {
           id?: string
           note?: string | null
           organization_id?: string | null
+          pii_iv?: string | null
           source?: string
           start_at: string
           status?: string
@@ -199,6 +228,7 @@ export type Database = {
           id?: string
           note?: string | null
           organization_id?: string | null
+          pii_iv?: string | null
           source?: string
           start_at?: string
           status?: string
@@ -874,6 +904,69 @@ export type Database = {
           ip_address?: unknown | null
           user_agent?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      encryption_errors: {
+        Row: {
+          appointment_id: string | null
+          created_at: string
+          error_message: string
+          error_type: string
+          function_name: string
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          appointment_id?: string | null
+          created_at?: string
+          error_message: string
+          error_type: string
+          function_name: string
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          appointment_id?: string | null
+          created_at?: string
+          error_message?: string
+          error_type?: string
+          function_name?: string
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
+      encryption_key_audit: {
+        Row: {
+          action: string
+          created_at: string
+          from_version: number | null
+          id: string
+          metadata: Json | null
+          reason: string | null
+          to_version: number | null
+          user_role: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          from_version?: number | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+          to_version?: number | null
+          user_role: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          from_version?: number | null
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+          to_version?: number | null
+          user_role?: string
         }
         Relationships: []
       }
