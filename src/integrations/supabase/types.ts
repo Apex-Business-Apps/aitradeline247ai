@@ -156,9 +156,12 @@ export type Database = {
         Row: {
           created_at: string
           e164: string
+          e164_encrypted: string | null
           email: string | null
+          email_encrypted: string | null
           end_at: string
           first_name: string | null
+          first_name_encrypted: string | null
           id: string
           note: string | null
           organization_id: string | null
@@ -170,9 +173,12 @@ export type Database = {
         Insert: {
           created_at?: string
           e164: string
+          e164_encrypted?: string | null
           email?: string | null
+          email_encrypted?: string | null
           end_at: string
           first_name?: string | null
+          first_name_encrypted?: string | null
           id?: string
           note?: string | null
           organization_id?: string | null
@@ -184,9 +190,12 @@ export type Database = {
         Update: {
           created_at?: string
           e164?: string
+          e164_encrypted?: string | null
           email?: string | null
+          email_encrypted?: string | null
           end_at?: string
           first_name?: string | null
+          first_name_encrypted?: string | null
           id?: string
           note?: string | null
           organization_id?: string | null
@@ -651,7 +660,9 @@ export type Database = {
         Row: {
           created_at: string
           e164: string
+          e164_encrypted: string | null
           first_name: string | null
+          first_name_encrypted: string | null
           id: string
           organization_id: string | null
           wa_capable: boolean | null
@@ -659,7 +670,9 @@ export type Database = {
         Insert: {
           created_at?: string
           e164: string
+          e164_encrypted?: string | null
           first_name?: string | null
+          first_name_encrypted?: string | null
           id?: string
           organization_id?: string | null
           wa_capable?: boolean | null
@@ -667,7 +680,9 @@ export type Database = {
         Update: {
           created_at?: string
           e164?: string
+          e164_encrypted?: string | null
           first_name?: string | null
+          first_name_encrypted?: string | null
           id?: string
           organization_id?: string | null
           wa_capable?: boolean | null
@@ -1720,22 +1735,28 @@ export type Database = {
         Row: {
           created_at: string
           full_name: string | null
+          full_name_encrypted: string | null
           id: string
           phone_e164: string | null
+          phone_e164_encrypted: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           full_name?: string | null
+          full_name_encrypted?: string | null
           id: string
           phone_e164?: string | null
+          phone_e164_encrypted?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           full_name?: string | null
+          full_name_encrypted?: string | null
           id?: string
           phone_e164?: string | null
+          phone_e164_encrypted?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -2669,6 +2690,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      decrypt_pii: {
+        Args: { ciphertext: string }
+        Returns: string
+      }
       detect_and_alert_anomalies: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -2692,6 +2717,23 @@ export type Database = {
           e164: string
           email: string
           first_name: string
+        }[]
+      }
+      encrypt_pii: {
+        Args: { plaintext: string }
+        Returns: string
+      }
+      get_appointment_pii_secure: {
+        Args: { access_reason: string; appointment_id_param: string }
+        Returns: {
+          e164: string
+          email: string
+          end_at: string
+          first_name: string
+          id: string
+          organization_id: string
+          start_at: string
+          status: string
         }[]
       }
       get_appointment_summary_secure: {
@@ -2722,6 +2764,17 @@ export type Database = {
           start_at: string
           status: string
           tz: string
+        }[]
+      }
+      get_contact_pii_secure: {
+        Args: { access_reason: string; contact_id_param: string }
+        Returns: {
+          created_at: string
+          e164: string
+          first_name: string
+          id: string
+          organization_id: string
+          wa_capable: boolean
         }[]
       }
       get_contact_summary_secure: {
@@ -3000,7 +3053,7 @@ export type Database = {
       }
       l2_normalize: {
         Args: { "": string } | { "": unknown } | { "": unknown }
-        Returns: string
+        Returns: unknown
       }
       log_ab_test_access: {
         Args: { p_access_type?: string; p_test_name: string; p_variant: string }

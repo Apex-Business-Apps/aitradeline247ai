@@ -2,6 +2,8 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "npm:resend@4.0.0";
+import { checkAdminAuth } from "../_shared/adminAuth.ts";
+import { sanitizeText, sanitizeEmail } from "../_shared/sanitizer.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,14 +29,8 @@ serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const resend = new Resend(resendApiKey);
 
-    // Verify authentication
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing authorization' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // SECURITY: Verify admin authentication and authorization
+    const { userId } = await checkAdminAuth(req, supabase);
 
     const body: SendBatchRequest = await req.json();
     const batchSize = body.batch_size || 100;

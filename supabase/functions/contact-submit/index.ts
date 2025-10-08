@@ -1,6 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "npm:resend@2.0.0";
+import { 
+  sanitizeText, 
+  sanitizeEmail, 
+  sanitizePhone, 
+  validateSecurity 
+} from "../_shared/sanitizer.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -74,16 +80,30 @@ serve(async (req) => {
       );
     }
 
-    // Sanitize inputs (basic)
-    const sanitizedData = {
-      name: String(name).trim().slice(0, 100),
-      email: String(email).trim().toLowerCase().slice(0, 255),
-      phone: phone ? String(phone).trim().slice(0, 20) : null,
-      subject: subject ? String(subject).trim().slice(0, 200) : 'New Contact Form Submission',
-      message: String(message).trim().slice(0, 2000),
-      ip_address: clientIp,
-      user_agent: req.headers.get('user-agent')?.slice(0, 500) || null
-    };
+    // SECURITY: Comprehensive input sanitization and validation
+    let sanitizedData;
+    try {
+      validateSecurity(name, 'name');
+      validateSecurity(email, 'email');
+      validateSecurity(message, 'message');
+      if (subject) validateSecurity(subject, 'subject');
+
+      sanitizedData = {
+        name: sanitizeText(name, { maxLength: 100 }),
+        email: sanitizeEmail(email),
+        phone: phone ? sanitizePhone(phone) : null,
+        subject: subject ? sanitizeText(subject, { maxLength: 200 }) : 'New Contact Form Submission',
+        message: sanitizeText(message, { maxLength: 2000 }),
+        ip_address: clientIp,
+        user_agent: req.headers.get('user-agent')?.slice(0, 500) || null
+      };
+    } catch (sanitizeError: any) {
+      console.error('Input validation failed:', sanitizeError.message);
+      return new Response(
+        JSON.stringify({ error: 'Invalid input detected', details: sanitizeError.message }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Insert into database
     const { data: contactRecord, error: dbError } = await supabaseClient
