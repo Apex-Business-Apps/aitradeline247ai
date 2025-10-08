@@ -2612,8 +2612,14 @@ export type Database = {
         Returns: unknown
       }
       batch_encrypt_appointments: {
-        Args: { p_batch_size?: number; p_encryption_key?: string }
-        Returns: Json
+        Args:
+          | { batch_size?: number }
+          | { p_batch_size?: number; p_encryption_key?: string }
+        Returns: {
+          batch_duration_seconds: number
+          encrypted_count: number
+          failed_count: number
+        }[]
       }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
@@ -2708,6 +2714,14 @@ export type Database = {
         Args: { ciphertext: string }
         Returns: string
       }
+      decrypt_pii_with_iv_logged: {
+        Args: {
+          appointment_id?: string
+          encrypted_data: string
+          iv_data: string
+        }
+        Returns: string
+      }
       detect_and_alert_anomalies: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -2735,6 +2749,10 @@ export type Database = {
       }
       encrypt_pii: {
         Args: { plaintext: string }
+        Returns: string
+      }
+      encrypt_pii_field: {
+        Args: { iv_value: string; plaintext_value: string }
         Returns: string
       }
       get_app_encryption_key: {
