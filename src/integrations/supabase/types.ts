@@ -2737,6 +2737,10 @@ export type Database = {
         Args: { plaintext: string }
         Returns: string
       }
+      get_app_encryption_key: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_appointment_pii_secure: {
         Args: { access_reason: string; appointment_id_param: string }
         Returns: {
