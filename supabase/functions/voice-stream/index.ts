@@ -143,6 +143,27 @@ serve(async (req) => {
     return response;
   }
 
+  // Watchdog: fail over to human dial after ~3s if handshake > SLO
+  const handshakeStartTime = Date.now();
+  let handshakeCompleted = false;
+  
+  const handshakeWatchdog = setTimeout(() => {
+    if (!handshakeCompleted) {
+      console.log('⚠️ Handshake timeout (>3s), failing over to human');
+      supabase.from('call_logs')
+        .update({ 
+          handoff: true, 
+          handoff_reason: 'handshake_timeout',
+          fail_path: 'watchdog_bridge'
+        })
+        .eq('call_sid', callSid)
+        .then();
+      
+      openaiWs.close();
+      socket.close();
+    }
+  }, 3000);
+
   // Silence detection (6s threshold)
   silenceCheckInterval = setInterval(() => {
     const timeSinceActivity = Date.now() - lastActivityTime;
@@ -188,11 +209,18 @@ serve(async (req) => {
     
     if (data.event === 'start') {
       streamSid = data.start.streamSid;
-      console.log('✅ Media stream started:', streamSid);
+      handshakeCompleted = true;
+      clearTimeout(handshakeWatchdog);
       
-      // Update call log with session ID
+      const handshakeTime = Date.now() - handshakeStartTime;
+      console.log(`✅ Media stream started: ${streamSid} (handshake: ${handshakeTime}ms)`);
+      
+      // Update call log with session ID and handshake metrics
       supabase.from('call_logs')
-        .update({ llm_session_id: streamSid })
+        .update({ 
+          llm_session_id: streamSid,
+          captured_fields: { handshake_ms: handshakeTime }
+        })
         .eq('call_sid', callSid)
         .then();
         

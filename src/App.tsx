@@ -53,6 +53,8 @@ import StagingTest from "./pages/ops/StagingTest";
 import VoiceHealth from "./pages/ops/VoiceHealth";
 import CallLogs from "./pages/CallLogs";
 import PhoneApps from "./pages/PhoneApps";
+import NumberOnboarding from "./pages/ops/NumberOnboarding";
+import TwilioEvidence from "./pages/ops/TwilioEvidence";
 
 
 const queryClient = new QueryClient();
@@ -102,10 +104,12 @@ const AppWithMonitoring = () => {
         <Route path="/ops/activation" element={<main id="main"><Activation /></main>} />
         <Route path="/ops/voice" element={<main id="main"><VoiceSettings /></main>} />
         <Route path="/ops/twilio/wire" element={<main id="main"><TwilioWire /></main>} />
-          <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
-          <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
+        <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />
+        <Route path="/ops/numbers/onboard" element={<main id="main"><NumberOnboarding /></main>} />
+        <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
+        
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>
     </>
