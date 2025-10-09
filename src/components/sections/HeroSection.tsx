@@ -1,27 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import officialLogo from '@/assets/official-logo.svg';
+import { BACKGROUND_IMAGE1 } from '@/brand/vars';
 
 export const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-orange-subtle text-center overflow-hidden pt-safe pb-safe px-safe"  style={{ 
-      paddingTop: 'max(env(safe-area-inset-top), 2rem)',
-      paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
-      paddingLeft: 'max(env(safe-area-inset-left), 1rem)',
-      paddingRight: 'max(env(safe-area-inset-right), 1rem)'
-    }}>
-      {/* Multi-layered Background System for Premium Translucency */}
-      {/* Premium base gradient (bottom-most) */}
-      <div className="absolute inset-0" style={{background: 'var(--gradient-premium)'}}></div>
-      {/* Soft background fade (reduced opacity further) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background/12 via-transparent to-background/8"></div>
-      {/* Saturated orange wash (top of background layers) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/50 via-brand-orange-light/35 to-brand-orange/25"></div>
-      
-      {/* Enhanced Glowing Orbs with Animation */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/40 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-brand-orange-light/28 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 right-1/6 w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+    <section 
+      className="hero relative text-center overflow-hidden pt-safe pb-safe px-safe"  
+      style={{ 
+        backgroundImage: `url(${BACKGROUND_IMAGE1})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        paddingTop: 'max(env(safe-area-inset-top), 2rem)',
+        paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
+        paddingLeft: 'max(env(safe-area-inset-left), 1rem)',
+        paddingRight: 'max(env(safe-area-inset-right), 1rem)'
+      }}
+    >
       
       <div className="container relative z-10">
         {/* Hero Logo - Prominent with Enhanced Animation */}
