@@ -10,6 +10,11 @@ export const featureFlags = {
   // Set to false to short-circuit all A/B test logic
   AB_ENABLED: false,
   
+  // Header Mode Toggle - legacy = old working header, new = HeaderV2
+  // Set to 'legacy' to use the previously working header
+  // Set to 'new' to use the new HeaderV2 implementation
+  HEADER_MODE: 'legacy' as 'legacy' | 'new',
+  
   // Add other feature flags here as needed
   ANALYTICS_ENABLED: true,
   ERROR_BOUNDARY_ENABLED: true,
