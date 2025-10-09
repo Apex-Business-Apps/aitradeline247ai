@@ -39,6 +39,9 @@ const adminNavigationItems = [{
   name: 'Numbers',
   href: '/ops/numbers/onboard'
 }, {
+  name: 'Knowledge Base',
+  href: '/admin/knowledge-base'
+}, {
   name: 'Settings',
   href: '/ops/voice'
 }];

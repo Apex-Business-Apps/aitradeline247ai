@@ -58,6 +58,7 @@ import PhoneApps from "./pages/PhoneApps";
 import NumberOnboarding from "./pages/ops/NumberOnboarding";
 import TwilioEvidence from "./pages/ops/TwilioEvidence";
 import MessagingHealth from "./pages/ops/MessagingHealth";
+import AdminKnowledgeBase from "./pages/AdminKnowledgeBase";
 
 // Lazy load admin-only pages
 const OnboardNumbers = React.lazy(() => import("./pages/ops/numbers/onboard"));
@@ -140,6 +141,7 @@ const AppWithMonitoring = () => {
           </main>
         } />
         <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
+        <Route path="/admin/knowledge-base" element={<main id="main"><AdminKnowledgeBase /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />

@@ -85,6 +85,12 @@ verify_jwt = true  # Requires authentication
 [functions.rag-ingest]
 verify_jwt = true  # Admin only
 
+[functions.kb-ingest]
+verify_jwt = true  # Admin only - Knowledge base ingestion
+
+[functions.kb-search]
+verify_jwt = true  # Requires authentication - Knowledge base search
+
 [functions.ragz]
 verify_jwt = true  # Requires authentication
 
