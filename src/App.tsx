@@ -23,6 +23,7 @@ import LayoutCanon from "@/components/LayoutCanon";
 import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
 import ClientDashboard from "./pages/ClientDashboard";
+import DashboardRedirect from "./pages/DashboardRedirect";
 import Auth from "./pages/Auth";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
@@ -88,7 +89,9 @@ const AppWithMonitoring = () => {
         <Route path="/privacy" element={<main id="main"><Privacy /></main>} />
         <Route path="/terms" element={<main id="main"><Terms /></main>} />
         <Route path="/design-tokens" element={<main id="main"><DesignTokens /></main>} />
-        <Route path="/dashboard" element={<main id="main"><ClientDashboard /></main>} />
+        <Route path="/dashboard" element={<DashboardRedirect />} />
+        <Route path="/app/dashboard" element={<main id="main"><ClientDashboard /></main>} />
+        <Route path="/app/dashboard" element={<main id="main"><ClientDashboard /></main>} />
         <Route path="/dashboard/integrations/crm" element={<main id="main"><CRMIntegration /></main>} />
         <Route path="/dashboard/integrations/email" element={<main id="main"><EmailIntegration /></main>} />
         <Route path="/dashboard/integrations/phone" element={<main id="main"><PhoneIntegration /></main>} />
