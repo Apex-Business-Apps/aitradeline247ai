@@ -22,12 +22,10 @@ export const LanguageSwitcher: React.FC = () => {
       <DropdownMenuTrigger asChild>
         <Button 
           variant="ghost" 
-          size="sm"
+          size="icon"
           aria-label={t('language.switch')}
-          className="h-9 px-3 rounded-lg min-w-[44px] min-h-[44px] shadow-none"
         >
-          <Globe className="h-4 w-4 mr-1" />
-          <span className="text-sm">{i18n.language.split('-')[0].toUpperCase()}</span>
+          <Globe className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
