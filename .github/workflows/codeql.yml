@@ -26,16 +26,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Detect GitHub Advanced Security availability
+        id: ghas
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const { data } = await github.request('GET /repos/{owner}/{repo}', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const enabled = data?.security_and_analysis?.advanced_security?.status === 'enabled';
+            core.setOutput('enabled', enabled ? 'true' : 'false');
+
       - name: Initialize CodeQL
+        if: steps.ghas.outputs.enabled == 'true'
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
 
       - name: Autobuild
+        if: steps.ghas.outputs.enabled == 'true'
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
+        if: steps.ghas.outputs.enabled == 'true'
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
+
+      - name: Skip CodeQL (GitHub Advanced Security disabled)
+        if: steps.ghas.outputs.enabled != 'true'
+        run: echo "GitHub Advanced Security disabled; skipping CodeQL scan."
