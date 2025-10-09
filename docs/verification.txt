@@ -1,0 +1,20 @@
+TradeLine247 verification log
+=============================
+
+Date: 2025-10-09
+
+Commands executed:
+1. npm install --include=dev (align dependencies, regenerate lockfile)
+2. npm audit --omit=dev (record low severity tmp advisory via @lhci/cli)
+3. npm run build
+4. npm run verify:app
+5. npm ci --include=dev (clean install from lock)
+6. npm run build
+7. npm run verify:app
+
+Results:
+- Build produced dist/index.html and assets after both install paths.
+- verify:app started server.mjs, confirmed /healthz, /readyz, and homepage tagline. Output: "VERIFY: PASS" (twice).
+
+Outstanding items:
+- npm audit --omit=dev reports low severity tmp advisory via @lhci/cli (requires breaking downgrade); documented for follow-up.

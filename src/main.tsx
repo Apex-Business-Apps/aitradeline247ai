@@ -9,7 +9,7 @@ import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";
 import { performanceMonitor } from "./lib/performanceMonitor";
 import SafeErrorBoundary from "./components/errors/SafeErrorBoundary";
-import "./safe-mode"; // Initialize safe mode before React mounts
+import { isSafeMode } from "./safe-mode"; // Initialize safe mode before React mounts
 
 // Canonical domain redirect (skip in dev)
 if (import.meta.env.PROD && typeof window !== 'undefined') {
@@ -28,22 +28,30 @@ createRoot(document.getElementById("root")!).render(
   </SafeErrorBoundary>
 );
 
-watchRoiTableCanon();
-initPWAInstall();
+if (!isSafeMode) {
+  watchRoiTableCanon();
+  initPWAInstall();
+} else {
+  console.log("🛡️ Safe Mode: skipping ROI watcher and PWA install");
+}
 
 // Initialize hero guardian for permanent safeguards
 if (typeof window !== 'undefined') {
-  window.addEventListener('load', () => {
-    setTimeout(initHeroGuardian, 1500);
-  });
-  
-  // Production performance monitoring
-  if (import.meta.env.PROD) {
+  if (!isSafeMode) {
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        const summary = performanceMonitor.getMetricsSummary();
-        console.log('📊 Performance Summary:', summary);
-      }, 3000);
+      setTimeout(initHeroGuardian, 1500);
     });
+
+    // Production performance monitoring
+    if (import.meta.env.PROD) {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const summary = performanceMonitor.getMetricsSummary();
+          console.log('📊 Performance Summary:', summary);
+        }, 3000);
+      });
+    }
+  } else {
+    console.log('🛡️ Safe Mode: hero guardian & performance monitor paused');
   }
 }

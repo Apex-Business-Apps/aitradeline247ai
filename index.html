@@ -170,18 +170,36 @@
     </script>
     
     <!-- PWA Service Worker Registration (Production Only) -->
-    <script>
-      // Only register service worker in production builds
-      if ('serviceWorker' in navigator && import.meta.env.PROD) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-              console.log('TradeLine 24/7 SW registered successfully:', registration.scope);
-            }, function(err) {
-              console.log('TradeLine 24/7 SW registration failed:', err);
+    <script type="module">
+      (function() {
+        if (!('serviceWorker' in navigator)) {
+          return;
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var safe = params.get('safe') === '1' || window.__SAFE_MODE__ === true;
+
+        if (safe) {
+          console.log('🛡️ Safe Mode: service worker registration skipped');
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            registrations.forEach(function(registration) {
+              registration.unregister();
             });
-        });
-      }
+          });
+          return;
+        }
+
+        if (import.meta.env?.PROD) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+              .then(function(registration) {
+                console.log('TradeLine 24/7 SW registered successfully:', registration.scope);
+              }, function(err) {
+                console.log('TradeLine 24/7 SW registration failed:', err);
+              });
+          });
+        }
+      })();
     </script>
   </body>
 </html>
