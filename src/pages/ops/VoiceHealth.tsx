@@ -37,6 +37,9 @@ interface SLOData {
     consent_decline_rate: number;
     llm_stream_error_rate: number;
     transcript_latency_p95: number;
+    realtime_handshake_p50_ms?: number;
+    realtime_handshake_p95_ms?: number;
+    realtime_fallback_rate?: number;
   };
   thresholds: {
     p95_ring_seconds: number;
@@ -44,6 +47,8 @@ interface SLOData {
     handoff_rate_max: number;
     llm_stream_error_rate: number;
     transcript_latency_p95: number;
+    realtime_handshake_p95_ms?: number;
+    realtime_fallback_rate_max?: number;
   };
   metrics: {
     total_calls: number;
@@ -53,6 +58,8 @@ interface SLOData {
     amd_detected: number;
     consent_declined: number;
     llm_errors: number;
+    realtime_streams?: number;
+    realtime_fallbacks?: number;
   };
   alerts: Array<{
     metric: string;
@@ -398,6 +405,28 @@ export default function VoiceHealth() {
                     Threshold: ≤{sloData.thresholds.transcript_latency_p95}s
                   </div>
                 </div>
+                {sloData.slos.realtime_handshake_p50_ms !== undefined && (
+                  <>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Realtime P50 Handshake</div>
+                      <div className="text-2xl font-bold">{sloData.slos.realtime_handshake_p50_ms}ms</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Realtime P95 Handshake</div>
+                      <div className="text-2xl font-bold">{sloData.slos.realtime_handshake_p95_ms}ms</div>
+                      <div className="text-xs text-muted-foreground">
+                        Threshold: ≤{sloData.thresholds.realtime_handshake_p95_ms || 1500}ms
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Realtime Fallback Rate</div>
+                      <div className="text-2xl font-bold">{sloData.slos.realtime_fallback_rate}%</div>
+                      <div className="text-xs text-muted-foreground">
+                        Threshold: &lt;{sloData.thresholds.realtime_fallback_rate_max || 5}%
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -438,6 +467,18 @@ export default function VoiceHealth() {
                   <div className="text-sm text-muted-foreground">LLM Errors</div>
                   <div className="text-2xl font-bold">{sloData.metrics.llm_errors}</div>
                 </div>
+                {sloData.metrics.realtime_streams !== undefined && (
+                  <>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Realtime Streams</div>
+                      <div className="text-2xl font-bold">{sloData.metrics.realtime_streams}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Realtime Fallbacks</div>
+                      <div className="text-2xl font-bold">{sloData.metrics.realtime_fallbacks || 0}</div>
+                    </div>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>

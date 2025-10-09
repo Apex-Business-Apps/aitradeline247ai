@@ -143,16 +143,16 @@ serve(async (req) => {
     return response;
   }
 
-  // PROMPT C: Watchdog - 3s handshake timeout, log evidence
+  // Watchdog - 3s handshake timeout, log evidence (no PII)
   const handshakeStartTime = Date.now();
   let handshakeCompleted = false;
   
   const handshakeWatchdog = setTimeout(async () => {
     if (!handshakeCompleted) {
       const elapsedMs = Date.now() - handshakeStartTime;
-      console.log(`⚠️ Handshake timeout (${elapsedMs}ms), failing over to human`);
+      console.log(`⚠️ Handshake timeout (${elapsedMs}ms) - CallSid will failover to human bridge`);
       
-      // PROMPT C: Record evidence row (unique on call_sid)
+      // Record evidence row (unique on call_sid) - NO PII
       await supabase.from('voice_stream_logs').upsert({
         call_sid: callSid,
         started_at: new Date(handshakeStartTime).toISOString(),
@@ -162,13 +162,13 @@ serve(async (req) => {
         error_message: 'Handshake timeout (>3000ms)'
       }, { onConflict: 'call_sid' });
       
-      // Tag call with stream_fallback=true
+      // Tag call with stream_fallback=true - NO PII
       await supabase.from('call_logs')
         .update({ 
           handoff: true, 
           handoff_reason: 'handshake_timeout',
           fail_path: 'watchdog_bridge',
-          captured_fields: { stream_fallback: true }
+          captured_fields: { stream_fallback: true, handshake_ms: elapsedMs }
         })
         .eq('call_sid', callSid);
       
@@ -226,9 +226,9 @@ serve(async (req) => {
       clearTimeout(handshakeWatchdog);
       
       const handshakeTime = Date.now() - handshakeStartTime;
-      console.log(`✅ Media stream started: ${streamSid} (handshake: ${handshakeTime}ms)`);
+      console.log(`✅ Media stream started (handshake: ${handshakeTime}ms) - NO PII logged`);
       
-      // PROMPT C: Record successful handshake evidence
+      // Record successful handshake evidence - NO PII
       supabase.from('voice_stream_logs').upsert({
         call_sid: callSid,
         started_at: new Date(handshakeStartTime).toISOString(),
@@ -237,7 +237,7 @@ serve(async (req) => {
         fell_back: false
       }, { onConflict: 'call_sid' }).then();
       
-      // Update call log with session ID and handshake metrics
+      // Update call log with session ID and handshake metrics - NO PII
       supabase.from('call_logs')
         .update({ 
           llm_session_id: streamSid,

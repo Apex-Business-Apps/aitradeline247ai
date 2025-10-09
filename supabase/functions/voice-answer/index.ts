@@ -123,8 +123,18 @@ serve(async (req) => {
     
     let twiml: string;
 
-    if (useLLM || pickupMode === 'immediate') {
-      // Greeting + consent with DTMF-0 bridge option
+    // Check concurrent stream limit (max 10 per org to prevent overload)
+    const { count: activeStreams } = await supabase
+      .from('voice_stream_logs')
+      .select('*', { count: 'exact', head: true })
+      .is('connected_at', null)
+      .gte('started_at', new Date(Date.now() - 30000).toISOString()); // Last 30s
+    
+    const realtimeEnabled = config?.stream_enabled !== false;
+    const withinConcurrencyLimit = (activeStreams || 0) < 10;
+
+    if ((useLLM || pickupMode === 'immediate') && realtimeEnabled && withinConcurrencyLimit) {
+      // Greeting + realtime stream with 3s watchdog fallback
       twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Gather action="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-action" numDigits="1" timeout="1">
@@ -132,9 +142,13 @@ serve(async (req) => {
       Hi, you've reached TradeLine 24/7 — Your 24/7 AI Receptionist! How can I help? Press 0 to speak with someone directly.
     </Say>
   </Gather>
-  <Connect>
+  <Connect action="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-answer?fallback=true">
     <Stream url="wss://${supabaseUrl.replace('https://', '')}/functions/v1/voice-stream?callSid=${CallSid}" />
   </Connect>
+  <Say voice="Polly.Joanna">Connecting you to an agent now.</Say>
+  <Dial callerId="${To}" record="record-from-answer" recordingStatusCallback="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-status">
+    <Number>${FORWARD_TARGET_E164}</Number>
+  </Dial>
 </Response>`;
     } else {
       // Bridge directly to human
@@ -152,7 +166,7 @@ serve(async (req) => {
     // Update call log with mode
     await supabase.from('call_logs')
       .update({ 
-        mode: useLLM || pickupMode === 'immediate' ? 'llm' : 'bridge',
+        mode: (useLLM || pickupMode === 'immediate') && realtimeEnabled && withinConcurrencyLimit ? 'llm' : 'bridge',
         pickup_mode: pickupMode 
       })
       .eq('call_sid', CallSid);

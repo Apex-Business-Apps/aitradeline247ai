@@ -38,6 +38,9 @@ serve(async (req) => {
           consent_decline_rate: 0,
           llm_stream_error_rate: 0,
           transcript_latency_p95: 0,
+          realtime_handshake_p50_ms: null,
+          realtime_handshake_p95_ms: null,
+          realtime_fallback_rate: 0,
         },
         thresholds: {
           p95_ring_seconds: 20,
@@ -45,6 +48,8 @@ serve(async (req) => {
           handoff_rate_max: 60,
           llm_stream_error_rate: 1,
           transcript_latency_p95: 120,
+          realtime_handshake_p95_ms: 1500,
+          realtime_fallback_rate_max: 5,
         },
         metrics: {
           total_calls: 0,
@@ -54,6 +59,8 @@ serve(async (req) => {
           amd_detected: 0,
           consent_declined: 0,
           llm_errors: 0,
+          realtime_streams: 0,
+          realtime_fallbacks: 0,
         },
         alerts: [],
         window_hours: 24,
@@ -98,6 +105,28 @@ serve(async (req) => {
     const transcriptP95Index = Math.ceil(transcriptLatencies.length * 0.95) - 1;
     const transcriptLatencyP95 = transcriptLatencies[transcriptP95Index] || 0;
 
+    // Realtime handshake metrics - NO PII
+    const { data: realtimeHandshakes } = await supabase
+      .from('voice_stream_logs')
+      .select('elapsed_ms, fell_back')
+      .gte('started_at', twentyFourHoursAgo);
+
+    const successfulHandshakes = realtimeHandshakes?.filter(h => !h.fell_back).map(h => h.elapsed_ms) || [];
+    const realtimeStreams = realtimeHandshakes?.length || 0;
+    const realtimeFallbacks = realtimeHandshakes?.filter(h => h.fell_back).length || 0;
+    
+    const realtimeHandshakeP50 = successfulHandshakes.length > 0
+      ? successfulHandshakes.sort((a, b) => a - b)[Math.floor(successfulHandshakes.length * 0.5)]
+      : null;
+    
+    const realtimeHandshakeP95 = successfulHandshakes.length > 0
+      ? successfulHandshakes.sort((a, b) => a - b)[Math.floor(successfulHandshakes.length * 0.95)]
+      : null;
+
+    const realtimeFallbackRate = realtimeStreams > 0
+      ? parseFloat(((realtimeFallbacks / realtimeStreams) * 100).toFixed(1))
+      : 0;
+
     // Define thresholds
     const thresholds = {
       p95_ring_seconds: 20,
@@ -105,6 +134,8 @@ serve(async (req) => {
       handoff_rate_max: 60,
       llm_stream_error_rate: 1,
       transcript_latency_p95: 120,
+      realtime_handshake_p95_ms: 1500,
+      realtime_fallback_rate_max: 5,
     };
 
     // Check for threshold breaches
@@ -146,6 +177,27 @@ serve(async (req) => {
       });
     }
 
+    // Realtime handshake alerts
+    if (realtimeHandshakeP95 && realtimeHandshakeP95 > thresholds.realtime_handshake_p95_ms) {
+      alerts.push({
+        metric: 'realtime_handshake_p95',
+        value: realtimeHandshakeP95,
+        threshold: thresholds.realtime_handshake_p95_ms,
+        severity: 'warning',
+        message: `P95 realtime handshake (${realtimeHandshakeP95}ms) exceeds ${thresholds.realtime_handshake_p95_ms}ms threshold`,
+      });
+    }
+
+    if (realtimeFallbackRate > thresholds.realtime_fallback_rate_max) {
+      alerts.push({
+        metric: 'realtime_fallback_rate',
+        value: realtimeFallbackRate,
+        threshold: thresholds.realtime_fallback_rate_max,
+        severity: realtimeFallbackRate > 10 ? 'critical' : 'warning',
+        message: `Realtime fallback rate (${realtimeFallbackRate}%) exceeds ${thresholds.realtime_fallback_rate_max}% threshold`,
+      });
+    }
+
     const response = {
       slos: {
         p95_ring_seconds: parseFloat(p95RingSeconds.toFixed(2)),
@@ -154,6 +206,9 @@ serve(async (req) => {
         consent_decline_rate: parseFloat(consentDeclineRate.toFixed(2)),
         llm_stream_error_rate: parseFloat(llmStreamErrorRate.toFixed(2)),
         transcript_latency_p95: parseFloat(transcriptLatencyP95.toFixed(2)),
+        realtime_handshake_p50_ms: realtimeHandshakeP50,
+        realtime_handshake_p95_ms: realtimeHandshakeP95,
+        realtime_fallback_rate: realtimeFallbackRate,
       },
       thresholds,
       metrics: {
@@ -164,6 +219,8 @@ serve(async (req) => {
         amd_detected: amdDetected,
         consent_declined: consentDeclined,
         llm_errors: llmErrors,
+        realtime_streams: realtimeStreams,
+        realtime_fallbacks: realtimeFallbacks,
       },
       alerts,
       window_hours: 24,
