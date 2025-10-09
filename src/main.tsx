@@ -8,6 +8,8 @@ import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";
 import { performanceMonitor } from "./lib/performanceMonitor";
+import SafeErrorBoundary from "./components/errors/SafeErrorBoundary";
+import "./safe-mode"; // Initialize safe mode before React mounts
 
 // Canonical domain redirect (skip in dev)
 if (import.meta.env.PROD && typeof window !== 'undefined') {
@@ -20,7 +22,11 @@ if (import.meta.env.PROD && typeof window !== 'undefined') {
   }
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <SafeErrorBoundary>
+    <App />
+  </SafeErrorBoundary>
+);
 
 watchRoiTableCanon();
 initPWAInstall();

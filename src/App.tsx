@@ -147,7 +147,7 @@ const App = () => {
           <Sonner />
           {import.meta.env.VITE_SPLASH_ENABLED !== "false" && <StartupSplash />}
           <AppErrorBoundary>
-            <BrowserRouter>
+            <BrowserRouter basename="/">
               <AppWithMonitoring />
               <InstallPrompt />
               <MiniChat />

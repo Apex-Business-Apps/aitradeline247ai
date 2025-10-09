@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <base href="/" />
     <link rel="icon" type="image/x-icon" href="/assets/App_Icons/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     
     <!-- Primary Meta Tags -->
     <title>TradeLine 24/7 — Your 24/7 Ai Receptionist!</title>
@@ -168,9 +169,10 @@
     })();
     </script>
     
-    <!-- PWA Service Worker Registration -->
+    <!-- PWA Service Worker Registration (Production Only) -->
     <script>
-      if ('serviceWorker' in navigator) {
+      // Only register service worker in production builds
+      if ('serviceWorker' in navigator && import.meta.env.PROD) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/sw.js')
             .then(function(registration) {
