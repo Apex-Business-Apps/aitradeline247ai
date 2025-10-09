@@ -4,15 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hide scrollbar for mobile nav */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 /* Safe Area Support for Hero Sections */
 .hero-safe-area {
   padding-top: max(0.5rem, env(safe-area-inset-top)) !important;
@@ -89,7 +80,7 @@ All colors MUST be HSL.
     --premium-backdrop: backdrop-blur(12px) saturate(180%);
     
     /* Canonical Background Image */
-    --bg-pattern-1: url('/assets/BACKGROUND_IMAGE1.svg');
+    --bg-pattern-1: url('/src/assets/BACKGROUND_IMAGE1.svg');
     
     /* Premium Gradients - Sophisticated Color Blends */
     --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-light) / 0.25));
