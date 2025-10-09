@@ -67,6 +67,35 @@ const Privacy = () => {
                 </section>
 
                 <section>
+                  <h2 className="text-2xl font-semibold mb-4">Mobile App Privacy</h2>
+                  <p className="text-muted-foreground mb-4">
+                    For detailed information about data collection and usage in our mobile applications:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                    <li>
+                      <a 
+                        href="https://github.com/yourusername/tradeline247ai/blob/main/ops/policy-kit/apple_privacy.md" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Apple App Store Privacy Details
+                      </a>
+                    </li>
+                    <li>
+                      <a 
+                        href="https://github.com/yourusername/tradeline247ai/blob/main/ops/policy-kit/play_data_safety.md" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Google Play Data Safety Information
+                      </a>
+                    </li>
+                  </ul>
+                </section>
+
+                <section>
                   <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
                   <p className="text-muted-foreground">
                     If you have questions about this Privacy Policy, please contact us at:

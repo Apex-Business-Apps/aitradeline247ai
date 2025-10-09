@@ -67,6 +67,8 @@ export default function HeroRoiDuo() {
             <a href="/security" className="text-primary hover:underline font-medium">🔒 Enterprise Security</a>
             <span className="text-muted-foreground">•</span>
             <a href="/compare" className="text-primary hover:underline font-medium">📊 Compare Services</a>
+            <span className="text-muted-foreground">•</span>
+            <a href="/pricing" className="text-primary hover:underline font-medium">💰 See Pricing</a>
           </div>
           
           {/* Premium Phone Number */}

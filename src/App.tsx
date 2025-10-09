@@ -55,6 +55,7 @@ import CallLogs from "./pages/CallLogs";
 import PhoneApps from "./pages/PhoneApps";
 import NumberOnboarding from "./pages/ops/NumberOnboarding";
 import TwilioEvidence from "./pages/ops/TwilioEvidence";
+import MessagingHealth from "./pages/ops/MessagingHealth";
 
 
 const queryClient = new QueryClient();
@@ -106,6 +107,7 @@ const AppWithMonitoring = () => {
         <Route path="/ops/twilio/wire" element={<main id="main"><TwilioWire /></main>} />
         <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
         <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />
+        <Route path="/ops/messaging-health" element={<main id="main"><MessagingHealth /></main>} />
         <Route path="/ops/numbers/onboard" element={<main id="main"><NumberOnboarding /></main>} />
         <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
         
