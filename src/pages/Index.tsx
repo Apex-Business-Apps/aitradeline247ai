@@ -12,7 +12,6 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
 import LayoutCanon from "@/components/LayoutCanon";
-import backgroundImage from "@/assets/BACKGROUND_IMAGE1.svg";
 
 const Index = () => {
   const { trackPageView } = useAnalytics();
@@ -24,18 +23,7 @@ const Index = () => {
   return (
     <>
       <LayoutCanon />
-      <div 
-        className="min-h-screen flex flex-col relative"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-      {/* Content with translucency */}
-      <div className="relative z-10">
+      <div className="min-h-screen flex flex-col">
         <SEOHead 
           title="TradeLine 24/7 - Your 24/7 AI Receptionist!"
           description="Get fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
@@ -90,36 +78,19 @@ const Index = () => {
         />
         <OrganizationSchema />
         
-        <div className="backdrop-blur-[2px] bg-background/30">
-          <Header />
-        </div>
+        <Header />
         
         <main className="flex-1">
-          <div className="backdrop-blur-[2px] bg-background/20">
-            <HeroRoiDuo />
-          </div>
-          <div className="backdrop-blur-[2px] bg-background/20">
-            <BenefitsGrid />
-          </div>
-        <div className="backdrop-blur-[2px] bg-background/25">
+          <HeroRoiDuo />
+          <BenefitsGrid />
           <ImpactStrip />
-        </div>
-        <div className="backdrop-blur-[2px] bg-background/25">
           <HowItWorks />
-        </div>
         </main>
         
-        <div className="backdrop-blur-[2px] bg-background/25">
-          <TrustBadgesSlim />
-        </div>
-        
-        <div className="backdrop-blur-[2px] bg-background/30">
-          <Footer />
-        </div>
-        
+        <TrustBadgesSlim />
+        <Footer />
         <NoAIHypeFooter />
       </div>
-    </div>
     </>
   );
 };
