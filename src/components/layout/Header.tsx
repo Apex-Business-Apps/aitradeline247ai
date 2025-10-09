@@ -24,8 +24,11 @@ export const Header: React.FC = () => {
   return (
     <header 
       data-site-header 
-      className="sticky top-0 z-[9999] isolate bg-white dark:bg-gray-950 border-b border-slate-200/30 dark:border-slate-800/30"
-      style={{ height: 'clamp(56px, 14vw, 64px)' }}
+      className="sticky top-0 z-[9999] isolate bg-white dark:bg-gray-950 border-b border-slate-200/30 dark:border-slate-800/30 shadow-none"
+      style={{ 
+        height: window.innerWidth <= 768 ? '56px' : '64px',
+        boxShadow: 'none'
+      }}
     >
       <div 
         data-header-inner 
@@ -39,13 +42,22 @@ export const Header: React.FC = () => {
           paddingInline: 'max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right))'
         }}
       >
-        {/* LEFT: Logo + Badge (not in nav) */}
+        {/* LEFT: Logo + Badge (decorative, not in nav) */}
         <div data-slot="left" className="flex items-center gap-3" style={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}>
+          <Link to="/" className="flex items-center gap-3">
+            <img 
+              src="/assets/official-logo.svg" 
+              alt="TradeLine 24/7 Logo" 
+              className="h-8 w-auto"
+              style={{ height: '32px' }}
+              loading="eager"
+            />
+          </Link>
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada badge" 
             className="h-7 w-auto"
-            style={{ height: '28px', margin: '0 12px' }}
+            style={{ height: '28px' }}
             loading="eager"
           />
         </div>
@@ -63,7 +75,7 @@ export const Header: React.FC = () => {
               const isActive = location.pathname === item.href || 
                              (item.href !== '/' && location.pathname.startsWith(item.href));
               return (
-                <Link
+                  <Link
                   key={item.name}
                   to={item.href}
                   aria-current={isActive ? 'page' : undefined}
@@ -71,10 +83,10 @@ export const Header: React.FC = () => {
                     "px-3 py-2 text-sm font-medium rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center",
                     "hover:bg-[hsl(var(--brand-orange-primary)/0.12)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[hsl(var(--brand-orange-primary))]",
                     isActive 
-                      ? "bg-[hsl(var(--brand-orange-primary)/0.14)] text-[hsl(var(--brand-orange-primary))]" 
-                      : "text-foreground"
+                      ? "bg-[hsl(var(--brand-orange-primary)/0.14)] text-[hsl(var(--brand-orange-primary))] shadow-none" 
+                      : "text-foreground bg-transparent"
                   )}
-                  style={{ fontSize: '16px' }}
+                  style={{ fontSize: '16px', boxShadow: 'none' }}
                 >
                   {item.name}
                 </Link>
