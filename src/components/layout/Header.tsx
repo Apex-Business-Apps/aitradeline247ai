@@ -88,7 +88,7 @@ export const Header: React.FC = () => {
         paddingRight: 'max(1rem, env(safe-area-inset-right))'
       }}
     >
-      <div data-header-inner className="container h-full">
+      <div data-header-inner className="container h-full flex items-center justify-between gap-4">
         {/* Logo & Badge */}
         <div data-slot="left" className="flex items-center gap-3">
           <Logo className="h-8 w-auto" />
