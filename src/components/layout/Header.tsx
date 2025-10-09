@@ -5,17 +5,14 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { Menu, X, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 const navigationItems = [{
-  name: 'Home',
-  href: '/'
-}, {
   name: 'Features',
   href: '/features'
 }, {
   name: 'Pricing',
-  href: '/pricing'
+  href: '/pricing#no-monthly'
 }, {
   name: 'Compare',
   href: '/compare'
@@ -52,13 +49,6 @@ export const Header: React.FC = () => {
     isAdmin
   } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  const isActivePath = (href: string) => {
-    if (href === '/') return location.pathname === '/';
-    return location.pathname.startsWith(href);
-  };
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -66,83 +56,67 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header data-site-header className={cn('sticky z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300')} style={{
+  return <header data-site-header className={cn('sticky z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{
       top: 'max(0px, var(--sat))',
-      height: 'clamp(56px, 8vw, 64px)'
+      height: '3.5rem'
     }} data-lovable-lock="permanent">
-      <div data-header-inner className="container flex items-center justify-between" data-lovable-lock="permanent">
-        {/* Logo & Badge */}
+      <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
+        {/* Home Button & Badge */}
         <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
-          <Logo variant="icon" size="sm" className="cursor-pointer" onClick={() => navigate('/')} aria-label="TradeLine 24/7 home" />
+          <Button 
+            variant="default" 
+            size={isScrolled ? 'sm' : 'default'}
+            onClick={() => navigate('/')} 
+            className="hover-scale transition-all duration-300" 
+            aria-label="Go to homepage" 
+            data-lovable-lock="permanent"
+          >
+            Home
+          </Button>
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="h-[28px] sm:h-[32px] w-auto"
-            width="78"
-            height="32"
+            className="h-[45px] sm:h-[60px] lg:h-[65px] w-auto"
+            width="156"
+            height="65"
             loading="eager"
-            role="img"
             data-lovable-lock="permanent"
           />
         </div>
 
         {/* Desktop Navigation */}
-        <nav data-slot="center" role="navigation" aria-label="Primary navigation" className="hidden md:flex animate-fade-in" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
-          <ul className="flex items-center gap-5 lg:gap-6">
-            {navigationItems.map((item, index) => {
-              const isActive = isActivePath(item.href);
-              return (
-                <li key={item.name}>
-                  <Link 
-                    to={item.href} 
-                    className={cn(
-                      "inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                      "min-w-[44px] min-h-[44px]",
-                      isActive 
-                        ? "bg-primary/12 text-foreground" 
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                    )}
-                    aria-current={isActive ? "page" : undefined}
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
+        <nav data-slot="center" aria-label="Primary" className="hidden md:flex animate-fade-in" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
+          <NavigationMenu data-lovable-lock="permanent">
+            <NavigationMenuList data-lovable-lock="permanent">
+            {navigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
+                <NavigationMenuLink asChild>
+                  <Link to={item.href} className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 story-link hover-scale" style={{
+                  animationDelay: `${index * 100}ms`
+                }}>
                     {item.name}
                   </Link>
-                </li>
-              );
-            })}
+                </NavigationMenuLink>
+              </NavigationMenuItem>)}
             {/* Admin-only navigation items */}
-            {isAdmin() && adminNavigationItems.map((item, index) => {
-              const isActive = isActivePath(item.href);
-              return (
-                <li key={item.name}>
-                  <Link 
-                    to={item.href} 
-                    className={cn(
-                      "inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                      "min-w-[44px] min-h-[44px]",
-                      isActive
-                        ? "bg-primary/20 text-primary"
-                        : "bg-primary/10 text-primary hover:bg-primary/15"
-                    )}
-                    aria-current={isActive ? "page" : undefined}
-                    style={{ animationDelay: `${(navigationItems.length + index) * 100}ms` }}
-                  >
+            {isAdmin() && adminNavigationItems.map((item, index) => <NavigationMenuItem key={item.name}>
+                <NavigationMenuLink asChild>
+                  <Link to={item.href} className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-primary/10 px-4 py-2 text-sm font-medium transition-all duration-300 hover:bg-primary/20 hover:text-primary focus:bg-primary/20 focus:text-primary focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-primary/30 data-[state=open]:bg-primary/30 story-link hover-scale text-primary" style={{
+                  animationDelay: `${(navigationItems.length + index) * 100}ms`
+                }}>
                     {item.name}
                   </Link>
-                </li>
-              );
-            })}
-          </ul>
+                </NavigationMenuLink>
+              </NavigationMenuItem>)}
+          </NavigationMenuList>
+        </NavigationMenu>
         </nav>
 
-        {/* Locale & Auth */}
-        <div data-slot="right" className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
+        {/* Enhanced CTA Button & Mobile Menu */}
+        <div data-slot="right" className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
           <LanguageSwitcher data-lovable-lock="permanent" />
           
-          {/* Mobile Menu Button */}
-          <button className="md:hidden p-2 rounded-md hover:bg-accent transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle mobile menu" aria-expanded={isMobileMenuOpen}>
+          {/* Enhanced Mobile Menu Button */}
+          <button className="md:hidden p-2 rounded-md hover:bg-accent transition-all duration-300 hover-scale" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle mobile menu">
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
@@ -151,74 +125,34 @@ export const Header: React.FC = () => {
                 <span className="text-sm text-muted-foreground hidden sm:block">
                   Welcome, {user.user_metadata?.display_name || user.email}
                 </span>
-                {userRole && <span className={cn("text-xs px-2 py-1 rounded-full font-medium hidden sm:block transition-all duration-200", isAdmin() ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200")}>
+                {userRole && <span className={cn("text-xs px-2 py-1 rounded-full font-medium hidden sm:block transition-all duration-300", isAdmin() ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200")}>
                     {userRole.toUpperCase()}
                   </span>}
               </div>
-              <Button 
-                variant="outline" 
-                size="default"
-                onClick={() => signOut()} 
-                className="h-9 rounded-xl border transition-all duration-200 min-w-[44px] min-h-[44px]"
-              >
+              <Button variant="outline" size={isScrolled ? 'sm' : 'default'} onClick={() => signOut()} className="hover-scale transition-all duration-300">
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Sign Out</span>
               </Button>
-            </div> : <Button 
-              variant="success" 
-              size="default"
-              onClick={() => navigate('/auth')} 
-              className="h-9 rounded-xl border border-primary/20 transition-all duration-200 min-h-[44px]"
-            >
+            </div> : <Button variant="success" size={isScrolled ? 'sm' : 'default'} onClick={() => navigate('/auth')} className="hover-scale transition-all duration-300 shadow-lg hover:shadow-xl min-h-[44px]">
               Login
             </Button>}
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Enhanced Mobile Navigation with Slide Animation */}
       {isMobileMenuOpen && <div className="md:hidden border-t bg-background/95 backdrop-blur animate-slide-in-right">
-          <nav role="navigation" aria-label="Mobile navigation" className="container py-4 space-y-2">
-            {navigationItems.map((item, index) => {
-              const isActive = isActivePath(item.href);
-              return (
-                <Link 
-                  key={item.name} 
-                  to={item.href} 
-                  className={cn(
-                    "block px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 animate-fade-in min-h-[44px]",
-                    isActive
-                      ? "bg-primary/12 text-foreground"
-                      : "hover:bg-accent hover:text-accent-foreground"
-                  )}
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  aria-current={isActive ? "page" : undefined}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
+          <nav className="container py-4 space-y-2">
+            {navigationItems.map((item, index) => <Link key={item.name} to={item.href} className="block px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-all duration-300 hover-scale animate-fade-in" onClick={() => setIsMobileMenuOpen(false)} style={{
+          animationDelay: `${index * 100}ms`
+        }}>
+                {item.name}
+              </Link>)}
             {/* Admin-only mobile navigation items */}
-            {isAdmin() && adminNavigationItems.map((item, index) => {
-              const isActive = isActivePath(item.href);
-              return (
-                <Link 
-                  key={item.name} 
-                  to={item.href} 
-                  className={cn(
-                    "block px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 animate-fade-in min-h-[44px]",
-                    isActive
-                      ? "bg-primary/20 text-primary"
-                      : "bg-primary/10 hover:bg-primary/15 text-primary"
-                  )}
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  aria-current={isActive ? "page" : undefined}
-                  style={{ animationDelay: `${(navigationItems.length + index) * 100}ms` }}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
+            {isAdmin() && adminNavigationItems.map((item, index) => <Link key={item.name} to={item.href} className="block px-4 py-2 text-sm font-medium rounded-md bg-primary/10 hover:bg-primary/20 text-primary transition-all duration-300 hover-scale animate-fade-in" onClick={() => setIsMobileMenuOpen(false)} style={{
+          animationDelay: `${(navigationItems.length + index) * 100}ms`
+        }}>
+                {item.name}
+              </Link>)}
           </nav>
         </div>}
     </header>;
