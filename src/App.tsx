@@ -20,6 +20,7 @@ import { RagSearchDrawer } from "@/components/rag/RagSearchDrawer";
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
 import LayoutCanon from "@/components/LayoutCanon";
+import { Header } from "@/components/layout/Header";
 import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
 import ClientDashboard from "./pages/ClientDashboard";
@@ -73,6 +74,7 @@ const AppWithMonitoring = () => {
       <WebVitalsReporter />
       <LayoutCanon />
       <SmokeChecks />
+      <Header />
       <Routes>
         <Route path="/" element={<main id="main"><Index /></main>} />
         <Route path="/auth" element={<main id="main"><Auth /></main>} />
@@ -110,6 +112,10 @@ const AppWithMonitoring = () => {
         <Route path="/ops/messaging-health" element={<main id="main"><MessagingHealth /></main>} />
         <Route path="/ops/numbers/onboard" element={<main id="main"><NumberOnboarding /></main>} />
         <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
+        
+        {/* Dashboard alias - 301 redirect */}
+        <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
+        <Route path="/app/dashboard" element={<main id="main"><ClientDashboard /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
