@@ -147,7 +147,7 @@ serve(async (req) => {
       }
     };
 
-    openaiWs.onmessage = (event) => {
+    openaiWs.onmessage = async (event) => {
       const data = JSON.parse(event.data);
       lastActivityTime = Date.now();
 
@@ -163,6 +163,37 @@ serve(async (req) => {
         }));
       } else if (data.type === 'response.audio_transcript.delta') {
         transcript += data.delta;
+        
+        // Check guardrails after every transcript update
+        if (profile?.escalation) {
+          const { checkGuardrails, logGuardrailTrigger } = await import('../_shared/guardrails.ts');
+          const guardrailCheck = checkGuardrails(transcript, capturedFields, profile.escalation);
+          
+          if (guardrailCheck.should_escalate) {
+            console.log('🚨 Guardrail triggered:', guardrailCheck.reason);
+            
+            // Log the trigger
+            await logGuardrailTrigger(supabase, callSid, guardrailCheck);
+            
+            // Force bridge to human
+            socket.send(JSON.stringify({
+              event: 'clear',
+              streamSid: streamSid
+            }));
+            
+            // Send TwiML redirect to bridge
+            socket.send(JSON.stringify({
+              event: 'mark',
+              streamSid: streamSid,
+              mark: {
+                name: 'escalate_now'
+              }
+            }));
+            
+            return;
+          }
+        }
+        
       } else if (data.type === 'response.done') {
         // Extract captured fields from response
         if (data.response?.output) {
@@ -170,6 +201,17 @@ serve(async (req) => {
             capturedFields = JSON.parse(data.response.output);
           } catch {}
         }
+        
+        // Log for drift detection
+        await supabase.from('voice_transcripts').insert({
+          call_sid: callSid,
+          transcript: transcript,
+          captured_fields: capturedFields,
+          model_output: data.response?.output,
+          used_kb: ragSnippets.length > 0,
+          kb_sources: ragSnippets.map(s => s.source_title).filter(Boolean)
+        });
+        
       } else if (data.type === 'error') {
         console.error('OpenAI error:', data.error);
         

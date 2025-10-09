@@ -3160,6 +3160,45 @@ export type Database = {
         }
         Relationships: []
       }
+      voice_transcripts: {
+        Row: {
+          call_sid: string
+          captured_fields: Json | null
+          created_at: string
+          drift_flagged: boolean | null
+          drift_reason: string | null
+          id: string
+          kb_sources: string[] | null
+          model_output: string | null
+          transcript: string
+          used_kb: boolean | null
+        }
+        Insert: {
+          call_sid: string
+          captured_fields?: Json | null
+          created_at?: string
+          drift_flagged?: boolean | null
+          drift_reason?: string | null
+          id?: string
+          kb_sources?: string[] | null
+          model_output?: string | null
+          transcript: string
+          used_kb?: boolean | null
+        }
+        Update: {
+          call_sid?: string
+          captured_fields?: Json | null
+          created_at?: string
+          drift_flagged?: boolean | null
+          drift_reason?: string | null
+          id?: string
+          kb_sources?: string[] | null
+          model_output?: string | null
+          transcript?: string
+          used_kb?: boolean | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       appointments_safe: {
