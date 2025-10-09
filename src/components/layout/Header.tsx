@@ -88,14 +88,14 @@ export const Header: React.FC = () => {
         paddingRight: 'max(1rem, env(safe-area-inset-right))'
       }}
     >
-      <div data-header-inner className="container h-full flex items-center justify-between gap-4">
+      <div data-header-inner className="container h-full">
         {/* Logo & Badge */}
         <div data-slot="left" className="flex items-center gap-3">
           <Logo className="h-8 w-auto" />
           <img 
             src="/assets/brand/badges/built-in-canada.svg" 
             alt="Built in Canada badge" 
-            className="h-7 md:h-8 w-auto mx-3"
+            className="h-7 md:h-8 w-auto"
             loading="eager"
             role="presentation"
           />
