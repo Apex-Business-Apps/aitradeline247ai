@@ -8,6 +8,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 const navigationItems = [{
+  name: 'Home',
+  href: '/'
+}, {
   name: 'Features',
   href: '/features'
 }, {
@@ -56,27 +59,15 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header data-site-header className={cn('sticky z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{
-      top: 'max(0px, var(--sat))',
-      height: '3.5rem'
-    }} data-lovable-lock="permanent">
-      <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
-        {/* Home Button & Badge */}
-        <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
-          <Button 
-            variant="default" 
-            size={isScrolled ? 'sm' : 'default'}
-            onClick={() => navigate('/')} 
-            className="hover-scale transition-all duration-300" 
-            aria-label="Go to homepage" 
-            data-lovable-lock="permanent"
-          >
-            Home
-          </Button>
+  return <header data-site-header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-14 md:h-16" data-lovable-lock="permanent">
+      <div data-header-inner className="container h-full flex items-center justify-between gap-4" data-lovable-lock="permanent">
+        {/* Logo & Badge */}
+        <div data-slot="left" className="flex items-center gap-3" data-lovable-lock="permanent">
+          <Logo className="h-8 w-auto" />
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="h-[45px] sm:h-[60px] lg:h-[65px] w-auto"
+            className="h-7 w-auto"
             width="156"
             height="65"
             loading="eager"
