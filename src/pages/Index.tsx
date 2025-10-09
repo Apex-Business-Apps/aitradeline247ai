@@ -12,7 +12,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
 import LayoutCanon from "@/components/LayoutCanon";
-import backgroundImage from "@/assets/BACKGROUND_IMAGE1.svg";
+import backgroundImage from "@/assets/BACKGROUND_IMAGE2.svg";
 
 const Index = () => {
   const { trackPageView } = useAnalytics();
