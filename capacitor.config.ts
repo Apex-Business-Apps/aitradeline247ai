@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.555a49714138435ea7eedfa3d713d1d3',
+  appId: 'com.tradeline247ai.app',
   appName: 'TradeLine 24/7',
   webDir: 'dist',
   server: {
