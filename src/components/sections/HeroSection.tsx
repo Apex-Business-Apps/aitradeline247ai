@@ -14,9 +14,9 @@ export const HeroSection = () => {
       {/* Premium base gradient (bottom-most) */}
       <div className="absolute inset-0" style={{background: 'var(--gradient-premium)'}}></div>
       {/* Soft background fade (reduced opacity further) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background/65 via-transparent to-background/61"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background/72 via-transparent to-background/67"></div>
       {/* Saturated orange wash (top of background layers) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/100 via-brand-orange-light/93 to-brand-orange/81"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/100 via-brand-orange-light/100 to-brand-orange/89"></div>
       
       {/* Enhanced Glowing Orbs with Animation */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/40 rounded-full blur-3xl animate-pulse"></div>
