@@ -94,10 +94,6 @@ const Index = () => {
         />
         <OrganizationSchema />
         
-        <div className="backdrop-blur-sm bg-background/80">
-          <Header />
-        </div>
-        
         <main className="flex-1">
           <div className="backdrop-blur-sm bg-background/75">
             <HeroRoiDuo />
