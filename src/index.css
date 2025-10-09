@@ -89,7 +89,7 @@ All colors MUST be HSL.
     --premium-backdrop: backdrop-blur(12px) saturate(180%);
     
     /* Canonical Background Image */
-    --bg-pattern-1: url('/src/assets/BACKGROUND_IMAGE1.svg');
+    --bg-pattern-1: url('/assets/BACKGROUND_IMAGE1.svg');
     
     /* Premium Gradients - Sophisticated Color Blends */
     --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-light) / 0.25));
