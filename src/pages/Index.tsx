@@ -90,30 +90,30 @@ const Index = () => {
         />
         <OrganizationSchema />
         
-        <div className="backdrop-blur-[2px] bg-background/30">
+        <div className="backdrop-blur-[2px] bg-background/50">
           <Header />
         </div>
         
         <main className="flex-1">
-          <div className="backdrop-blur-[2px] bg-background/20">
+          <div className="backdrop-blur-[2px] bg-background/40">
             <HeroRoiDuo />
           </div>
-          <div className="backdrop-blur-[2px] bg-background/20">
+          <div className="backdrop-blur-[2px] bg-background/40">
             <BenefitsGrid />
           </div>
-        <div className="backdrop-blur-[2px] bg-background/25">
+        <div className="backdrop-blur-[2px] bg-background/45">
           <ImpactStrip />
         </div>
-        <div className="backdrop-blur-[2px] bg-background/25">
+        <div className="backdrop-blur-[2px] bg-background/45">
           <HowItWorks />
         </div>
         </main>
         
-        <div className="backdrop-blur-[2px] bg-background/25">
+        <div className="backdrop-blur-[2px] bg-background/45">
           <TrustBadgesSlim />
         </div>
         
-        <div className="backdrop-blur-[2px] bg-background/30">
+        <div className="backdrop-blur-[2px] bg-background/50">
           <Footer />
         </div>
         
