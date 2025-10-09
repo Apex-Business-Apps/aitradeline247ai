@@ -12,6 +12,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
 import LayoutCanon from "@/components/LayoutCanon";
+import backgroundImage from "@/assets/BACKGROUND_IMAGE1.svg";
 
 const Index = () => {
   const { trackPageView } = useAnalytics();
@@ -23,7 +24,16 @@ const Index = () => {
   return (
     <>
       <LayoutCanon />
-      <div className="min-h-screen flex flex-col relative">
+      <div 
+        className="min-h-screen flex flex-col relative"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
       {/* Content with translucency */}
       <div className="relative z-10">
         <SEOHead 
