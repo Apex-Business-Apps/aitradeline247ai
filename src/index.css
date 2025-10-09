@@ -30,6 +30,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body {
@@ -41,6 +42,10 @@ body {
   font-feature-settings: 'cv11', 'ss01';
   font-variant: normal;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-top: var(--sat);
+  padding-bottom: var(--sab);
+  background-color: hsl(var(--background));
 }
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
@@ -49,6 +54,12 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* iOS Safe Area Insets */
+    --sat: env(safe-area-inset-top);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+    --sar: env(safe-area-inset-right);
+    
     /* Brand Orange Colors from Logo - Maximum Saturation + 45% Vibrancy + 5% Hue */
     --brand-orange-primary: 21 100% 67%;
     --brand-orange-light: 29 100% 95%;
@@ -220,6 +231,36 @@ All colors MUST be HSL.
 
 :where(a, button, [role="button"], input, select, textarea) {
   min-height: 44px;
+}
+
+/* iOS Mobile Polish - Input Zoom Prevention & Keyboard Handling */
+input, select, textarea {
+  font-size: 16px;
+}
+
+button, .cta, [role="button"] {
+  padding-bottom: calc(1rem + var(--sab));
+}
+
+/* iOS Mobile Polish - Image Optimization */
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* iOS Mobile Polish - Backdrop Filter Support */
+@supports (backdrop-filter: blur(1px)) {
+  .glass {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* iOS Mobile Polish - True Height Units */
+.min-h-screen {
+  min-height: 100svh;  /* stable viewport */
+  min-height: 100dvh;  /* dynamic viewport (iOS 17+) */
+  min-height: 100vh;   /* fallback */
 }
 
 /* Responsive tables: full-width, scrollable on overflow */
