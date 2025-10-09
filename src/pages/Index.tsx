@@ -24,20 +24,6 @@ const Index = () => {
     <>
       <LayoutCanon />
       <div className="min-h-screen flex flex-col relative">
-      {/* Background Image Layer */}
-      <div 
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: 'var(--bg-pattern-1)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          containIntrinsicSize: '100vw 100vh'
-        }}
-        role="presentation"
-        aria-hidden="true"
-      />
-      
       {/* Content with translucency */}
       <div className="relative z-10">
         <SEOHead 
