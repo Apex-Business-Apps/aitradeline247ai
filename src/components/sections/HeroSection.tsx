@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import officialLogo from '@/assets/official-logo.svg';
+import { BACKGROUND_IMAGE1 } from '@/brand/vars';
 
 export const HeroSection = () => {
   return (
     <section className="relative bg-gradient-orange-subtle text-center overflow-hidden pt-safe pb-safe px-safe"  style={{ 
+      backgroundImage: `url(${BACKGROUND_IMAGE1})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
       paddingTop: 'max(env(safe-area-inset-top), 2rem)',
       paddingBottom: 'max(env(safe-area-inset-bottom), 2rem)',
       paddingLeft: 'max(env(safe-area-inset-left), 1rem)',
