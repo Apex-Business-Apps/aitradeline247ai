@@ -63,7 +63,6 @@ const queryClient = new QueryClient();
 
 // App monitoring wrapper component
 const AppWithMonitoring = () => {
-  console.log('[AppWithMonitoring] Rendering...');
   // Initialize session security monitoring
   useSessionSecurity();
 

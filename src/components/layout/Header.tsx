@@ -7,21 +7,21 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const navigationItems = [
-  { name: 'Home', href: '/' },
   { name: 'Features', href: '/features' },
   { name: 'Pricing', href: '/pricing' },
-  { name: 'Compare', href: '/compare' },
-  { name: 'Security', href: '/security' },
   { name: 'FAQ', href: '/faq' },
-  { name: 'Contact', href: '/contact' }
+  { name: 'Contact', href: '/contact' },
+  { name: 'Compare', href: '/compare' },
+  { name: 'Security', href: '/security' }
 ];
+
 export const Header: React.FC = () => {
-  console.log('[Header] Rendering...');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log('[Header] Initialized, location:', location.pathname);
+
+  const isHomeActive = location.pathname === '/';
 
   return (
     <header 
@@ -41,45 +41,47 @@ export const Header: React.FC = () => {
       `}</style>
       <div 
         data-header-inner 
-        className="mx-auto px-4"
+        className="mx-auto px-4 h-full"
         style={{
           display: 'grid',
           gridTemplateColumns: 'auto 1fr auto',
           alignItems: 'center',
-          gap: '0.5rem',
-          height: '100%',
+          gap: '1rem',
           paddingInline: 'max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right))'
         }}
       >
-        {/* LEFT: Logo + Badge (decorative, not in nav) */}
-        <div data-slot="left" className="flex items-center gap-3" style={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}>
-          <Link to="/" className="flex items-center gap-3">
-            <img 
-              src="/assets/official-logo.svg" 
-              alt="TradeLine 24/7 Logo" 
-              className="h-8 w-auto"
-              style={{ height: '32px' }}
-              loading="eager"
-            />
+        {/* LEFT: Home button + Badge */}
+        <div data-slot="left" className="flex items-center gap-3" style={{ whiteSpace: 'nowrap' }}>
+          <Link
+            to="/"
+            className={cn(
+              "px-6 py-2 text-base font-medium rounded-full transition-colors min-h-[44px] flex items-center justify-center",
+              isHomeActive 
+                ? "bg-[hsl(var(--brand-orange-primary))] text-white" 
+                : "bg-[hsl(var(--brand-orange-primary)/0.12)] text-[hsl(var(--brand-orange-primary))] hover:bg-[hsl(var(--brand-orange-primary)/0.2)]"
+            )}
+            style={{ boxShadow: 'none' }}
+          >
+            Home
           </Link>
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
-            alt="Built in Canada badge" 
-            className="h-7 w-auto"
-            style={{ height: '28px' }}
+            alt="Built in Canada" 
+            className="h-8 w-8 rounded-full"
+            style={{ height: '32px', width: '32px' }}
             loading="eager"
           />
         </div>
 
-        {/* CENTER: Nav */}
+        {/* CENTER: Nav (without Home) */}
         <nav 
           data-slot="center" 
           role="navigation" 
           aria-label="Main navigation"
           className="hidden md:flex justify-center"
-          style={{ justifySelf: 'center', minWidth: 0 }}
+          style={{ justifySelf: 'center' }}
         >
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-6">
             {navigationItems.map((item) => {
               const isActive = location.pathname === item.href || 
                              (item.href !== '/' && location.pathname.startsWith(item.href));
@@ -89,13 +91,13 @@ export const Header: React.FC = () => {
                   to={item.href}
                   aria-current={isActive ? 'page' : undefined}
                   className={cn(
-                    "px-3 py-2 text-sm font-medium rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center",
-                    "hover:bg-[hsl(var(--brand-orange-primary)/0.12)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[hsl(var(--brand-orange-primary))]",
+                    "px-3 py-2 text-base font-medium transition-colors min-h-[44px] flex items-center justify-center",
+                    "hover:text-[hsl(var(--brand-orange-primary))] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[hsl(var(--brand-orange-primary))]",
                     isActive 
-                      ? "bg-[hsl(var(--brand-orange-primary)/0.14)] text-[hsl(var(--brand-orange-primary))] shadow-none" 
-                      : "text-foreground bg-transparent"
+                      ? "text-[hsl(var(--brand-orange-primary))]" 
+                      : "text-foreground"
                   )}
-                  style={{ fontSize: '16px', boxShadow: 'none' }}
+                  style={{ boxShadow: 'none' }}
                 >
                   {item.name}
                 </Link>
