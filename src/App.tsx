@@ -113,6 +113,7 @@ const AppWithMonitoring = () => {
         <Route path="/ops/messaging-health" element={<main id="main"><MessagingHealth /></main>} />
         <Route path="/ops/number-onboarding" element={<main id="main"><NumberOnboarding /></main>} />
         <Route path="/ops/numbers/onboard" element={<main id="main"><NumberOnboard /></main>} />
+        <Route path="/onboarding/number" element={<main id="main"><NumberOnboard /></main>} />
         <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
