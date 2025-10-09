@@ -66,29 +66,30 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header data-site-header className={cn('sticky z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300')} style={{
+  return <header data-site-header className="sticky z-50 w-full border-b bg-background" style={{
       top: 'max(0px, var(--sat))',
       height: 'clamp(56px, 8vw, 64px)'
     }} data-lovable-lock="permanent">
       <div data-header-inner className="container flex items-center justify-between" data-lovable-lock="permanent">
         {/* Logo & Badge */}
-        <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
+        <div data-slot="left" className="flex items-center gap-3" data-lovable-lock="permanent">
           <Logo variant="icon" size="sm" className="cursor-pointer" onClick={() => navigate('/')} aria-label="TradeLine 24/7 home" />
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
-            className="h-[28px] sm:h-[32px] w-auto"
+            className="h-[28px] sm:h-[32px] w-auto mx-3"
             width="78"
             height="32"
             loading="eager"
             role="img"
+            aria-hidden="true"
             data-lovable-lock="permanent"
           />
         </div>
 
         {/* Desktop Navigation */}
-        <nav data-slot="center" role="navigation" aria-label="Primary navigation" className="hidden md:flex animate-fade-in" style={{ animationDelay: '200ms' }} data-lovable-lock="permanent">
-          <ul className="flex items-center gap-5 lg:gap-6">
+        <nav data-slot="center" role="navigation" aria-label="Primary navigation" className="hidden md:flex" data-lovable-lock="permanent">
+          <ul className="flex items-center gap-5 lg:gap-6" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
             {navigationItems.map((item, index) => {
               const isActive = isActivePath(item.href);
               return (
@@ -96,15 +97,14 @@ export const Header: React.FC = () => {
                   <Link 
                     to={item.href} 
                     className={cn(
-                      "inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                      "inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       "min-w-[44px] min-h-[44px]",
                       isActive 
                         ? "bg-primary/12 text-foreground" 
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}
                     aria-current={isActive ? "page" : undefined}
-                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     {item.name}
                   </Link>
@@ -119,15 +119,14 @@ export const Header: React.FC = () => {
                   <Link 
                     to={item.href} 
                     className={cn(
-                      "inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                      "inline-flex items-center justify-center h-9 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                       "min-w-[44px] min-h-[44px]",
                       isActive
                         ? "bg-primary/20 text-primary"
                         : "bg-primary/10 text-primary hover:bg-primary/15"
                     )}
                     aria-current={isActive ? "page" : undefined}
-                    style={{ animationDelay: `${(navigationItems.length + index) * 100}ms` }}
                   >
                     {item.name}
                   </Link>
@@ -138,7 +137,7 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Locale & Auth */}
-        <div data-slot="right" className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '400ms' }} data-lovable-lock="permanent">
+        <div data-slot="right" className="flex items-center gap-3" data-lovable-lock="permanent">
           <LanguageSwitcher data-lovable-lock="permanent" />
           
           {/* Mobile Menu Button */}
@@ -159,7 +158,7 @@ export const Header: React.FC = () => {
                 variant="outline" 
                 size="default"
                 onClick={() => signOut()} 
-                className="h-9 rounded-xl border transition-all duration-200 min-w-[44px] min-h-[44px]"
+                className="h-9 rounded-xl border transition-colors duration-200 min-w-[44px] min-h-[44px]"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline ml-2">Sign Out</span>
@@ -168,7 +167,7 @@ export const Header: React.FC = () => {
               variant="success" 
               size="default"
               onClick={() => navigate('/auth')} 
-              className="h-9 rounded-xl border border-primary/20 transition-all duration-200 min-h-[44px]"
+              className="h-9 rounded-xl border border-primary/20 transition-colors duration-200 min-h-[44px]"
             >
               Login
             </Button>}
@@ -176,7 +175,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Mobile Navigation */}
-      {isMobileMenuOpen && <div className="md:hidden border-t bg-background/95 backdrop-blur animate-slide-in-right">
+      {isMobileMenuOpen && <div className="md:hidden border-t bg-background">
           <nav role="navigation" aria-label="Mobile navigation" className="container py-4 space-y-2">
             {navigationItems.map((item, index) => {
               const isActive = isActivePath(item.href);
@@ -185,14 +184,13 @@ export const Header: React.FC = () => {
                   key={item.name} 
                   to={item.href} 
                   className={cn(
-                    "block px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 animate-fade-in min-h-[44px]",
+                    "block px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 min-h-[44px]",
                     isActive
                       ? "bg-primary/12 text-foreground"
                       : "hover:bg-accent hover:text-accent-foreground"
                   )}
                   onClick={() => setIsMobileMenuOpen(false)} 
                   aria-current={isActive ? "page" : undefined}
-                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {item.name}
                 </Link>
@@ -206,14 +204,13 @@ export const Header: React.FC = () => {
                   key={item.name} 
                   to={item.href} 
                   className={cn(
-                    "block px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 animate-fade-in min-h-[44px]",
+                    "block px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 min-h-[44px]",
                     isActive
                       ? "bg-primary/20 text-primary"
                       : "bg-primary/10 hover:bg-primary/15 text-primary"
                   )}
                   onClick={() => setIsMobileMenuOpen(false)} 
                   aria-current={isActive ? "page" : undefined}
-                  style={{ animationDelay: `${(navigationItems.length + index) * 100}ms` }}
                 >
                   {item.name}
                 </Link>
