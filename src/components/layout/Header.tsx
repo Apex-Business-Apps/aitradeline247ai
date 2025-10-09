@@ -36,6 +36,9 @@ const adminNavigationItems = [{
   name: 'Phone Apps',
   href: '/phone-apps'
 }, {
+  name: 'Numbers',
+  href: '/ops/numbers/onboard'
+}, {
   name: 'Settings',
   href: '/ops/voice'
 }];
