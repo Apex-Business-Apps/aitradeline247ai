@@ -38,11 +38,15 @@ jobs:
           SMOKE_URL="https://github.com/${{ github.repository }}/actions/workflows/synthetic-smoke.yml"
           echo "smoke_url=$SMOKE_URL" >> $GITHUB_OUTPUT
       
-      - name: Get Twilio evidence link
+      - name: Get evidence links
         id: evidence
         run: |
           EVIDENCE_URL="https://tradeline247ai.com/ops/twilio-evidence"
+          PRIVACY_URL="https://tradeline247ai.com/privacy"
+          POLICY_KIT_URL="https://github.com/${{ github.repository }}/tree/main/ops/policy-kit"
           echo "evidence_url=$EVIDENCE_URL" >> $GITHUB_OUTPUT
+          echo "privacy_url=$PRIVACY_URL" >> $GITHUB_OUTPUT
+          echo "policy_kit_url=$POLICY_KIT_URL" >> $GITHUB_OUTPUT
       
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -53,10 +57,16 @@ jobs:
           body: |
             ## Release ${{ github.ref_name }}
             
-            ### Verification
+            **TradeLine 24/7** — Your 24/7 Ai Receptionist
+            
+            ### Verification & Evidence
             
             - **Synthetic Smoke Tests:** [${{ steps.smoke-run.outputs.smoke_url }}](${{ steps.smoke-run.outputs.smoke_url }})
-            - **Twilio Evidence Dashboard:** [${{ steps.evidence.outputs.evidence_url }}](${{ steps.evidence.outputs.evidence_url }})
+            - **Twilio Evidence Dashboard (24h tiles):** [${{ steps.evidence.outputs.evidence_url }}](${{ steps.evidence.outputs.evidence_url }})
+            - **Privacy Policy:** [${{ steps.evidence.outputs.privacy_url }}](${{ steps.evidence.outputs.privacy_url }})
+            - **Store Policy Kit:** [${{ steps.evidence.outputs.policy_kit_url }}](${{ steps.evidence.outputs.policy_kit_url }})
+              - [Apple Privacy Details](https://github.com/${{ github.repository }}/blob/main/ops/policy-kit/apple_privacy.md)
+              - [Play Data Safety](https://github.com/${{ github.repository }}/blob/main/ops/policy-kit/play_data_safety.md)
             
             ### Checksums
             
