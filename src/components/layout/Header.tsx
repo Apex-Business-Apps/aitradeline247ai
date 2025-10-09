@@ -16,10 +16,12 @@ const navigationItems = [
   { name: 'Contact', href: '/contact' }
 ];
 export const Header: React.FC = () => {
+  console.log('[Header] Rendering...');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  console.log('[Header] Initialized, location:', location.pathname);
 
   return (
     <header 

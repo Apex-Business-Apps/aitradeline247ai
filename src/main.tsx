@@ -21,11 +21,13 @@ if (import.meta.env.PROD && typeof window !== 'undefined') {
   }
 }
 
+console.log('[main.tsx] Starting app...');
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
   </StrictMode>
 );
+console.log('[main.tsx] App mounted');
 
 watchRoiTableCanon();
 initPWAInstall();
