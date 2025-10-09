@@ -32,7 +32,7 @@ const Index = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          containIntrinsicSize: '100vw 100vh'
+          containIntrinsicSize: '100vw 100svh'
         }}
         role="presentation"
         aria-hidden="true"
