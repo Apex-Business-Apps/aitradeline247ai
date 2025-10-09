@@ -82,7 +82,7 @@ export const Header: React.FC = () => {
               const isActive = location.pathname === item.href || 
                              (item.href !== '/' && location.pathname.startsWith(item.href));
               return (
-                  <Link
+                <Link
                   key={item.name}
                   to={item.href}
                   aria-current={isActive ? 'page' : undefined}
