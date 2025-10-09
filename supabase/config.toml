@@ -1,1 +1,174 @@
 project_id = "hysvqdwmhxnblxfqnszn"
+
+# Edge Functions Configuration
+[functions.unsubscribe]
+verify_jwt = false  # Public endpoint for email unsubscribe
+
+[functions.ops-campaigns-create]
+verify_jwt = true  # Requires authentication
+
+[functions.ops-campaigns-send]
+verify_jwt = true  # Requires authentication
+
+[functions.sms-inbound]
+verify_jwt = false  # Twilio webhook
+
+[functions.sms-inbound-fallback]
+verify_jwt = false  # Twilio webhook fallback
+
+[functions.sms-status]
+verify_jwt = false  # Twilio webhook
+
+[functions.lookup-number]
+verify_jwt = true  # Requires authentication
+
+[functions.secure-lead-submission]
+verify_jwt = false  # Public form submission
+
+[functions.send-lead-email]
+verify_jwt = false  # Public email sending
+
+[functions.voice-answer]
+verify_jwt = false  # Twilio webhook
+
+[functions.voice-status]
+verify_jwt = false  # Twilio webhook
+
+[functions.voice-stream]
+verify_jwt = false  # Twilio media stream
+
+[functions.voice-consent]
+verify_jwt = false  # Twilio consent callback
+
+[functions.ops-activate-account]
+verify_jwt = true  # Admin only
+
+[functions.ops-voice-config-update]
+verify_jwt = true  # Admin only
+
+[functions.ops-twilio-list-numbers]
+verify_jwt = true  # Admin only
+
+[functions.ops-twilio-configure-webhooks]
+verify_jwt = true  # Admin only
+
+[functions.ops-twilio-test-webhook]
+verify_jwt = true  # Admin only
+
+[functions.ops-voice-health]
+verify_jwt = true  # Admin only
+
+[functions.ops-voice-slo]
+verify_jwt = true  # Admin only
+
+[functions.voice-action]
+verify_jwt = false  # Twilio DTMF callback
+
+[functions.send-transcript]
+verify_jwt = false  # Internal service call
+
+[functions.chat]
+verify_jwt = true  # Requires authentication
+
+[functions.dashboard-summary]
+verify_jwt = true  # Requires authentication
+
+[functions.rag-search]
+verify_jwt = true  # Requires authentication
+
+[functions.rag-answer]
+verify_jwt = true  # Requires authentication
+
+[functions.rag-ingest]
+verify_jwt = true  # Admin only
+
+[functions.ragz]
+verify_jwt = true  # Requires authentication
+
+[functions.secure-analytics]
+verify_jwt = false  # Public analytics tracking
+
+[functions.secure-ab-assign]
+verify_jwt = false  # Public A/B testing
+
+[functions.ab-convert]
+verify_jwt = false  # Public conversion tracking
+
+[functions.register-ab-session]
+verify_jwt = false  # Public session registration
+
+[functions.track-session-activity]
+verify_jwt = false  # Public session tracking
+
+[functions.validate-session]
+verify_jwt = true  # Requires authentication
+
+[functions.threat-detection-scan]
+verify_jwt = true  # Admin only
+
+[functions.check-password-breach]
+verify_jwt = true  # Requires authentication
+
+[functions.secure-rate-limit]
+verify_jwt = false  # Public rate limit checking
+
+[functions.start-trial]
+verify_jwt = true  # Authenticated users start/ensure trial
+
+[functions.secret-encrypt]
+verify_jwt = true  # Admin-only secret encryption/decryption
+
+[functions.contact-submit]
+verify_jwt = false  # Public contact form
+
+[functions.ops-leads-import]
+verify_jwt = true  # Admin-only lead import
+
+[functions.ops-followups-enable]
+verify_jwt = true  # Admin-only followup automation
+
+[functions.ops-followups-send]
+verify_jwt = true  # Admin-only followup sending
+
+[functions.ops-report-export]
+verify_jwt = true  # Admin-only report export
+
+[functions.ops-segment-warm50]
+verify_jwt = true  # Admin-only segment operations
+
+[functions.ops-send-warm50]
+verify_jwt = true  # Admin-only warm contact sending
+
+# PROMPT A & D: Canonical SMS webhooks
+[functions.webcomms-sms-reply]
+verify_jwt = false  # Twilio webhook - canonical SMS reply path
+
+[functions.webcomms-sms-status]
+verify_jwt = false  # Twilio webhook - canonical SMS status callback
+
+# PROMPT B: Number provisioning
+[functions.ops-twilio-buy-number]
+verify_jwt = true  # Admin only - buy and configure numbers
+
+[functions.ops-twilio-hosted-sms]
+verify_jwt = true  # Admin only - hosted SMS setup
+
+[functions.ops-twilio-create-port]
+verify_jwt = true  # Admin only - port order creation
+
+# PROMPT H: A2P compliance
+[functions.ops-twilio-a2p]
+verify_jwt = true  # Admin only - A2P workflow
+
+# PROMPT DF-1 & DF-2: Legacy webhook aliases (permanent)
+[functions.twilio-voice]
+verify_jwt = false  # Alias to /voice-answer
+
+[functions.twilio-status]
+verify_jwt = false  # Alias to /voice-status
+
+[functions.twilio-sms]
+verify_jwt = false  # Alias to /webcomms-sms-reply
+
+[functions.twilio-sms-status]
+verify_jwt = false  # Alias to /webcomms-sms-status
