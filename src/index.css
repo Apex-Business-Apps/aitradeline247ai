@@ -76,8 +76,7 @@ All colors MUST be HSL.
     --premium-backdrop: backdrop-blur(12px) saturate(180%);
     
     /* Canonical Background Image */
-    --bg-pattern-1: url('/src/assets/BACKGROUND_IMAGE1.svg');
-    --bg-pattern-opacity: 0.15;
+    /* --bg-pattern-1: url('/src/assets/BACKGROUND_IMAGE1.svg'); */
     
     /* Premium Gradients - Sophisticated Color Blends */
     --gradient-orange-subtle: linear-gradient(135deg, hsl(var(--brand-orange-primary) / 0.35), hsl(var(--brand-orange-light) / 0.25));
@@ -195,23 +194,6 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    background-image: var(--bg-pattern-1);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-  
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: hsl(var(--background) / 0.85);
-    z-index: -1;
-    pointer-events: none;
   }
 }
 
