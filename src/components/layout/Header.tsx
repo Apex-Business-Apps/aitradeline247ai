@@ -56,10 +56,7 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <header data-site-header className={cn('sticky z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{
-      top: 'max(0px, var(--sat))',
-      height: '3.5rem'
-    }} data-lovable-lock="permanent">
+  return <header data-site-header className={cn('sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300', isScrolled ? 'shadow-lg py-2' : 'py-4')} data-lovable-lock="permanent">
       <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
         {/* Home Button & Badge */}
         <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
