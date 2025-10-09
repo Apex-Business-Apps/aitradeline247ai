@@ -12,6 +12,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
 import LayoutCanon from "@/components/LayoutCanon";
+import backgroundImage from "@/assets/BACKGROUND_IMAGE1.svg";
 
 const Index = () => {
   const { trackPageView } = useAnalytics();
@@ -28,7 +29,7 @@ const Index = () => {
       <div 
         className="fixed inset-0 z-0"
         style={{
-          backgroundImage: 'var(--bg-pattern-1)',
+          backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
