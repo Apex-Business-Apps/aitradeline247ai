@@ -50,6 +50,7 @@ import CampaignManager from "./pages/CampaignManager";
 import CryptoInit from "./pages/ops/CryptoInit";
 import Activation from "./pages/ops/Activation";
 import VoiceSettings from "./pages/ops/VoiceSettings";
+import BusinessProfile from "./pages/ops/BusinessProfile";
 import TwilioWire from "./pages/ops/TwilioWire";
 import StagingTest from "./pages/ops/StagingTest";
 import VoiceHealth from "./pages/ops/VoiceHealth";
@@ -126,6 +127,7 @@ const AppWithMonitoring = () => {
         <Route path="/ops/crypto/init" element={<main id="main"><CryptoInit /></main>} />
         <Route path="/ops/activation" element={<main id="main"><Activation /></main>} />
         <Route path="/ops/voice" element={<main id="main"><VoiceSettings /></main>} />
+        <Route path="/ops/business-profile" element={<main id="main"><BusinessProfile /></main>} />
         <Route path="/ops/twilio/wire" element={<main id="main"><TwilioWire /></main>} />
         <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
         <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />

@@ -314,6 +314,57 @@ export type Database = {
         }
         Relationships: []
       }
+      business_profiles: {
+        Row: {
+          booking_rules: Json
+          brand_voice: Json
+          business_name: string
+          compliance: Json
+          created_at: string
+          escalation: Json
+          faq: Json
+          hours: Json
+          id: string
+          industry: string
+          organization_id: string
+          service_area: string | null
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          booking_rules?: Json
+          brand_voice?: Json
+          business_name: string
+          compliance?: Json
+          created_at?: string
+          escalation?: Json
+          faq?: Json
+          hours?: Json
+          id?: string
+          industry: string
+          organization_id: string
+          service_area?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          booking_rules?: Json
+          brand_voice?: Json
+          business_name?: string
+          compliance?: Json
+          created_at?: string
+          escalation?: Json
+          faq?: Json
+          hours?: Json
+          id?: string
+          industry?: string
+          organization_id?: string
+          service_area?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       call_lifecycle: {
         Row: {
           call_sid: string
@@ -3049,6 +3100,7 @@ export type Database = {
       voice_presets: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           label: string
           max_reply_seconds: number | null
@@ -3058,6 +3110,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id: string
           label: string
           max_reply_seconds?: number | null
@@ -3067,6 +3120,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           label?: string
           max_reply_seconds?: number | null

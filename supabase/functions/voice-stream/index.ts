@@ -28,17 +28,62 @@ serve(async (req) => {
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
   
-  // Get voice config and system prompt
+  // Get voice config
   const { data: config } = await supabase
     .from('voice_config')
     .select('*')
     .single();
 
-  const systemPrompt = config?.system_prompt || 
-    `You are TradeLine 24/7, an AI receptionist. Canadian English. Be warm, concise (≤15s per reply). 
+  // Get business profile
+  const { data: profile } = await supabase
+    .from('business_profiles')
+    .select('*')
+    .limit(1)
+    .single();
+
+  // Get caller's intent/query from call metadata (if available)
+  const { data: callLog } = await supabase
+    .from('call_logs')
+    .select('captured_fields')
+    .eq('call_sid', callSid)
+    .single();
+  
+  const callerQuery = callLog?.captured_fields?.initial_query || 'general inquiry';
+
+  // Retrieve relevant knowledge from RAG
+  let ragSnippets: any[] = [];
+  if (profile?.organization_id) {
+    try {
+      const { data: ragData } = await supabase.functions.invoke('kb-search', {
+        body: {
+          query: callerQuery,
+          organization_id: profile.organization_id,
+          match_count: 5,
+          match_threshold: 0.7
+        }
+      });
+      ragSnippets = ragData?.results || [];
+    } catch (err) {
+      console.error('RAG retrieval failed:', err);
+    }
+  }
+
+  // Build dynamic system prompt
+  let systemPrompt = config?.system_prompt;
+  
+  if (!systemPrompt && profile) {
+    // Import prompt builder
+    const { buildSystemPrompt } = await import('../_shared/promptBuilder.ts');
+    systemPrompt = buildSystemPrompt(profile, ragSnippets);
+  }
+  
+  // Fallback to basic prompt
+  if (!systemPrompt) {
+    systemPrompt = `You are TradeLine 24/7, an AI receptionist. Canadian English. Be warm, concise (≤15s per reply). 
      Capture: name, callback number, email, job summary, preferred date/time. Confirm back. 
      Offer to connect to a human on request/urgent. If human unreachable, take a message and promise a callback. 
      Never invent data; read numbers digit-by-digit. On background noise, ask to repeat briefly.`;
+  }
 
   let openaiWs: WebSocket;
   let streamSid: string | null = null;
@@ -59,10 +104,17 @@ serve(async (req) => {
       }
     );
 
-    openaiWs.onopen = () => {
+    openaiWs.onopen = async () => {
       console.log('✅ Connected to OpenAI Realtime API');
       
-      // Configure session
+      // Get few-shot examples if we have a profile
+      let fewShotMessages: any[] = [];
+      if (profile) {
+        const { getFewShotExamples } = await import('../_shared/promptBuilder.ts');
+        fewShotMessages = getFewShotExamples(profile);
+      }
+      
+      // Configure session with dynamic instructions
       openaiWs.send(JSON.stringify({
         type: 'session.update',
         session: {
@@ -81,6 +133,18 @@ serve(async (req) => {
           max_response_output_tokens: 'inf'
         }
       }));
+
+      // Send few-shot examples to prime the model
+      for (const example of fewShotMessages) {
+        openaiWs.send(JSON.stringify({
+          type: 'conversation.item.create',
+          item: {
+            type: 'message',
+            role: example.role,
+            content: [{ type: 'input_text', text: example.content }]
+          }
+        }));
+      }
     };
 
     openaiWs.onmessage = (event) => {
