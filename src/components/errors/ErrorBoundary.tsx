@@ -90,8 +90,8 @@ export class AppErrorBoundary extends Component<Props, State> {
 
               <p className="text-xs text-center text-muted-foreground">
                 If this persists, contact support at{' '}
-                <a href="mailto:hello@tradeline247ai.com" className="text-primary hover:underline">
-                  hello@tradeline247ai.com
+                <a href="mailto:info@tradeline247ai.com" className="text-primary hover:underline">
+                  info@tradeline247ai.com
                 </a>
               </p>
             </CardContent>

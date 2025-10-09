@@ -13,6 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { FormErrorFallback } from "@/components/errors/FormErrorFallback";
 import { z } from "zod";
+import { PUBLIC_HELPLINE_E164, PUBLIC_HELPLINE_DISPLAY, PUBLIC_EMAIL } from "@/config/public";
+import builtCanadianBadge from "@/assets/badges/built-canadian.svg";
 
 const contactFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50),
@@ -29,15 +31,15 @@ const contactMethods = [
     icon: Phone,
     title: "Call",
     description: "Talk to our team",
-    contact: "+1 (431) 990-0222",
-    action: "tel:+14319900222"
+    contact: PUBLIC_HELPLINE_DISPLAY,
+    action: `tel:${PUBLIC_HELPLINE_E164}`
   },
   {
     icon: Mail,
     title: "Email",
     description: "Send us a message",
-    contact: "hello@tradeline247ai.com",
-    action: "mailto:hello@tradeline247ai.com"
+    contact: PUBLIC_EMAIL,
+    action: `mailto:${PUBLIC_EMAIL}`
   },
   {
     icon: MessageCircle,
@@ -387,15 +389,15 @@ const Contact = () => {
                 <div className="mt-8 p-6 bg-muted/30 rounded-lg">
                   <div data-guard="canada-badge" className="flex items-start gap-3">
                     <img
-                      src="/assets/brand/badges/built-in-canada.svg"
-                      width="24"
-                      height="24"
+                      src={builtCanadianBadge}
+                      width="32"
+                      height="32"
                       alt="Built in Canada"
-                      aria-hidden="true"
+                      loading="lazy"
                     />
                     <div>
                       <h3 className="font-semibold">Built in Canada</h3>
-                      <p className="opacity-80">CanAdian-hosted. Privacy-by-design.</p>
+                      <p className="opacity-80">Canadian-hosted. Privacy-by-design.</p>
                       <p className="opacity-80">Made here. Trusted here.</p>
                     </div>
                   </div>

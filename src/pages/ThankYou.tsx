@@ -8,6 +8,8 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/seo/SEOHead';
 
+import { PUBLIC_HELPLINE_E164, PUBLIC_HELPLINE_DISPLAY, PUBLIC_EMAIL } from "@/config/public";
+
 const ThankYou = () => {
   const { trackPageView } = useAnalytics();
 
@@ -66,13 +68,13 @@ const ThankYou = () => {
                   <h3 className="font-semibold text-lg mb-4">Need Help?</h3>
                   <div className="grid sm:grid-cols-2 gap-3">
                     <Button variant="outline" asChild className="justify-start">
-                      <a href="tel:+14319900222">
+                      <a href={`tel:${PUBLIC_HELPLINE_E164}`}>
                         <Phone className="w-4 h-4 mr-2" />
-                        +1-431-990-0222
+                        {PUBLIC_HELPLINE_DISPLAY}
                       </a>
                     </Button>
                     <Button variant="outline" asChild className="justify-start">
-                      <a href="mailto:hello@tradeline247ai.com">
+                      <a href={`mailto:${PUBLIC_EMAIL}`}>
                         <Mail className="w-4 h-4 mr-2" />
                         Email Support
                       </a>

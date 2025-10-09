@@ -1,6 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Phone, Mail, MessageCircle } from 'lucide-react';
+import { PUBLIC_HELPLINE_E164, PUBLIC_HELPLINE_DISPLAY, PUBLIC_EMAIL } from "@/config/public";
 
 interface FormErrorFallbackProps {
   error?: string;
@@ -34,9 +35,9 @@ export const FormErrorFallback = ({ error, onRetry }: FormErrorFallbackProps) =>
             asChild
             className="flex-1"
           >
-            <a href="tel:+14319900222">
+            <a href={`tel:${PUBLIC_HELPLINE_E164}`}>
               <Phone className="w-4 h-4 mr-2" />
-              Call: +1-431-990-0222
+              Call: {PUBLIC_HELPLINE_DISPLAY}
             </a>
           </Button>
           <Button 
@@ -45,7 +46,7 @@ export const FormErrorFallback = ({ error, onRetry }: FormErrorFallbackProps) =>
             asChild
             className="flex-1"
           >
-            <a href="mailto:hello@tradeline247ai.com">
+            <a href={`mailto:${PUBLIC_EMAIL}`}>
               <Mail className="w-4 h-4 mr-2" />
               Email Us
             </a>
