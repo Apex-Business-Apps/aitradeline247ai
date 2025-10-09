@@ -16,6 +16,7 @@ const phoneSchema = z.object({
 });
 
 export default function NumberOnboard() {
+  console.log("🔍 NumberOnboard component rendering");
   const [numberE164, setNumberE164] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
