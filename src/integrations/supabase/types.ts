@@ -4009,6 +4009,10 @@ export type Database = {
         Args: { "": unknown[] }
         Returns: number
       }
+      verify_email_service_configured: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator"
