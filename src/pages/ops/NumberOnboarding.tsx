@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Phone, FileText, Upload, CheckCircle2 } from "lucide-react";
+import { Phone, FileText, Upload, CheckCircle2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -20,22 +20,54 @@ export default function NumberOnboarding() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [evidence, setEvidence] = useState<Record<string, any>>({});
+  const [organizationId, setOrganizationId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOrgId = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('organization_members')
+        .select('org_id')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (data) setOrganizationId(data.org_id);
+    };
+    fetchOrgId();
+  }, []);
 
   const handleQuickStart = async (data: any) => {
+    if (!organizationId) {
+      toast({
+        title: "Error",
+        description: "Organization ID not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
-      // Call edge function to buy number and configure
       const { data: result, error } = await supabase.functions.invoke('ops-twilio-buy-number', {
-        body: { areaCode: data.areaCode, country: data.country }
+        body: { 
+          organizationId,
+          areaCode: data.areaCode, 
+          country: data.country || 'CA'
+        }
       });
 
       if (error) throw error;
 
       setEvidence({
-        ...evidence,
         phoneSid: result.phoneSid,
         number: result.number,
-        webhooksConfigured: true,
+        webhooksConfigured: result.webhooksConfigured,
+        voiceUrl: `https://hysvqdwmhxnblxfqnszn.supabase.co/functions/v1/voice-answer`,
+        smsUrl: `https://hysvqdwmhxnblxfqnszn.supabase.co/functions/v1/webcomms-sms-reply`,
+        statusCallback: `https://hysvqdwmhxnblxfqnszn.supabase.co/functions/v1/voice-status`,
+        smsStatusCallback: `https://hysvqdwmhxnblxfqnszn.supabase.co/functions/v1/webcomms-sms-status`,
         timestamp: new Date().toISOString()
       });
 
@@ -44,12 +76,12 @@ export default function NumberOnboarding() {
         description: `Successfully configured ${result.number}`,
       });
 
-      setStep(step + 1);
-    } catch (error) {
+      setStep(2);
+    } catch (error: any) {
       console.error(error);
       toast({
         title: "Error",
-        description: "Failed to purchase number",
+        description: error.message || "Failed to purchase number",
         variant: "destructive",
       });
     } finally {
@@ -258,13 +290,14 @@ function QuickStartWizard({ step, onSubmit, loading, evidence }: any) {
         {step === 1 && (
           <>
             <div className="space-y-2">
-              <Label htmlFor="areaCode">Area Code</Label>
+              <Label htmlFor="areaCode">Area Code (Optional)</Label>
               <Input
                 id="areaCode"
                 placeholder="587"
                 value={formData.areaCode}
                 onChange={(e) => setFormData({ ...formData, areaCode: e.target.value })}
               />
+              <p className="text-xs text-muted-foreground">Leave empty for any available number</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="country">Country</Label>
@@ -275,21 +308,52 @@ function QuickStartWizard({ step, onSubmit, loading, evidence }: any) {
               />
             </div>
             <Button onClick={() => onSubmit(formData)} disabled={loading}>
-              {loading ? "Purchasing..." : "Purchase Number"}
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {loading ? "Searching & Purchasing..." : "Purchase Number"}
             </Button>
           </>
         )}
-        {step === 2 && (
+        {step === 2 && evidence && (
           <div className="space-y-4">
             <Alert>
-              <CheckCircle2 className="h-4 w-4" />
+              <CheckCircle2 className="h-4 w-4 text-green-600" />
               <AlertDescription>
-                Number configured successfully! Webhooks and messaging service are ready.
+                <div className="font-semibold mb-2">Number Provisioned Successfully!</div>
               </AlertDescription>
             </Alert>
-            <Button onClick={() => window.open('/ops/numbers', '_blank')}>
-              View Configuration
-            </Button>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Route Card</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="font-semibold">Number (E.164):</div>
+                  <div className="font-mono">{evidence.number}</div>
+                  
+                  <div className="font-semibold">Phone SID:</div>
+                  <div className="font-mono text-xs break-all">{evidence.phoneSid}</div>
+                  
+                  <div className="font-semibold">Voice URL:</div>
+                  <div className="font-mono text-xs break-all">{evidence.voiceUrl}</div>
+                  
+                  <div className="font-semibold">SMS URL:</div>
+                  <div className="font-mono text-xs break-all">{evidence.smsUrl}</div>
+                  
+                  <div className="font-semibold">Status Callback:</div>
+                  <div className="font-mono text-xs break-all">{evidence.statusCallback}</div>
+                  
+                  <div className="font-semibold">SMS Status Callback:</div>
+                  <div className="font-mono text-xs break-all">{evidence.smsStatusCallback}</div>
+                  
+                  <div className="font-semibold">Webhooks:</div>
+                  <div className="text-green-600 flex items-center gap-1">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Configured
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </CardContent>
@@ -366,10 +430,8 @@ function FullPortWizard({ step, onSubmit, loading, evidence }: any) {
                   <li>Account holder authorization</li>
                   <li>FOC (Firm Order Commitment) date coordination</li>
                 </ul>
-                <div className="mt-2 text-xs">
-                  <a href="https://www.twilio.com/docs/phone-numbers/regulatory" target="_blank" rel="noopener noreferrer" className="text-primary underline">
-                    View country-specific requirements →
-                  </a>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Contact support for country-specific requirements
                 </div>
               </AlertDescription>
             </Alert>

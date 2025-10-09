@@ -157,16 +157,8 @@ export const NewDashboard = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-6 space-y-3">
+                <div className="text-center py-6">
                   <p className="text-muted-foreground">Your AI receptionist hasn't logged activity yet this week.</p>
-                  <a 
-                    href="https://www.twilio.com/console" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-sm text-primary hover:underline inline-flex items-center gap-1"
-                  >
-                    Check that your Twilio number is connected →
-                  </a>
                 </div>
               )}
             </CardContent>

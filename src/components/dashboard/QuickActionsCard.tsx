@@ -17,7 +17,7 @@ export const QuickActionsCard: React.FC = () => {
     {
       label: 'Add Number',
       icon: PhoneCall,
-      onClick: () => window.open('https://www.twilio.com/console/phone-numbers/incoming', '_blank'),
+      onClick: () => navigate('/ops/number-onboarding'),
       variant: 'outline' as const
     },
     {
