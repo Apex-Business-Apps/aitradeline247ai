@@ -1,0 +1,19 @@
+# Default owners for everything in the repo
+* @apex-business-systems
+
+# GitHub workflows and configuration
+/.github/ @apex-business-systems
+
+# Infrastructure and database
+/supabase/ @apex-business-systems
+
+# Edge functions and backend logic
+/supabase/functions/ @apex-business-systems
+
+# Frontend application code
+/src/ @apex-business-systems
+
+# Ops and policy documentation
+/ops/ @apex-business-systems
+SECURITY.md @apex-business-systems
+SUPPORT.md @apex-business-systems

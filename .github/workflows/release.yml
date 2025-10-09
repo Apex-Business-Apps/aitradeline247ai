@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Create release tarball
+        run: |
+          tar -czf release.tar.gz dist/ package.json package-lock.json
+          sha256sum release.tar.gz > release.tar.gz.sha256
+      
+      - name: Get latest synthetic-smoke run
+        id: smoke-run
+        run: |
+          SMOKE_URL="https://github.com/${{ github.repository }}/actions/workflows/synthetic-smoke.yml"
+          echo "smoke_url=$SMOKE_URL" >> $GITHUB_OUTPUT
+      
+      - name: Get Twilio evidence link
+        id: evidence
+        run: |
+          EVIDENCE_URL="https://tradeline247ai.com/ops/twilio-evidence"
+          echo "evidence_url=$EVIDENCE_URL" >> $GITHUB_OUTPUT
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release.tar.gz
+            release.tar.gz.sha256
+          body: |
+            ## Release ${{ github.ref_name }}
+            
+            ### Verification
+            
+            - **Synthetic Smoke Tests:** [${{ steps.smoke-run.outputs.smoke_url }}](${{ steps.smoke-run.outputs.smoke_url }})
+            - **Twilio Evidence Dashboard:** [${{ steps.evidence.outputs.evidence_url }}](${{ steps.evidence.outputs.evidence_url }})
+            
+            ### Checksums
+            
+            ```
+            $(cat release.tar.gz.sha256)
+            ```
+            
+            ### Installation
+            
+            ```bash
+            curl -L -O https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/release.tar.gz
+            curl -L -O https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/release.tar.gz.sha256
+            sha256sum -c release.tar.gz.sha256
+            tar -xzf release.tar.gz
+            ```
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
