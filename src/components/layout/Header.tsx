@@ -60,7 +60,7 @@ export const Header: React.FC = () => {
       }}
       data-lovable-lock="permanent"
     >
-      <div data-header-inner className="container h-full flex items-center justify-between gap-4" data-lovable-lock="permanent">
+      <div data-header-inner className="container h-full" data-lovable-lock="permanent">
         {/* Logo & Badge */}
         <div data-slot="left" className="flex items-center gap-3" data-lovable-lock="permanent">
           <Logo className="h-8 w-auto" />
