@@ -1,47 +1,90 @@
 /**
  * Header Edge-Pinning Layout
  * 
- * Ensures left badge and right button stay flush to viewport edges
- * while center nav adapts/collapses. Respects iOS safe areas.
+ * HD-1 through HD-7: Structured left (logo+badge), center (nav), right (locale+login).
+ * No shadows, proper heights, a11y compliant, mobile horizontal scroll.
  */
+
+header[data-site-header] {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: clamp(56px, 8vw, 64px);
+}
 
 header[data-site-header] [data-header-inner] {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   padding-inline: max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right));
+  height: 100%;
 }
 
-/* Pin left and right slots to edges - never wrap */
-header[data-site-header] [data-slot="left"],
-header[data-site-header] [data-slot="right"] {
+/* Left slot: Logo + Badge (outside nav) */
+header[data-site-header] [data-slot="left"] {
   white-space: nowrap;
   min-width: max-content;
 }
 
-/* Explicitly push right slot to far right edge */
-header[data-site-header] [data-slot="right"] {
-  justify-self: end;
-  margin-left: auto;
-}
-
-/* Center slot can shrink/collapse */
+/* Center slot: Nav items */
 header[data-site-header] [data-slot="center"] {
   justify-self: center;
   min-width: 0;
 }
 
-/* Ensure header stickiness and stacking */
-header[data-site-header] {
-  position: sticky;
-  top: 0;
-  z-index: 50;
+header[data-site-header] [data-slot="center"] ul {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-/* Mobile: same grid, center may be hidden behind hamburger */
+/* Right slot: Locale + Login */
+header[data-site-header] [data-slot="right"] {
+  justify-self: end;
+  margin-left: auto;
+  white-space: nowrap;
+  min-width: max-content;
+}
+
+/* Mobile: horizontal scroll for nav */
 @media (max-width: 768px) {
   header[data-site-header] [data-header-inner] {
     grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+  }
+  
+  header[data-site-header] [data-slot="center"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    /* Edge fades */
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 12px,
+      black calc(100% - 12px),
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 12px,
+      black calc(100% - 12px),
+      transparent
+    );
+  }
+  
+  header[data-site-header] [data-slot="center"]::-webkit-scrollbar {
+    display: none;
+  }
+  
+  header[data-site-header] [data-slot="center"] ul {
+    gap: 0.75rem;
   }
 }
