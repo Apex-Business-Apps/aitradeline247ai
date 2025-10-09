@@ -93,11 +93,9 @@ export const Header: React.FC = () => {
         <div data-slot="left" className="flex items-center gap-3">
           <Logo className="h-8 w-auto" />
           <img 
-            src="/assets/brand/badges/built-in-canada-badge.png" 
+            src="/assets/brand/badges/built-in-canada.svg" 
             alt="Built in Canada badge" 
             className="h-7 md:h-8 w-auto mx-3"
-            width="156"
-            height="65"
             loading="eager"
             role="presentation"
           />
@@ -110,7 +108,7 @@ export const Header: React.FC = () => {
           aria-label="Primary navigation" 
           className="hidden md:flex"
         >
-          <ul className="flex items-center gap-5 lg:gap-6">
+          <ul className="flex items-center md:gap-5 lg:gap-6">
             {navigationItems.map((item) => {
               const isActive = location.pathname === item.href || 
                               (item.href !== '/' && location.pathname.startsWith(item.href));
@@ -119,7 +117,7 @@ export const Header: React.FC = () => {
                   <Link 
                     to={item.href}
                     className={cn(
-                      "inline-flex h-10 items-center justify-center px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
+                      "inline-flex h-11 items-center justify-center px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 min-h-[44px] min-w-[44px]",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                       isActive 
                         ? "bg-primary/14 text-foreground" 
@@ -140,7 +138,7 @@ export const Header: React.FC = () => {
                   <Link 
                     to={item.href}
                     className={cn(
-                      "inline-flex h-10 items-center justify-center px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
+                      "inline-flex h-11 items-center justify-center px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 min-h-[44px] min-w-[44px]",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                       isActive 
                         ? "bg-primary/20 text-primary" 
@@ -205,7 +203,7 @@ export const Header: React.FC = () => {
           }}
         >
           <nav role="navigation" aria-label="Mobile navigation">
-            <ul className="py-4 space-y-1">
+            <ul className="py-4 space-y-2">
               {/* Dashboard first when logged in */}
               {user && (
                 <li>
