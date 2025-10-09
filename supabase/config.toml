@@ -49,6 +49,9 @@ verify_jwt = true  # Admin only
 [functions.ops-twilio-list-numbers]
 verify_jwt = true  # Admin only
 
+[functions.ops-twilio-attach-number]
+verify_jwt = true  # Admin only
+
 [functions.ops-twilio-configure-webhooks]
 verify_jwt = true  # Admin only
 

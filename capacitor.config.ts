@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'TradeLine 24/7',
   webDir: 'dist',
   server: {
-    url: 'https://555a4971-4138-435e-a7ee-dfa3d713d1d3.lovableproject.com?forceHideBadge=true',
-    cleartext: true
+    url: 'https://tradeline247ai.com',
+    cleartext: false
   },
   plugins: {
     SplashScreen: {
