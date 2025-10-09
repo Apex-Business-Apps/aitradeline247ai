@@ -76,7 +76,7 @@ export const Header: React.FC = () => {
           <Logo variant="icon" size="sm" className="cursor-pointer" onClick={() => navigate('/')} aria-label="TradeLine 24/7 home" />
           <img 
             src="/assets/brand/badges/built-in-canada-badge.png" 
-            alt="Built in Canada" 
+            alt="" 
             className="h-[28px] sm:h-[32px] w-auto mx-3"
             width="78"
             height="32"
@@ -102,7 +102,7 @@ export const Header: React.FC = () => {
                       "min-w-[44px] min-h-[44px]",
                       isActive 
                         ? "bg-primary/15 text-foreground" 
-                        : "text-foreground/70 hover:text-foreground hover:bg-accent/30"
+                        : "text-foreground/70 hover:text-foreground hover:bg-transparent"
                     )}
                     aria-current={isActive ? "page" : undefined}
                   >
@@ -124,7 +124,7 @@ export const Header: React.FC = () => {
                       "min-w-[44px] min-h-[44px]",
                       isActive
                         ? "bg-primary/15 text-foreground"
-                        : "text-foreground/70 hover:text-foreground hover:bg-accent/30"
+                        : "text-foreground/70 hover:text-foreground hover:bg-transparent"
                     )}
                     aria-current={isActive ? "page" : undefined}
                   >
