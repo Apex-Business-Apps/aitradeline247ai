@@ -24,12 +24,19 @@ export const Header: React.FC = () => {
   return (
     <header 
       data-site-header 
-      className="sticky top-0 z-[9999] isolate bg-white dark:bg-gray-950 border-b border-slate-200/30 dark:border-slate-800/30 shadow-none"
+      className="sticky top-0 z-[9999] isolate bg-white dark:bg-gray-950 border-b border-slate-200/30 dark:border-slate-800/30"
       style={{ 
-        height: window.innerWidth <= 768 ? '56px' : '64px',
+        height: '56px',
         boxShadow: 'none'
       }}
     >
+      <style>{`
+        @media (min-width: 769px) {
+          header[data-site-header] {
+            height: 64px !important;
+          }
+        }
+      `}</style>
       <div 
         data-header-inner 
         className="mx-auto px-4"
