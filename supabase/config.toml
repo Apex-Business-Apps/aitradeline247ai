@@ -49,9 +49,6 @@ verify_jwt = true  # Admin only
 [functions.ops-twilio-list-numbers]
 verify_jwt = true  # Admin only
 
-[functions.ops-twilio-attach-number]
-verify_jwt = true  # Admin only
-
 [functions.ops-twilio-configure-webhooks]
 verify_jwt = true  # Admin only
 
@@ -84,12 +81,6 @@ verify_jwt = true  # Requires authentication
 
 [functions.rag-ingest]
 verify_jwt = true  # Admin only
-
-[functions.kb-ingest]
-verify_jwt = true  # Admin only - Knowledge base ingestion
-
-[functions.kb-search]
-verify_jwt = true  # Requires authentication - Knowledge base search
 
 [functions.ragz]
 verify_jwt = true  # Requires authentication

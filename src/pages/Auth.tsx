@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,6 @@ const Auth = () => {
   const [passwordBreached, setPasswordBreached] = useState(false);
   const navigate = useNavigate();
   const { validatePassword: secureValidatePassword } = usePasswordSecurity();
-  const buyerPathSentRef = useRef(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -170,21 +169,6 @@ const Auth = () => {
       } else {
         setMessage('Account created successfully! Please check your email to verify your account.');
         setLoading(false);
-        
-        // Trigger buyer path email (call once)
-        if (!buyerPathSentRef.current) {
-          buyerPathSentRef.current = true;
-          supabase.auth.getUser().then(({ data: { user } }) => {
-            if (user?.id) {
-              supabase.functions.invoke('automation-buyer-path', {
-                body: { event_type: 'after_signup', user_id: user.id }
-              }).catch((err) => {
-                console.error('Buyer path email failed (non-blocking):', err);
-              });
-            }
-          });
-        }
-        
         // Clear form
         setEmail('');
         setPassword('');

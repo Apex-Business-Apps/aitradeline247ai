@@ -17,7 +17,6 @@ import { SmokeChecks } from '@/components/testing/SmokeChecks';
 import { RagSearchFab } from "@/components/rag/RagSearchFab";
 import { RagSearchDrawer } from "@/components/rag/RagSearchDrawer";
 import { TwilioLinkGuard } from "@/components/TwilioLinkGuard";
-import { useAuth } from "@/hooks/useAuth";
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -50,8 +49,6 @@ import CampaignManager from "./pages/CampaignManager";
 import CryptoInit from "./pages/ops/CryptoInit";
 import Activation from "./pages/ops/Activation";
 import VoiceSettings from "./pages/ops/VoiceSettings";
-import BusinessProfile from "./pages/ops/BusinessProfile";
-import VoiceDryRun from "./pages/ops/VoiceDryRun";
 import TwilioWire from "./pages/ops/TwilioWire";
 import StagingTest from "./pages/ops/StagingTest";
 import VoiceHealth from "./pages/ops/VoiceHealth";
@@ -60,28 +57,9 @@ import PhoneApps from "./pages/PhoneApps";
 import NumberOnboarding from "./pages/ops/NumberOnboarding";
 import TwilioEvidence from "./pages/ops/TwilioEvidence";
 import MessagingHealth from "./pages/ops/MessagingHealth";
-import AdminKnowledgeBase from "./pages/AdminKnowledgeBase";
-
-// Lazy load admin-only pages
-const NumberOnboard = React.lazy(() => import("./pages/onboarding/NumberOnboard"));
 
 
 const queryClient = new QueryClient();
-
-// Minimal admin guard component
-const RequireAdmin: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAdmin, loading } = useAuth();
-  
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
-  
-  if (!isAdmin()) {
-    return <Navigate to="/auth" replace />;
-  }
-  
-  return <>{children}</>;
-};
 
 // App monitoring wrapper component
 const AppWithMonitoring = () => {
@@ -128,25 +106,12 @@ const AppWithMonitoring = () => {
         <Route path="/ops/crypto/init" element={<main id="main"><CryptoInit /></main>} />
         <Route path="/ops/activation" element={<main id="main"><Activation /></main>} />
         <Route path="/ops/voice" element={<main id="main"><VoiceSettings /></main>} />
-        <Route path="/ops/business-profile" element={<main id="main"><BusinessProfile /></main>} />
-        <Route path="/ops/voice-dryrun" element={<main id="main"><VoiceDryRun /></main>} />
         <Route path="/ops/twilio/wire" element={<main id="main"><TwilioWire /></main>} />
         <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
         <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />
         <Route path="/ops/messaging-health" element={<main id="main"><MessagingHealth /></main>} />
         <Route path="/ops/number-onboarding" element={<main id="main"><NumberOnboarding /></main>} />
-        <Route path="/onboarding/number" element={<Navigate to="/ops/numbers/onboard" replace />} />
-        <Route path="/ops/numbers/onboard" element={
-          <main id="main">
-            <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
-              <RequireAdmin>
-                <NumberOnboard />
-              </RequireAdmin>
-            </React.Suspense>
-          </main>
-        } />
         <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
-        <Route path="/admin/knowledge-base" element={<main id="main"><AdminKnowledgeBase /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />

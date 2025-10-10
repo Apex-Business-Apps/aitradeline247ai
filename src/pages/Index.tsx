@@ -25,7 +25,7 @@ const Index = () => {
     <>
       <LayoutCanon />
       <div 
-        className="min-h-screen flex flex-col relative overflow-x-hidden"
+        className="min-h-screen flex flex-col relative"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
@@ -35,7 +35,7 @@ const Index = () => {
         }}
       >
       {/* Content with translucency */}
-      <div className="relative z-10 overflow-x-hidden">
+      <div className="relative z-10">
         <SEOHead 
           title="TradeLine 24/7 - Your 24/7 AI Receptionist!"
           description="Get fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
@@ -90,30 +90,30 @@ const Index = () => {
         />
         <OrganizationSchema />
         
-        <div className="backdrop-blur-[2px] bg-background/50">
+        <div className="backdrop-blur-[2px] bg-background/30">
           <Header />
         </div>
         
         <main className="flex-1">
-          <div className="backdrop-blur-[2px] bg-background/40">
+          <div className="backdrop-blur-[2px] bg-background/20">
             <HeroRoiDuo />
           </div>
-          <div className="backdrop-blur-[2px] bg-background/40">
+          <div className="backdrop-blur-[2px] bg-background/20">
             <BenefitsGrid />
           </div>
-        <div className="backdrop-blur-[2px] bg-background/45">
+        <div className="backdrop-blur-[2px] bg-background/25">
           <ImpactStrip />
         </div>
-        <div className="backdrop-blur-[2px] bg-background/45">
+        <div className="backdrop-blur-[2px] bg-background/25">
           <HowItWorks />
         </div>
         </main>
         
-        <div className="backdrop-blur-[2px] bg-background/45">
+        <div className="backdrop-blur-[2px] bg-background/25">
           <TrustBadgesSlim />
         </div>
         
-        <div className="backdrop-blur-[2px] bg-background/50">
+        <div className="backdrop-blur-[2px] bg-background/30">
           <Footer />
         </div>
         
