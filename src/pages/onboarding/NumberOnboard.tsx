@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, ArrowLeft } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const WEBHOOK_URLS = {
   voiceUrl: "https://api.tradeline247ai.com/functions/v1/voice-answer",
@@ -15,6 +17,7 @@ const WEBHOOK_URLS = {
 };
 
 export default function NumberOnboard() {
+  const { user } = useAuth();
   const [number, setNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -43,14 +46,14 @@ export default function NumberOnboard() {
       if (error) throw error;
       if (!data?.ok) throw new Error(data?.error || "Attach failed");
 
-      setConnectedData({ number: e164, sid: data.sid });
-      setMsg({ ok: true, text: `✅ Connected: ${e164} (SID ${data.sid})` });
+      setConnectedData({ number: e164, sid: data.phone_sid });
+      setMsg({ ok: true, text: `✅ Connected: ${e164} (SID ${data.phone_sid})` });
       setNumber("");
       
       console.log("✅ Successfully attached number");
     } catch (err: any) {
       console.error("❌ Attach error:", err);
-      setMsg({ ok: false, text: `Attach error: ${err.message || err}` });
+      setMsg({ ok: false, text: err.message || String(err) });
     } finally {
       setLoading(false);
     }
@@ -58,6 +61,16 @@ export default function NumberOnboard() {
 
   return (
     <div className="container max-w-xl mx-auto py-10">
+      {user && (
+        <Link 
+          to="/dashboard" 
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </Link>
+      )}
+      
       <h1 className="text-2xl font-semibold mb-2">Number Onboarding</h1>
       <p className="text-muted-foreground mb-6">
         Enter your business number. We'll connect calls & texts to TradeLine 24/7.
@@ -87,7 +100,7 @@ export default function NumberOnboard() {
               <p className="font-mono text-sm font-semibold">{connectedData.sid}</p>
             </div>
             <div className="pt-2 border-t">
-              <Label className="text-xs text-muted-foreground mb-2 block">Webhook URLs</Label>
+              <Label className="text-xs text-muted-foreground mb-2 block">Webhooks updated.</Label>
               <div className="space-y-2 text-xs">
                 <div>
                   <span className="text-muted-foreground">Voice URL (POST):</span>
@@ -113,12 +126,12 @@ export default function NumberOnboard() {
 
       <form onSubmit={handleAttach} className="space-y-4">
         <div>
-          <Label htmlFor="number">Your Number (E.164)</Label>
+          <Label htmlFor="number">Client Number (E.164)</Label>
           <Input
             id="number"
             name="number"
             required
-            placeholder="+1 587-742-8885"
+            placeholder="+1587XXXXXXX"
             value={number}
             onChange={(e) => setNumber(e.target.value)}
             disabled={loading}

@@ -29,15 +29,32 @@ serve(async (req) => {
 
   try {
     if (req.method !== "POST") {
-      return new Response("Method Not Allowed", { 
+      return new Response(JSON.stringify({ ok: false, error: "Method not allowed" }), { 
         status: 405, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       });
     }
     
     const { number_e164 } = await req.json();
+    
+    // Smoke test hook (non-production only)
+    if (number_e164 === "SMOKE_TEST") {
+      if (Deno.env.get("ENV") === "production") {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid E.164 number" }), { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        });
+      }
+      console.log("🧪 Smoke test invoked");
+      return new Response(JSON.stringify({ ok: true, number: "SMOKE_TEST", phone_sid: "PN_SMOKE" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }, 
+        status: 200
+      });
+    }
+    
+    // Validate E.164 format
     if (!number_e164 || !/^\+\d{8,15}$/.test(number_e164)) {
-      return new Response(JSON.stringify({ ok:false, error:"Invalid E.164 number" }), { 
+      return new Response(JSON.stringify({ ok: false, error: "Invalid E.164 number" }), { 
         status: 400, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       });
@@ -52,7 +69,7 @@ serve(async (req) => {
     
     if (!hit?.sid) {
       console.error(`❌ Number not found: ${number_e164}`);
-      return new Response(JSON.stringify({ ok:false, error:`Number not found in account: ${number_e164}` }), { 
+      return new Response(JSON.stringify({ ok: false, error: "number_not_found" }), { 
         status: 404, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       });
@@ -82,20 +99,20 @@ serve(async (req) => {
     
     if (!upd.ok) {
       console.error(`❌ Update failed:`, updJson);
-      return new Response(JSON.stringify({ ok:false, error: updJson?.message || "Update failed" }), { 
-        status: 400, 
+      return new Response(JSON.stringify({ ok: false, error: updJson?.message || "Update failed" }), { 
+        status: upd.status, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       });
     }
 
     console.log(`✅ Webhooks updated successfully for ${number_e164}`);
-    return new Response(JSON.stringify({ ok:true, sid: phoneSid }), {
+    return new Response(JSON.stringify({ ok: true, number: number_e164, phone_sid: phoneSid }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" }, 
       status: 200
     });
   } catch (e) {
     console.error(`❌ Exception:`, e);
-    return new Response(JSON.stringify({ ok:false, error: String(e) }), {
+    return new Response(JSON.stringify({ ok: false, error: String(e) }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" }, 
       status: 500
     });
