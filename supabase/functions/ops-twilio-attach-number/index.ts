@@ -1,6 +1,11 @@
 // supabase edge function (Deno)
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID")!;
 const TWILIO_AUTH_TOKEN  = Deno.env.get("TWILIO_AUTH_TOKEN")!;
 
@@ -17,21 +22,44 @@ function tw(path: string, init: RequestInit = {}) {
 }
 
 serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
   try {
-    if (req.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+    if (req.method !== "POST") {
+      return new Response("Method Not Allowed", { 
+        status: 405, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      });
+    }
+    
     const { number_e164 } = await req.json();
     if (!number_e164 || !/^\+\d{8,15}$/.test(number_e164)) {
-      return new Response(JSON.stringify({ ok:false, error:"Invalid E.164 number" }), { status: 400 });
+      return new Response(JSON.stringify({ ok:false, error:"Invalid E.164 number" }), { 
+        status: 400, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      });
     }
+
+    console.log(`🔍 Searching for number: ${number_e164}`);
 
     // 1) Find the phone SID by number (parent account)
     const searchResp = await tw(`/Accounts/${TWILIO_ACCOUNT_SID}/IncomingPhoneNumbers.json?PhoneNumber=${encodeURIComponent(number_e164)}`);
     const searchJson = await searchResp.json();
     const hit = searchJson?.incoming_phone_numbers?.[0];
+    
     if (!hit?.sid) {
-      return new Response(JSON.stringify({ ok:false, error:`Number not found in account: ${number_e164}` }), { status: 404 });
+      console.error(`❌ Number not found: ${number_e164}`);
+      return new Response(JSON.stringify({ ok:false, error:`Number not found in account: ${number_e164}` }), { 
+        status: 404, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      });
     }
+    
     const phoneSid = hit.sid;
+    console.log(`✅ Found number SID: ${phoneSid}`);
 
     // 2) Update webhooks on that number
     const form = new URLSearchParams({
@@ -43,22 +71,33 @@ serve(async (req) => {
       SmsMethod: "POST",
       SmsStatusCallback: SMS_STATUS
     });
+    
+    console.log(`🔧 Updating webhooks for ${phoneSid}...`);
     const upd = await tw(`/Accounts/${TWILIO_ACCOUNT_SID}/IncomingPhoneNumbers/${phoneSid}.json`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: form
     });
     const updJson = await upd.json();
+    
     if (!upd.ok) {
-      return new Response(JSON.stringify({ ok:false, error: updJson?.message || "Update failed" }), { status: 400 });
+      console.error(`❌ Update failed:`, updJson);
+      return new Response(JSON.stringify({ ok:false, error: updJson?.message || "Update failed" }), { 
+        status: 400, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      });
     }
 
+    console.log(`✅ Webhooks updated successfully for ${number_e164}`);
     return new Response(JSON.stringify({ ok:true, sid: phoneSid }), {
-      headers: { "Content-Type": "application/json" }, status: 200
+      headers: { ...corsHeaders, "Content-Type": "application/json" }, 
+      status: 200
     });
   } catch (e) {
+    console.error(`❌ Exception:`, e);
     return new Response(JSON.stringify({ ok:false, error: String(e) }), {
-      headers: { "Content-Type": "application/json" }, status: 400
+      headers: { ...corsHeaders, "Content-Type": "application/json" }, 
+      status: 500
     });
   }
 });

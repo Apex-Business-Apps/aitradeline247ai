@@ -23,16 +23,23 @@ export default function NumberOnboard() {
 
     setLoading(true);
     try {
+      console.log("🔄 Attaching number:", e164);
+      
       const { data, error } = await supabase.functions.invoke("ops-twilio-attach-number", {
         body: { number_e164: e164 }
       });
+
+      console.log("📥 Response:", { data, error });
 
       if (error) throw error;
       if (!data?.ok) throw new Error(data?.error || "Attach failed");
 
       setMsg({ ok: true, text: `✅ Connected: ${e164} (SID ${data.sid})` });
       setNumber("");
+      
+      console.log("✅ Successfully attached number");
     } catch (err: any) {
+      console.error("❌ Attach error:", err);
       setMsg({ ok: false, text: `Attach error: ${err.message || err}` });
     } finally {
       setLoading(false);
