@@ -113,13 +113,18 @@ export const Header: React.FC = () => {
           <div className="container flex h-12 items-center justify-between gap-4">
             {/* Left: Logo */}
             <div className="flex items-center gap-3 animate-fade-in min-w-[200px]">
-              <Link to="/" aria-label="Go to homepage">
-                <Logo size="sm" variant="full" />
-              </Link>
+              <Button 
+                variant="success" 
+                size={isScrolled ? 'sm' : 'default'}
+                onClick={() => navigate('/')}
+                className="hover-scale transition-all duration-300"
+              >
+                Home
+              </Button>
               <img 
                 src="/assets/brand/badges/built-in-canada-badge.png" 
                 alt="Built in Canada" 
-                className="h-[32px] sm:h-[40px] w-auto"
+                className="h-[40px] w-auto hidden lg:block"
                 width="120"
                 height="40"
                 loading="eager"
