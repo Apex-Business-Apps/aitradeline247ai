@@ -8,6 +8,7 @@ import { NewDashboard } from '@/components/dashboard/NewDashboard';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const ClientDashboard = () => {
   const navigate = useNavigate();
@@ -19,7 +20,10 @@ const ClientDashboard = () => {
       
       <main className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+          </div>
           <Button 
             onClick={() => navigate('/')}
             variant="outline"
