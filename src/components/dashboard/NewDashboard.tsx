@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { WelcomeHeader } from './new/WelcomeHeader';
 import { NextActionsSection } from './new/NextActionsSection';
 import { WinsSection } from './new/WinsSection';
 import { QuickActionsCard } from './QuickActionsCard';
