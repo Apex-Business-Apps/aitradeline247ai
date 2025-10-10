@@ -119,7 +119,7 @@ export const Header: React.FC = () => {
               <img 
                 src="/assets/brand/badges/built-in-canada-badge.png" 
                 alt="Built in Canada" 
-                className="h-[40px] w-auto hidden lg:block"
+                className="h-[32px] sm:h-[40px] w-auto"
                 width="120"
                 height="40"
                 loading="eager"
