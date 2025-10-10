@@ -115,7 +115,7 @@ export const Header: React.FC = () => {
             {/* Left: Home Button and Badge */}
             <div className="flex items-center gap-3 animate-fade-in min-w-[200px]">
               <Button 
-                variant="success" 
+                variant="default" 
                 size={isScrolled ? 'sm' : 'default'}
                 onClick={() => navigate('/')}
                 className="hover-scale transition-all duration-300"
