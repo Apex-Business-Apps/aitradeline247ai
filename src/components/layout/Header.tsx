@@ -104,10 +104,9 @@ export const Header: React.FC = () => {
         role="banner" 
         data-site-header 
         className={cn(
-          'sticky top-0 z-[9999] w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300 isolate',
+          'sticky top-0 z-[9999] w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300',
           isScrolled ? 'shadow-lg' : ''
         )} 
-        style={{ isolation: 'isolate' }} 
         data-lovable-lock="permanent"
       >
         {/* Tier 1: Site/Utility Bar */}

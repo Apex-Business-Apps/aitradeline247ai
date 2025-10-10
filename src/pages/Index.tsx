@@ -25,7 +25,7 @@ const Index = () => {
     <>
       <LayoutCanon />
       <div 
-        className="min-h-screen flex flex-col relative"
+        className="min-h-screen flex flex-col relative overflow-x-hidden"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
@@ -35,7 +35,7 @@ const Index = () => {
         }}
       >
       {/* Content with translucency */}
-      <div className="relative z-10">
+      <div className="relative z-10 overflow-x-hidden">
         <SEOHead 
           title="TradeLine 24/7 - Your 24/7 AI Receptionist!"
           description="Get fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
