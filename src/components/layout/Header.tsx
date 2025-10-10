@@ -111,7 +111,7 @@ export const Header: React.FC = () => {
         {/* Tier 1: Site/Utility Bar */}
         <div className={cn('border-b border-border/50', isScrolled ? 'py-1' : 'py-2')}>
           <div className="container flex h-12 items-center justify-between gap-4">
-            {/* Left: Logo */}
+            {/* Left: Home Button and Badge */}
             <div className="flex items-center gap-3 animate-fade-in min-w-[200px]">
               <Button 
                 variant="success" 
@@ -123,8 +123,8 @@ export const Header: React.FC = () => {
               </Button>
               <img 
                 src="/assets/brand/badges/built-in-canada-badge.png" 
-                alt="Built in Canada" 
-                className="h-[40px] w-auto hidden lg:block"
+                alt="Built in Canada - TradeLine 24/7" 
+                className="h-[40px] w-auto"
                 width="120"
                 height="40"
                 loading="eager"
