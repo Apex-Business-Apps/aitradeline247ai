@@ -69,6 +69,9 @@ export const Header: React.FC = () => {
                                 location.pathname.startsWith('/admin');
 
   useEffect(() => {
+    console.log('[Header] Component mounted');
+    console.log('[Header] User:', user);
+    console.log('[Header] isAuthenticatedRoute:', isAuthenticatedRoute);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
