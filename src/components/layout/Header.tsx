@@ -66,7 +66,7 @@ export const Header: React.FC = () => {
       console.warn('Header left elements missing; override not applied');
     }
   }, []);
-  return <header data-site-header className={cn('sticky top-0 z-[9999] w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300 isolate', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{ isolation: 'isolate' }} data-lovable-lock="permanent">
+  return <header data-site-header className={cn('sticky top-0 z-[9999] w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300 isolate', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{ isolation: 'isolate' }} data-lovable-lock="permanent">
       <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
         {/* Home Button & Badge */}
         <div id="app-header-left" data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
