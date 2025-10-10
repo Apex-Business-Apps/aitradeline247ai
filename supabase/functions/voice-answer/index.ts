@@ -102,7 +102,7 @@ serve(async (req) => {
       .select('*')
       .single();
 
-    // Create call log
+    // Create call log with consent tracking
     await supabase.from('call_logs').insert({
       call_sid: CallSid,
       from_e164: From,
@@ -110,6 +110,8 @@ serve(async (req) => {
       started_at: new Date().toISOString(),
       status: 'initiated',
       amd_detected: AnsweredBy === 'machine_start' || AnsweredBy === 'machine_end_beep',
+      consent_captured: true,
+      consent_timestamp: new Date().toISOString(),
     });
 
     // AMD Detection: If voicemail detected, use LLM path
@@ -134,9 +136,12 @@ serve(async (req) => {
     const withinConcurrencyLimit = (activeStreams || 0) < 10;
 
     if ((useLLM || pickupMode === 'immediate') && realtimeEnabled && withinConcurrencyLimit) {
-      // Greeting + realtime stream with 3s watchdog fallback
+      // Greeting with consent + realtime stream with 3s watchdog fallback
       twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
+  <Say voice="Polly.Joanna">
+    This call may be monitored and recorded for quality and training. By continuing, you consent.
+  </Say>
   <Gather action="https://${supabaseUrl.replace('https://', '')}/functions/v1/voice-action" numDigits="1" timeout="1">
     <Say voice="Polly.Joanna">
       Hi, you've reached TradeLine 24/7 — Your 24/7 AI Receptionist! How can I help? Press 0 to speak with someone directly.
@@ -151,9 +156,12 @@ serve(async (req) => {
   </Dial>
 </Response>`;
     } else {
-      // Bridge directly to human
+      // Bridge directly to human with consent
       twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
+  <Say voice="Polly.Joanna">
+    This call may be monitored and recorded for quality and training. By continuing, you consent.
+  </Say>
   <Say voice="Polly.Joanna">
     Hi, you've reached TradeLine 24/7 — Your 24/7 AI Receptionist! Connecting you now.
   </Say>

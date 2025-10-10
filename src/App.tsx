@@ -135,7 +135,8 @@ const AppWithMonitoring = () => {
         <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />
         <Route path="/ops/messaging-health" element={<main id="main"><MessagingHealth /></main>} />
         <Route path="/ops/number-onboarding" element={<main id="main"><NumberOnboarding /></main>} />
-        <Route path="/onboarding/number" element={
+        <Route path="/onboarding/number" element={<Navigate to="/ops/numbers/onboard" replace />} />
+        <Route path="/ops/numbers/onboard" element={
           <main id="main">
             <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
               <RequireAdmin>

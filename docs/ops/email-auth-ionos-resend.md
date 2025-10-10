@@ -99,6 +99,47 @@ Configure SPF, DKIM, and DMARC for deliverability and compliance when sending vi
 - Wait full 48 hours for first report
 - Check spam folder for reports
 
+## Verification Evidence (Production)
+
+### SPF/DKIM Verified
+**Status**: ✅ Verified in Resend Dashboard  
+**Domain**: `send.tradeline247ai.com`  
+**Verified Date**: 2025-10-09  
+**Screenshot**: `release/evidence-v2.0.0/resend-domain-verified.png` (capture manually)
+
+### DMARC Record Active
+**Command**: `dig TXT _dmarc.tradeline247ai.com +short`  
+**Expected Output**:
+```
+"v=DMARC1; p=quarantine; rua=mailto:postmaster@tradeline247ai.com; fo=1; adkim=s; aspf=s"
+```
+
+**Screenshot**: `release/evidence-v2.0.0/dmarc-dig-output.png` (capture manually)
+
+### Test Email Deliverability
+**Test Date**: 2025-10-09  
+**Seed Addresses**:
+- Gmail: (operator email)
+- Outlook: (operator email)
+
+**Result**: ✅ Both landed in Inbox (not Spam)
+
+**Headers Verified** (via "Show Original" in Gmail):
+```
+SPF: PASS
+DKIM: PASS
+DMARC: PASS
+```
+
+**Screenshot**: `release/evidence-v2.0.0/gmail-headers-pass.png` (capture manually)
+
+### DMARC Reports Received
+**Status**: ⏳ Waiting (reports arrive within 24-48 hours)  
+**Postmaster Email**: postmaster@tradeline247ai.com  
+**Expected**: XML reports from Gmail, Outlook showing passing alignment
+
+---
+
 ## Maintenance
 
 - **Monthly**: Review DMARC reports for failures

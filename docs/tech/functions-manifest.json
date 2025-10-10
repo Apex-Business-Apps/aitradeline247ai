@@ -1,0 +1,462 @@
+{
+  "generated_at": "2025-10-10T00:00:00Z",
+  "version": "2.0.0",
+  "functions": [
+    {
+      "name": "ab-convert",
+      "path": "/functions/v1/ab-convert",
+      "auth": "public",
+      "rate_limit": "none",
+      "description": "A/B test conversion tracking"
+    },
+    {
+      "name": "automation-buyer-path",
+      "path": "/functions/v1/automation-buyer-path",
+      "auth": "service_role",
+      "rate_limit": "idempotent_per_user_event",
+      "description": "Sends buyer path emails (after_signup, after_payment)"
+    },
+    {
+      "name": "calendly-sync",
+      "path": "/functions/v1/calendly-sync",
+      "auth": "service_role",
+      "rate_limit": "none",
+      "description": "Syncs appointments from Calendly webhooks"
+    },
+    {
+      "name": "chat",
+      "path": "/functions/v1/chat",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "AI chat interface"
+    },
+    {
+      "name": "check-password-breach",
+      "path": "/functions/v1/check-password-breach",
+      "auth": "public",
+      "rate_limit": "10_per_minute",
+      "description": "Checks if password has been breached"
+    },
+    {
+      "name": "contact-submit",
+      "path": "/functions/v1/contact-submit",
+      "auth": "public",
+      "rate_limit": "5_per_hour",
+      "description": "Contact form submission"
+    },
+    {
+      "name": "dashboard-summary",
+      "path": "/functions/v1/dashboard-summary",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "Dashboard data aggregation"
+    },
+    {
+      "name": "init-encryption-key",
+      "path": "/functions/v1/init-encryption-key",
+      "auth": "admin",
+      "rate_limit": "once",
+      "description": "Initializes encryption key (one-time)"
+    },
+    {
+      "name": "kb-ingest",
+      "path": "/functions/v1/kb-ingest",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Knowledge base document ingestion"
+    },
+    {
+      "name": "kb-search",
+      "path": "/functions/v1/kb-search",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "Knowledge base search"
+    },
+    {
+      "name": "lookup-number",
+      "path": "/functions/v1/lookup-number",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Phone number lookup via Twilio"
+    },
+    {
+      "name": "ops-activate-account",
+      "path": "/functions/v1/ops-activate-account",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Account activation operator function"
+    },
+    {
+      "name": "ops-campaigns-create",
+      "path": "/functions/v1/ops-campaigns-create",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Create SMS campaign"
+    },
+    {
+      "name": "ops-campaigns-send",
+      "path": "/functions/v1/ops-campaigns-send",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Send SMS campaign"
+    },
+    {
+      "name": "ops-followups-enable",
+      "path": "/functions/v1/ops-followups-enable",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Enable follow-up automation"
+    },
+    {
+      "name": "ops-followups-send",
+      "path": "/functions/v1/ops-followups-send",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Send follow-up messages"
+    },
+    {
+      "name": "ops-init-encryption-key",
+      "path": "/functions/v1/ops-init-encryption-key",
+      "auth": "admin",
+      "rate_limit": "once",
+      "description": "Operator encryption key initialization"
+    },
+    {
+      "name": "ops-leads-import",
+      "path": "/functions/v1/ops-leads-import",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Bulk lead import from CSV"
+    },
+    {
+      "name": "ops-report-export",
+      "path": "/functions/v1/ops-report-export",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Export reports as CSV"
+    },
+    {
+      "name": "ops-segment-warm50",
+      "path": "/functions/v1/ops-segment-warm50",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Segment warm contacts for outreach"
+    },
+    {
+      "name": "ops-send-warm50",
+      "path": "/functions/v1/ops-send-warm50",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Send to warm50 segment"
+    },
+    {
+      "name": "ops-twilio-a2p",
+      "path": "/functions/v1/ops-twilio-a2p",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Twilio A2P brand registration"
+    },
+    {
+      "name": "ops-twilio-attach-number",
+      "path": "/functions/v1/ops-twilio-attach-number",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Attach Twilio number to account"
+    },
+    {
+      "name": "ops-twilio-buy-number",
+      "path": "/functions/v1/ops-twilio-buy-number",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Purchase Twilio number"
+    },
+    {
+      "name": "ops-twilio-configure-webhooks",
+      "path": "/functions/v1/ops-twilio-configure-webhooks",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Configure Twilio webhooks for number"
+    },
+    {
+      "name": "ops-twilio-create-port",
+      "path": "/functions/v1/ops-twilio-create-port",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Create Twilio port request"
+    },
+    {
+      "name": "ops-twilio-hosted-sms",
+      "path": "/functions/v1/ops-twilio-hosted-sms",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Configure hosted SMS (voice stays with carrier)"
+    },
+    {
+      "name": "ops-twilio-list-numbers",
+      "path": "/functions/v1/ops-twilio-list-numbers",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "List available Twilio numbers"
+    },
+    {
+      "name": "ops-twilio-test-webhook",
+      "path": "/functions/v1/ops-twilio-test-webhook",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Test Twilio webhook connectivity"
+    },
+    {
+      "name": "ops-verify-gate1",
+      "path": "/functions/v1/ops-verify-gate1",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Verify Gate 1 compliance checks"
+    },
+    {
+      "name": "ops-voice-config-update",
+      "path": "/functions/v1/ops-voice-config-update",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Update voice configuration"
+    },
+    {
+      "name": "ops-voice-health",
+      "path": "/functions/v1/ops-voice-health",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Voice system health metrics"
+    },
+    {
+      "name": "ops-voice-slo",
+      "path": "/functions/v1/ops-voice-slo",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Voice SLO metrics and alerts"
+    },
+    {
+      "name": "rag-answer",
+      "path": "/functions/v1/rag-answer",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "RAG-based answer generation"
+    },
+    {
+      "name": "rag-ingest",
+      "path": "/functions/v1/rag-ingest",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "RAG document ingestion"
+    },
+    {
+      "name": "rag-search",
+      "path": "/functions/v1/rag-search",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "RAG document search"
+    },
+    {
+      "name": "ragz",
+      "path": "/functions/v1/ragz",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "Experimental RAG endpoint"
+    },
+    {
+      "name": "register-ab-session",
+      "path": "/functions/v1/register-ab-session",
+      "auth": "public",
+      "rate_limit": "none",
+      "description": "Register A/B test session"
+    },
+    {
+      "name": "secret-encrypt",
+      "path": "/functions/v1/secret-encrypt",
+      "auth": "admin",
+      "rate_limit": "none",
+      "description": "Encrypt sensitive data"
+    },
+    {
+      "name": "secure-ab-assign",
+      "path": "/functions/v1/secure-ab-assign",
+      "auth": "public",
+      "rate_limit": "none",
+      "description": "Secure A/B test assignment"
+    },
+    {
+      "name": "secure-analytics",
+      "path": "/functions/v1/secure-analytics",
+      "auth": "public",
+      "rate_limit": "none",
+      "description": "Privacy-safe analytics tracking"
+    },
+    {
+      "name": "secure-lead-submission",
+      "path": "/functions/v1/secure-lead-submission",
+      "auth": "public",
+      "rate_limit": "5_per_hour",
+      "description": "Lead form submission with validation"
+    },
+    {
+      "name": "secure-rate-limit",
+      "path": "/functions/v1/secure-rate-limit",
+      "auth": "service_role",
+      "rate_limit": "none",
+      "description": "Rate limiting enforcement"
+    },
+    {
+      "name": "send-lead-email",
+      "path": "/functions/v1/send-lead-email",
+      "auth": "service_role",
+      "rate_limit": "none",
+      "description": "Send lead notification email"
+    },
+    {
+      "name": "send-transcript",
+      "path": "/functions/v1/send-transcript",
+      "auth": "service_role",
+      "rate_limit": "none",
+      "description": "Email call transcript"
+    },
+    {
+      "name": "sms-inbound",
+      "path": "/functions/v1/sms-inbound",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Twilio SMS webhook (inbound messages)"
+    },
+    {
+      "name": "sms-inbound-fallback",
+      "path": "/functions/v1/sms-inbound-fallback",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Fallback handler for SMS inbound"
+    },
+    {
+      "name": "sms-reply",
+      "path": "/functions/v1/sms-reply",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "Send SMS reply"
+    },
+    {
+      "name": "sms-status",
+      "path": "/functions/v1/sms-status",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "SMS delivery status callback"
+    },
+    {
+      "name": "start-trial",
+      "path": "/functions/v1/start-trial",
+      "auth": "authenticated",
+      "rate_limit": "once_per_user",
+      "description": "Start trial period"
+    },
+    {
+      "name": "threat-detection-scan",
+      "path": "/functions/v1/threat-detection-scan",
+      "auth": "service_role",
+      "rate_limit": "none",
+      "description": "Security threat scanning"
+    },
+    {
+      "name": "track-session-activity",
+      "path": "/functions/v1/track-session-activity",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "Session activity tracking"
+    },
+    {
+      "name": "twilio-sms",
+      "path": "/functions/v1/twilio-sms",
+      "auth": "service_role",
+      "rate_limit": "none",
+      "description": "Send SMS via Twilio"
+    },
+    {
+      "name": "twilio-sms-status",
+      "path": "/functions/v1/twilio-sms-status",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Twilio SMS status webhook"
+    },
+    {
+      "name": "twilio-status",
+      "path": "/functions/v1/twilio-status",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Twilio call status webhook"
+    },
+    {
+      "name": "twilio-voice",
+      "path": "/functions/v1/twilio-voice",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Twilio voice webhook (deprecated)"
+    },
+    {
+      "name": "unsubscribe",
+      "path": "/functions/v1/unsubscribe",
+      "auth": "public",
+      "rate_limit": "none",
+      "description": "Email/SMS unsubscribe handler"
+    },
+    {
+      "name": "validate-session",
+      "path": "/functions/v1/validate-session",
+      "auth": "authenticated",
+      "rate_limit": "none",
+      "description": "Session validation and renewal"
+    },
+    {
+      "name": "voice-action",
+      "path": "/functions/v1/voice-action",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Voice DTMF action handler"
+    },
+    {
+      "name": "voice-answer",
+      "path": "/functions/v1/voice-answer",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Voice call answer handler (primary)"
+    },
+    {
+      "name": "voice-consent",
+      "path": "/functions/v1/voice-consent",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Voice recording consent handler"
+    },
+    {
+      "name": "voice-status",
+      "path": "/functions/v1/voice-status",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Voice call status and recording callbacks"
+    },
+    {
+      "name": "voice-stream",
+      "path": "/functions/v1/voice-stream",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "WebSocket voice streaming handler"
+    },
+    {
+      "name": "webcomms-sms-reply",
+      "path": "/functions/v1/webcomms-sms-reply",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Primary SMS inbound webhook"
+    },
+    {
+      "name": "webcomms-sms-status",
+      "path": "/functions/v1/webcomms-sms-status",
+      "auth": "public_webhook",
+      "rate_limit": "none",
+      "description": "Primary SMS status webhook"
+    }
+  ],
+  "total_count": 68
+}
