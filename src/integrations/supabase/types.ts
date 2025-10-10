@@ -365,6 +365,27 @@ export type Database = {
         }
         Relationships: []
       }
+      buyer_path_sends: {
+        Row: {
+          event_type: string
+          id: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       call_lifecycle: {
         Row: {
           call_sid: string
