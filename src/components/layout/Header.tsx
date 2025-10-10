@@ -56,11 +56,22 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (document.getElementById('app-header-left') &&
+        document.getElementById('app-home') &&
+        document.getElementById('app-badge-ca')) {
+      import('../nav/AppHeaderOverride.module.css');
+    } else {
+      console.warn('Header left elements missing; override not applied');
+    }
+  }, []);
   return <header data-site-header className={cn('sticky top-0 z-[9999] w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300 isolate', isScrolled ? 'shadow-lg py-2' : 'py-4')} style={{ isolation: 'isolate' }} data-lovable-lock="permanent">
       <div data-header-inner className="container flex h-14 items-center justify-between gap-4" data-lovable-lock="permanent">
         {/* Home Button & Badge */}
-        <div data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
+        <div id="app-header-left" data-slot="left" className="flex items-center gap-3 animate-fade-in" data-lovable-lock="permanent">
           <Button 
+            id="app-home"
             variant="default" 
             size={isScrolled ? 'sm' : 'default'}
             onClick={() => navigate('/')} 
@@ -71,6 +82,7 @@ export const Header: React.FC = () => {
             Home
           </Button>
           <img 
+            id="app-badge-ca"
             src="/assets/brand/badges/built-in-canada-badge.png" 
             alt="Built in Canada" 
             className="h-[45px] sm:h-[60px] lg:h-[65px] w-auto"
