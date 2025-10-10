@@ -3,13 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
+
+const WEBHOOK_URLS = {
+  voiceUrl: "https://api.tradeline247ai.com/functions/v1/voice-answer",
+  voiceStatus: "https://api.tradeline247ai.com/functions/v1/voice-status",
+  smsUrl: "https://api.tradeline247ai.com/functions/v1/webcomms-sms-reply",
+  smsStatus: "https://api.tradeline247ai.com/functions/v1/webcomms-sms-status"
+};
 
 export default function NumberOnboard() {
   const [number, setNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [connectedData, setConnectedData] = useState<{ number: string; sid: string } | null>(null);
 
   const handleAttach = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +43,7 @@ export default function NumberOnboard() {
       if (error) throw error;
       if (!data?.ok) throw new Error(data?.error || "Attach failed");
 
+      setConnectedData({ number: e164, sid: data.sid });
       setMsg({ ok: true, text: `✅ Connected: ${e164} (SID ${data.sid})` });
       setNumber("");
       
@@ -53,10 +63,52 @@ export default function NumberOnboard() {
         Enter your business number. We'll connect calls & texts to TradeLine 24/7.
       </p>
 
-      {msg && (
+      {msg && !connectedData && (
         <Alert variant={msg.ok ? "default" : "destructive"} className="mb-4">
           <AlertDescription>{msg.text}</AlertDescription>
         </Alert>
+      )}
+
+      {connectedData && (
+        <Card className="mb-6 border-green-500/50 bg-green-50/50 dark:bg-green-950/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+              <CheckCircle2 className="w-5 h-5" />
+              Connected Successfully
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label className="text-xs text-muted-foreground">Number</Label>
+              <p className="font-mono text-sm font-semibold">{connectedData.number}</p>
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">PhoneNumber SID</Label>
+              <p className="font-mono text-sm font-semibold">{connectedData.sid}</p>
+            </div>
+            <div className="pt-2 border-t">
+              <Label className="text-xs text-muted-foreground mb-2 block">Webhook URLs</Label>
+              <div className="space-y-2 text-xs">
+                <div>
+                  <span className="text-muted-foreground">Voice URL (POST):</span>
+                  <p className="font-mono text-[10px] break-all">{WEBHOOK_URLS.voiceUrl}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Voice Status (POST):</span>
+                  <p className="font-mono text-[10px] break-all">{WEBHOOK_URLS.voiceStatus}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">SMS URL (POST):</span>
+                  <p className="font-mono text-[10px] break-all">{WEBHOOK_URLS.smsUrl}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">SMS Status (POST):</span>
+                  <p className="font-mono text-[10px] break-all">{WEBHOOK_URLS.smsStatus}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <form onSubmit={handleAttach} className="space-y-4">
