@@ -7,9 +7,11 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Phone, FileText, Upload, CheckCircle2, Loader2 } from "lucide-react";
+import { Phone, FileText, Upload, CheckCircle2, Loader2, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 type OnboardingTrack = "quick-start" | "hosted-sms" | "full-port";
 
@@ -362,7 +364,76 @@ function QuickStartWizard({ step, onSubmit, loading, evidence }: any) {
 }
 
 function HostedSMSWizard({ step, onSubmit, loading, evidence }: any) {
+  const { isAdmin } = useAuth();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({ phoneNumber: '', loaDocument: null });
+  const [templateInfo, setTemplateInfo] = useState<any>(null);
+  const [uploadingTemplate, setUploadingTemplate] = useState(false);
+  const [orgId, setOrgId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOrgAndTemplate = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      const { data: memberData } = await supabase
+        .from('organization_members')
+        .select('org_id')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (!memberData) return;
+      setOrgId(memberData.org_id);
+
+      // Check for existing template
+      const { data: files } = await supabase.storage
+        .from('compliance')
+        .list(`loa/templates/${memberData.org_id}`);
+      
+      if (files && files.length > 0) {
+        const masterFile = files.find(f => f.name === 'master.pdf');
+        if (masterFile) {
+          setTemplateInfo({
+            size: (masterFile.metadata?.size || 0) / 1024,
+            updated: new Date(masterFile.updated_at || masterFile.created_at).toLocaleString()
+          });
+        }
+      }
+    };
+    fetchOrgAndTemplate();
+  }, []);
+
+  const handleTemplateUpload = async (file: File) => {
+    if (!orgId) return;
+    if (!file.type.includes('pdf')) {
+      toast({ title: "Error", description: "Only PDF files are allowed", variant: "destructive" });
+      return;
+    }
+
+    setUploadingTemplate(true);
+    try {
+      const { error } = await supabase.storage
+        .from('compliance')
+        .upload(`loa/templates/${orgId}/master.pdf`, file, {
+          upsert: true,
+          contentType: 'application/pdf'
+        });
+
+      if (error) throw error;
+
+      setTemplateInfo({
+        size: file.size / 1024,
+        updated: new Date().toLocaleString()
+      });
+
+      toast({ title: "Success", description: "Template uploaded successfully" });
+    } catch (error: any) {
+      console.error(error);
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } finally {
+      setUploadingTemplate(false);
+    }
+  };
 
   return (
     <Card>
@@ -373,6 +444,57 @@ function HostedSMSWizard({ step, onSubmit, loading, evidence }: any) {
       <CardContent className="space-y-4">
         {step === 1 && (
           <>
+            {/* Template Status Badge */}
+            <div className="flex items-center gap-2 text-sm">
+              <FileText className="h-4 w-4" />
+              <span className="text-muted-foreground">
+                Template: {templateInfo ? "Using Custom PDF" : "Default template"}
+              </span>
+            </div>
+
+            {/* Admin Template Upload Section */}
+            {isAdmin() && (
+              <Collapsible>
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline" size="sm" className="w-full justify-between">
+                    <span className="flex items-center gap-2">
+                      <Settings className="h-4 w-4" />
+                      LOA Template (Admin)
+                    </span>
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-2 p-4 border rounded-lg space-y-3">
+                  {templateInfo && (
+                    <div className="text-sm space-y-1">
+                      <div className="flex items-center gap-2 text-green-600">
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span className="font-medium">Template: Uploaded</span>
+                      </div>
+                      <div className="text-muted-foreground">
+                        Size: {templateInfo.size.toFixed(1)} KB · Updated: {templateInfo.updated}
+                      </div>
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <Label htmlFor="template-upload">Upload Custom PDF Template</Label>
+                    <Input
+                      id="template-upload"
+                      type="file"
+                      accept=".pdf"
+                      disabled={uploadingTemplate}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleTemplateUpload(file);
+                      }}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Upload a PDF template for LOA generation. Overwrites previous template.
+                    </p>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="phoneNumber">Phone Number (E.164)</Label>
               <Input
