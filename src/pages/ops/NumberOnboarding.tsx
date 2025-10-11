@@ -7,11 +7,11 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Phone, FileText, Upload, CheckCircle2, Loader2 } from "lucide-react";
+import { Phone, FileText, CheckCircle2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-type OnboardingTrack = "quick-start" | "hosted-sms" | "full-port";
+type OnboardingTrack = "quick-start" | "hosted-sms";
 
 export default function NumberOnboarding() {
   const navigate = useNavigate();
@@ -127,45 +127,6 @@ export default function NumberOnboarding() {
     }
   };
 
-  const handleFullPort = async (data: any) => {
-    setLoading(true);
-    try {
-      const { data: result, error } = await supabase.functions.invoke('ops-twilio-create-port', {
-        body: { 
-          phoneNumber: data.phoneNumber,
-          loaDocument: data.loaDocument,
-          billDocument: data.billDocument
-        }
-      });
-
-      if (error) throw error;
-
-      setEvidence({
-        ...evidence,
-        portOrderId: result.portOrderId,
-        phoneNumber: data.phoneNumber,
-        focDate: result.focDate,
-        tempDid: result.tempDid,
-        timestamp: new Date().toISOString()
-      });
-
-      toast({
-        title: "Port Order Created",
-        description: `Temporary number: ${result.tempDid}`,
-      });
-
-      setStep(step + 1);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: "Failed to create port order",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="container mx-auto py-8">
@@ -212,20 +173,6 @@ export default function NumberOnboarding() {
                 </Label>
               </div>
 
-              <div className="flex items-center space-x-2 p-4 border rounded-lg">
-                <RadioGroupItem value="full-port" id="full-port" />
-                <Label htmlFor="full-port" className="flex-1 cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <Upload className="h-5 w-5" />
-                    <div>
-                      <div className="font-semibold">Full Port</div>
-                      <div className="text-sm text-muted-foreground">
-                        Port number completely (LOA + bill required)
-                      </div>
-                    </div>
-                  </div>
-                </Label>
-              </div>
             </RadioGroup>
           </CardContent>
         </Card>
@@ -249,14 +196,6 @@ export default function NumberOnboarding() {
             />
           </TabsContent>
           
-          <TabsContent value="full-port">
-            <FullPortWizard 
-              step={step} 
-              onSubmit={handleFullPort} 
-              loading={loading}
-              evidence={evidence}
-            />
-          </TabsContent>
         </Tabs>
 
         {Object.keys(evidence).length > 0 && (
@@ -409,92 +348,3 @@ function HostedSMSWizard({ step, onSubmit, loading, evidence }: any) {
   );
 }
 
-function FullPortWizard({ step, onSubmit, loading, evidence }: any) {
-  const [formData, setFormData] = useState({ phoneNumber: '', loaDocument: null, billDocument: null });
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Full Port - Port Existing Number</CardTitle>
-        <CardDescription>Step {step} of 4</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {step === 1 && (
-          <>
-            <Alert>
-              <AlertDescription>
-                <div className="font-semibold mb-2">Porting Requirements:</div>
-                <ul className="text-sm space-y-1 list-disc list-inside">
-                  <li>Letter of Authorization (LOA) with exact name/address</li>
-                  <li>Recent bill (within 30 days)</li>
-                  <li>Account holder authorization</li>
-                  <li>FOC (Firm Order Commitment) date coordination</li>
-                </ul>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  Contact support for country-specific requirements
-                </div>
-              </AlertDescription>
-            </Alert>
-            
-            <div className="space-y-2">
-              <Label htmlFor="portPhoneNumber">Phone Number (E.164)</Label>
-              <Input
-                id="portPhoneNumber"
-                placeholder="+15878428885"
-                value={formData.phoneNumber}
-                onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="portLoa">LOA Document</Label>
-              <Input
-                id="portLoa"
-                type="file"
-                accept=".pdf"
-                onChange={(e) => setFormData({ ...formData, loaDocument: e.target.files?.[0] || null })}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="bill">Recent Bill</Label>
-              <Input
-                id="bill"
-                type="file"
-                accept=".pdf"
-                onChange={(e) => setFormData({ ...formData, billDocument: e.target.files?.[0] || null })}
-              />
-            </div>
-            
-            <Button 
-              onClick={() => onSubmit(formData)} 
-              disabled={loading || !formData.loaDocument || !formData.billDocument}
-            >
-              {loading ? "Creating Port Order..." : "Create Port Order"}
-            </Button>
-          </>
-        )}
-        {step === 2 && (
-          <div className="space-y-4">
-            <Alert>
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription>
-                <div className="space-y-2">
-                  <div>Port order created successfully!</div>
-                  <div className="text-sm">
-                    <div>Port Order ID: <code>{evidence.portOrderId}</code></div>
-                    <div>FOC Date: <code>{evidence.focDate}</code></div>
-                    <div>Temporary DID: <code>{evidence.tempDid}</code></div>
-                  </div>
-                </div>
-              </AlertDescription>
-            </Alert>
-            <Button onClick={() => window.open('/ops/ports', '_blank')}>
-              Track Port Status
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
