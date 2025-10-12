@@ -156,6 +156,10 @@ verify_jwt = true  # Admin only - hosted SMS setup
 [functions.ops-twilio-create-port]
 verify_jwt = true  # Admin only - port order creation
 
+# TRUST•VOICE: Reputation setup
+[functions.ops-twilio-trust-setup]
+verify_jwt = true  # Admin only - Trust Hub and reputation configuration
+
 # PROMPT H: A2P compliance
 [functions.ops-twilio-a2p]
 verify_jwt = true  # Admin only - A2P workflow

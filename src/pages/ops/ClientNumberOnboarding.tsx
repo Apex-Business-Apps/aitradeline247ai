@@ -360,6 +360,97 @@ export default function ClientNumberOnboarding() {
     }
   };
 
+  const handleTrustSetup = async () => {
+    if (!formData.existing_numbers && !formData.fallback_e164) {
+      toast.error("Please provide a phone number for Trust Setup");
+      return;
+    }
+
+    setLoading(true);
+    setEvidence([]);
+    
+    try {
+      addEvidence("Initializing Trust Hub and reputation setup...");
+      
+      // Use first existing number or fallback number
+      const phoneNumber = formData.existing_numbers 
+        ? formData.existing_numbers.split(",")[0].trim()
+        : formData.fallback_e164;
+      
+      // Get subaccount SID
+      const { data: subaccountData } = await supabase.functions.invoke(
+        "ops-twilio-ensure-subaccount",
+        {
+          body: {
+            tenant_id: formData.tenant_id,
+            business_name: formData.business_name
+          }
+        }
+      );
+
+      addEvidence(`Setting up Trust Hub for ${phoneNumber}...`);
+      
+      const { data, error } = await supabase.functions.invoke(
+        "ops-twilio-trust-setup",
+        {
+          body: {
+            tenant_id: formData.tenant_id,
+            business_name: formData.business_name,
+            legal_address: formData.legal_address,
+            phone_number: phoneNumber,
+            subaccount_sid: subaccountData.subaccount_sid,
+            country_code: 'US',
+            contact_email: formData.contact_email
+          }
+        }
+      );
+
+      if (error) throw error;
+
+      if (data.trustHubProfileSid) {
+        addEvidence(`✅ Trust Hub Business Profile created: ${data.trustHubProfileSid}`);
+      }
+      
+      if (data.a2pBrandSid && data.a2pCampaignSid) {
+        addEvidence(`✅ Registered for 10DLC (US A2P)`);
+        addEvidence(`   Brand SID: ${data.a2pBrandSid}`);
+        addEvidence(`   Campaign SID: ${data.a2pCampaignSid}`);
+      }
+      
+      if (data.voiceIntegrityEnabled) {
+        addEvidence(`✅ Enabled STIR/SHAKEN voice attestation`);
+      }
+      
+      if (data.cnamSet) {
+        addEvidence(`✅ CNAM Caller ID set to "${formData.business_name}"`);
+      }
+      
+      addEvidence("");
+      addEvidence("📋 Reputation Features Configured:");
+      addEvidence("  • Trust Hub Business Profile ✓");
+      if (data.a2pBrandSid) {
+        addEvidence("  • A2P 10DLC Registration ✓");
+      }
+      if (data.voiceIntegrityEnabled) {
+        addEvidence("  • STIR/SHAKEN Attestation ✓");
+      }
+      if (data.cnamSet) {
+        addEvidence("  • Caller ID Name Display ✓");
+      }
+      addEvidence("");
+      addEvidence("✅ Trust and reputation setup complete!");
+      
+      toast.success("Trust Hub and reputation setup complete!");
+
+    } catch (error: any) {
+      console.error("Trust Setup error:", error);
+      addEvidence(`✗ Error: ${error.message}`);
+      toast.error("Failed to complete Trust Setup");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto p-6 max-w-5xl">
       <Card>
@@ -483,6 +574,23 @@ export default function ClientNumberOnboarding() {
                 <span className="text-xs opacity-80">Port existing numbers</span>
               </Button>
             </div>
+          </div>
+
+          {/* Trust & Reputation Setup */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-2">Trust & Reputation Setup</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Configure Trust Hub, A2P 10DLC, STIR/SHAKEN, and CNAM caller ID (can run in parallel with onboarding tracks)
+            </p>
+            <Button
+              onClick={handleTrustSetup}
+              disabled={loading || !formData.tenant_id || !formData.business_name}
+              variant="secondary"
+              className="w-full md:w-auto"
+            >
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Setup Trust & Reputation
+            </Button>
           </div>
 
           {/* Evidence Panel */}
