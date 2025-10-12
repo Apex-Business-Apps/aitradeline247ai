@@ -1,9 +1,8 @@
 {
   "endpoints": [
-    "/functions/v1/dashboard-summary",
-    "/functions/v1/secure-analytics",
-    "/functions/v1/call-logs"
+    "/functions/v1/healthz"
   ],
   "interval_minutes": 5,
-  "timeout_ms": 3000
+  "timeout_ms": 3000,
+  "comment": "GET-only endpoints for cold-start prevention. Add more public GET endpoints here."
 }

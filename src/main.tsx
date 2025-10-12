@@ -4,6 +4,8 @@ import "./index.css";
 import "./styles/roi-table.css";
 import "./styles/header-align.css";
 import "./i18n/config";
+import "./lib/previewUnblanker"; // CRITICAL: Blank screen prevention - runs first
+import "./lib/blankScreenDetector"; // Post-mount monitoring
 import { watchRoiTableCanon } from "./lib/roiTableFix";
 import { initPWAInstall } from "./lib/pwaInstall";
 import { initHeroGuardian } from "./lib/heroGuardian";

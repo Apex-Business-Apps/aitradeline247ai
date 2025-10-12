@@ -21,6 +21,13 @@ const Index = () => {
     trackPageView('home');
   }, [trackPageView]);
 
+  // Preload background image for faster rendering
+  useEffect(() => {
+    const img = new Image();
+    img.src = backgroundImage;
+    img.onerror = () => console.error('Background image failed to load');
+  }, []);
+
   return (
     <>
       <LayoutCanon />
@@ -31,12 +38,13 @@ const Index = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed'
+          backgroundAttachment: 'fixed',
+          backgroundColor: '#f8f9fa' // Fallback color if image fails
         }}
       >
-      {/* Content with translucency */}
-      <div className="relative z-10">
-        <SEOHead 
+      {/* Content with translucency - Optimized for performance */}
+      <div className="relative z-10" style={{ minHeight: '100vh' }}>
+        <SEOHead
           title="TradeLine 24/7 - Your 24/7 AI Receptionist!"
           description="Get fast and reliable customer service that never sleeps. Handle calls, messages, and inquiries 24/7 with human-like responses. Start growing now!"
           keywords="AI receptionist, 24/7 customer service, business automation, call handling, lead capture, CRM integration, grow business"
@@ -90,30 +98,30 @@ const Index = () => {
         />
         <OrganizationSchema />
         
-        <div className="backdrop-blur-[2px] bg-background/30">
+        <div className="bg-background/30 backdrop-blur-[2px]" style={{ willChange: 'transform' }}>
           <Header />
         </div>
         
-        <main className="flex-1">
-          <div className="backdrop-blur-[2px] bg-background/20">
+        <main className="flex-1" style={{ minHeight: '60vh' }}>
+          <div className="bg-background/20 backdrop-blur-[2px]" style={{ willChange: 'transform' }}>
             <HeroRoiDuo />
           </div>
-          <div className="backdrop-blur-[2px] bg-background/20">
+          <div className="bg-background/20 backdrop-blur-[2px]">
             <BenefitsGrid />
           </div>
-        <div className="backdrop-blur-[2px] bg-background/25">
+        <div className="bg-background/25 backdrop-blur-[2px]">
           <ImpactStrip />
         </div>
-        <div className="backdrop-blur-[2px] bg-background/25">
+        <div className="bg-background/25 backdrop-blur-[2px]">
           <HowItWorks />
         </div>
         </main>
         
-        <div className="backdrop-blur-[2px] bg-background/25">
+        <div className="bg-background/25 backdrop-blur-[2px]">
           <TrustBadgesSlim />
         </div>
         
-        <div className="backdrop-blur-[2px] bg-background/30">
+        <div className="bg-background/30 backdrop-blur-[2px]">
           <Footer />
         </div>
         

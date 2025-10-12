@@ -9,9 +9,25 @@ export default function StartupSplash() {
     const urlOff = new URLSearchParams(location.search).has("nosplash");
     const seen = sessionStorage.getItem("tl_splash_dismissed") === "1";
     if (disabled || urlOff || seen) return;
-    setShow(true);
-    const t = setTimeout(() => dismiss(), 1800);
-    return () => clearTimeout(t);
+    
+    // Safety: Ensure app is actually mounted before showing splash
+    const checkMount = () => {
+      const root = document.getElementById('root');
+      const main = document.getElementById('main');
+      if (root && (root.children.length > 0 || main)) {
+        setShow(true);
+        const t = setTimeout(() => dismiss(), 1000); // Reduced from 1800ms
+        return () => clearTimeout(t);
+      } else {
+        // App not mounted yet, dismiss splash to prevent blocking
+        console.warn('App not mounted, dismissing splash');
+        dismiss();
+      }
+    };
+    
+    // Delay check to ensure React has mounted
+    const checkTimer = setTimeout(checkMount, 100);
+    return () => clearTimeout(checkTimer);
   }, []);
 
   function dismiss() {
@@ -20,6 +36,17 @@ export default function StartupSplash() {
   }
 
   if (!show) return null;
+
+  // Emergency unblanking: If shown for >2s, auto-dismiss
+  useEffect(() => {
+    if (show) {
+      const emergency = setTimeout(() => {
+        console.warn('Startup splash auto-dismissed (emergency timeout)');
+        dismiss();
+      }, 2000);
+      return () => clearTimeout(emergency);
+    }
+  }, [show]);
 
   return (
     <div role="dialog" aria-label="Welcome to TradeLine 24/7" aria-modal="true"
