@@ -11,26 +11,27 @@ import { performanceMonitor } from "./lib/performanceMonitor";
 import SafeErrorBoundary from "./components/errors/SafeErrorBoundary";
 import { isSafeMode } from "./safe-mode"; // Initialize safe mode before React mounts
 
-// Canonical domain redirect (ONLY on www.tradeline247ai.com)
-// Skip for dev, preview (lovable.app), and other non-production environments
+// Environment detection for debugging
 if (typeof window !== 'undefined') {
   const hostname = window.location.hostname;
-  const isWWW = hostname === 'www.tradeline247ai.com';
-  const isApex = hostname === 'tradeline247ai.com';
-  const isPreview = hostname.endsWith('.lovable.app') || hostname.endsWith('.lovable.dev');
-  const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+  const isPreview = hostname.endsWith('.lovableproject.com') || 
+                    hostname.endsWith('.lovable.app') || 
+                    hostname.endsWith('.lovable.dev');
+  const isLocalhost = hostname === 'localhost' || 
+                     hostname === '127.0.0.1' ||
+                     hostname.startsWith('192.168.') ||
+                     hostname.endsWith('.local');
   
-  // Only redirect apex to www in actual production, not in preview/dev
-  if (isApex && !isPreview && !isLocalhost && !window.location.pathname.startsWith('/auth/callback')) {
-    const canonical = 'https://www.tradeline247ai.com';
-    const target = canonical + window.location.pathname + window.location.search + window.location.hash;
-    console.log('↪️ Redirecting apex to www:', target);
-    window.location.replace(target);
-  } else if (isPreview || isLocalhost) {
-    console.log('🔧 Preview/Dev environment detected, skipping canonical redirect');
-  } else if (isWWW) {
-    console.log('✅ Canonical domain (www)');
-  }
+  console.log('🚀 TradeLine 24/7 starting...', {
+    hostname,
+    isPreview,
+    isLocalhost,
+    pathname: window.location.pathname,
+    env: import.meta.env.MODE
+  });
+  
+  // NOTE: Canonical redirect moved to App.tsx to run AFTER React mounts
+  // This prevents blank screens caused by redirects before app initialization
 }
 
 createRoot(document.getElementById("root")!).render(

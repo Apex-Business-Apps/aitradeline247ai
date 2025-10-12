@@ -17,6 +17,7 @@ import { SmokeChecks } from '@/components/testing/SmokeChecks';
 import { RagSearchFab } from "@/components/rag/RagSearchFab";
 import { RagSearchDrawer } from "@/components/rag/RagSearchDrawer";
 import { TwilioLinkGuard } from "@/components/TwilioLinkGuard";
+import { CanonicalRedirect } from "@/components/CanonicalRedirect";
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -68,6 +69,7 @@ const AppWithMonitoring = () => {
 
   return (
     <>
+      <CanonicalRedirect />
       <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
