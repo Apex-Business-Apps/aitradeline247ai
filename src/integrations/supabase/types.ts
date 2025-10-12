@@ -2678,6 +2678,152 @@ export type Database = {
           },
         ]
       }
+      tenant_phone_mappings: {
+        Row: {
+          created_at: string
+          id: string
+          number_type: string
+          phone_number: string
+          provisioned_at: string
+          tenant_id: string
+          twilio_number_sid: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          number_type?: string
+          phone_number: string
+          provisioned_at?: string
+          tenant_id: string
+          twilio_number_sid: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          number_type?: string
+          phone_number?: string
+          provisioned_at?: string
+          tenant_id?: string
+          twilio_number_sid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_phone_mappings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_usage_counters: {
+        Row: {
+          billing_period_end: string
+          billing_period_start: string
+          created_at: string
+          id: string
+          last_updated_at: string
+          phone_mapping_id: string
+          sms_count_inbound: number
+          sms_count_outbound: number
+          tenant_id: string
+          voice_minutes_inbound: number
+          voice_minutes_outbound: number
+        }
+        Insert: {
+          billing_period_end: string
+          billing_period_start: string
+          created_at?: string
+          id?: string
+          last_updated_at?: string
+          phone_mapping_id: string
+          sms_count_inbound?: number
+          sms_count_outbound?: number
+          tenant_id: string
+          voice_minutes_inbound?: number
+          voice_minutes_outbound?: number
+        }
+        Update: {
+          billing_period_end?: string
+          billing_period_start?: string
+          created_at?: string
+          id?: string
+          last_updated_at?: string
+          phone_mapping_id?: string
+          sms_count_inbound?: number
+          sms_count_outbound?: number
+          tenant_id?: string
+          voice_minutes_inbound?: number
+          voice_minutes_outbound?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_usage_counters_phone_mapping_id_fkey"
+            columns: ["phone_mapping_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_phone_mappings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_usage_counters_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_usage_logs: {
+        Row: {
+          call_sid: string | null
+          created_at: string
+          id: string
+          message_sid: string | null
+          occurred_at: string
+          phone_mapping_id: string
+          quantity: number
+          tenant_id: string
+          usage_type: string
+        }
+        Insert: {
+          call_sid?: string | null
+          created_at?: string
+          id?: string
+          message_sid?: string | null
+          occurred_at: string
+          phone_mapping_id: string
+          quantity: number
+          tenant_id: string
+          usage_type: string
+        }
+        Update: {
+          call_sid?: string | null
+          created_at?: string
+          id?: string
+          message_sid?: string | null
+          occurred_at?: string
+          phone_mapping_id?: string
+          quantity?: number
+          tenant_id?: string
+          usage_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_usage_logs_phone_mapping_id_fkey"
+            columns: ["phone_mapping_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_phone_mappings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_usage_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transcripts: {
         Row: {
           archived: boolean | null
@@ -3921,6 +4067,14 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_or_create_usage_counter: {
+        Args: {
+          p_occurred_at?: string
+          p_phone_mapping_id: string
+          p_tenant_id: string
+        }
+        Returns: string
+      }
       get_org_appointments_secure: {
         Args: { limit_count?: number; org_id: string }
         Returns: {
@@ -4220,12 +4374,33 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_sms_usage: {
+        Args: {
+          p_direction: string
+          p_message_sid: string
+          p_occurred_at?: string
+          p_phone_number: string
+          p_tenant_id: string
+        }
+        Returns: undefined
+      }
       log_upgrade_step: {
         Args: {
           p_details?: Json
           p_phase: string
           p_status: string
           p_step: string
+        }
+        Returns: undefined
+      }
+      log_voice_usage: {
+        Args: {
+          p_call_sid: string
+          p_direction: string
+          p_duration_seconds: number
+          p_occurred_at?: string
+          p_phone_number: string
+          p_tenant_id: string
         }
         Returns: undefined
       }

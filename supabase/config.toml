@@ -167,6 +167,10 @@ verify_jwt = true  # Admin only - voice health checks
 [functions.ops-messaging-health-check]
 verify_jwt = true  # Admin only - messaging health checks
 
+# BILLING•MAP: Usage mapping and tracking
+[functions.ops-map-number-to-tenant]
+verify_jwt = true  # Admin only - map numbers to tenants for billing
+
 # PROMPT H: A2P compliance
 [functions.ops-twilio-a2p]
 verify_jwt = true  # Admin only - A2P workflow
