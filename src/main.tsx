@@ -11,14 +11,25 @@ import { performanceMonitor } from "./lib/performanceMonitor";
 import SafeErrorBoundary from "./components/errors/SafeErrorBoundary";
 import { isSafeMode } from "./safe-mode"; // Initialize safe mode before React mounts
 
-// Canonical domain redirect (skip in dev)
-if (import.meta.env.PROD && typeof window !== 'undefined') {
-  const canonical = 'https://tradeline247ai.com';
-  const current = window.location.origin;
+// Canonical domain redirect (ONLY on www.tradeline247ai.com)
+// Skip for dev, preview (lovable.app), and other non-production environments
+if (typeof window !== 'undefined') {
+  const hostname = window.location.hostname;
+  const isWWW = hostname === 'www.tradeline247ai.com';
+  const isApex = hostname === 'tradeline247ai.com';
+  const isPreview = hostname.endsWith('.lovable.app') || hostname.endsWith('.lovable.dev');
+  const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
   
-  if (current !== canonical && !window.location.pathname.startsWith('/auth/callback')) {
+  // Only redirect apex to www in actual production, not in preview/dev
+  if (isApex && !isPreview && !isLocalhost && !window.location.pathname.startsWith('/auth/callback')) {
+    const canonical = 'https://www.tradeline247ai.com';
     const target = canonical + window.location.pathname + window.location.search + window.location.hash;
+    console.log('↪️ Redirecting apex to www:', target);
     window.location.replace(target);
+  } else if (isPreview || isLocalhost) {
+    console.log('🔧 Preview/Dev environment detected, skipping canonical redirect');
+  } else if (isWWW) {
+    console.log('✅ Canonical domain (www)');
   }
 }
 
