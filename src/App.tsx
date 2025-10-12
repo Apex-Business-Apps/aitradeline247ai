@@ -18,6 +18,8 @@ import { RagSearchFab } from "@/components/rag/RagSearchFab";
 import { RagSearchDrawer } from "@/components/rag/RagSearchDrawer";
 import { TwilioLinkGuard } from "@/components/TwilioLinkGuard";
 import { CanonicalRedirect } from "@/components/CanonicalRedirect";
+import { PreviewDiagnostics } from "@/components/dev/PreviewDiagnostics";
+import "@/lib/errorReporter"; // Initialize global error tracking
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -155,6 +157,7 @@ const App = () => {
               <MiniChat />
               <RagSearchFab onClick={() => setRagDrawerOpen(true)} />
               <RagSearchDrawer open={ragDrawerOpen} onOpenChange={setRagDrawerOpen} />
+              <PreviewDiagnostics />
             </BrowserRouter>
           </AppErrorBoundary>
         </TooltipProvider>
