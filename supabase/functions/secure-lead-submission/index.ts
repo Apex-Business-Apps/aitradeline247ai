@@ -1,6 +1,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
+import { sanitizeText, sanitizeEmail, sanitizeName, detectSuspiciousContent, generateRequestHash } from '../_shared/sanitizer.ts';
+import { createRequestContext, logWithContext, createResponseHeaders } from '../_shared/requestId.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -21,16 +23,7 @@ interface LeadSubmission {
   phone?: string;
 }
 
-// Input sanitization function
-function sanitizeInput(input: string, maxLength: number): string {
-  if (!input) return '';
-  
-  return input
-    .trim()
-    .substring(0, maxLength)
-    .replace(/[<>'"&]/g, '') // Remove potentially dangerous characters
-    .replace(/\s+/g, ' '); // Normalize whitespace
-}
+// Use comprehensive sanitization from shared utility
 
 // Comprehensive server-side validation
 function validateLeadData(data: any): { isValid: boolean; errors: string[]; sanitizedData?: LeadSubmission } {
@@ -41,50 +34,63 @@ function validateLeadData(data: any): { isValid: boolean; errors: string[]; sani
     return { isValid: false, errors };
   }
 
-  // Validate and sanitize name
-  const name = sanitizeInput(data.name, 100);
-  if (!name || name.length < 1) {
-    errors.push('Name is required');
-  } else if (!/^[a-zA-Z\s\-'\.]+$/.test(name)) {
-    errors.push('Name contains invalid characters');
+  // Validate and sanitize name using comprehensive utility
+  let name: string;
+  try {
+    name = sanitizeName(data.name, 100);
+    if (!name || name.length < 1) {
+      errors.push('Name is required');
+    }
+  } catch (err) {
+    errors.push('Invalid name format');
+    name = '';
   }
 
-  // Validate and sanitize email
-  const email = sanitizeInput(data.email, 255).toLowerCase();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email || !emailRegex.test(email)) {
+  // Validate and sanitize email using comprehensive utility
+  let email: string;
+  try {
+    email = sanitizeEmail(data.email);
+  } catch (err) {
     errors.push('Invalid email address');
+    email = '';
   }
 
-  // Validate and sanitize company
-  const company = sanitizeInput(data.company, 200);
-  if (!company || company.length < 1) {
-    errors.push('Company name is required');
-  } else if (!/^[a-zA-Z0-9\s\-&.,()]+$/.test(company)) {
-    errors.push('Company name contains invalid characters');
+  // Validate and sanitize company using comprehensive utility
+  let company: string;
+  try {
+    company = sanitizeName(data.company, 200);
+    if (!company || company.length < 1) {
+      errors.push('Company name is required');
+    }
+  } catch (err) {
+    errors.push('Invalid company name');
+    company = '';
   }
 
-  // Validate and sanitize notes (optional)
-  const notes = data.notes ? sanitizeInput(data.notes, 2000) : '';
+  // Validate and sanitize notes (optional) using comprehensive utility
+  let notes = '';
+  if (data.notes) {
+    try {
+      notes = sanitizeText(data.notes, { maxLength: 2000 });
+    } catch (err) {
+      errors.push('Invalid notes content');
+    }
+  }
 
   // Validate and sanitize phone (optional)
-  const phone = data.phone ? sanitizeInput(data.phone, 20) : '';
-
-  // Check for suspicious patterns
-  const suspiciousPatterns = [
-    /script/gi,
-    /<[^>]*>/gi,
-    /javascript:/gi,
-    /on\w+=/gi,
-    /(union|select|drop|delete|update|insert)/gi
-  ];
-
-  const allText = `${name} ${email} ${company} ${notes} ${phone}`;
-  for (const pattern of suspiciousPatterns) {
-    if (pattern.test(allText)) {
-      errors.push('Suspicious content detected');
-      break;
+  let phone = '';
+  if (data.phone) {
+    try {
+      phone = sanitizeText(data.phone, { maxLength: 20 });
+    } catch (err) {
+      errors.push('Invalid phone format');
     }
+  }
+
+  // Check for suspicious patterns using comprehensive utility
+  const allText = `${name} ${email} ${company} ${notes} ${phone}`;
+  if (detectSuspiciousContent(allText)) {
+    errors.push('Suspicious content detected');
   }
 
   if (errors.length > 0) {
@@ -128,6 +134,9 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
+
+  const requestCtx = createRequestContext(req);
+  logWithContext(requestCtx, 'info', 'Secure lead submission request received');
 
   try {
     // Only accept POST requests
@@ -178,6 +187,30 @@ serve(async (req) => {
 
     // Parse and validate request body
     const requestBody = await req.json();
+    
+    // Check for idempotency key
+    const idempotencyKey = req.headers.get('idempotency-key') || 
+                          requestBody.idempotency_key || 
+                          await generateRequestHash({ ...requestBody, ip: clientIP });
+    
+    // Check if this request was already processed
+    const { data: idempotencyCheck } = await supabase.rpc('check_idempotency', {
+      p_key: idempotencyKey,
+      p_operation: 'lead_submission',
+      p_request_hash: await generateRequestHash(requestBody)
+    });
+    
+    if (idempotencyCheck?.exists && idempotencyCheck?.status === 'completed') {
+      logWithContext(requestCtx, 'info', 'Duplicate request detected - returning cached response');
+      return new Response(
+        JSON.stringify(idempotencyCheck.response_data),
+        { 
+          status: 200, 
+          headers: { ...corsHeaders, ...createResponseHeaders(requestCtx), 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
     const validation = validateLeadData(requestBody);
 
     if (!validation.isValid) {
@@ -268,22 +301,32 @@ serve(async (req) => {
       user_agent: req.headers.get('user-agent')?.substring(0, 200) || 'unknown'
     });
 
-    console.log('Secure lead submission successful:', {
+    logWithContext(requestCtx, 'info', 'Secure lead submission successful', {
       leadId: insertedLead.id,
       leadScore: insertedLead.lead_score
     });
 
+    // Prepare success response
+    const successResponse = { 
+      success: true,
+      leadId: insertedLead.id,
+      leadScore: insertedLead.lead_score,
+      remainingAttempts: rateLimitResult.remaining - 1
+    };
+    
+    // Complete idempotency tracking
+    await supabase.rpc('complete_idempotency', {
+      p_key: idempotencyKey,
+      p_response: successResponse,
+      p_status: 'completed'
+    });
+
     // Return success response
     return new Response(
-      JSON.stringify({ 
-        success: true,
-        leadId: insertedLead.id,
-        leadScore: insertedLead.lead_score,
-        remainingAttempts: rateLimitResult.remaining - 1
-      }),
+      JSON.stringify(successResponse),
       { 
         status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...corsHeaders, ...createResponseHeaders(requestCtx), 'Content-Type': 'application/json' }
       }
     );
 
