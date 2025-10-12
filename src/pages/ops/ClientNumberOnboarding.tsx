@@ -94,6 +94,64 @@ export default function ClientNumberOnboarding() {
     toast.info("Now proceed to purchase numbers for this client");
   };
 
+  const handleQuickStartForward = async () => {
+    if (!formData.fallback_e164) {
+      toast.error("Fallback number is required for Quick-Start Forward");
+      return;
+    }
+
+    setLoading(true);
+    setEvidence([]);
+    
+    try {
+      addEvidence("Initializing client...");
+      
+      // Initialize client first
+      await initializeClient();
+      
+      addEvidence("Executing Quick-Start Forward flow...");
+      
+      // Parse area code from fallback number
+      const areaCode = formData.fallback_e164.substring(2, 5);
+      
+      const { data, error } = await supabase.functions.invoke(
+        "ops-twilio-quickstart-forward",
+        {
+          body: {
+            tenant_id: formData.tenant_id,
+            business_name: formData.business_name,
+            fallback_e164: formData.fallback_e164,
+            area_code: areaCode,
+            contact_email: formData.contact_email
+          }
+        }
+      );
+
+      if (error) throw error;
+
+      addEvidence(`✅ Quick-Start: Purchased number ${data.phone_number}`);
+      addEvidence(`✅ Configured webhooks and failover`);
+      addEvidence(`✅ Added to Messaging Service`);
+      if (data.forwarding_kit_url) {
+        addEvidence(`✅ Forwarding Kit ready: ${data.forwarding_kit_url}`);
+      }
+      
+      toast.success("Quick-Start Forward complete!");
+      
+      // Open forwarding kit in new tab
+      if (data.forwarding_kit_url) {
+        window.open(data.forwarding_kit_url, '_blank');
+      }
+
+    } catch (error: any) {
+      console.error("Quick-Start Forward error:", error);
+      addEvidence(`✗ Error: ${error.message}`);
+      toast.error("Failed to complete Quick-Start Forward");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleHostedSMS = async () => {
     await initializeClient();
     addEvidence("Hosted SMS track selected - LOA submission required");
@@ -198,13 +256,13 @@ export default function ClientNumberOnboarding() {
             <h3 className="text-lg font-semibold mb-4">Select Onboarding Track</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button
-                onClick={handleQuickStart}
-                disabled={loading || !formData.tenant_id || !formData.business_name}
+                onClick={handleQuickStartForward}
+                disabled={loading || !formData.tenant_id || !formData.business_name || !formData.fallback_e164}
                 className="h-24 flex-col gap-2"
               >
                 <Phone className="h-6 w-6" />
-                <span>Quick-Start</span>
-                <span className="text-xs opacity-80">Purchase new numbers</span>
+                <span>Quick-Start Forward</span>
+                <span className="text-xs opacity-80">Buy + Wire + Kit</span>
               </Button>
 
               <Button

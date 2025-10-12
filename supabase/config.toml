@@ -167,6 +167,16 @@ verify_jwt = true  # Admin only - ensure Twilio subaccount exists
 [functions.ops-twilio-ensure-messaging-service]
 verify_jwt = true  # Admin only - ensure Messaging Service exists
 
+# FLOW•QUICKSTART: Buy + Wire + Forwarding Kit
+[functions.ops-twilio-quickstart-forward]
+verify_jwt = true  # Admin only - complete quick-start flow
+
+[functions.ops-generate-forwarding-kit]
+verify_jwt = false  # Service-to-service call
+
+[functions.ops-test-call]
+verify_jwt = false  # Public test call page
+
 # PROMPT DF-1 & DF-2: Legacy webhook aliases (permanent)
 [functions.twilio-voice]
 verify_jwt = false  # Alias to /voice-answer

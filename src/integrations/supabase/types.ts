@@ -2910,6 +2910,57 @@ export type Database = {
           },
         ]
       }
+      twilio_quickstart_configs: {
+        Row: {
+          created_at: string
+          failover_url: string | null
+          fallback_e164: string
+          forwarding_kit_url: string | null
+          id: string
+          messaging_service_enrolled: boolean | null
+          metadata: Json | null
+          phone_number: string
+          phone_sid: string
+          status: string
+          status_callback: string
+          tenant_id: string
+          updated_at: string
+          voice_url: string
+        }
+        Insert: {
+          created_at?: string
+          failover_url?: string | null
+          fallback_e164: string
+          forwarding_kit_url?: string | null
+          id?: string
+          messaging_service_enrolled?: boolean | null
+          metadata?: Json | null
+          phone_number: string
+          phone_sid: string
+          status?: string
+          status_callback: string
+          tenant_id: string
+          updated_at?: string
+          voice_url: string
+        }
+        Update: {
+          created_at?: string
+          failover_url?: string | null
+          fallback_e164?: string
+          forwarding_kit_url?: string | null
+          id?: string
+          messaging_service_enrolled?: boolean | null
+          metadata?: Json | null
+          phone_number?: string
+          phone_sid?: string
+          status?: string
+          status_callback?: string
+          tenant_id?: string
+          updated_at?: string
+          voice_url?: string
+        }
+        Relationships: []
+      }
       twilio_subaccounts: {
         Row: {
           business_name: string
