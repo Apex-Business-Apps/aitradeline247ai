@@ -28,9 +28,13 @@ export function detectBlankScreen(): BlankScreenReport {
     return report;
   }
 
-  if (root.children.length === 0) {
+  // CRITICAL FIX: Check if root has meaningful content (not just wrapper divs)
+  const hasTextContent = root.textContent && root.textContent.trim().length > 50;
+  const hasVisibleElements = root.querySelectorAll('button, a, input, h1, h2, h3, p').length > 0;
+  
+  if (root.children.length === 0 || (!hasTextContent && !hasVisibleElements)) {
     report.isBlank = true;
-    report.issues.push('root_empty');
+    report.issues.push('root_empty_or_no_content');
   }
 
   // Check 2: Main content exists

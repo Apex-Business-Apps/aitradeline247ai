@@ -37,11 +37,20 @@ export function initPreviewUnblanker(): UnblankerReport {
       console.log('✅ Fixed: root element visibility');
     }
 
-    // Ensure root has content
+    // CRITICAL FIX: Don't report empty root immediately - React needs time to mount
+    // Only warn if root is STILL empty after a delay
     if (root.children.length === 0) {
-      report.triggered = true;
-      report.fixes.push('empty_root');
-      console.error('❌ Root element is empty - React may have failed to mount');
+      setTimeout(() => {
+        if (root.children.length === 0) {
+          console.error('❌ Root element is empty after 1s - React may have failed to mount');
+          report.triggered = true;
+          report.fixes.push('empty_root_delayed');
+        } else {
+          console.log('✅ Root element populated successfully');
+        }
+      }, 1000);
+    } else {
+      console.log('✅ Root element has content');
     }
 
     // Fix height issues
@@ -142,17 +151,27 @@ export function monitorBlankScreen(): void {
   }, 1000); // Check every second for 5 seconds
 }
 
-// Auto-initialize on import
+// Auto-initialize on import with proper timing
 if (typeof window !== 'undefined' && window.location.hostname.includes('lovable')) {
-  // Run immediately
-  document.addEventListener('DOMContentLoaded', () => {
-    initPreviewUnblanker();
-  });
+  // CRITICAL: Wait for React to mount before running checks
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      // Delay check to allow React time to mount
+      setTimeout(() => {
+        initPreviewUnblanker();
+      }, 500);
+    });
+  } else {
+    // DOM already loaded, still give React time
+    setTimeout(() => {
+      initPreviewUnblanker();
+    }, 500);
+  }
 
-  // Run again after load event
+  // Run comprehensive monitoring after full page load
   window.addEventListener('load', () => {
     setTimeout(() => {
       monitorBlankScreen();
-    }, 500);
+    }, 1000);
   });
 }
