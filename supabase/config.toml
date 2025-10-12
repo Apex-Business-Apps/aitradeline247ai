@@ -204,3 +204,16 @@ verify_jwt = false  # Alias to /webcomms-sms-reply
 
 [functions.twilio-sms-status]
 verify_jwt = false  # Alias to /webcomms-sms-status
+
+# PROMPT VOICE-FRONTDOOR: Canadian consent flow with speech-based opt-out
+[functions.voice-frontdoor]
+verify_jwt = false  # Twilio webhook - main entry point
+
+[functions.voice-consent-speech]
+verify_jwt = false  # Twilio webhook - speech consent handler
+
+[functions.voice-route]
+verify_jwt = false  # Twilio webhook - AI-first routing with human fallback
+
+[functions.voice-route-action]
+verify_jwt = false  # Twilio webhook - routing action callback
