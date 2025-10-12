@@ -160,6 +160,13 @@ verify_jwt = true  # Admin only - port order creation
 [functions.ops-twilio-trust-setup]
 verify_jwt = true  # Admin only - Trust Hub and reputation configuration
 
+# OPS•HEALTH: Health monitoring and testing
+[functions.ops-voice-health-check]
+verify_jwt = true  # Admin only - voice health checks
+
+[functions.ops-messaging-health-check]
+verify_jwt = true  # Admin only - messaging health checks
+
 # PROMPT H: A2P compliance
 [functions.ops-twilio-a2p]
 verify_jwt = true  # Admin only - A2P workflow
