@@ -266,6 +266,144 @@ export type Database = {
         }
         Relationships: []
       }
+      billing_events: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_id: string
+          event_type: string
+          id: string
+          last_processed_at: string | null
+          payload: Json
+          processing_status: string
+          received_at: string
+          retry_count: number
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          last_processed_at?: string | null
+          payload?: Json
+          processing_status?: string
+          received_at?: string
+          retry_count?: number
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          last_processed_at?: string | null
+          payload?: Json
+          processing_status?: string
+          received_at?: string
+          retry_count?: number
+        }
+        Relationships: []
+      }
+      billing_invoices: {
+        Row: {
+          amount_due: number
+          amount_paid: number
+          billing_reason: string | null
+          created_at: string
+          currency: string
+          hosted_invoice_url: string | null
+          id: string
+          invoice_pdf: string | null
+          metadata: Json | null
+          organization_id: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_invoice_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount_due: number
+          amount_paid?: number
+          billing_reason?: string | null
+          created_at?: string
+          currency?: string
+          hosted_invoice_url?: string | null
+          id?: string
+          invoice_pdf?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_invoice_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number
+          billing_reason?: string | null
+          created_at?: string
+          currency?: string
+          hosted_invoice_url?: string | null
+          id?: string
+          invoice_pdf?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          status?: string
+          stripe_customer_id?: string
+          stripe_invoice_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      billing_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json | null
+          organization_id: string | null
+          payment_method: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_payment_intent_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          payment_method?: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_payment_intent_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          payment_method?: string | null
+          status?: string
+          stripe_customer_id?: string
+          stripe_payment_intent_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       blocklist_numbers: {
         Row: {
           created_at: string

@@ -205,6 +205,10 @@ verify_jwt = false  # Alias to /webcomms-sms-reply
 [functions.twilio-sms-status]
 verify_jwt = false  # Alias to /webcomms-sms-status
 
+# BILLING: Stripe webhook processing with idempotency
+[functions.stripe-webhook]
+verify_jwt = false  # Stripe webhook - signature verified in function
+
 # PROMPT VOICE-FRONTDOOR: Canadian consent flow with speech-based opt-out
 [functions.voice-frontdoor]
 verify_jwt = false  # Twilio webhook - main entry point
