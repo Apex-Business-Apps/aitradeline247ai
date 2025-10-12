@@ -153,9 +153,94 @@ export default function ClientNumberOnboarding() {
   };
 
   const handleHostedSMS = async () => {
-    await initializeClient();
-    addEvidence("Hosted SMS track selected - LOA submission required");
-    toast.info("Submit LOA documents for existing numbers");
+    if (!formData.existing_numbers) {
+      toast.error("Please provide at least one existing number for Hosted SMS");
+      return;
+    }
+
+    setLoading(true);
+    setEvidence([]);
+    
+    try {
+      addEvidence("Initializing client for Hosted SMS...");
+      
+      // Initialize client first
+      await initializeClient();
+      
+      addEvidence("Processing Hosted SMS requests...");
+      
+      // Parse existing numbers
+      const existingNumbers = formData.existing_numbers
+        .split(",")
+        .map(n => n.trim())
+        .filter(n => n);
+
+      if (existingNumbers.length === 0) {
+        throw new Error("No valid phone numbers provided");
+      }
+
+      // Get subaccount SID
+      const { data: subaccountData } = await supabase.functions.invoke(
+        "ops-twilio-ensure-subaccount",
+        {
+          body: {
+            tenant_id: formData.tenant_id,
+            business_name: formData.business_name
+          }
+        }
+      );
+
+      // Process each number for Hosted SMS
+      for (const phoneNumber of existingNumbers) {
+        addEvidence(`📱 Submitting Hosted SMS order for ${phoneNumber}...`);
+        
+        const { data, error } = await supabase.functions.invoke(
+          "ops-twilio-hosted-sms",
+          {
+            body: {
+              phoneNumber,
+              tenant_id: formData.tenant_id,
+              business_name: formData.business_name,
+              legal_address: formData.legal_address,
+              contact_email: formData.contact_email,
+              subaccount_sid: subaccountData.subaccount_sid
+            }
+          }
+        );
+
+        if (error) throw error;
+
+        addEvidence(`✅ Hosted SMS order created for ${phoneNumber}`);
+        addEvidence(`📧 LOA email sent to ${formData.contact_email}`);
+        addEvidence(`🔑 Order SID: ${data.orderSid}`);
+        addEvidence(`📋 Status: ${data.status}`);
+        
+        if (data.loaUrl) {
+          addEvidence(`📄 LOA Document: ${data.loaUrl}`);
+        }
+        
+        addEvidence(`⚠️ Client must sign LOA and complete ownership verification`);
+        addEvidence(`⏱️ Processing typically takes 1-2 business days`);
+        addEvidence("");
+      }
+
+      addEvidence("✅ All Hosted SMS orders submitted successfully");
+      addEvidence("📌 Next steps:");
+      addEvidence("  1. Client will receive LOA email from Twilio");
+      addEvidence("  2. Client must sign LOA electronically");
+      addEvidence("  3. Twilio may call for ownership verification");
+      addEvidence("  4. Once approved, numbers will be SMS-enabled");
+      addEvidence("  5. Numbers will be added to Messaging Service automatically");
+      
+      toast.success("Hosted SMS orders submitted successfully");
+
+    } catch (error: any) {
+      console.error("Hosted SMS error:", error);
+      addEvidence(`✗ Error: ${error.message}`);
+      toast.error("Failed to submit Hosted SMS orders");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFullPort = async () => {

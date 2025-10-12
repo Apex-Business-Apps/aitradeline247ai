@@ -2827,6 +2827,69 @@ export type Database = {
           },
         ]
       }
+      twilio_hosted_sms_orders: {
+        Row: {
+          business_name: string
+          contact_email: string
+          created_at: string
+          id: string
+          legal_address: string
+          loa_signed_at: string | null
+          messaging_service_added_at: string | null
+          metadata: Json | null
+          order_data: Json | null
+          order_sid: string
+          phone_number: string
+          status: string
+          subaccount_sid: string | null
+          submission_id: string | null
+          tenant_id: string
+          test_sms_sent_at: string | null
+          updated_at: string
+          verification_completed_at: string | null
+        }
+        Insert: {
+          business_name: string
+          contact_email: string
+          created_at?: string
+          id?: string
+          legal_address: string
+          loa_signed_at?: string | null
+          messaging_service_added_at?: string | null
+          metadata?: Json | null
+          order_data?: Json | null
+          order_sid: string
+          phone_number: string
+          status?: string
+          subaccount_sid?: string | null
+          submission_id?: string | null
+          tenant_id: string
+          test_sms_sent_at?: string | null
+          updated_at?: string
+          verification_completed_at?: string | null
+        }
+        Update: {
+          business_name?: string
+          contact_email?: string
+          created_at?: string
+          id?: string
+          legal_address?: string
+          loa_signed_at?: string | null
+          messaging_service_added_at?: string | null
+          metadata?: Json | null
+          order_data?: Json | null
+          order_sid?: string
+          phone_number?: string
+          status?: string
+          subaccount_sid?: string | null
+          submission_id?: string | null
+          tenant_id?: string
+          test_sms_sent_at?: string | null
+          updated_at?: string
+          verification_completed_at?: string | null
+        }
+        Relationships: []
+      }
       twilio_messaging_services: {
         Row: {
           business_name: string
