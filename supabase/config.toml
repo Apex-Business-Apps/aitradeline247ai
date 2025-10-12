@@ -160,6 +160,13 @@ verify_jwt = true  # Admin only - port order creation
 [functions.ops-twilio-a2p]
 verify_jwt = true  # Admin only - A2P workflow
 
+# WIZARD•CREATE: Client onboarding automation
+[functions.ops-twilio-ensure-subaccount]
+verify_jwt = true  # Admin only - ensure Twilio subaccount exists
+
+[functions.ops-twilio-ensure-messaging-service]
+verify_jwt = true  # Admin only - ensure Messaging Service exists
+
 # PROMPT DF-1 & DF-2: Legacy webhook aliases (permanent)
 [functions.twilio-voice]
 verify_jwt = false  # Alias to /voice-answer

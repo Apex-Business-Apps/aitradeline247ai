@@ -314,6 +314,78 @@ export type Database = {
         }
         Relationships: []
       }
+      business_profiles: {
+        Row: {
+          booking_rules: Json
+          brand_voice: Json
+          business_name: string
+          compliance: Json
+          created_at: string
+          escalation: Json
+          faq: Json
+          hours: Json
+          id: string
+          industry: string
+          organization_id: string
+          service_area: string | null
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          booking_rules?: Json
+          brand_voice?: Json
+          business_name: string
+          compliance?: Json
+          created_at?: string
+          escalation?: Json
+          faq?: Json
+          hours?: Json
+          id?: string
+          industry: string
+          organization_id: string
+          service_area?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          booking_rules?: Json
+          brand_voice?: Json
+          business_name?: string
+          compliance?: Json
+          created_at?: string
+          escalation?: Json
+          faq?: Json
+          hours?: Json
+          id?: string
+          industry?: string
+          organization_id?: string
+          service_area?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      buyer_path_sends: {
+        Row: {
+          event_type: string
+          id: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       call_lifecycle: {
         Row: {
           call_sid: string
@@ -2755,6 +2827,42 @@ export type Database = {
           },
         ]
       }
+      twilio_messaging_services: {
+        Row: {
+          business_name: string
+          created_at: string
+          id: string
+          messaging_service_sid: string
+          metadata: Json | null
+          status: string
+          subaccount_sid: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          id?: string
+          messaging_service_sid: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          id?: string
+          messaging_service_sid?: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       twilio_numbers: {
         Row: {
           capabilities: Json | null
@@ -2801,6 +2909,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      twilio_subaccounts: {
+        Row: {
+          business_name: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          status: string
+          subaccount_sid: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       unsubscribes: {
         Row: {
@@ -3049,6 +3190,7 @@ export type Database = {
       voice_presets: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           label: string
           max_reply_seconds: number | null
@@ -3058,6 +3200,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id: string
           label: string
           max_reply_seconds?: number | null
@@ -3067,6 +3210,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           label?: string
           max_reply_seconds?: number | null
@@ -3103,6 +3247,45 @@ export type Database = {
           error_message?: string | null
           fell_back?: boolean
           started_at?: string
+        }
+        Relationships: []
+      }
+      voice_transcripts: {
+        Row: {
+          call_sid: string
+          captured_fields: Json | null
+          created_at: string
+          drift_flagged: boolean | null
+          drift_reason: string | null
+          id: string
+          kb_sources: string[] | null
+          model_output: string | null
+          transcript: string
+          used_kb: boolean | null
+        }
+        Insert: {
+          call_sid: string
+          captured_fields?: Json | null
+          created_at?: string
+          drift_flagged?: boolean | null
+          drift_reason?: string | null
+          id?: string
+          kb_sources?: string[] | null
+          model_output?: string | null
+          transcript: string
+          used_kb?: boolean | null
+        }
+        Update: {
+          call_sid?: string
+          captured_fields?: Json | null
+          created_at?: string
+          drift_flagged?: boolean | null
+          drift_reason?: string | null
+          id?: string
+          kb_sources?: string[] | null
+          model_output?: string | null
+          transcript?: string
+          used_kb?: boolean | null
         }
         Relationships: []
       }
@@ -4008,6 +4191,10 @@ export type Database = {
       vector_typmod_in: {
         Args: { "": unknown[] }
         Returns: number
+      }
+      verify_email_service_configured: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
     }
     Enums: {
