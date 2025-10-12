@@ -1,0 +1,9 @@
+{
+  "endpoints": [
+    "/functions/v1/dashboard-summary",
+    "/functions/v1/secure-analytics",
+    "/functions/v1/call-logs"
+  ],
+  "interval_minutes": 5,
+  "timeout_ms": 3000
+}

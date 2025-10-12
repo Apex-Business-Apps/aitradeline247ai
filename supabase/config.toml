@@ -209,6 +209,13 @@ verify_jwt = false  # Alias to /webcomms-sms-status
 [functions.stripe-webhook]
 verify_jwt = false  # Stripe webhook - signature verified in function
 
+# INFRA: Health checks and pre-warming
+[functions.healthz]
+verify_jwt = false  # Public health check endpoint
+
+[functions.prewarm-cron]
+verify_jwt = false  # Cron-triggered pre-warm job
+
 # PROMPT VOICE-FRONTDOOR: Canadian consent flow with speech-based opt-out
 [functions.voice-frontdoor]
 verify_jwt = false  # Twilio webhook - main entry point
