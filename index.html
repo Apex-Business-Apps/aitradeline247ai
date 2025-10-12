@@ -125,8 +125,26 @@
 </head>
 
   <body>
+    <!-- EMERGENCY UNBLANKER: Force visibility before React loads -->
+    <script>
+      (function() {
+        // Immediately ensure root is visible
+        var style = document.createElement('style');
+        style.textContent = '#root { min-height: 100vh; opacity: 1 !important; visibility: visible !important; }';
+        document.head.appendChild(style);
+        
+        console.log('🚀 UNBLANKER: Root visibility forced');
+      })();
+    </script>
+    
     <a class="skip-link" href="#main">Skip to content</a>
     <div id="root"></div>
+    
+    <!-- LOAD ORDER VERIFICATION -->
+    <script>
+      console.log('🔍 HTML loaded, waiting for React bundle...');
+    </script>
+    
     <script type="module" src="/src/main.tsx"></script>
     
     <!-- Google tag (gtag.js) — GA4 -->

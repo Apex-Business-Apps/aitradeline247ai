@@ -14,23 +14,25 @@ import { isSafeMode } from "./safe-mode"; // Initialize safe mode before React m
 // Environment detection for debugging
 if (typeof window !== 'undefined') {
   const hostname = window.location.hostname;
-  const isPreview = hostname.endsWith('.lovableproject.com') || 
-                    hostname.endsWith('.lovable.app') || 
-                    hostname.endsWith('.lovable.dev');
+  const isPreview = hostname.includes('lovableproject.com') || 
+                    hostname.includes('lovable.app') || 
+                    hostname.includes('lovable.dev') ||
+                    hostname.includes('.gptengineer.app');
   const isLocalhost = hostname === 'localhost' || 
                      hostname === '127.0.0.1' ||
                      hostname.startsWith('192.168.') ||
                      hostname.endsWith('.local');
   
-  console.log('🚀 TradeLine 24/7 starting...', {
+  console.log('🚀 TradeLine 24/7 main.tsx executing...', {
     hostname,
     isPreview,
     isLocalhost,
     pathname: window.location.pathname,
-    env: import.meta.env.MODE
+    env: import.meta.env.MODE,
+    timestamp: new Date().toISOString()
   });
   
-  // NOTE: Canonical redirect moved to App.tsx to run AFTER React mounts
+  // NOTE: Canonical redirect moved to CanonicalRedirect component in App.tsx
   // This prevents blank screens caused by redirects before app initialization
 }
 
