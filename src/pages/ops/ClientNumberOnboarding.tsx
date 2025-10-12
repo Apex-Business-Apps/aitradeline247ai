@@ -244,9 +244,120 @@ export default function ClientNumberOnboarding() {
   };
 
   const handleFullPort = async () => {
-    await initializeClient();
-    addEvidence("Full Port track selected - port order will be created");
-    toast.info("Proceed with port order creation");
+    if (!formData.existing_numbers) {
+      toast.error("Please provide the phone number(s) to port");
+      return;
+    }
+
+    if (!formData.fallback_e164) {
+      toast.error("Fallback number is required for temporary forwarding during port");
+      return;
+    }
+
+    setLoading(true);
+    setEvidence([]);
+    
+    try {
+      addEvidence("Initializing client for Full Port...");
+      
+      // Initialize client first
+      await initializeClient();
+      
+      addEvidence("Processing port orders...");
+      
+      // Parse numbers to port
+      const numbersToPort = formData.existing_numbers
+        .split(",")
+        .map(n => n.trim())
+        .filter(n => n);
+
+      if (numbersToPort.length === 0) {
+        throw new Error("No valid phone numbers provided");
+      }
+
+      // Get subaccount SID
+      const { data: subaccountData } = await supabase.functions.invoke(
+        "ops-twilio-ensure-subaccount",
+        {
+          body: {
+            tenant_id: formData.tenant_id,
+            business_name: formData.business_name
+          }
+        }
+      );
+
+      // Process each number for porting
+      for (const phoneNumber of numbersToPort) {
+        addEvidence(`📞 Initiating port order for ${phoneNumber}...`);
+        
+        const { data, error } = await supabase.functions.invoke(
+          "ops-twilio-create-port",
+          {
+            body: {
+              phoneNumber,
+              tenant_id: formData.tenant_id,
+              business_name: formData.business_name,
+              legal_address: formData.legal_address,
+              contact_email: formData.contact_email,
+              subaccount_sid: subaccountData.subaccount_sid,
+              authorized_person_name: formData.business_name,
+              fallback_e164: formData.fallback_e164,
+              current_carrier: 'Unknown' // Could add a field for this
+            }
+          }
+        );
+
+        if (error) throw error;
+
+        addEvidence(`✅ Port order created for ${phoneNumber}`);
+        addEvidence(`🔑 Port Order SID: ${data.portOrderSid}`);
+        addEvidence(`📅 Estimated FOC Date: ${new Date(data.estimatedFocDate).toLocaleDateString()}`);
+        
+        if (data.temporaryDid) {
+          addEvidence(`📱 Temporary DID provisioned: ${data.temporaryDid}`);
+          addEvidence(`↪️  Forward ${phoneNumber} to ${data.temporaryDid} immediately`);
+        }
+        
+        if (data.quickStartCreated) {
+          addEvidence(`⚡ Quick-Start forwarding kit auto-generated`);
+        }
+        
+        addEvidence(`📧 LOA email sent to ${formData.contact_email}`);
+        addEvidence(`⚙️  Webhooks pre-provisioned for port completion`);
+        addEvidence("");
+        
+        // Display next steps
+        addEvidence("📋 Next Steps:");
+        data.nextSteps?.forEach((step: string) => {
+          addEvidence(`  • ${step}`);
+        });
+        addEvidence("");
+      }
+
+      addEvidence("✅ All port orders submitted successfully");
+      addEvidence("");
+      addEvidence("🎯 Port Process Timeline:");
+      addEvidence("  1. Client signs LOA (today)");
+      addEvidence("  2. Twilio processes port request (1-2 days)");
+      addEvidence("  3. Losing carrier confirms (3-5 days)");
+      addEvidence("  4. FOC date reached - port completes (7-10 days)");
+      addEvidence("  5. Number goes live on Twilio automatically");
+      addEvidence("  6. Remove temporary forwarding");
+      addEvidence("");
+      addEvidence("⚠️  During port process:");
+      addEvidence("  • Temporary forwarding ensures no missed calls");
+      addEvidence("  • Voice & SMS will work via forwarding");
+      addEvidence("  • Monitor port status daily");
+      
+      toast.success("Port orders created successfully");
+
+    } catch (error: any) {
+      console.error("Port order error:", error);
+      addEvidence(`✗ Error: ${error.message}`);
+      toast.error("Failed to create port orders");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

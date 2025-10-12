@@ -2973,6 +2973,111 @@ export type Database = {
           },
         ]
       }
+      twilio_port_orders: {
+        Row: {
+          a2p_brand_sid: string | null
+          a2p_campaign_sid: string | null
+          actual_foc_date: string | null
+          authorized_person: string
+          bill_upload_url: string | null
+          business_name: string
+          contact_email: string
+          created_at: string
+          current_carrier: string | null
+          estimated_foc_date: string | null
+          fallback_e164: string | null
+          id: string
+          legal_address: string
+          loa_document_url: string | null
+          loa_signed_at: string | null
+          metadata: Json | null
+          phone_number: string
+          port_completed_at: string | null
+          port_data: Json | null
+          port_order_sid: string
+          pre_provisioned: boolean | null
+          status: string
+          subaccount_sid: string | null
+          temporary_did: string | null
+          temporary_forwarding_active: boolean | null
+          temporary_forwarding_removed_at: string | null
+          tenant_id: string
+          test_call_verified_at: string | null
+          test_sms_verified_at: string | null
+          trust_hub_profile_sid: string | null
+          updated_at: string
+          webhook_config: Json | null
+        }
+        Insert: {
+          a2p_brand_sid?: string | null
+          a2p_campaign_sid?: string | null
+          actual_foc_date?: string | null
+          authorized_person: string
+          bill_upload_url?: string | null
+          business_name: string
+          contact_email: string
+          created_at?: string
+          current_carrier?: string | null
+          estimated_foc_date?: string | null
+          fallback_e164?: string | null
+          id?: string
+          legal_address: string
+          loa_document_url?: string | null
+          loa_signed_at?: string | null
+          metadata?: Json | null
+          phone_number: string
+          port_completed_at?: string | null
+          port_data?: Json | null
+          port_order_sid: string
+          pre_provisioned?: boolean | null
+          status?: string
+          subaccount_sid?: string | null
+          temporary_did?: string | null
+          temporary_forwarding_active?: boolean | null
+          temporary_forwarding_removed_at?: string | null
+          tenant_id: string
+          test_call_verified_at?: string | null
+          test_sms_verified_at?: string | null
+          trust_hub_profile_sid?: string | null
+          updated_at?: string
+          webhook_config?: Json | null
+        }
+        Update: {
+          a2p_brand_sid?: string | null
+          a2p_campaign_sid?: string | null
+          actual_foc_date?: string | null
+          authorized_person?: string
+          bill_upload_url?: string | null
+          business_name?: string
+          contact_email?: string
+          created_at?: string
+          current_carrier?: string | null
+          estimated_foc_date?: string | null
+          fallback_e164?: string | null
+          id?: string
+          legal_address?: string
+          loa_document_url?: string | null
+          loa_signed_at?: string | null
+          metadata?: Json | null
+          phone_number?: string
+          port_completed_at?: string | null
+          port_data?: Json | null
+          port_order_sid?: string
+          pre_provisioned?: boolean | null
+          status?: string
+          subaccount_sid?: string | null
+          temporary_did?: string | null
+          temporary_forwarding_active?: boolean | null
+          temporary_forwarding_removed_at?: string | null
+          tenant_id?: string
+          test_call_verified_at?: string | null
+          test_sms_verified_at?: string | null
+          trust_hub_profile_sid?: string | null
+          updated_at?: string
+          webhook_config?: Json | null
+        }
+        Relationships: []
+      }
       twilio_quickstart_configs: {
         Row: {
           created_at: string
