@@ -228,3 +228,7 @@ verify_jwt = false  # Twilio webhook - AI-first routing with human fallback
 
 [functions.voice-route-action]
 verify_jwt = false  # Twilio webhook - routing action callback
+
+# PRIVACY: Recording retention purge for PIPEDA compliance
+[functions.recording-purge]
+verify_jwt = false  # Cron-triggered daily retention purge

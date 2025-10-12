@@ -66,6 +66,35 @@ const Privacy = () => {
                   </p>
                 </section>
 
+                <section id="call-recording">
+                  <h2 className="text-2xl font-semibold mb-4">Call Recording Policy</h2>
+                  <p className="text-muted-foreground mb-4">
+                    TradeLine 24/7 may record phone calls in compliance with Canadian privacy laws (PIPEDA/PIPA).
+                  </p>
+                  <div className="space-y-4 text-muted-foreground">
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-2">Purpose</h3>
+                      <p>Calls are recorded to improve service quality and keep accurate records of customer interactions.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-2">Disclosure</h3>
+                      <p>At the start of each call, you will hear a clear notice that the call may be recorded.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-2">Opt-Out</h3>
+                      <p>You may opt out of call recording by saying "opt out" when prompted. The call will continue without recording.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-2">Retention</h3>
+                      <p>Call recordings are retained for 30 days, after which they are automatically purged from our systems.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-2">Access & Deletion</h3>
+                      <p>You may request access to or deletion of your call recordings at any time by contacting privacy@tradeline247ai.com.</p>
+                    </div>
+                  </div>
+                </section>
+
                 <section>
                   <h2 className="text-2xl font-semibold mb-4">Mobile App Privacy</h2>
                   <p className="text-muted-foreground mb-4">

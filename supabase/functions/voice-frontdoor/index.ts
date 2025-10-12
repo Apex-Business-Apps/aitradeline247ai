@@ -84,7 +84,7 @@ serve(async (req) => {
           hints="opt out, no recording"
           speechTimeout="auto">
     <Say voice="Polly.Joanna" language="en-CA">
-      This call may be recorded to improve service quality. 
+      This call may be recorded to improve service quality and keep accurate records. 
       Say opt out to continue without recording.
     </Say>
   </Gather>
