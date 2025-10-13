@@ -128,41 +128,10 @@
     <!-- EMERGENCY SYSTEM: Ensure React can mount no matter what -->
     <script>
       (function() {
-        console.log('🔍 Mount Monitor: Initializing...');
-        
-        // Force root visibility
+        // Force root visibility only - no error screens
         var style = document.createElement('style');
         style.textContent = '#root { min-height: 100vh; opacity: 1 !important; visibility: visible !important; display: flex; flex-direction: column; }';
         document.head.appendChild(style);
-        
-        // Monitor React mount (much more lenient - only warn, don't block)
-        var mountTimeout = setTimeout(function() {
-          var root = document.getElementById('root');
-          var hasContent = root && (
-            root.children.length > 0 || 
-            root.textContent.trim().length > 50 ||
-            document.querySelectorAll('button, a, nav, header').length > 0
-          );
-          
-          if (!hasContent) {
-            console.warn('⚠️ Content loading slowly after 10s - this is just a warning');
-          } else {
-            console.log('✅ React mounted successfully');
-          }
-        }, 10000); // Increased to 10 seconds and no longer blocks
-        
-        // Clear timeout if React mounts
-        window.addEventListener('load', function() {
-          setTimeout(function() {
-            var root = document.getElementById('root');
-            if (root && root.children.length > 0) {
-              clearTimeout(mountTimeout);
-              console.log('✅ React mount confirmed');
-            }
-          }, 1000);
-        });
-        
-        console.log('✅ Mount Monitor: Active');
       })();
     </script>
     
