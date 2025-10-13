@@ -80,6 +80,18 @@ app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'assets', 
   maxAge: '1y',
 }));
 
+// Service Worker - always fresh (critical for updates)
+app.get('/sw.js', (_req, res) => {
+  const swPath = path.join(distDir, 'sw.js');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(swPath, (err) => {
+    if (err && !res.headersSent) {
+      res.status(404).send('// Service worker not found');
+    }
+  });
+});
+
 // SPA fallback LAST
 app.get('*', (_req, res) => {
   res.sendFile(indexPath, (err) => {

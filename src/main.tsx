@@ -6,6 +6,7 @@ console.log('🚀 TradeLine 24/7 - Starting main.tsx...');
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import { initBootSentinel } from "./lib/bootSentinel";
 import "./i18n/config";
 
 console.log('✅ Core modules loaded');
@@ -23,6 +24,9 @@ try {
   createRoot(rootElement).render(<App />);
   
   console.log('✅ React mounted successfully');
+  
+  // Initialize boot sentinel (production monitoring only)
+  initBootSentinel();
   
   // Load optional features after mount (non-blocking)
   setTimeout(() => {
