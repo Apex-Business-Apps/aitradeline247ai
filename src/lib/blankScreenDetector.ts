@@ -1,139 +1,136 @@
 /**
- * Blank Screen Detector & Auto-Recovery
- * Monitors app rendering and attempts automatic recovery
+ * BLANK SCREEN DETECTOR - ENHANCED WITH DATA PERSISTENCE
+ * 
+ * Monitors for blank screens and stores detection history
+ * for trend analysis and reliability improvements.
  */
 
-export interface BlankScreenReport {
-  isBlank: boolean;
-  issues: string[];
-  recovery: string[];
+interface DetectionEvent {
   timestamp: string;
+  hasContent: boolean;
+  elementCount: number;
+  textLength: number;
+  interactiveElements: number;
+  url: string;
+  userAgent: string;
 }
 
-export function detectBlankScreen(): BlankScreenReport {
-  const report: BlankScreenReport = {
-    isBlank: false,
-    issues: [],
-    recovery: [],
-    timestamp: new Date().toISOString()
-  };
+const STORAGE_KEY = 'tl247_blank_screen_history';
+const MAX_HISTORY_SIZE = 50;
 
-  if (typeof window === 'undefined') return report;
-
-  // Check 1: Root element exists and has content
-  const root = document.getElementById('root');
-  if (!root) {
-    report.isBlank = true;
-    report.issues.push('root_missing');
-    return report;
-  }
-
-  // CRITICAL FIX: Check if root has meaningful content (not just wrapper divs)
-  const hasTextContent = root.textContent && root.textContent.trim().length > 50;
-  const hasVisibleElements = root.querySelectorAll('button, a, input, h1, h2, h3, p').length > 0;
-  
-  if (root.children.length === 0 || (!hasTextContent && !hasVisibleElements)) {
-    report.isBlank = true;
-    report.issues.push('root_empty_or_no_content');
-  }
-
-  // Check 2: Main content exists
-  const main = document.getElementById('main');
-  if (!main) {
-    report.isBlank = true;
-    report.issues.push('main_missing');
-  }
-
-  // Check 3: Visible height
-  const rootHeight = root.getBoundingClientRect().height;
-  if (rootHeight < 100) {
-    report.isBlank = true;
-    report.issues.push('root_zero_height');
-  }
-
-  // Check 4: CSS loaded
-  const computedStyle = window.getComputedStyle(document.body);
-  if (!computedStyle.fontFamily || computedStyle.fontFamily === '') {
-    report.isBlank = true;
-    report.issues.push('css_not_loaded');
-  }
-
-  // Check 5: React rendered
-  const reactRoot = root.querySelector('[data-reactroot], [data-reactid]');
-  const anyContent = root.textContent && root.textContent.trim().length > 10;
-  if (!reactRoot && !anyContent) {
-    report.isBlank = true;
-    report.issues.push('react_not_rendered');
-  }
-
-  return report;
-}
-
-export function attemptRecovery(report: BlankScreenReport): void {
-  if (!report.isBlank) return;
-
-  console.error('🚨 BLANK SCREEN DETECTED:', report.issues);
-
-  // Recovery 1: Fix root visibility
-  const root = document.getElementById('root');
-  if (root) {
-    root.style.opacity = '1';
-    root.style.visibility = 'visible';
-    root.style.minHeight = '100vh';
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    report.recovery.push('root_styles_fixed');
-  }
-
-  // Recovery 2: Reload if CSS failed
-  if (report.issues.includes('css_not_loaded')) {
-    console.error('CSS failed to load, attempting reload...');
-    setTimeout(() => window.location.reload(), 1000);
-    report.recovery.push('reload_attempted');
-    return;
-  }
-
-  // Recovery 3: Force re-render
-  if (report.issues.includes('react_not_rendered')) {
-    report.recovery.push('react_remount_needed');
-    console.error('React failed to mount. Check console for errors.');
-  }
-
-  // Log recovery attempt
-  console.log('🔧 Recovery attempted:', report.recovery);
-
-  // Send telemetry if in preview
-  if (window.location.hostname.includes('lovable')) {
-    fetch('/api/telemetry/blank-screen', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(report)
-    }).catch(() => {}); // Silent fail
+/**
+ * Store detection event in localStorage for persistence
+ */
+function storeDetectionEvent(event: DetectionEvent): void {
+  try {
+    const history = getDetectionHistory();
+    history.push(event);
+    
+    // Keep only last MAX_HISTORY_SIZE events
+    const trimmed = history.slice(-MAX_HISTORY_SIZE);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+  } catch (e) {
+    console.warn('[BlankScreenDetector] Failed to store detection event:', e);
   }
 }
 
 /**
- * Initialize monitoring with automatic recovery
+ * Get detection history from localStorage
  */
-export function initBlankScreenMonitor(): void {
-  if (typeof window === 'undefined') return;
-
-  // Check immediately after DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runCheck);
-  } else {
-    runCheck();
+function getDetectionHistory(): DetectionEvent[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (e) {
+    return [];
   }
+}
 
-  // Check again after window load
-  window.addEventListener('load', () => {
-    setTimeout(runCheck, 500);
+/**
+ * Analyze detection history for patterns
+ */
+export function analyzeBlankScreenTrend(): {
+  totalChecks: number;
+  blankScreens: number;
+  successRate: number;
+  recentTrend: string;
+} {
+  const history = getDetectionHistory();
+  
+  if (history.length === 0) {
+    return {
+      totalChecks: 0,
+      blankScreens: 0,
+      successRate: 100,
+      recentTrend: 'No data'
+    };
+  }
+  
+  const blankScreens = history.filter(e => !e.hasContent).length;
+  const successRate = ((history.length - blankScreens) / history.length) * 100;
+  
+  // Analyze last 10 checks
+  const recent = history.slice(-10);
+  const recentBlanks = recent.filter(e => !e.hasContent).length;
+  const recentTrend = recentBlanks === 0 ? 'Stable' : 
+                      recentBlanks > 3 ? 'Degrading' : 'Minor issues';
+  
+  return {
+    totalChecks: history.length,
+    blankScreens,
+    successRate: Math.round(successRate * 100) / 100,
+    recentTrend
+  };
+}
+
+/**
+ * Check for meaningful content with enhanced detection
+ */
+export function checkForMeaningfulContent(): boolean {
+  // Check if root exists and has content
+  const root = document.getElementById('root');
+  if (!root) return false;
+  
+  // Count various indicators of real content
+  const hasChildren = root.children.length > 0;
+  const hasText = (root.textContent?.trim().length ?? 0) > 50;
+  const hasInteractive = document.querySelectorAll('button, a, input, textarea').length > 0;
+  const hasImages = document.querySelectorAll('img, svg').length > 0;
+  const hasHeadings = document.querySelectorAll('h1, h2, h3').length > 0;
+  
+  const contentScore = [hasChildren, hasText, hasInteractive, hasImages, hasHeadings]
+    .filter(Boolean).length;
+  
+  // Store detection event
+  storeDetectionEvent({
+    timestamp: new Date().toISOString(),
+    hasContent: contentScore >= 2, // Require at least 2 indicators
+    elementCount: root.children.length,
+    textLength: root.textContent?.trim().length ?? 0,
+    interactiveElements: document.querySelectorAll('button, a, input, textarea').length,
+    url: window.location.href,
+    userAgent: navigator.userAgent
   });
+  
+  // Require at least 2 out of 5 indicators
+  return contentScore >= 2;
+}
 
-  function runCheck() {
-    const report = detectBlankScreen();
-    if (report.isBlank) {
-      attemptRecovery(report);
-    }
+/**
+ * Export detection history (for debugging)
+ */
+export function exportDetectionHistory(): DetectionEvent[] {
+  return getDetectionHistory();
+}
+
+/**
+ * Clear detection history
+ */
+export function clearDetectionHistory(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    console.log('[BlankScreenDetector] History cleared');
+  } catch (e) {
+    console.warn('[BlankScreenDetector] Failed to clear history:', e);
   }
 }

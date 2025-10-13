@@ -108,14 +108,36 @@ export function initPreviewUnblanker(): UnblankerReport {
 }
 
 /**
- * Monitor for blank screens after initial load
+ * Monitor for blank screens after initial load (BASIC NON-BLOCKING)
  */
 export function monitorBlankScreen(): void {
-  // Completely disabled - no monitoring
-  return;
+  if (typeof window === 'undefined') return;
+  
+  // Basic check after delay
+  setTimeout(() => {
+    const root = document.getElementById('root');
+    const hasContent = root && (
+      root.children.length > 0 || 
+      (root.textContent?.trim().length ?? 0) > 50 ||
+      document.querySelectorAll('button, a, nav, header').length > 0
+    );
+    
+    if (!hasContent) {
+      console.log('[PreviewUnblanker] ℹ️ Limited content detected - app may still be loading');
+    } else {
+      console.log('[PreviewUnblanker] ✅ Content detected successfully');
+    }
+  }, 3000);
 }
 
-// Monitoring completely disabled - no auto-initialization
+// Auto-initialize with proper timing (NON-BLOCKING)
 if (typeof window !== 'undefined' && window.location.hostname.includes('lovable')) {
-  console.log('[PreviewUnblanker] Monitoring disabled');
+  console.log('[PreviewUnblanker] ✅ Monitoring enabled (non-blocking)');
+  
+  // Run after page load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      monitorBlankScreen();
+    }, 1000);
+  });
 }

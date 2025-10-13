@@ -11,7 +11,6 @@ import { NoAIHypeFooter } from "@/components/sections/NoAIHypeFooter";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
-import LayoutCanon from "@/components/LayoutCanon";
 import backgroundImage from "@/assets/BACKGROUND_IMAGE1.svg";
 
 const Index = () => {
@@ -30,8 +29,7 @@ const Index = () => {
 
   return (
     <>
-      <LayoutCanon />
-      <div 
+      <div
         className="min-h-screen flex flex-col relative"
         style={{
           backgroundImage: `url(${backgroundImage})`,
