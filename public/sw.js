@@ -1,6 +1,6 @@
-// Service Worker v3.1.0 - Auth callback exclusion
-const SW_VERSION = '3.1.0';
-const CACHE_NAME = `tradeline247-v${SW_VERSION}`;
+// Service Worker v5 - Versioned cache discipline
+const SW_VERSION = '5';
+const CACHE_NAME = `app-v${SW_VERSION}`;
 const STATIC_CACHE = `tradeline247-static-v${SW_VERSION}`;
 const API_CACHE = `tradeline247-api-v${SW_VERSION}`;
 
@@ -13,30 +13,43 @@ const CACHE_CONFIG = {
 
 self.addEventListener("install", (event) => {
   console.log(`[SW ${SW_VERSION}] Installing...`);
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => 
+      cache.addAll(['/', '/index.html'])
+    ).then(() => {
+      console.log(`[SW ${SW_VERSION}] Pre-cached core assets`);
+      self.skipWaiting();
+    })
+  );
 });
 
 self.addEventListener("activate", (event) => {
   console.log(`[SW ${SW_VERSION}] Activating...`);
   event.waitUntil(
-    Promise.all([
-      // Clean up old caches
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
-          cacheNames
-            .filter((cacheName) => 
-              !cacheName.includes(SW_VERSION) &&
-              cacheName.startsWith('tradeline247')
-            )
-            .map((cacheName) => {
-              console.log(`[SW ${SW_VERSION}] Deleting old cache: ${cacheName}`);
-              return caches.delete(cacheName);
-            })
-        );
-      }),
-      // Take control immediately
-      self.clients.claim()
-    ])
+    caches.keys().then((cacheNames) => {
+      const oldCaches = cacheNames.filter((cacheName) => 
+        !cacheName.includes(`v${SW_VERSION}`) &&
+        (cacheName.startsWith('tradeline247') || cacheName.startsWith('app-'))
+      );
+      console.log(`[SW ${SW_VERSION}] Deleting ${oldCaches.length} old caches`);
+      return Promise.all(
+        oldCaches.map((cacheName) => {
+          console.log(`[SW ${SW_VERSION}] Deleting: ${cacheName}`);
+          return caches.delete(cacheName);
+        })
+      );
+    }).then(() => {
+      console.log(`[SW ${SW_VERSION}] Cache cleanup complete, claiming clients`);
+      return self.clients.claim();
+    }).then(() => {
+      console.log(`[SW ${SW_VERSION}] CACHE_VERSION=${SW_VERSION}, clients claimed`);
+      // Notify clients that update is available
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({ type: 'SW_UPDATED', version: SW_VERSION });
+        });
+      });
+    })
   );
 });
 
