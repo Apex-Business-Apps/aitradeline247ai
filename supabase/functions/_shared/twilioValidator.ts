@@ -74,9 +74,16 @@ export async function validateTwilioRequest(
     params[key] = value.toString();
   });
   
-  // Bypass validation in non-production if flag is set
+  // DevOps SRE: SECURITY WARNING - Bypass validation ONLY in explicitly non-production environments
+  // This creates risk if:
+  // 1. NODE_ENV is misconfigured or missing (treats prod as non-prod)
+  // 2. Dev/staging environments contain real customer data
+  // 3. ALLOW_INSECURE_TWILIO_WEBHOOKS is accidentally enabled in production
+  // RECOMMENDATION: Remove this bypass entirely and use test Twilio credentials with valid signatures
   if (!isProduction && allowInsecure) {
     console.warn('⚠️  INSECURE: Bypassing Twilio signature validation (non-production mode)');
+    console.warn('⚠️  NODE_ENV:', Deno.env.get('NODE_ENV'), '| ALLOW_INSECURE_TWILIO_WEBHOOKS:', allowInsecure);
+    console.warn('⚠️  If this appears in production logs, IMMEDIATELY investigate and disable bypass');
     return params;
   }
   

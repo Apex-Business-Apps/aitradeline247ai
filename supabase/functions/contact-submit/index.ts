@@ -98,9 +98,10 @@ serve(async (req) => {
         user_agent: req.headers.get('user-agent')?.slice(0, 500) || null
       };
     } catch (sanitizeError: any) {
+      // DevOps SRE: Log validation details internally, return generic message to client
       console.error('Input validation failed:', sanitizeError.message);
       return new Response(
-        JSON.stringify({ error: 'Invalid input detected', details: sanitizeError.message }),
+        JSON.stringify({ error: 'Invalid input detected. Please check your information and try again.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -172,11 +173,11 @@ serve(async (req) => {
     );
 
   } catch (error) {
+    // DevOps SRE: Log detailed errors internally, return generic message to client
     console.error('Contact submission error:', error);
     return new Response(
       JSON.stringify({ 
-        error: 'Internal server error',
-        message: error.message 
+        error: 'Unable to submit contact form. Please try again or call us directly.'
       }),
       { 
         status: 500, 
