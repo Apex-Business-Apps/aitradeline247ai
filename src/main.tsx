@@ -8,9 +8,26 @@ import App from "./App.tsx";
 import "./index.css";
 import { initBootSentinel } from "./lib/bootSentinel";
 import { runSwCleanup } from "./lib/swCleanup";
+import { featureFlags } from "./config/featureFlags";
 import "./i18n/config";
 
 console.log('✅ Core modules loaded');
+
+// H310-1: Dev-only error listener to capture React Error #310
+if (import.meta.env.DEV && featureFlags.H310_HARDENING) {
+  window.addEventListener('error', (e) => {
+    const msg = String(e?.error?.message || '');
+    if (msg.includes('Rendered more hooks') || msg.includes('rendered more hooks')) {
+      console.info('🚨 H310_CAPTURE - React Hook Order Violation Detected:', {
+        message: msg,
+        stack: e.error?.stack || e.message,
+        route: window.location.pathname,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+  console.log('🛡️ H310 Hardening: Error listener active');
+}
 
 // Mount React with error handling
 try {

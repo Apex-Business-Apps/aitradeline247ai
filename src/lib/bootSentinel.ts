@@ -5,15 +5,40 @@
  * Reports telemetry only (no UI changes).
  * 
  * Runs 3s after DOMContentLoaded to allow for lazy/async loading.
+ * When H310_HARDENING flag is ON, captures console errors for debugging.
  */
+
+import { featureFlags } from '@/config/featureFlags';
 
 const BOOT_TIMEOUT_MS = 3000;
 const TELEMETRY_ENDPOINT = '/api/telemetry';
 
+// Capture console errors when H310_HARDENING is enabled
+const consoleErrors: Array<{ ts: string; message: string; stack?: string }> = [];
+
 export function initBootSentinel(): void {
-  // Skip in dev mode
-  if (import.meta.env.DEV) {
+  // In production, always run basic check
+  // In dev, only run if H310_HARDENING flag is ON
+  if (import.meta.env.DEV && !featureFlags.H310_HARDENING) {
     return;
+  }
+  
+  // Capture console errors for telemetry
+  if (featureFlags.H310_HARDENING && import.meta.env.DEV) {
+    const originalError = console.error;
+    console.error = (...args: any[]) => {
+      const message = args.map(String).join(' ');
+      consoleErrors.push({
+        ts: new Date().toISOString(),
+        message,
+        stack: args[0]?.stack,
+      });
+      // Keep last 10 errors only
+      if (consoleErrors.length > 10) {
+        consoleErrors.shift();
+      }
+      originalError.apply(console, args);
+    };
   }
 
   // Skip if already initialized
@@ -49,6 +74,8 @@ export function initBootSentinel(): void {
       url: window.location.href,
       userAgent: navigator.userAgent,
       buildId: window.__BUILD_ID__ || 'unknown',
+      route: window.location.pathname,
+      consoleErrors: featureFlags.H310_HARDENING ? consoleErrors.slice(-3) : undefined,
     };
 
     // Silent telemetry (no console spam)

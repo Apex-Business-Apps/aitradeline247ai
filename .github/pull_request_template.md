@@ -2,6 +2,13 @@
 
 <!-- Brief description of what changed -->
 
+## React Hooks Checklist (H310-8)
+
+- [ ] All hooks are at top-level (no conditional/looped hooks)
+- [ ] No component function calls (e.g., `Component()` → use `<Component/>`)
+- [ ] No early returns before hooks complete
+- [ ] ESLint passes with zero hook warnings
+
 ## Evidence
 
 - [ ] Evidence attached (links to `/ops/twilio-evidence` or test results)
