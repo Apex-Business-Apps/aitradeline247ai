@@ -4,6 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 import { createRequestContext, logWithContext, createResponseHeaders } from '../_shared/requestId.ts';
 import { fetchWithRetry } from '../_shared/retry.ts';
 import { globalCircuitBreaker } from '../_shared/circuitBreaker.ts';
+import { normalizeTextForEmbedding } from '../_shared/textNormalization.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -98,8 +99,18 @@ serve(async (req) => {
       console.log(`Query truncated from ${body.query_text.length} to ${maxQueryLength} chars`);
     }
 
+    // Apply multilingual normalization to query
+    const { normalized: normalizedQuery, language: queryLang } = normalizeTextForEmbedding(queryText);
+    console.log(`Query language detected: ${queryLang}`);
+
     const top_k = body.top_k ?? 8;
     const filters = body.filters ?? {};
+    
+    // Add language filter if not explicitly set
+    if (!filters.lang && queryLang) {
+      filters.lang = queryLang;
+      console.log(`Applied automatic language filter: ${queryLang}`);
+    }
 
     // Guardrail: enforce max top_k
     if (typeof top_k !== 'number' || top_k < 1 || top_k > 20) {
@@ -129,7 +140,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           model: 'text-embedding-3-small',
-          input: queryText,
+          input: normalizedQuery, // Use normalized query
           dimensions: 1536,
         }),
       }, {
