@@ -4,6 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 import { createRequestContext, logWithContext, createResponseHeaders } from '../_shared/requestId.ts';
 import { fetchWithRetry } from '../_shared/retry.ts';
 import { globalCircuitBreaker } from '../_shared/circuitBreaker.ts';
+import { normalizeTextForEmbedding } from '../_shared/textNormalization.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -96,8 +97,19 @@ serve(async (req) => {
       console.log(`Query truncated from ${body.query_text.length} to ${maxQueryLength} chars`);
     }
 
+    // Apply multilingual normalization to query
+    const { normalized: normalizedQuery, language: queryLang } = normalizeTextForEmbedding(queryText);
+    console.log(`Query language detected: ${queryLang}`);
+
     const top_k = body.top_k ?? 8;
     const filters = body.filters ?? {};
+    
+    // Add language filter if not explicitly set
+    const shouldFilterByLanguage = !filters.hasOwnProperty('lang');
+    if (shouldFilterByLanguage && queryLang) {
+      filters.lang = queryLang;
+      console.log(`Applied automatic language filter: ${queryLang}`);
+    }
 
     // Guardrail: enforce max top_k
     if (typeof top_k !== 'number' || top_k < 1 || top_k > 20) {
@@ -125,7 +137,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'text-embedding-3-small',
-        input: queryText,
+        input: normalizedQuery, // Use normalized query
         dimensions: 1536,
       }),
     });
@@ -143,7 +155,7 @@ serve(async (req) => {
     const queryVector = embeddingData.data[0].embedding;
 
     // Call rag_match RPC
-    const { data: matches, error: matchError } = await supabase.rpc('rag_match', {
+    let { data: matches, error: matchError } = await supabase.rpc('rag_match', {
       query_vector: queryVector,
       top_k: top_k,
       filter: filters,
@@ -157,6 +169,85 @@ serve(async (req) => {
       );
     }
 
+    // Translation fallback: If few/no results and non-English, try English
+    const MIN_RESULTS_THRESHOLD = 2;
+    const MIN_SCORE_THRESHOLD = 0.5;
+    let translatedFromEnglish = false;
+    const needsFallback = queryLang !== 'en' && 
+                          (!matches || matches.length < MIN_RESULTS_THRESHOLD || 
+                           (matches.length > 0 && matches[0].score < MIN_SCORE_THRESHOLD));
+
+    if (needsFallback) {
+      console.log(`Translation fallback triggered: lang=${queryLang}, results=${matches?.length || 0}`);
+      
+      try {
+        const translationResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { 
+                role: 'system', 
+                content: 'Translate the following text to English. Only return the translation, no explanations.' 
+              },
+              { role: 'user', content: queryText }
+            ],
+            temperature: 0.3,
+            max_tokens: 200,
+          }),
+        });
+
+        if (translationResponse.ok) {
+          const translationData = await translationResponse.json();
+          const translatedQuery = translationData.choices?.[0]?.message?.content?.trim();
+          
+          if (translatedQuery) {
+            console.log(`Translated query for answer: "${queryText}" -> "${translatedQuery}"`);
+            
+            const { normalized: normalizedTranslated } = normalizeTextForEmbedding(translatedQuery);
+            const translatedEmbedResponse = await fetch('https://api.openai.com/v1/embeddings', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${openaiApiKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: 'text-embedding-3-small',
+                input: normalizedTranslated,
+                dimensions: 1536,
+              }),
+            });
+
+            if (translatedEmbedResponse.ok) {
+              const translatedEmbedData = await translatedEmbedResponse.json();
+              const translatedVector = translatedEmbedData.data[0].embedding;
+
+              const englishFilters = { ...filters };
+              delete englishFilters.lang;
+              
+              const { data: englishMatches, error: englishError } = await supabase.rpc('rag_match', {
+                query_vector: translatedVector,
+                top_k: top_k,
+                filter: englishFilters,
+              });
+
+              if (!englishError && englishMatches && englishMatches.length > 0) {
+                console.log(`Fallback successful for answer: found ${englishMatches.length} English results`);
+                matches = englishMatches;
+                translatedFromEnglish = true;
+              }
+            }
+          }
+        }
+      } catch (translationError) {
+        console.error('Translation fallback error:', translationError);
+      }
+    }
+
     // Hard rule: if 0 hits, return snippets_only with empty citations
     const matchedResults = matches || [];
     if (matchedResults.length === 0) {
@@ -168,6 +259,7 @@ serve(async (req) => {
         confidence: 'low',
         mode: 'snippets_only',
         hits_count: 0,
+        query_language: queryLang,
       }));
       
       return new Response(
@@ -178,6 +270,7 @@ serve(async (req) => {
           confidence: 'low',
           answer_draft: null,
           citations: [],
+          query_language: queryLang,
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -225,6 +318,7 @@ serve(async (req) => {
         confidence,
         mode: 'snippets_only',
         hits_count: matchedResults.length,
+        query_language: queryLang,
       }));
 
       return new Response(
@@ -235,6 +329,7 @@ serve(async (req) => {
           confidence,
           answer_draft: null,
           citations,
+          query_language: queryLang,
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -255,14 +350,36 @@ serve(async (req) => {
       );
     }
 
-    const systemPrompt = `You are a helpful AI assistant. Answer the user's question based on the provided context chunks from various sources (transcripts, emails, documents, FAQs, web content).
+    // Language name mapping for LLM instruction
+    const languageNames: Record<string, string> = {
+      'en': 'English',
+      'en-US': 'English',
+      'en-CA': 'English',
+      'fr-CA': 'French (Canadian)',
+      'es-US': 'Spanish',
+      'zh': 'Chinese (Simplified)',
+      'hi': 'Hindi',
+      'ar': 'Arabic',
+      'pt-BR': 'Portuguese (Brazilian)',
+      'ja': 'Japanese',
+    };
+
+    const languageName = languageNames[queryLang] || 'English';
+    const translationNote = translatedFromEnglish 
+      ? `\n\nIMPORTANT: The information was retrieved from English sources. Translate and explain it clearly in ${languageName}.`
+      : '';
+
+    const systemPrompt = `You are a helpful AI assistant. The user's question is in ${languageName}. You MUST provide your answer in ${languageName}.${translationNote}
+
+Answer the user's question based on the provided context chunks from various sources (transcripts, emails, documents, FAQs, web content).
 
 Rules:
-1. Only use information from the provided context
-2. Cite sources by referencing the source type when possible
-3. If the context doesn't contain enough information, say so
-4. Be concise and accurate
-5. If multiple sources agree, mention that for credibility
+1. ALWAYS respond in ${languageName}
+2. Only use information from the provided context
+3. Cite sources by referencing the source type when possible
+4. If the context doesn't contain enough information, say so in ${languageName}
+5. Be concise and accurate
+6. If multiple sources agree, mention that for credibility
 
 Context:
 ${contextChunks}`;
@@ -320,6 +437,8 @@ ${contextChunks}`;
       mode: 'answer',
       hits_count: matchedResults.length,
       answer_length: answerDraft?.length || 0,
+      query_language: queryLang,
+      translated_from_english: translatedFromEnglish,
     }));
 
     return new Response(
@@ -330,6 +449,8 @@ ${contextChunks}`;
         confidence,
         answer_draft: answerDraft,
         citations,
+        query_language: queryLang,
+        translated_from_english: translatedFromEnglish,
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

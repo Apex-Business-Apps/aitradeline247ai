@@ -106,8 +106,9 @@ serve(async (req) => {
     const top_k = body.top_k ?? 8;
     const filters = body.filters ?? {};
     
-    // Add language filter if not explicitly set
-    if (!filters.lang && queryLang) {
+    // Add language filter if not explicitly set (unless explicitly disabled)
+    const shouldFilterByLanguage = !filters.hasOwnProperty('lang');
+    if (shouldFilterByLanguage && queryLang) {
       filters.lang = queryLang;
       console.log(`Applied automatic language filter: ${queryLang}`);
     }
@@ -170,7 +171,7 @@ serve(async (req) => {
     const queryVector = embeddingData.data[0].embedding;
 
     // Call rag_match RPC
-    const { data: matches, error: matchError } = await supabase.rpc('rag_match', {
+    let { data: matches, error: matchError } = await supabase.rpc('rag_match', {
       query_vector: queryVector,
       top_k: top_k,
       filter: filters,
@@ -182,6 +183,87 @@ serve(async (req) => {
         JSON.stringify({ ok: false, error: 'Search query failed' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Translation fallback: If few/no results and non-English, try English
+    const MIN_RESULTS_THRESHOLD = 2;
+    const MIN_SCORE_THRESHOLD = 0.5;
+    const needsFallback = queryLang !== 'en' && 
+                          (!matches || matches.length < MIN_RESULTS_THRESHOLD || 
+                           (matches.length > 0 && matches[0].score < MIN_SCORE_THRESHOLD));
+
+    if (needsFallback) {
+      console.log(`Translation fallback triggered: lang=${queryLang}, results=${matches?.length || 0}`);
+      
+      // Simple translation using OpenAI (leveraging existing key)
+      try {
+        const translationResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { 
+                role: 'system', 
+                content: 'Translate the following text to English. Only return the translation, no explanations.' 
+              },
+              { role: 'user', content: queryText }
+            ],
+            temperature: 0.3,
+            max_tokens: 200,
+          }),
+        });
+
+        if (translationResponse.ok) {
+          const translationData = await translationResponse.json();
+          const translatedQuery = translationData.choices?.[0]?.message?.content?.trim();
+          
+          if (translatedQuery) {
+            console.log(`Translated query: "${queryText}" -> "${translatedQuery}"`);
+            
+            // Re-embed translated query
+            const { normalized: normalizedTranslated } = normalizeTextForEmbedding(translatedQuery);
+            const translatedEmbedResponse = await fetch('https://api.openai.com/v1/embeddings', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${openaiApiKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: 'text-embedding-3-small',
+                input: normalizedTranslated,
+                dimensions: 1536,
+              }),
+            });
+
+            if (translatedEmbedResponse.ok) {
+              const translatedEmbedData = await translatedEmbedResponse.json();
+              const translatedVector = translatedEmbedData.data[0].embedding;
+
+              // Search English docs (remove language filter)
+              const englishFilters = { ...filters };
+              delete englishFilters.lang;
+              
+              const { data: englishMatches, error: englishError } = await supabase.rpc('rag_match', {
+                query_vector: translatedVector,
+                top_k: top_k,
+                filter: englishFilters,
+              });
+
+              if (!englishError && englishMatches && englishMatches.length > 0) {
+                console.log(`Fallback successful: found ${englishMatches.length} English results`);
+                matches = englishMatches;
+              }
+            }
+          }
+        }
+      } catch (translationError) {
+        console.error('Translation fallback error:', translationError);
+        // Continue with original results
+      }
     }
 
     const latency_ms = Date.now() - startTime;
