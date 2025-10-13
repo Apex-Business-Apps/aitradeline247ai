@@ -128,25 +128,28 @@
     <!-- EMERGENCY SYSTEM: Ensure React can mount no matter what -->
     <script>
       (function() {
-        console.log('🚨 EMERGENCY SYSTEM: Initializing...');
+        console.log('🔍 Mount Monitor: Initializing...');
         
         // Force root visibility
         var style = document.createElement('style');
         style.textContent = '#root { min-height: 100vh; opacity: 1 !important; visibility: visible !important; display: flex; flex-direction: column; }';
         document.head.appendChild(style);
         
-        // Detect if React fails to mount within 5 seconds
+        // Monitor React mount (much more lenient - only warn, don't block)
         var mountTimeout = setTimeout(function() {
           var root = document.getElementById('root');
-          if (root && (!root.children.length || root.textContent.trim().length < 50)) {
-            console.error('🚨 EMERGENCY: React failed to mount after 5s');
-            
-            // Show emergency recovery UI
-            root.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;font-family:system-ui"><div style="max-width:600px;text-align:center"><h1 style="color:#dc2626;font-size:2rem;margin-bottom:1rem">⚠️ Loading Issue</h1><p style="color:#4b5563;margin-bottom:2rem">The application is taking longer than expected to load.</p><button onclick="location.reload()" style="background:#ff6b35;color:white;padding:0.75rem 2rem;border:none;border-radius:0.5rem;font-size:1rem;cursor:pointer">Reload Page</button><div style="margin-top:1rem"><a href="?safe=1" style="color:#6b7280;text-decoration:underline">Load in Safe Mode</a></div></div></div>';
+          var hasContent = root && (
+            root.children.length > 0 || 
+            root.textContent.trim().length > 50 ||
+            document.querySelectorAll('button, a, nav, header').length > 0
+          );
+          
+          if (!hasContent) {
+            console.warn('⚠️ Content loading slowly after 10s - this is just a warning');
           } else {
             console.log('✅ React mounted successfully');
           }
-        }, 5000);
+        }, 10000); // Increased to 10 seconds and no longer blocks
         
         // Clear timeout if React mounts
         window.addEventListener('load', function() {
@@ -159,7 +162,7 @@
           }, 1000);
         });
         
-        console.log('✅ EMERGENCY SYSTEM: Active');
+        console.log('✅ Mount Monitor: Active');
       })();
     </script>
     

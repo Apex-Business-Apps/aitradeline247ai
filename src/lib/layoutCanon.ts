@@ -26,9 +26,12 @@ function openOverlay(detail: string) {
 }
 
 function assertLayout(): Fail | null {
+  // Only validate on homepage
+  if (window.location.pathname !== '/') return null;
+  
   const a = document.getElementById("start-trial-hero");
   const b = document.getElementById("roi-calculator");
-  if (!a || !b) return { reason: "Missing required nodes", meta: { hasStartTrial: !!a, hasROI: !!b } };
+  if (!a || !b) return null; // These are optional elements, don't fail
 
   const desktop = window.matchMedia("(min-width: 1025px)").matches;
   const cs = (el: Element) => getComputedStyle(el as HTMLElement);

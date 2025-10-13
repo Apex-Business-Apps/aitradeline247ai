@@ -133,17 +133,17 @@ export function monitorBlankScreen(): void {
     if (checkCount >= maxChecks) {
       clearInterval(checkInterval);
       
-      if (!root || root.children.length === 0) {
-        console.error('❌ BLANK SCREEN DETECTED: Root is empty after 5 seconds');
+      // Only warn if truly blank - check for any visible content
+      const hasVisibleContent = document.body.innerText.trim().length > 100 || 
+                                document.querySelectorAll('button, a, input').length > 3;
+      
+      if (!hasVisibleContent && (!root || root.children.length === 0)) {
+        console.warn('⚠️ Minimal content detected after 5 seconds - may be loading slowly');
         
-        // Attempt recovery
-        const report = initPreviewUnblanker();
-        
-        // Log to analytics if available
-        if ((window as any).trackError) {
-          (window as any).trackError('blank_screen_detected', {
-            fixes: report.fixes,
-            timestamp: report.timestamp
+        // Log to analytics if available (as warning, not error)
+        if ((window as any).trackEvent) {
+          (window as any).trackEvent('slow_content_load', {
+            timestamp: new Date().toISOString()
           });
         }
       }

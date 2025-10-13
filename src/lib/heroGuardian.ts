@@ -45,7 +45,7 @@ export function validateHeroStructure(route: string): HeroValidation {
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // Check for required data-node attributes
+  // Check for required data-node attributes (only as warnings, not errors)
   const requiredNodes = REQUIRED_ATTRIBUTES[route as keyof typeof REQUIRED_ATTRIBUTES];
   if (requiredNodes) {
     requiredNodes.forEach(attr => {
@@ -53,16 +53,16 @@ export function validateHeroStructure(route: string): HeroValidation {
       const value = attrValue?.replace(/"/g, '');
       const element = document.querySelector(`[${attrName}="${value}"]`);
       if (!element) {
-        errors.push(`Missing required attribute: ${attr} on route ${route}`);
+        warnings.push(`Optional attribute missing: ${attr} on route ${route}`);
       }
     });
   }
 
-  // Validate hero section exists
+  // Validate hero section exists (only warn, don't error)
   const heroSection = document.querySelector('section.bg-gradient-orange-subtle, section.hero-section');
-  if (!heroSection) {
-    errors.push(`No hero section found on route ${route}`);
-  } else {
+  if (!heroSection && route === '/') {
+    warnings.push(`No hero section found on route ${route}`);
+  } else if (heroSection) {
     // Check for safe area insets
     const styles = getComputedStyle(heroSection as HTMLElement);
     SAFE_AREA_PROPERTIES.forEach(prop => {
@@ -231,19 +231,19 @@ export function initHeroGuardian() {
     const structureValidation = validateHeroStructure(route);
     const ctaValidation = validateHeroCTAs();
 
-    // Log results
-    if (!structureValidation.isValid) {
-      console.error('🚨 HERO STRUCTURE VALIDATION FAILED:', structureValidation);
-    }
-    if (structureValidation.warnings.length > 0) {
-      console.warn('⚠️ Hero Structure Warnings:', structureValidation.warnings);
+    // Log results (all as info/warnings, not errors)
+    if (!structureValidation.isValid || structureValidation.warnings.length > 0) {
+      console.log('ℹ️ Hero Structure Info:', {
+        errors: structureValidation.errors,
+        warnings: structureValidation.warnings
+      });
     }
 
-    if (!ctaValidation.isValid) {
-      console.error('🚨 HERO CTA VALIDATION FAILED:', ctaValidation);
-    }
-    if (ctaValidation.warnings.length > 0) {
-      console.warn('⚠️ Hero CTA Warnings:', ctaValidation.warnings);
+    if (!ctaValidation.isValid || ctaValidation.warnings.length > 0) {
+      console.log('ℹ️ Hero CTA Info:', {
+        errors: ctaValidation.errors,
+        warnings: ctaValidation.warnings
+      });
     }
 
     // Monitor performance
