@@ -1795,6 +1795,48 @@ export type Database = {
           },
         ]
       }
+      idempotency_keys: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          expires_at: string
+          id: string
+          idempotency_key: string
+          operation: string
+          request_hash: string
+          response_data: Json | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string
+          id?: string
+          idempotency_key: string
+          operation: string
+          request_hash: string
+          response_data?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string
+          id?: string
+          idempotency_key?: string
+          operation?: string
+          request_hash?: string
+          response_data?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           company: string
@@ -3947,11 +3989,7 @@ export type Database = {
         Args:
           | { batch_size?: number }
           | { p_batch_size?: number; p_encryption_key?: string }
-        Returns: {
-          batch_duration_seconds: number
-          encrypted_count: number
-          failed_count: number
-        }[]
+        Returns: Json
       }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
@@ -3981,6 +4019,10 @@ export type Database = {
       }
       check_hotline_rate_limit: {
         Args: { p_ani_hash: string; p_ip_hash: string }
+        Returns: Json
+      }
+      check_idempotency: {
+        Args: { p_key: string; p_operation: string; p_request_hash: string }
         Returns: Json
       }
       check_rag_health: {
@@ -4018,6 +4060,10 @@ export type Database = {
         Args: { "": string }
         Returns: string
       }
+      cleanup_expired_idempotency_keys: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       cleanup_expired_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -4040,6 +4086,10 @@ export type Database = {
       }
       cleanup_rate_limits: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      complete_idempotency: {
+        Args: { p_key: string; p_response: Json; p_status?: string }
         Returns: undefined
       }
       decrypt_pii: {
