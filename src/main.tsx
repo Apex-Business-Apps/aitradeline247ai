@@ -7,6 +7,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { initBootSentinel } from "./lib/bootSentinel";
+import { runSwCleanup } from "./lib/swCleanup";
 import "./i18n/config";
 
 console.log('✅ Core modules loaded');
@@ -24,6 +25,9 @@ try {
   createRoot(rootElement).render(<App />);
   
   console.log('✅ React mounted successfully');
+  
+  // Run SW cleanup hotfix (one-time, auto-expires after 7 days)
+  runSwCleanup().catch(err => console.warn('[SW Cleanup] Failed:', err));
   
   // Initialize boot sentinel (production monitoring only)
   initBootSentinel();
