@@ -61,33 +61,6 @@ function assertLayout(): Fail | null {
 }
 
 export function startLayoutCanon() {
-  // try self-heal first (ids/classes intact, but structure wrong)
-  enforceHeroRoiDuo();
-
-  const fail = assertLayout();
-  if (fail) {
-    // Log warning instead of blocking overlay
-    console.warn(`[LayoutCanon] ${fail.reason}`, fail.meta);
-  }
-
-  // keep watching for naughty changes
-  const mo = new MutationObserver(() => {
-    const f = assertLayout();
-    if (f) {
-      // Log warning instead of blocking overlay
-      console.warn(`[LayoutCanon] ${f.reason}`, f.meta);
-    }
-  });
-  mo.observe(document.body, { childList: true, subtree: true });
-
-  if ((window as any).ResizeObserver) {
-    const ro = new (window as any).ResizeObserver(() => {
-      const f = assertLayout();
-      if (f) {
-        // Log warning instead of blocking overlay
-        console.warn(`[LayoutCanon] ${f.reason}`, f.meta);
-      }
-    });
-    ro.observe(document.documentElement);
-  }
+  // Completely disabled - no overlays, no blocking, minimal logging only
+  console.log('[LayoutCanon] Monitoring disabled');
 }

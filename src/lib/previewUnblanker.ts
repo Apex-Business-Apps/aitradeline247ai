@@ -111,67 +111,11 @@ export function initPreviewUnblanker(): UnblankerReport {
  * Monitor for blank screens after initial load
  */
 export function monitorBlankScreen(): void {
-  if (typeof window === 'undefined') return;
-
-  let checkCount = 0;
-  const maxChecks = 5;
-
-  const checkInterval = setInterval(() => {
-    checkCount++;
-    
-    const root = document.getElementById('root');
-    const main = document.getElementById('main');
-    
-    // If we find content, stop monitoring
-    if (main && main.children.length > 0) {
-      clearInterval(checkInterval);
-      console.log('✅ Content detected, monitoring stopped');
-      return;
-    }
-
-    // If we've checked enough times without finding content
-    if (checkCount >= maxChecks) {
-      clearInterval(checkInterval);
-      
-      // Only warn if truly blank - check for any visible content
-      const hasVisibleContent = document.body.innerText.trim().length > 100 || 
-                                document.querySelectorAll('button, a, input').length > 3;
-      
-      if (!hasVisibleContent && (!root || root.children.length === 0)) {
-        console.warn('⚠️ Minimal content detected after 5 seconds - may be loading slowly');
-        
-        // Log to analytics if available (as warning, not error)
-        if ((window as any).trackEvent) {
-          (window as any).trackEvent('slow_content_load', {
-            timestamp: new Date().toISOString()
-          });
-        }
-      }
-    }
-  }, 1000); // Check every second for 5 seconds
+  // Completely disabled - no monitoring
+  return;
 }
 
-// Auto-initialize on import with proper timing
+// Monitoring completely disabled - no auto-initialization
 if (typeof window !== 'undefined' && window.location.hostname.includes('lovable')) {
-  // CRITICAL: Wait for React to mount before running checks
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      // Delay check to allow React time to mount
-      setTimeout(() => {
-        initPreviewUnblanker();
-      }, 500);
-    });
-  } else {
-    // DOM already loaded, still give React time
-    setTimeout(() => {
-      initPreviewUnblanker();
-    }, 500);
-  }
-
-  // Run comprehensive monitoring after full page load
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      monitorBlankScreen();
-    }, 1000);
-  });
+  console.log('[PreviewUnblanker] Monitoring disabled');
 }
