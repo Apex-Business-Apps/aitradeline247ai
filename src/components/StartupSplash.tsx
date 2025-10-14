@@ -35,8 +35,6 @@ export default function StartupSplash() {
     setShow(false);
   }
 
-  if (!show) return null;
-
   // Emergency unblanking: If shown for >2s, auto-dismiss
   useEffect(() => {
     if (show) {
@@ -47,6 +45,8 @@ export default function StartupSplash() {
       return () => clearTimeout(emergency);
     }
   }, [show]);
+
+  if (!show) return null;
 
   return (
     <div role="dialog" aria-label="Welcome to TradeLine 24/7" aria-modal="true"
