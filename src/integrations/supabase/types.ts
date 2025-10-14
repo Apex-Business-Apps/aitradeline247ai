@@ -4719,7 +4719,7 @@ export type Database = {
         Returns: Json
       }
       share_org: {
-        Args: { _user_a: string; _user_b: string }
+        Args: { user_a: string; user_b: string }
         Returns: boolean
       }
       sparsevec_out: {

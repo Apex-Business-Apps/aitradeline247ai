@@ -1,6 +1,9 @@
 // Twilio request signature validator for Deno Edge Functions
 // Implements HMAC-SHA1 validation per Twilio spec
 
+const isProd = Deno.env.get('NODE_ENV') === 'production';
+const allowInsecure = Deno.env.get('ALLOW_INSECURE_TWILIO_WEBHOOKS') === 'true';
+
 /**
  * Validates Twilio webhook signature
  * @param url Full webhook URL including query string
@@ -61,8 +64,12 @@ export async function validateTwilioRequest(
   url: string
 ): Promise<Record<string, string>> {
   const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
-  const allowInsecure = Deno.env.get('ALLOW_INSECURE_TWILIO_WEBHOOKS') === 'true';
-  const isProduction = Deno.env.get('NODE_ENV') === 'production';
+  
+  // 🚫 PRODUCTION HARDENING: Block bypass in production regardless of env var
+  if (isProd && allowInsecure) {
+    console.error('❌ SECURITY VIOLATION: ALLOW_INSECURE_TWILIO_WEBHOOKS is true in production');
+    throw new Response('Security configuration error', { status: 500 });
+  }
   
   // Get signature
   const twilioSignature = req.headers.get('X-Twilio-Signature');
@@ -74,20 +81,32 @@ export async function validateTwilioRequest(
     params[key] = value.toString();
   });
   
-  // DevOps SRE: SECURITY WARNING - Bypass validation ONLY in explicitly non-production environments
-  // This creates risk if:
-  // 1. NODE_ENV is misconfigured or missing (treats prod as non-prod)
-  // 2. Dev/staging environments contain real customer data
-  // 3. ALLOW_INSECURE_TWILIO_WEBHOOKS is accidentally enabled in production
-  // RECOMMENDATION: Remove this bypass entirely and use test Twilio credentials with valid signatures
-  if (!isProduction && allowInsecure) {
-    console.warn('⚠️  INSECURE: Bypassing Twilio signature validation (non-production mode)');
-    console.warn('⚠️  NODE_ENV:', Deno.env.get('NODE_ENV'), '| ALLOW_INSECURE_TWILIO_WEBHOOKS:', allowInsecure);
-    console.warn('⚠️  If this appears in production logs, IMMEDIATELY investigate and disable bypass');
+  // Optional: IP allowlist for defense-in-depth
+  const ipAllowlist = (Deno.env.get('TWILIO_IP_ALLOWLIST') ?? '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+  
+  if (isProd && ipAllowlist.length > 0) {
+    const clientIp = req.headers.get('x-forwarded-for') ?? 
+                     req.headers.get('cf-connecting-ip') ?? 
+                     'unknown';
+    
+    if (!ipAllowlist.some(allowed => clientIp.includes(allowed))) {
+      console.error(`❌ SECURITY: IP ${clientIp} not in Twilio allowlist`);
+      throw new Response('Forbidden', { status: 403 });
+    }
+  }
+  
+  // DevOps: ONLY allow bypass in non-production with explicit flag
+  // This bypass MUST NEVER appear in production logs
+  if (!isProd && allowInsecure) {
+    console.warn('⚠️  DEV MODE: Bypassing Twilio signature validation');
+    console.warn('⚠️  NODE_ENV:', Deno.env.get('NODE_ENV'));
     return params;
   }
   
-  // Require auth token in all other cases
+  // Production path: require auth token and valid signature
   if (!authToken) {
     console.error('Missing TWILIO_AUTH_TOKEN in environment');
     throw new Response('Unauthorized: Missing auth token', { status: 401 });

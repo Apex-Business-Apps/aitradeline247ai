@@ -113,6 +113,8 @@ export const useAuth = () => {
     return { error };
   };
 
+  // CLIENT-SIDE UX ONLY — NOT SECURITY
+  // Do not rely on this for authorization. All admin ops are verified server-side.
   const isAdmin = () => userRole === 'admin';
   const isUser = () => userRole === 'user';
 
