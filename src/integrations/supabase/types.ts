@@ -934,6 +934,45 @@ export type Database = {
           },
         ]
       }
+      consent_access_audit: {
+        Row: {
+          access_type: string
+          accessed_by: string | null
+          consent_id: string | null
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          reason: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_type: string
+          accessed_by?: string | null
+          consent_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          reason?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string
+          accessed_by?: string | null
+          consent_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          reason?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       consent_logs: {
         Row: {
           channel: string
@@ -1217,6 +1256,101 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      data_retention_policies: {
+        Row: {
+          active: boolean
+          created_at: string
+          date_column: string
+          deletion_criteria: Json | null
+          id: string
+          last_enforced_at: string | null
+          retention_days: number
+          table_name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          date_column?: string
+          deletion_criteria?: Json | null
+          id?: string
+          last_enforced_at?: string | null
+          retention_days: number
+          table_name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          date_column?: string
+          deletion_criteria?: Json | null
+          id?: string
+          last_enforced_at?: string | null
+          retention_days?: number
+          table_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      dsar_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          evidence_artifact_url: string | null
+          id: string
+          initiated_at: string
+          initiated_by: string | null
+          metadata: Json | null
+          organization_id: string | null
+          request_type: string
+          requester_email: string
+          requester_phone: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          evidence_artifact_url?: string | null
+          id?: string
+          initiated_at?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          request_type: string
+          requester_email: string
+          requester_phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          evidence_artifact_url?: string | null
+          id?: string
+          initiated_at?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          request_type?: string
+          requester_email?: string
+          requester_phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dsar_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       encryption_errors: {
         Row: {
@@ -3985,6 +4119,15 @@ export type Database = {
         Args: { ip: unknown }
         Returns: unknown
       }
+      audit_consent_access: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          by_access_type: Json
+          recent_accesses: Json
+          total_accesses: number
+          unique_users: number
+        }[]
+      }
       batch_encrypt_appointments: {
         Args:
           | { batch_size?: number }
@@ -4136,6 +4279,14 @@ export type Database = {
       encrypt_pii_field: {
         Args: { iv_seed: string; plaintext_value: string }
         Returns: string
+      }
+      enforce_data_retention: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          executed_at: string
+          policy_name: string
+          rows_deleted: number
+        }[]
       }
       get_app_encryption_key: {
         Args: Record<PropertyKey, never>

@@ -232,3 +232,19 @@ verify_jwt = false  # Twilio webhook - routing action callback
 # PRIVACY: Recording retention purge for PIPEDA compliance
 [functions.recording-purge]
 verify_jwt = false  # Cron-triggered daily retention purge
+
+# P13: Compliance & Privacy Ops - PIPEDA/CASL DSAR endpoints
+[functions.admin-check]
+verify_jwt = true  # Server-side admin verification
+
+[functions.dsar-export]
+verify_jwt = true  # Authenticated users can export their data, admins can export any user
+
+[functions.dsar-delete]
+verify_jwt = true  # Admin-only: right to be forgotten
+
+[functions.consent-logs-export]
+verify_jwt = true  # Admin-only: CASL compliance export
+
+[functions.retention-enforcement]
+verify_jwt = false  # Cron-triggered daily data retention enforcement
