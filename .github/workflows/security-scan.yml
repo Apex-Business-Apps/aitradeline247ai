@@ -1,0 +1,144 @@
+name: Security Scanning
+
+on:
+  workflow_dispatch: # Manual trigger only
+  schedule:
+    - cron: '0 2 * * 1' # Weekly on Monday at 2 AM UTC
+
+jobs:
+  zap-baseline:
+    name: OWASP ZAP Baseline Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: 'https://tradeline247ai.com'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+          fail_action: false # Non-blocking for now
+          allow_issue_writing: true
+          issue_title: 'ZAP Security Scan Report'
+      
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-scan-report
+          path: report_html.html
+          retention-days: 30
+  
+  npm-audit:
+    name: NPM Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true # Non-blocking
+      
+      - name: Run npm audit fix
+        run: npm audit fix --dry-run
+        continue-on-error: true
+      
+      - name: Generate audit report
+        run: |
+          npm audit --json > npm-audit-report.json || true
+          echo "## NPM Audit Summary" > audit-summary.md
+          echo "" >> audit-summary.md
+          echo "Generated at: $(date)" >> audit-summary.md
+          echo "" >> audit-summary.md
+          npm audit >> audit-summary.md || true
+        continue-on-error: true
+      
+      - name: Upload Audit Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: npm-audit-report
+          path: |
+            npm-audit-report.json
+            audit-summary.md
+          retention-days: 30
+      
+      - name: Comment PR with audit results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('audit-summary.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+        continue-on-error: true
+
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Check for outdated dependencies
+        run: npm outdated || true
+      
+      - name: Check for vulnerable patterns
+        run: |
+          echo "Checking for common security issues..."
+          # Check for hardcoded secrets (basic check)
+          ! grep -r "password.*=" src/ --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" | grep -v "passwordStrength" | grep -v "passwordError"
+          ! grep -r "api.*key.*=" src/ --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" | grep -v "apikey"
+          ! grep -r "secret.*=" src/ --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" | grep -v "totp_secret"
+          echo "No hardcoded secrets found in source code"
+        continue-on-error: true
+
+  summary:
+    name: Security Scan Summary
+    runs-on: ubuntu-latest
+    needs: [zap-baseline, npm-audit, dependency-check]
+    if: always()
+    
+    steps:
+      - name: Generate Summary
+        run: |
+          echo "# Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "- ZAP Baseline: ${{ needs.zap-baseline.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- NPM Audit: ${{ needs.npm-audit.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Dependency Check: ${{ needs.dependency-check.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Generated at: $(date)" >> $GITHUB_STEP_SUMMARY

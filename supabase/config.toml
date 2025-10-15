@@ -1,5 +1,17 @@
 project_id = "hysvqdwmhxnblxfqnszn"
 
+[functions.mfa-setup]
+verify_jwt = true
+
+[functions.mfa-verify]
+verify_jwt = true
+
+[functions.mfa-disable]
+verify_jwt = true
+
+[functions.mfa-backup-verify]
+verify_jwt = true
+
 # Edge Functions Configuration
 [functions.unsubscribe]
 verify_jwt = false  # Public endpoint for email unsubscribe

@@ -1,0 +1,18 @@
+# ZAP Scanning Rules
+# Format: RULE_ID	ACTION	URL_PATTERN
+# Actions: IGNORE, WARN, FAIL
+
+# Ignore known false positives
+10202	IGNORE	.*	# Absence of Anti-CSRF Tokens (SPA handles this differently)
+10021	IGNORE	.*	# X-Content-Type-Options Header Missing (handled by helmet)
+
+# Warn on medium severity issues
+10055	WARN	.*	# CSP Header Not Set
+10063	WARN	.*	# Feature Policy Header Not Set
+
+# Fail on high severity issues
+40012	FAIL	.*	# Cross Site Scripting (Reflected)
+40014	FAIL	.*	# Cross Site Scripting (Persistent)
+90020	FAIL	.*	# Remote OS Command Injection
+90019	FAIL	.*	# Server Side Code Injection
+7	FAIL	.*	# Remote File Inclusion
