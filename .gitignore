@@ -8,9 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Build artifacts
-node_modules
-dist
-dist-ssr
+node_modules/
+dist/
+dist-ssr/
 
 # Env files (keep real secrets out of git)
 *.local
