@@ -1,0 +1,81 @@
+name: ios-build-upload
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps & build web
+        run: |
+          npm ci
+          npm run build
+
+      # Generate/refresh native iOS project BEFORE pods
+      - name: Sync Capacitor iOS
+        run: |
+          npx cap sync ios
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          cd ios/App
+          pod install --repo-update
+        # Pods live under ios/App; Podfile is created by cap sync
+        # If rerun, it's idempotent
+
+      - name: Archive (Xcode Managed Signing)
+        run: |
+          WORKSPACE="ios/App/App.xcworkspace"
+          SCHEME="App"
+          ARCHIVE_PATH="$PWD/ios/build/App.xcarchive"
+          xcodebuild -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -archivePath "$ARCHIVE_PATH" \
+            -allowProvisioningUpdates archive
+
+      - name: Export IPA (App Store)
+        run: |
+          cat > ExportOptions.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store</string>
+            <key>uploadSymbols</key><true/>
+            <key>compileBitcode</key><false/>
+            <key>signingStyle</key><string>automatic</string>
+          </dict>
+          </plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath ios/build/App.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath ios/build
+
+      - name: Upload to App Store Connect (Transporter + API Key)
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+          ASC_API_KEY: ${{ secrets.ASC_API_KEY }}
+        run: |
+          # save API key to a file Transporter expects
+          mkdir -p ~/.itmstransporter
+          KEYFILE="$HOME/.itmstransporter/AuthKey_${ASC_KEY_ID}.p8"
+          printf "%s" "$ASC_API_KEY" > "$KEYFILE"
+          xcrun iTMSTransporter -m upload -assetFile ios/build/App.ipa \
+            -apiKey $ASC_KEY_ID -apiIssuer $ASC_ISSUER_ID -v informational
