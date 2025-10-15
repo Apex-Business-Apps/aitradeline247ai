@@ -1,8 +1,13 @@
 name: ios-build-upload
+
 on:
   workflow_dispatch:
   push:
     branches: [ main ]
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ios:
@@ -10,6 +15,9 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      NODE_ENV: production
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,25 +32,44 @@ jobs:
           npm ci
           npm run build
 
-      # Generate/refresh native iOS project BEFORE pods
-     - name: Generate iOS project (idempotent)
-    run: |
-      # If ios/ is missing or we want a fresh scaffold, add it
-      if [ ! -d ios ]; then
-        npx cap add ios
-      fi
-      # Copy web build into native project
-      npx cap copy ios
+      # Generate/refresh native iOS project BEFORE pods (idempotent)
+      - name: Ensure Capacitor iOS project
+        run: |
+          if [ ! -d ios ]; then
+            npx cap add ios
+          else
+            npx cap update ios
+          fi
+          npx cap copy ios
 
-  - name: Install CocoaPods
-    run: |
-      sudo gem install cocoapods
-      cd ios/App
-      pod repo update
-      pod install --repo-update
+      # Safety net: if Podfile didn't get generated, create a minimal Capacitor one
+      - name: Ensure Podfile exists
+        run: |
+          if [ ! -f ios/App/Podfile ]; then
+            cat > ios/App/Podfile <<'PODFILE'
+require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
-        # Pods live under ios/App; Podfile is created by cap sync
-        # If rerun, it's idempotent
+platform :ios, '13.0'
+use_frameworks!
+
+target 'App' do
+  capacitor_pods
+  # Add extra pods here if needed
+end
+
+post_install do |installer|
+  assertDeploymentTarget(installer)
+end
+PODFILE
+          fi
+          echo "✅ Podfile present at ios/App/Podfile"
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          cd ios/App
+          pod repo update
+          pod install --repo-update
 
       - name: Archive (Xcode Managed Signing)
         run: |
@@ -58,31 +85,37 @@ jobs:
       - name: Export IPA (App Store)
         run: |
           cat > ExportOptions.plist <<'PLIST'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key><string>app-store</string>
-            <key>uploadSymbols</key><true/>
-            <key>compileBitcode</key><false/>
-            <key>signingStyle</key><string>automatic</string>
-          </dict>
-          </plist>
-          PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>method</key><string>app-store</string>
+  <key>uploadSymbols</key><true/>
+  <key>signingStyle</key><string>automatic</string>
+</dict>
+</plist>
+PLIST
           xcodebuild -exportArchive \
             -archivePath ios/build/App.xcarchive \
             -exportOptionsPlist ExportOptions.plist \
             -exportPath ios/build
+          ls -al ios/build
 
-      - name: Upload to App Store Connect (Transporter + API Key)
+      # Transporter looks for AuthKey_<ID>.p8 in these dirs; we place it in ~/.private_keys
+      - name: Prepare App Store Connect API key
+        run: |
+          mkdir -p "$HOME/.private_keys"
+          echo "${{ secrets.ASC_API_KEY }}" > "$HOME/.private_keys/AuthKey_${{ secrets.ASC_API_KEY_ID }}.p8"
+          echo "✅ Wrote ASC key to \$HOME/.private_keys/AuthKey_${{ secrets.ASC_API_KEY_ID }}.p8"
+
+      - name: Upload to App Store Connect (Transporter)
         env:
           ASC_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
-          ASC_API_KEY: ${{ secrets.ASC_API_KEY }}
         run: |
-          # save API key to a file Transporter expects
-          mkdir -p ~/.itmstransporter
-          KEYFILE="$HOME/.itmstransporter/AuthKey_${ASC_KEY_ID}.p8"
-          printf "%s" "$ASC_API_KEY" > "$KEYFILE"
-          xcrun iTMSTransporter -m upload -assetFile ios/build/App.ipa \
-            -apiKey $ASC_KEY_ID -apiIssuer $ASC_ISSUER_ID -v informational
+          xcrun iTMSTransporter \
+            -m upload \
+            -apiKey "$ASC_KEY_ID" \
+            -apiIssuer "$ASC_ISSUER_ID" \
+            -assetFile ios/build/App.ipa \
+            -verbose
