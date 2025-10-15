@@ -25,15 +25,22 @@ jobs:
           npm run build
 
       # Generate/refresh native iOS project BEFORE pods
-      - name: Sync Capacitor iOS
-        run: |
-          npx cap sync ios
+     - name: Generate iOS project (idempotent)
+    run: |
+      # If ios/ is missing or we want a fresh scaffold, add it
+      if [ ! -d ios ]; then
+        npx cap add ios
+      fi
+      # Copy web build into native project
+      npx cap copy ios
 
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods
-          cd ios/App
-          pod install --repo-update
+  - name: Install CocoaPods
+    run: |
+      sudo gem install cocoapods
+      cd ios/App
+      pod repo update
+      pod install --repo-update
+
         # Pods live under ios/App; Podfile is created by cap sync
         # If rerun, it's idempotent
 
