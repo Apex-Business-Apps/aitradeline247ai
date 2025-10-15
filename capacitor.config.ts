@@ -4,10 +4,12 @@ const config: CapacitorConfig = {
   appId: 'com.tradeline247ai.app',
   appName: 'TradeLine 24/7',
   webDir: 'dist',
-  server: {
-    url: 'https://555a4971-4138-435e-a7ee-dfa3d713d1d3.lovableproject.com?forceHideBadge=true',
-    cleartext: true
-  },
+  // Production builds use compiled dist/
+  // For dev hot-reload, uncomment and use: https://555a4971-4138-435e-a7ee-dfa3d713d1d3.lovableproject.com?forceHideBadge=true
+  // server: {
+  //   url: 'https://555a4971-4138-435e-a7ee-dfa3d713d1d3.lovableproject.com?forceHideBadge=true',
+  //   cleartext: true
+  // },
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
