@@ -96,7 +96,7 @@ jobs:
           steps.readyz.outcome == 'failure' ||
           steps.icon.outcome == 'failure' ||
           steps.release-tarball.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const failures = [];
