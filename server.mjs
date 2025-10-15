@@ -15,9 +15,12 @@ const app = express();
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
 
-// Enhanced security headers
-app.use(getSecurityHeaders());
-app.use(additionalSecurityHeaders);
+// Enhanced security headers (only in production)
+const isProd = process.env.NODE_ENV === 'production';
+if (isProd) {
+  app.use(getSecurityHeaders());
+  app.use(additionalSecurityHeaders);
+}
 
 app.use(compression());
 app.use(express.json({ limit: '100kb' }));
