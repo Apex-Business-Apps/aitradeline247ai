@@ -27,7 +27,7 @@ export async function handleRagAnswer(body: any) {
     console.log(`Applied automatic language filter: ${body.queryLang}`);
   }
 
-  // TODO: keep your existing answer generation here.
+  // TODO: keep your existing answer generation logic here.
   return {
     ok: true,
     filters,

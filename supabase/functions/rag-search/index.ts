@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// Supabase Edge Function / Node runtime compatible
-// Purpose: handle RAG search with optional language filter
-// Fix: avoid `no-prototype-builtins` by using Object.hasOwn
+// Supabase Edge Function (Node or Deno compatible)
+// Purpose: RAG search with optional language filter
+// Lint fix: avoid `no-prototype-builtins` by using Object.hasOwn
 
 type Filters = Record<string, any>;
 
@@ -28,8 +28,7 @@ export async function handleRagSearch(body: any) {
     console.log(`Applied automatic language filter: ${body.queryLang}`);
   }
 
-  // TODO: keep your existing search implementation here.
-  // Return a neutral OK shape so CI doesn’t break.
+  // TODO: keep/replace with your real search implementation
   return {
     ok: true,
     filters,
