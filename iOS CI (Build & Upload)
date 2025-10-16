@@ -1,50 +1,92 @@
-name: iOS CI (Build & Upload)
+name: ios-build-upload
+
 on:
   workflow_dispatch:
   push:
-    branches: [ release/ios-v1 ]
+    branches: [ main ]
+
 jobs:
-  build-upload:
+  ios:
     runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      BASE_URL: https://www.tradeline247ai.com
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with: { ruby-version: '3.2' }
-      - name: Node install
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
         uses: actions/setup-node@v4
-        with: { node-version: '20' }
+        with:
+          node-version: '20'
+
       - name: Install deps & build web
         run: |
           npm ci
           npm run build
-      - name: Install Capacitor iOS toolchain
+
+      - name: Generate iOS project (idempotent)
         run: |
-          npm i -D @capacitor/cli @capacitor/assets
-          npm i @capacitor/core @capacitor/ios
-          npx cap init "TradeLine 24/7" com.apex.tradeline247 --web-dir=dist || true
-          npx cap add ios || true
-          npx cap copy ios && npx cap sync ios
-      - name: CocoaPods
+          if [ ! -d ios ]; then npx cap add ios; fi
+          npx cap copy ios
+
+      - name: Ensure Podfile present
         run: |
-          sudo gem install cocoapods -N
-          cd ios && pod install --repo-update
-      - name: Xcode build (archive)
+          test -f ios/App/Podfile || (echo "Missing ios/App/Podfile" && exit 1)
+
+      - name: Install Fastlane & CocoaPods
         run: |
-          xcodebuild -workspace ios/App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath $PWD/ios/build/App.xcarchive archive DEVELOPMENT_TEAM=$APPLE_TEAM_ID
+          gem install fastlane --no-document
+          sudo gem install cocoapods --no-document
+          cd ios/App
+          pod repo update
+          pod install --repo-update
+
+      - name: Archive (Xcode Managed Signing)
+        run: |
+          set -e
+          WORKSPACE="ios/App/App.xcworkspace"
+          SCHEME="App"
+          ARCHIVE_PATH="$PWD/ios/build/App.xcarchive"
+          xcodebuild -workspace "$WORKSPACE" \
+                     -scheme "$SCHEME" \
+                     -configuration Release \
+                     -archivePath "$ARCHIVE_PATH" \
+                     -allowProvisioningUpdates archive
+
+      - name: Export IPA
+        run: |
+          cat > ExportOptions.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+            <dict>
+              <key>method</key><string>app-store</string>
+              <key>uploadSymbols</key><true/>
+              <key>compileBitcode</key><false/>
+              <key>signingStyle</key><string>automatic</string>
+            </dict>
+          </plist>
+          PLIST
+
+          EXPORT_PATH="$PWD/ios/build/export"
+          mkdir -p "$EXPORT_PATH"
+          xcodebuild -exportArchive \
+            -archivePath "$PWD/ios/build/App.xcarchive" \
+            -exportPath "$EXPORT_PATH" \
+            -exportOptionsPlist ExportOptions.plist \
+            -allowProvisioningUpdates
+
+          echo "IPA_PATH=$EXPORT_PATH/App.ipa" >> $GITHUB_ENV
+
+      - name: Upload to TestFlight (Fastlane)
         env:
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      - name: Export .ipa (automatic signing)
+          ASC_API_KEY_ID:     ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_ISSUER_ID:  ${{ secrets.ASC_API_ISSUER_ID }}
+          ASC_API_KEY:        ${{ secrets.ASC_API_KEY }}
+          IPA_PATH:           ${{ env.IPA_PATH }}
         run: |
-          xcodebuild -exportArchive -archivePath ios/build/App.xcarchive -exportOptionsPlist ios/App/exportOptions.plist -exportPath ios/build
-        continue-on-error: true
-      - name: Fastlane
-        run: |
-          gem install fastlane -N
-          bundle exec fastlane ios beta || fastlane ios beta
-        env:
-          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
-          ASC_API_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
-          ASC_API_KEY: ${{ secrets.ASC_API_KEY }}
-          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER }}
-          APP_STORE_CONNECT_USERNAME: ${{ secrets.APP_STORE_CONNECT_USERNAME }}
+          fastlane ios upload
