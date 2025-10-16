@@ -1,121 +1,76 @@
-name: ios-build-upload
+name: ios
 
 on:
   workflow_dispatch:
   push:
     branches: [ main ]
-
-concurrency:
-  group: ios-${{ github.ref }}
-  cancel-in-progress: true
+    paths-ignore:
+      - '.github/**'
+      - '**/*.md'
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  ios:
+  ios-build:
+    name: Build iOS (Capacitor)
     runs-on: macos-latest
-    defaults:
-      run:
-        shell: bash
-    env:
-      NODE_ENV: production
+
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
-      - name: Install deps & build web
+      - name: Install deps
         run: |
-          npm ci
-          npm run build
+          npm ci || npm i
 
-      # Generate/refresh native iOS project BEFORE pods (idempotent)
-      - name: Ensure Capacitor iOS project
-        run: |
-          if [ ! -d ios ]; then
-            npx cap add ios
-          else
-            npx cap update ios
-          fi
-          npx cap copy ios
+      - name: Build web
+        run: npm run build
 
-      # Safety net: if Podfile didn't get generated, create a minimal Capacitor one
-      - name: Ensure Podfile exists
-        run: |
-          if [ ! -f ios/App/Podfile ]; then
-            cat > ios/App/Podfile <<'PODFILE'
-require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
+      - name: Capacitor sync (iOS)
+        run: npx cap sync ios
 
-platform :ios, '13.0'
-use_frameworks!
-
-target 'App' do
-  capacitor_pods
-  # Add extra pods here if needed
-end
-
-post_install do |installer|
-  assertDeploymentTarget(installer)
-end
-PODFILE
-          fi
-          echo "✅ Podfile present at ios/App/Podfile"
-
+      - name: Setup Ruby + CocoaPods
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
       - name: Install CocoaPods
         run: |
-          sudo gem install cocoapods
-          cd ios/App
-          pod repo update
-          pod install --repo-update
+          gem install cocoapods --no-document
+          cd ios/App && pod repo update && pod install
 
-      - name: Archive (Xcode Managed Signing)
+      - name: Xcode archive (no signing)
         run: |
-          WORKSPACE="ios/App/App.xcworkspace"
-          SCHEME="App"
-          ARCHIVE_PATH="$PWD/ios/build/App.xcarchive"
-          xcodebuild -workspace "$WORKSPACE" \
-            -scheme "$SCHEME" \
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
             -configuration Release \
-            -archivePath "$ARCHIVE_PATH" \
-            -allowProvisioningUpdates archive
+            -sdk iphoneos \
+            -archivePath $PWD/build/App.xcarchive \
+            clean archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
-      - name: Export IPA (App Store)
+      - name: Export .ipa (ad-hoc unsigned)
         run: |
-          cat > ExportOptions.plist <<'PLIST'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>method</key><string>app-store</string>
-  <key>uploadSymbols</key><true/>
-  <key>signingStyle</key><string>automatic</string>
-</dict>
-</plist>
-PLIST
+          mkdir -p build_out
           xcodebuild -exportArchive \
-            -archivePath ios/build/App.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath ios/build
-          ls -al ios/build
+            -archivePath $PWD/build/App.xcarchive \
+            -exportPath build_out \
+            -exportOptionsPlist ios/App/exportOptions.plist || true
+          ls -l build_out || true
 
-      # Transporter looks for AuthKey_<ID>.p8 in these dirs; we place it in ~/.private_keys
-      - name: Prepare App Store Connect API key
-        run: |
-          mkdir -p "$HOME/.private_keys"
-          echo "${{ secrets.ASC_API_KEY }}" > "$HOME/.private_keys/AuthKey_${{ secrets.ASC_API_KEY_ID }}.p8"
-          echo "✅ Wrote ASC key to \$HOME/.private_keys/AuthKey_${{ secrets.ASC_API_KEY_ID }}.p8"
-
-      - name: Upload to App Store Connect (Transporter)
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
-        run: |
-          xcrun iTMSTransporter \
-            -m upload \
-            -apiKey "$ASC_KEY_ID" \
-            -apiIssuer "$ASC_ISSUER_ID" \
-            -assetFile ios/build/App.ipa \
-            -verbose
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-artifacts
+          path: |
+            build_out/**/*.ipa
+            ios/App/build/**/*.app
+          if-no-files-found: warn

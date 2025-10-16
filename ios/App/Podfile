@@ -1,15 +1,24 @@
-# ios/App/Podfile
-require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
-
 platform :ios, '13.0'
-use_frameworks!
-install! 'cocoapods', :disable_input_output_paths => true
+
+# CocoaPods workspace for Capacitor iOS
+use_frameworks! :linkage => :static
+inhibit_all_warnings!
 
 target 'App' do
-  capacitor_pods
-  # Add any extra pods for plugins here
-end
+  # Core Capacitor pods
+  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
 
-post_install do |installer|
-  assertDeploymentTarget(installer)
+  # If you use plugins with iOS pods, CocoaPods will resolve them here.
+  # Keep this block minimal and let `npx cap sync ios` manage pods.
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # Ensure modern Swift / bitcode disabled for Xcode 15+
+        config.build_settings['SWIFT_VERSION'] = '5.0'
+        config.build_settings['ENABLE_BITCODE'] = 'NO'
+      end
+    end
+  end
 end

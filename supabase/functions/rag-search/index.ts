@@ -1,56 +1,56 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// Supabase Edge Function (Node or Deno compatible)
-// Purpose: RAG search with optional language filter
-// Lint fix: avoid `no-prototype-builtins` by using Object.hasOwn
+/* 
+  Supabase Edge Function (Deno compatible)
+  Purpose: RAG search with optional language filter
+  Lint fix: avoid `no-prototype-builtins` by using Object.hasOwn
+*/
 
-type Filters = Record<string, any>;
+type AnyRecord = Record<string, unknown>;
 
-function hasOwn<T extends object>(obj: T, key: PropertyKey): boolean {
-  return Object.hasOwn(obj as object, key);
+function normalizeFilters(input: unknown): AnyRecord {
+  return input && typeof input === 'object' ? (input as AnyRecord) : {};
 }
 
-function normalizeFilters(raw: unknown): Filters {
-  if (raw && typeof raw === 'object') return raw as Filters;
-  return {};
+function hasOwn(obj: AnyRecord, key: PropertyKey): boolean {
+  // Safe own-property check; no direct .hasOwnProperty calls
+  // Use Object.hasOwn when available (Node 20+ / modern runtimes)
+  // Fallback would be: Object.prototype.hasOwnProperty.call(obj, key)
+  // but Supabase Deno supports Object.hasOwn
+  // @ts-ignore - TS lib may not know older targets
+  return Object.hasOwn(obj, key);
 }
 
-export async function handleRagSearch(body: any) {
-  const filters = normalizeFilters(body?.filters);
+async function handleRagSearch(req: Request): Promise<Response> {
+  const body: AnyRecord =
+    (await req
+      .json()
+      .catch(() => ({}))) ?? {};
+
+  const filters = normalizeFilters(body.filters);
+  const queryLang = body.queryLang as string | undefined;
+  const autoLang = body.autoLang as boolean | undefined;
 
   // Add language filter if not explicitly set (unless explicitly disabled)
-  const shouldFilterByLanguage =
-    !hasOwn(filters, 'lang') && body?.queryLang && body?.autoLang !== false;
+  const shouldFilterByLanguage = !hasOwn(filters, 'lang') && !!queryLang && autoLang !== false;
 
-  if (shouldFilterByLanguage) {
-    filters.lang = body.queryLang;
-    // log left as console for CI visibility; swap to your logger if present
+  if (shouldFilterByLanguage && queryLang) {
+    filters.lang = queryLang;
+    // keep log for observability in CI; replace with your logger if needed
     // eslint-disable-next-line no-console
-    console.log(`Applied automatic language filter: ${body.queryLang}`);
+    console.log(`Applied automatic language filter: ${queryLang}`);
   }
 
-  // TODO: keep/replace with your real search implementation
-  return {
+  // TODO: plug in your real search pipeline here and return results
+  const response = {
     ok: true,
     filters,
-    results: [],
+    results: [] as unknown[],
   };
+
+  return new Response(JSON.stringify(response), {
+    headers: { 'content-type': 'application/json' },
+    status: 200,
+  });
 }
 
-// Minimal HTTP wrapper for Supabase functions (Deno or Node-compatible)
-export default async function handler(req: Request): Promise<Response> {
-  try {
-    const body = await req.json().catch(() => ({}));
-    const data = await handleRagSearch(body);
-    return new Response(JSON.stringify(data), {
-      headers: { 'content-type': 'application/json' },
-      status: 200,
-    });
-  } catch (err: any) {
-    // eslint-disable-next-line no-console
-    console.error('rag-search error', err);
-    return new Response(JSON.stringify({ ok: false, error: String(err?.message ?? err) }), {
-      headers: { 'content-type': 'application/json' },
-      status: 500,
-    });
-  }
-}
+// Deno entrypoint (Supabase Edge Functions)
+Deno.serve((req: Request) => handleRagSearch(req));
