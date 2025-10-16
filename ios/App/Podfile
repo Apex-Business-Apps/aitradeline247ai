@@ -1,0 +1,15 @@
+# ios/App/Podfile
+require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
+
+platform :ios, '13.0'
+use_frameworks!
+install! 'cocoapods', :disable_input_output_paths => true
+
+target 'App' do
+  capacitor_pods
+  # Add any extra pods for plugins here
+end
+
+post_install do |installer|
+  assertDeploymentTarget(installer)
+end
