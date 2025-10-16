@@ -1,15 +1,24 @@
-# ios/App/Podfile
-require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
-
 platform :ios, '13.0'
-use_frameworks!
-install! 'cocoapods', :disable_input_output_paths => true
+use_frameworks! :linkage => :static
 
 target 'App' do
-  capacitor_pods
-  # Add any extra pods for plugins here
+  # --- Capacitor core ---
+  pod 'Capacitor',        :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+
+  # --- Common Capacitor plugins (safe even if not all are used) ---
+  pod 'CapacitorApp',          :path => '../../node_modules/@capacitor/app'
+  pod 'CapacitorHaptics',      :path => '../../node_modules/@capacitor/haptics'
+  pod 'CapacitorKeyboard',     :path => '../../node_modules/@capacitor/keyboard'
+  pod 'CapacitorStatusBar',    :path => '../../node_modules/@capacitor/status-bar'
+  pod 'CapacitorSplashScreen', :path => '../../node_modules/@capacitor/splash-screen'
 end
 
 post_install do |installer|
-  assertDeploymentTarget(installer)
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      # Xcode 15+ recommended setting for static frameworks
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+  end
 end
