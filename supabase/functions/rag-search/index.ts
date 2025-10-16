@@ -1,55 +1,42 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// Supabase Edge Function / Node runtime compatible
-// Purpose: handle RAG search with optional language filter
-// Fix: avoid `no-prototype-builtins` by using Object.hasOwn
+// supabase/functions/rag-search/index.ts
+// Node 20+ compatible, no-prototype-builtins safe
 
-type Filters = Record<string, any>;
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-function hasOwn<T extends object>(obj: T, key: PropertyKey): boolean {
-  return Object.hasOwn(obj as object, key);
-}
+type AnyObject = Record<string, unknown>;
 
-function normalizeFilters(raw: unknown): Filters {
-  if (raw && typeof raw === 'object') return raw as Filters;
+function normalizeFilters(input: unknown): AnyObject {
+  if (input && typeof input === 'object') return input as AnyObject;
   return {};
 }
 
-export async function handleRagSearch(body: any) {
-  const filters = normalizeFilters(body?.filters);
-
-  // Add language filter if not explicitly set (unless explicitly disabled)
-  const shouldFilterByLanguage =
-    !hasOwn(filters, 'lang') && body?.queryLang && body?.autoLang !== false;
-
-  if (shouldFilterByLanguage) {
-    filters.lang = body.queryLang;
-    // eslint-disable-next-line no-console
-    console.log(`Applied automatic language filter: ${body.queryLang}`);
-  }
-
-  // TODO: keep your existing search implementation here.
-  return {
-    ok: true,
-    filters,
-    results: [],
-  };
-}
-
-// Minimal HTTP wrapper for Supabase functions (Deno or Node-compatible)
-export default async function handler(req: Request): Promise<Response> {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    const body = await req.json().catch(() => ({}));
-    const data = await handleRagSearch(body);
-    return new Response(JSON.stringify(data), {
-      headers: { 'content-type': 'application/json' },
-      status: 200,
+    const body = (req.method === 'POST' ? req.body : {}) ?? {};
+    const filters = normalizeFilters((body as AnyObject).filters);
+
+    // Add language filter if not explicitly set (unless explicitly disabled)
+    const shouldFilterByLanguage =
+      !Object.hasOwn(filters, 'lang') &&
+      (body as AnyObject)?.queryLang &&
+      (body as AnyObject)?.autoLang !== false;
+
+    if (shouldFilterByLanguage) {
+      (filters as AnyObject).lang = (body as AnyObject).queryLang;
+      // console left for CI visibility; replace with logger if desired
+      // eslint-disable-next-line no-console
+      console.log(`Applied automatic language filter: ${(body as AnyObject).queryLang}`);
+    }
+
+    // TODO: your real search logic here
+    return res.status(200).json({
+      ok: true,
+      filters,
+      results: [],
     });
-  } catch (err: any) {
+  } catch (err) {
     // eslint-disable-next-line no-console
     console.error('rag-search error', err);
-    return new Response(JSON.stringify({ ok: false, error: String(err?.message ?? err) }), {
-      headers: { 'content-type': 'application/json' },
-      status: 500,
-    });
+    return res.status(500).json({ ok: false, error: 'internal_error' });
   }
 }
