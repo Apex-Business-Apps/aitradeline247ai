@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
- * Example shape — adapt to your app state as needed.
- * The key fix is: memoize functions used inside `useEffect` and include them in deps.
+ * Offline data helper.
+ * Key fix: memoize functions referenced in effects and include them in deps.
  */
 
 type OfflineState<T> = {
@@ -56,7 +56,6 @@ export function useOfflineData<T = unknown>(opts: Options<T> = {}) {
     setData(null);
   }, [clearImpl, setData]);
 
-  // Example effect that saves pending operations.
   useEffect(() => {
     if (busyRef.current) return;
     busyRef.current = true;
@@ -71,12 +70,10 @@ export function useOfflineData<T = unknown>(opts: Options<T> = {}) {
       }
     };
 
-    // Only run when there is data to persist and lastSync is missing or stale.
-    // Adjust logic as your app requires.
     if (state.data !== undefined) {
       void run();
     }
-    // Include clearOfflineData because it’s referenced in the effect body per rule.
+    // include clearOfflineData per exhaustive-deps rule (even if not invoked every run)
   }, [persist, state.data, state.lastSync, clearOfflineData]);
 
   return {
