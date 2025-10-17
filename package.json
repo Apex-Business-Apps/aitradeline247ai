@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "typecheck": "tsc -p . --noEmit",
-    "preview": "vite preview --strictPort --port 5173",
+    "preview": "vite preview --strictPort --port 4173",
     "start": "node server.mjs",
     "verify:app": "node scripts/verify-app.cjs",
     "verify:react": "node scripts/verify-react-singleton.mjs"

@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        'brand': ['BrandFont', 'system-ui', 'sans-serif'],
+        brand: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         'brand-orange': {

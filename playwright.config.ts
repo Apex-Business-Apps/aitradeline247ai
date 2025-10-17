@@ -1,5 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const previewPort = Number.parseInt(process.env.PREVIEW_PORT ?? '', 10) || 4173;
+const resolvedBaseUrl =
+  process.env.E2E_BASE_URL ??
+  process.env.BASE_URL ??
+  `http://127.0.0.1:${previewPort}`;
+const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === '1';
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -8,7 +15,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: process.env.E2E_BASE_URL ?? process.env.BASE_URL ?? 'http://localhost:4173',
+    baseURL: resolvedBaseUrl,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -18,10 +25,14 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'npm run preview',
-    url: process.env.BASE_URL ?? 'http://localhost:4173',
-    reuseExistingServer: true,
-    timeout: 120000,
-  },
+  ...(skipWebServer
+    ? {}
+    : {
+        webServer: {
+          command: 'npm run preview',
+          url: resolvedBaseUrl,
+          reuseExistingServer: true,
+          timeout: 120_000,
+        },
+      }),
 });

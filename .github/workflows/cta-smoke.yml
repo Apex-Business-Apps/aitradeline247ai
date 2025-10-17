@@ -34,8 +34,11 @@ jobs:
         run: |
           npm run preview &
           sleep 5
-      
+
       - name: Run CTA smoke tests
+        env:
+          PLAYWRIGHT_SKIP_WEB_SERVER: '1'
+          BASE_URL: http://127.0.0.1:4173
         run: npx playwright test tests/cta-smoke.spec.ts
       
       - name: Upload test results
