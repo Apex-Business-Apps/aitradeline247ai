@@ -12,7 +12,10 @@
     "preview": "vite preview --strictPort --port 4173",
     "start": "node server.mjs",
     "verify:app": "node scripts/verify-app.cjs",
-    "verify:react": "node scripts/verify-react-singleton.mjs"
+    "verify:react": "node scripts/verify-react-singleton.mjs",
+    "check:fn:secret-encrypt": "npx deno@latest check supabase/functions/secret-encrypt/index.ts",
+    "deploy:fn:secret-encrypt": "node ./scripts/deploy-secret-encrypt.cjs",
+    "deploy:fn:secret-encrypt:manual": "SUPABASE_DEPLOY=1 node ./scripts/deploy-secret-encrypt.cjs"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.3",

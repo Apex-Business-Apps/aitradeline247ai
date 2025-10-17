@@ -1,11 +1,12 @@
 import express from 'express';
 import path from 'node:path';
-import fs from 'node:fs';
 import compression from 'compression';
 import { fileURLToPath } from 'node:url';
 import { getSecurityHeaders, additionalSecurityHeaders } from './server/securityHeaders.ts';
 import { createRateLimiter, cleanupRateLimits } from './server/middleware/rateLimit.ts';
 
+const SUPABASE_HEALTH_URL = 'https://hysvqdwmhxnblxfqnszn.supabase.co/auth/v1/health';
+const canonicalHost = 'tradeline247ai.com';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, 'dist');
 const indexPath = path.join(distDir, 'index.html');
@@ -20,6 +21,19 @@ const isProd = process.env.NODE_ENV === 'production';
 if (isProd) {
   app.use(getSecurityHeaders());
   app.use(additionalSecurityHeaders);
+  app.use((req, res, next) => {
+    const originalHost = String(req.headers.host || '');
+    const [hostname] = originalHost.toLowerCase().split(':');
+    if (hostname === `www.${canonicalHost}`) {
+      return res.redirect(301, `https://${canonicalHost}${req.originalUrl}`);
+    }
+    const forwardedProto = String(req.headers['x-forwarded-proto'] || '').toLowerCase();
+    if (forwardedProto === 'http') {
+      const redirectHost = originalHost || canonicalHost;
+      return res.redirect(301, `https://${redirectHost}${req.originalUrl}`);
+    }
+    next();
+  });
 }
 
 app.use(compression());
@@ -75,17 +89,20 @@ setInterval(async () => {
 
 // Health checks
 app.get('/healthz', (_req, res) => {
-  res.type('text/plain').send('ok');
+  res.status(200).json({ ok: true });
 });
 
-app.get('/readyz', (_req, res) => {
-  fs.access(indexPath, fs.constants.R_OK, (err) => {
-    if (err) {
-      res.sendStatus(503);
-    } else {
-      res.type('text/plain').send('ready');
+app.get('/readyz', async (_req, res) => {
+  try {
+    const response = await fetch(SUPABASE_HEALTH_URL);
+    if (response.ok) {
+      return res.status(200).json({ ready: true });
     }
-  });
+    return res.status(503).json({ ready: false, upstream: response.status });
+  } catch (error) {
+    console.error('[Server] Supabase health check failed', error);
+    return res.status(503).json({ ready: false });
+  }
 });
 
 // Static mounts (order matters - before fallback)
