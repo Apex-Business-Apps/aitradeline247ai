@@ -131,7 +131,7 @@ export const useSecureABTest = (testName: string) => {
     } catch (error) {
       console.error('Error tracking secure A/B test conversion:', error);
     }
-  }, [testName, variant]);
+  }, [analytics, testName, variant]);
 
   return {
     variant,

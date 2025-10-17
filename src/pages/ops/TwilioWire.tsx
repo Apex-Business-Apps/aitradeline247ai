@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -28,11 +28,7 @@ export default function TwilioWire() {
 
   const WEBHOOK_URLS = getWebhookUrls(environment);
 
-  useEffect(() => {
-    loadNumbers();
-  }, []);
-
-  const loadNumbers = async () => {
+  const loadNumbers = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('ops-twilio-list-numbers');
@@ -47,7 +43,11 @@ export default function TwilioWire() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadNumbers();
+  }, [loadNumbers]);
 
   const applyWebhooks = async () => {
     if (!selectedNumber) {
@@ -100,14 +100,14 @@ export default function TwilioWire() {
 
       if (error) throw error;
 
-      setTestResults({ ...testResults, [type]: 'success' });
+      setTestResults((prev: Record<string, string>) => ({ ...prev, [type]: 'success' }));
       
       toast({
         title: "Test Successful",
         description: `${type === 'voice' ? 'Voice' : 'SMS'} webhook returned 200 OK`
       });
     } catch (error: any) {
-      setTestResults({ ...testResults, [type]: 'error' });
+      setTestResults((prev: Record<string, string>) => ({ ...prev, [type]: 'error' }));
       toast({
         title: "Test Failed",
         description: error.message,

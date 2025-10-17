@@ -24,7 +24,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (shouldFilterByLanguage) {
       (filters as AnyObject).lang = (body as AnyObject).queryLang;
       // console left for CI visibility; replace with logger if desired
-      // eslint-disable-next-line no-console
       console.log(`Applied automatic language filter: ${(body as AnyObject).queryLang}`);
     }
 
@@ -35,7 +34,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       results: [],
     });
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error('rag-search error', err);
     return res.status(500).json({ ok: false, error: 'internal_error' });
   }

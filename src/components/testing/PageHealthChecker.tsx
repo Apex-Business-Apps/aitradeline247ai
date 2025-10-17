@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,75 +13,71 @@ interface PageTest {
   loadTime?: number;
 }
 
+const PAGE_NAMES: Record<string, string> = {
+  '/': 'Home Page',
+  '/features': 'Features Page',
+  '/pricing': 'Pricing Page',
+  '/faq': 'FAQ Page',
+  '/contact': 'Contact Page',
+  '/privacy': 'Privacy Policy',
+  '/terms': 'Terms of Service',
+  '/auth': 'Authentication',
+  '/dashboard': 'Dashboard',
+  '/dashboard/integrations/crm': 'CRM Integration',
+  '/dashboard/integrations/email': 'Email Integration',
+  '/dashboard/integrations/phone': 'Phone Integration',
+  '/dashboard/integrations/messaging': 'Messaging Integration',
+  '/dashboard/integrations/mobile': 'Mobile Integration',
+  '/dashboard/integrations/automation': 'Automation Integration',
+  '/design-tokens': 'Design Tokens',
+  '/components': 'Component Showcase',
+  '/call-center': 'Call Center',
+  '/admin/kb': 'Admin Knowledge Base',
+};
+
 export const PageHealthChecker: React.FC = () => {
   const [tests, setTests] = useState<PageTest[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const { routeHealth, checkAllRoutes, healthyCount, totalRoutes } = useRouteHealthCheck();
 
-  const pageNames: Record<string, string> = {
-    '/': 'Home Page',
-    '/features': 'Features Page',
-    '/pricing': 'Pricing Page',
-    '/faq': 'FAQ Page',
-    '/contact': 'Contact Page',
-    '/privacy': 'Privacy Policy',
-    '/terms': 'Terms of Service',
-    '/auth': 'Authentication',
-    '/dashboard': 'Dashboard',
-    '/dashboard/integrations/crm': 'CRM Integration',
-    '/dashboard/integrations/email': 'Email Integration',
-    '/dashboard/integrations/phone': 'Phone Integration',
-    '/dashboard/integrations/messaging': 'Messaging Integration',
-    '/dashboard/integrations/mobile': 'Mobile Integration',
-    '/dashboard/integrations/automation': 'Automation Integration',
-    '/design-tokens': 'Design Tokens',
-    '/components': 'Component Showcase',
-    '/call-center': 'Call Center',
-    '/admin/kb': 'Admin Knowledge Base'
-  };
-
-  const runPageTests = async () => {
+  const runPageTests = useCallback(async () => {
     setIsRunning(true);
     const newTests: PageTest[] = [];
 
     for (const route of VALID_ROUTES) {
       const startTime = performance.now();
-      
+
       try {
-        // Simulate page test by checking if route is known
-        const pageName = pageNames[route] || route;
-        
-        // Simple validation - in a real app you might actually navigate or ping
+        const pageName = PAGE_NAMES[route] || route;
         const isValid = route.startsWith('/');
         const loadTime = performance.now() - startTime;
-        
+
         newTests.push({
           route,
           name: pageName,
           status: isValid ? 'success' : 'error',
           message: isValid ? 'Page accessible' : 'Route invalid',
-          loadTime: Math.round(loadTime)
+          loadTime: Math.round(loadTime),
         });
-        
-        // Small delay to simulate real testing
-        await new Promise(resolve => setTimeout(resolve, 50));
+
+        await new Promise((resolve) => setTimeout(resolve, 50));
       } catch (error) {
         newTests.push({
           route,
-          name: pageNames[route] || route,
+          name: PAGE_NAMES[route] || route,
           status: 'error',
-          message: error instanceof Error ? error.message : 'Unknown error'
+          message: error instanceof Error ? error.message : 'Unknown error',
         });
       }
     }
 
     setTests(newTests);
     setIsRunning(false);
-  };
+  }, []);
 
   useEffect(() => {
     runPageTests();
-  }, []);
+  }, [runPageTests]);
 
   const getStatusIcon = (status: PageTest['status']) => {
     switch (status) {
@@ -101,19 +97,15 @@ export const PageHealthChecker: React.FC = () => {
       success: 'default',
       error: 'destructive',
       warning: 'secondary',
-      pending: 'outline'
+      pending: 'outline',
     };
-    
-    return (
-      <Badge variant={variants[status] as any}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
+
+    return <Badge variant={variants[status] as any}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
   };
 
-  const successCount = tests.filter(t => t.status === 'success').length;
-  const errorCount = tests.filter(t => t.status === 'error').length;
-  const warningCount = tests.filter(t => t.status === 'warning').length;
+  const successCount = tests.filter((t) => t.status === 'success').length;
+  const errorCount = tests.filter((t) => t.status === 'error').length;
+  const warningCount = tests.filter((t) => t.status === 'warning').length;
 
   return (
     <div className="space-y-6">
@@ -121,12 +113,7 @@ export const PageHealthChecker: React.FC = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Page Health Check</CardTitle>
-            <Button
-              onClick={runPageTests}
-              disabled={isRunning}
-              variant="outline"
-              size="sm"
-            >
+            <Button onClick={runPageTests} disabled={isRunning} variant="outline" size="sm">
               {isRunning ? (
                 <>
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -163,10 +150,7 @@ export const PageHealthChecker: React.FC = () => {
 
           <div className="space-y-2">
             {tests.map((test) => (
-              <div
-                key={test.route}
-                className="flex items-center justify-between p-3 border rounded-lg"
-              >
+              <div key={test.route} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center space-x-3">
                   {getStatusIcon(test.status)}
                   <div>
@@ -175,11 +159,7 @@ export const PageHealthChecker: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  {test.loadTime && (
-                    <span className="text-xs text-muted-foreground">
-                      {test.loadTime}ms
-                    </span>
-                  )}
+                  {test.loadTime && <span className="text-xs text-muted-foreground">{test.loadTime}ms</span>}
                   {getStatusBadge(test.status)}
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,9 +21,30 @@ export default function CallLogs() {
   const [modeFilter, setModeFilter] = useState('all');
   const { toast } = useToast();
 
+  const loadCalls = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('call_logs')
+        .select('*')
+        .order('started_at', { ascending: false })
+        .limit(100);
+
+      if (error) throw error;
+      setCalls(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Failed to load calls",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
   useEffect(() => {
     loadCalls();
-    
+
     // Subscribe to real-time updates
     const channel = supabase
       .channel('call_logs_changes')
@@ -39,7 +60,7 @@ export default function CallLogs() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [loadCalls]);
 
   useEffect(() => {
     let filtered = [...calls];
@@ -62,27 +83,6 @@ export default function CallLogs() {
 
     setFilteredCalls(filtered);
   }, [calls, searchTerm, statusFilter, modeFilter]);
-
-  const loadCalls = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('call_logs')
-        .select('*')
-        .order('started_at', { ascending: false })
-        .limit(100);
-
-      if (error) throw error;
-      setCalls(data || []);
-    } catch (error: any) {
-      toast({
-        title: "Failed to load calls",
-        description: error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const exportCalls = () => {
     const csv = [

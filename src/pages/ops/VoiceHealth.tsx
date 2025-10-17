@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -78,7 +78,7 @@ export default function VoiceHealth() {
   const [sloData, setSloData] = useState<SLOData | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchHealth = async () => {
+  const fetchHealth = useCallback(async () => {
     setLoading(true);
     try {
       const [healthRes, sloRes] = await Promise.all([
@@ -106,11 +106,11 @@ export default function VoiceHealth() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchHealth();
-  }, []);
+  }, [fetchHealth]);
 
   const getHealthIcon = (healthy: boolean) => {
     return healthy ? (
