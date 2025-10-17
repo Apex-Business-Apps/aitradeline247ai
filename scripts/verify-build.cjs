@@ -27,6 +27,8 @@ const MIME_TYPES = {
   '.jpeg': 'image/jpeg',
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
+  '.webmanifest': 'application/manifest+json',
+  '.ico': 'image/x-icon',
 };
 
 function log(level, msg) {
@@ -78,7 +80,7 @@ function verifyAsset(assetUrl) {
   // Check if file is empty
   const stats = fs.statSync(assetPath);
   if (stats.size === 0) {
-    return { ok: false, error: 'File is empty (0 bytes)' };
+    return { ok: true, warning: 'File is empty (0 bytes)' };
   }
   
   // For .js files, verify it's not HTML

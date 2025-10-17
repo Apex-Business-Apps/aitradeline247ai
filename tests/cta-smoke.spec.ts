@@ -1,13 +1,29 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Locator } from '@playwright/test';
 
 const BASE_URL =
   process.env.PLAYWRIGHT_BASE_URL || process.env.BASE_URL || 'http://localhost:5173';
 
 // CTA definitions with their expected destinations
-const CTAS = [
+type CTAConfig = {
+  name: string;
+  page: string;
+  selector: string | string[];
+  expectedUrl: string;
+};
+
+const CTAS: CTAConfig[] = [
   // Homepage CTAs
   { name: 'Start Free Trial (Hero)', page: '/', selector: 'button:has-text("Start Free Trial")', expectedUrl: '/auth' },
-  { name: 'Grow Now (Lead Form)', page: '/', selector: 'button:has-text("Grow Now")', expectedUrl: '/auth' },
+  {
+    name: 'Grow Now (Lead Form)',
+    page: '/',
+    selector: [
+      'button:has-text("Grow Now")',
+      'a:has-text("Grow Now")',
+      'text="Grow Now"'
+    ],
+    expectedUrl: '/auth'
+  },
   
   // Pricing page CTAs
   { name: 'Start Zero-Monthly', page: '/pricing', selector: 'a:has-text("Start Zero-Monthly")', expectedUrl: '/auth' },
@@ -36,11 +52,25 @@ test.describe('CTA Smoke Tests', () => {
       await page.waitForLoadState('networkidle');
       
       // Find and click the CTA
-      const button = page.locator(cta.selector).first();
-      await expect(button).toBeVisible({ timeout: 5000 });
-      
+      const selectors = Array.isArray(cta.selector) ? cta.selector : [cta.selector];
+      let button: Locator | null = null;
+
+      for (const selector of selectors) {
+        const candidate = page.locator(selector).first();
+        if ((await candidate.count()) > 0) {
+          button = candidate;
+          break;
+        }
+      }
+
+      if (!button) {
+        button = page.locator(selectors.join(', ')).first();
+      }
+
+      await expect(button!).toBeVisible({ timeout: 5000 });
+
       // Click and wait for navigation
-      await button.click();
+      await button!.click();
       await page.waitForLoadState('networkidle');
       
       // be robust: wait, then assert on pathname

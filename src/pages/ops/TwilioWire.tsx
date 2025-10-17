@@ -16,6 +16,7 @@ export default function TwilioWire() {
   const [testResults, setTestResults] = useState<any>({});
   const [environment, setEnvironment] = useState<'staging' | 'production'>('staging');
   const { toast } = useToast();
+  const supabaseClient = supabase;
 
   const stagingUrl = 'https://hysvqdwmhxnblxfqnszn.supabase.co';
   const productionUrl = 'https://hysvqdwmhxnblxfqnszn.supabase.co';
@@ -31,7 +32,7 @@ export default function TwilioWire() {
   const loadNumbers = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('ops-twilio-list-numbers');
+      const { data, error } = await supabaseClient.functions.invoke('ops-twilio-list-numbers');
       if (error) throw error;
       setNumbers(data?.numbers || []);
     } catch (error: any) {
@@ -43,7 +44,7 @@ export default function TwilioWire() {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [supabaseClient, toast]);
 
   useEffect(() => {
     loadNumbers();
@@ -61,7 +62,7 @@ export default function TwilioWire() {
 
     setLoading(true);
     try {
-      const { error } = await supabase.functions.invoke('ops-twilio-configure-webhooks', {
+      const { error } = await supabaseClient.functions.invoke('ops-twilio-configure-webhooks', {
         body: {
           phoneNumber: selectedNumber,
           voiceUrl: WEBHOOK_URLS.voice_answer,
@@ -94,7 +95,7 @@ export default function TwilioWire() {
     try {
       const url = type === 'voice' ? WEBHOOK_URLS.voice_answer : WEBHOOK_URLS.sms_inbound;
       
-      const { error } = await supabase.functions.invoke('ops-twilio-test-webhook', {
+      const { error } = await supabaseClient.functions.invoke('ops-twilio-test-webhook', {
         body: { url, type }
       });
 

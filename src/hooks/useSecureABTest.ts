@@ -38,11 +38,13 @@ export const useSecureABTest = (testName: string) => {
   const [variantData, setVariantData] = useState<ABTestVariant>({ text: 'Grow Now', color: 'primary' });
   const [loading, setLoading] = useState(false);
   const analytics = useSecureAnalytics();
+  const supabaseClient = supabase;
+  const isABEnabled = featureFlags.AB_ENABLED;
 
   // Get user's assigned variant from secure server-side assignment
   const getSecureVariant = useCallback(async () => {
     // Feature flag: short-circuit A/B testing when disabled
-    if (!featureFlags.AB_ENABLED) {
+    if (!isABEnabled) {
       setVariant('A');
       setVariantData({ text: 'Grow Now', color: 'primary' });
       setLoading(false);
@@ -53,8 +55,8 @@ export const useSecureABTest = (testName: string) => {
       const sessionId = getOrCreateSessionId();
 
       // Call secure assignment endpoint
-      const { data, error } = await supabase.functions.invoke('secure-ab-assign', {
-        body: { 
+      const { data, error } = await supabaseClient.functions.invoke('secure-ab-assign', {
+        body: {
           testName,
           anonId: sessionId
         }
@@ -71,7 +73,7 @@ export const useSecureABTest = (testName: string) => {
       console.error('Error in secure A/B test assignment:', error);
       return { variant: 'A', variantData: { text: 'Grow Now', color: 'primary' } };
     }
-  }, [testName]);
+  }, [isABEnabled, supabaseClient, testName]);
 
   // Load test configuration and user assignment
   useEffect(() => {
@@ -101,17 +103,17 @@ export const useSecureABTest = (testName: string) => {
     };
 
     loadSecureTest();
-  }, [testName, getSecureVariant]);
+  }, [getSecureVariant, isABEnabled]);
 
   // Track conversion (e.g., form submission, purchase)
   const convert = useCallback(async (conversionValue?: number) => {
     // Feature flag: no-op when A/B testing is disabled
-    if (!featureFlags.AB_ENABLED) {
+    if (!isABEnabled) {
       return;
     }
 
     try {
-      const { error } = await supabase.functions.invoke('ab-convert', {
+      const { error } = await supabaseClient.functions.invoke('ab-convert', {
         body: {
           testName,
           conversionValue
@@ -131,7 +133,7 @@ export const useSecureABTest = (testName: string) => {
     } catch (error) {
       console.error('Error tracking secure A/B test conversion:', error);
     }
-  }, [analytics, testName, variant]);
+  }, [analytics, isABEnabled, supabaseClient, testName, variant]);
 
   return {
     variant,

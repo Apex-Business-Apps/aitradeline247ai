@@ -12,9 +12,10 @@ module.exports = defineConfig({
     baseURL:
       process.env.PLAYWRIGHT_BASE_URL ||
       process.env.BASE_URL ||
-      'http://localhost:5000',
+      'http://127.0.0.1:5173',
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
+    bypassCSP: true,
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

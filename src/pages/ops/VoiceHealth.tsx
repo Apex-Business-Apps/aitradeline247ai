@@ -77,13 +77,14 @@ export default function VoiceHealth() {
   const [health, setHealth] = useState<VoiceHealth | null>(null);
   const [sloData, setSloData] = useState<SLOData | null>(null);
   const [loading, setLoading] = useState(false);
+  const supabaseClient = supabase;
 
   const fetchHealth = useCallback(async () => {
     setLoading(true);
     try {
       const [healthRes, sloRes] = await Promise.all([
-        supabase.functions.invoke('ops-voice-health'),
-        supabase.functions.invoke('ops-voice-slo'),
+        supabaseClient.functions.invoke('ops-voice-health'),
+        supabaseClient.functions.invoke('ops-voice-slo'),
       ]);
 
       if (healthRes.error) throw healthRes.error;
@@ -106,7 +107,7 @@ export default function VoiceHealth() {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [supabaseClient, toast]);
 
   useEffect(() => {
     fetchHealth();

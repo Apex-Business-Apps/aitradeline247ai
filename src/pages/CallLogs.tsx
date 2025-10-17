@@ -20,10 +20,11 @@ export default function CallLogs() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [modeFilter, setModeFilter] = useState('all');
   const { toast } = useToast();
+  const supabaseClient = supabase;
 
   const loadCalls = useCallback(async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('call_logs')
         .select('*')
         .order('started_at', { ascending: false })
@@ -40,13 +41,13 @@ export default function CallLogs() {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [supabaseClient, toast]);
 
   useEffect(() => {
     loadCalls();
 
     // Subscribe to real-time updates
-    const channel = supabase
+    const channel = supabaseClient
       .channel('call_logs_changes')
       .on('postgres_changes', {
         event: '*',
@@ -58,9 +59,9 @@ export default function CallLogs() {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabaseClient.removeChannel(channel);
     };
-  }, [loadCalls]);
+  }, [loadCalls, supabaseClient]);
 
   useEffect(() => {
     let filtered = [...calls];

@@ -31,10 +31,11 @@ export default function VoiceSettings() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [panicMode, setPanicMode] = useState(false);
   const { toast } = useToast();
+  const supabaseClient = supabase;
 
   const loadConfig = useCallback(async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('voice_config')
         .select('*')
         .single();
@@ -68,11 +69,11 @@ export default function VoiceSettings() {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [supabaseClient, toast]);
 
   const loadPresets = useCallback(async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('voice_presets')
         .select('*')
         .order('id');
@@ -82,7 +83,7 @@ export default function VoiceSettings() {
     } catch (error: any) {
       console.error('Failed to load presets:', error);
     }
-  }, []);
+  }, [supabaseClient]);
 
   useEffect(() => {
     loadConfig();
@@ -92,7 +93,7 @@ export default function VoiceSettings() {
   const saveConfig = async (updates: any) => {
     setSaving(true);
     try {
-      const { error } = await supabase.functions.invoke('ops-voice-config-update', {
+      const { error } = await supabaseClient.functions.invoke('ops-voice-config-update', {
         body: { ...config, ...updates }
       });
 
