@@ -5,7 +5,6 @@ project 'App.xcodeproj'
 target 'App' do
   pod 'Capacitor', :path => '../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../node_modules/@capacitor/ios'
-
   pod 'CapacitorApp', :path => '../node_modules/@capacitor/app'
   pod 'CapacitorHaptics', :path => '../node_modules/@capacitor/haptics'
   pod 'CapacitorKeyboard', :path => '../node_modules/@capacitor/keyboard'

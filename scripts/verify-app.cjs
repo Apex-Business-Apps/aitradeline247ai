@@ -56,7 +56,7 @@ async function verifyEndpoints(port) {
   try {
     await ensureDist();
 
-    const port = Number.parseInt(process.env.VERIFY_PORT ?? '', 10) || 4173;
+    const port = Number.parseInt(process.env.VERIFY_PORT ?? '', 10) || 5173;
     const server = spawn('node', ['server.mjs'], {
       cwd: projectRoot,
       env: { ...process.env, PORT: String(port) },

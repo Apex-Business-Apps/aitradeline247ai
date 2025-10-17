@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const previewPort = Number.parseInt(process.env.PREVIEW_PORT ?? '', 10) || 4173;
+const previewPort = Number.parseInt(process.env.PREVIEW_PORT ?? '', 10) || 5173;
 const resolvedBaseUrl =
   process.env.E2E_BASE_URL ??
   process.env.BASE_URL ??

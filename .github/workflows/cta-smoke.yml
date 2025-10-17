@@ -9,6 +9,8 @@ on:
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.1-jammy
     timeout-minutes: 10
     
     steps:
@@ -25,7 +27,7 @@ jobs:
         run: npm ci
       
       - name: Install Playwright browsers
-        run: npx playwright install chromium
+        run: npx playwright install --with-deps
       
       - name: Build application
         run: npm run build
@@ -37,9 +39,8 @@ jobs:
 
       - name: Run CTA smoke tests
         env:
-          PLAYWRIGHT_SKIP_WEB_SERVER: '1'
-          BASE_URL: http://127.0.0.1:4173
-        run: npx playwright test tests/cta-smoke.spec.ts
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:5173
+        run: npx playwright test -c ./playwright.config.cjs
       
       - name: Upload test results
         if: failure()

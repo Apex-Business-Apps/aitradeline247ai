@@ -59,6 +59,8 @@ jobs:
   ci-lint:
     name: ci/lint
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.1-jammy
     timeout-minutes: 10
     
     steps:
@@ -86,18 +88,15 @@ jobs:
           sleep 5
 
       - name: Wait for preview
-        run: npx wait-on http://127.0.0.1:4173
+        run: npx wait-on http://127.0.0.1:5173
 
-      - name: Run CTA smoke tests (TS config)
-        env:
-          PLAYWRIGHT_SKIP_WEB_SERVER: '1'
-          BASE_URL: http://127.0.0.1:4173
-        run: npx playwright test tests/cta-smoke.spec.ts
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
-      - name: Run CTA smoke tests (CJS config)
+      - name: Run CTA smoke tests
         env:
-          BASE_URL: http://127.0.0.1:4173
-        run: npx playwright test --config=playwright.config.cjs tests/cta-smoke.spec.ts
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:5173
+        run: npx playwright test -c ./playwright.config.cjs
 
       - name: Stop preview server
         if: always()

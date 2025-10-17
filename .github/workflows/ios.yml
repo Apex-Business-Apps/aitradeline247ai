@@ -44,9 +44,11 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
       - name: Install CocoaPods
-        run: |
-          gem install cocoapods --no-document
-          cd ios/App && pod repo update && pod install
+        run: gem install cocoapods --no-document
+
+      - name: Install iOS pods
+        working-directory: ios/App
+        run: pod install --repo-update
 
       - name: Xcode archive (no signing)
         run: |
