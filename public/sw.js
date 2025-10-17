@@ -1,8 +1,9 @@
-// Service Worker v5 - Versioned cache discipline
-const SW_VERSION = '5';
-const CACHE_NAME = `app-v${SW_VERSION}`;
-const STATIC_CACHE = `tradeline247-static-v${SW_VERSION}`;
-const API_CACHE = `tradeline247-api-v${SW_VERSION}`;
+// Service Worker v9 - Hard takeover cache discipline
+const CACHE_VERSION = "v9";
+const SW_VERSION = CACHE_VERSION.replace(/^v/, "");
+const CACHE_NAME = `app-${CACHE_VERSION}`;
+const STATIC_CACHE = `tradeline247-static-${CACHE_VERSION}`;
+const API_CACHE = `tradeline247-api-${CACHE_VERSION}`;
 
 // Cache configuration for production
 const CACHE_CONFIG = {
@@ -13,12 +14,12 @@ const CACHE_CONFIG = {
 
 self.addEventListener("install", (event) => {
   console.log(`[SW ${SW_VERSION}] Installing...`);
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => 
+    caches.open(CACHE_NAME).then(cache =>
       cache.addAll(['/', '/index.html'])
     ).then(() => {
       console.log(`[SW ${SW_VERSION}] Pre-cached core assets`);
-      self.skipWaiting();
     })
   );
 });
@@ -26,30 +27,23 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   console.log(`[SW ${SW_VERSION}] Activating...`);
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      const oldCaches = cacheNames.filter((cacheName) => 
-        !cacheName.includes(`v${SW_VERSION}`) &&
-        (cacheName.startsWith('tradeline247') || cacheName.startsWith('app-'))
-      );
-      console.log(`[SW ${SW_VERSION}] Deleting ${oldCaches.length} old caches`);
-      return Promise.all(
-        oldCaches.map((cacheName) => {
-          console.log(`[SW ${SW_VERSION}] Deleting: ${cacheName}`);
-          return caches.delete(cacheName);
-        })
-      );
-    }).then(() => {
-      console.log(`[SW ${SW_VERSION}] Cache cleanup complete, claiming clients`);
-      return self.clients.claim();
-    }).then(() => {
-      console.log(`[SW ${SW_VERSION}] CACHE_VERSION=${SW_VERSION}, clients claimed`);
-      // Notify clients that update is available
-      return self.clients.matchAll().then(clients => {
-        clients.forEach(client => {
-          client.postMessage({ type: 'SW_UPDATED', version: SW_VERSION });
+    caches.keys()
+      .then((cacheNames) => {
+        console.log(`[SW ${SW_VERSION}] Purging ${cacheNames.length} caches`);
+        return Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+      })
+      .then(() => {
+        console.log(`[SW ${SW_VERSION}] Cache purge complete, claiming clients`);
+        return self.clients.claim();
+      })
+      .then(() => {
+        console.log(`[SW ${SW_VERSION}] CACHE_VERSION=${CACHE_VERSION}, clients claimed`);
+        return self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({ type: 'SW_UPDATED', version: SW_VERSION });
+          });
         });
-      });
-    })
+      })
   );
 });
 

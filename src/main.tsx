@@ -10,8 +10,11 @@ import { initBootSentinel } from "./lib/bootSentinel";
 import { runSwCleanup } from "./lib/swCleanup";
 import { featureFlags } from "./config/featureFlags";
 import "./i18n/config";
+import { assertSingleReactInstance } from "./safety/reactSingletonAssert";
 
 console.log('✅ Core modules loaded');
+
+assertSingleReactInstance();
 
 // H310-1: Dev-only error listener to capture React Error #310
 if (import.meta.env.DEV && featureFlags.H310_HARDENING) {

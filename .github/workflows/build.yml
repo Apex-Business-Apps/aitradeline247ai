@@ -1,0 +1,27 @@
+name: build
+
+on:
+  push:
+    branches: ["main", "master", "fix/react-singleton-*"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify single React instance
+        run: npm run verify:react
+
+      - name: Build
+        run: npm run build
