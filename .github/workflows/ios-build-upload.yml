@@ -50,19 +50,21 @@ jobs:
           npx cap copy ios
           npx cap sync ios
 
-      - name: CocoaPods (install pods inside ios/App)
-        run: |
-          sudo gem install cocoapods -N
-          cd ios/App
-          pod install --repo-update
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods -N
+
+      - name: Install iOS pods
+        working-directory: ios/App
+        run: pod install --repo-update
 
       - name: Xcode build (archive)
+        working-directory: ios/App
         run: |
-          xcodebuild -workspace ios/App/App.xcworkspace \
+          xcodebuild -workspace App.xcworkspace \
                      -scheme App \
                      -configuration Release \
                      -destination 'generic/platform=iOS' \
-                     -archivePath $PWD/ios/build/App.xcarchive \
+                     -archivePath $PWD/build/App.xcarchive \
                      archive \
                      DEVELOPMENT_TEAM=$APPLE_TEAM_ID
         env:

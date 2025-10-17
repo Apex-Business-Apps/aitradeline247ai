@@ -44,13 +44,18 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
       - name: Install CocoaPods
+        run: gem install cocoapods --no-document
+
+      - name: Install iOS pods
+        working-directory: ios/App
         run: |
-          gem install cocoapods --no-document
-          cd ios/App && pod repo update && pod install
+          pod repo update
+          pod install --repo-update
 
       - name: Xcode archive (no signing)
+        working-directory: ios/App
         run: |
-          xcodebuild -workspace ios/App/App.xcworkspace \
+          xcodebuild -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -sdk iphoneos \
@@ -58,12 +63,13 @@ jobs:
             clean archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
       - name: Export .ipa (ad-hoc unsigned)
+        working-directory: ios/App
         run: |
           mkdir -p build_out
           xcodebuild -exportArchive \
             -archivePath $PWD/build/App.xcarchive \
             -exportPath build_out \
-            -exportOptionsPlist ios/App/exportOptions.plist || true
+            -exportOptionsPlist exportOptions.plist || true
           ls -l build_out || true
 
       - name: Upload artifacts
@@ -71,6 +77,6 @@ jobs:
         with:
           name: ios-build-artifacts
           path: |
-            build_out/**/*.ipa
+            ios/App/build_out/**/*.ipa
             ios/App/build/**/*.app
           if-no-files-found: warn

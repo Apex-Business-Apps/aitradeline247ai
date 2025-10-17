@@ -1,6 +1,9 @@
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
-project 'App.xcodeproj'
+
+# Always resolve the Xcode project relative to this Podfile so pod install
+# works even when invoked from a different working directory (e.g. CI).
+project File.expand_path('App.xcodeproj', __dir__)
 
 target 'App' do
   pod 'Capacitor', :path => '../node_modules/@capacitor/ios'
