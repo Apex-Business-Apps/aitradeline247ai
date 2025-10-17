@@ -1,7 +1,7 @@
-import { test, expect, Locator } from '@playwright/test';
+import { test, expect, Locator, Page } from '@playwright/test';
 
 const BASE_URL =
-  process.env.PLAYWRIGHT_BASE_URL || process.env.BASE_URL || 'http://localhost:5173';
+  process.env.PLAYWRIGHT_BASE_URL || process.env.BASE_URL || 'http://127.0.0.1:5173';
 
 // CTA definitions with their expected destinations
 type CTAConfig = {
@@ -37,6 +37,44 @@ const CTAS: CTAConfig[] = [
   { name: 'Start Free Trial (Features)', page: '/features', selector: 'a:has-text("Start Free Trial")', expectedUrl: '/auth' },
 ];
 
+const ESCAPE_REGEX = /[.*+?^${}()|[\]\\]/g;
+const escapeForRegExp = (value: string) => value.replace(ESCAPE_REGEX, '\\$&');
+
+const findCta = async (page: Page, cta: CTAConfig): Promise<Locator> => {
+  const selectors = Array.isArray(cta.selector) ? cta.selector : [cta.selector];
+
+  for (const selector of selectors) {
+    const candidate = page.locator(selector).first();
+    if ((await candidate.count()) > 0) {
+      return candidate;
+    }
+  }
+
+  const labelText = selectors
+    .map((selector) => {
+      const quoted = selector.match(/"([^"]+)"/g);
+      if (quoted) {
+        return quoted.map((part) => part.replace(/"/g, '')).join(' ');
+      }
+      return cta.name.replace(/\s*\(.*\)$/u, '').trim();
+    })
+    .find((text) => text.length > 0) || cta.name.replace(/\s*\(.*\)$/u, '').trim();
+
+  const pattern = new RegExp(escapeForRegExp(labelText), 'i');
+
+  const buttonRole = page.getByRole('button', { name: pattern }).first();
+  if ((await buttonRole.count()) > 0) {
+    return buttonRole;
+  }
+
+  const linkRole = page.getByRole('link', { name: pattern }).first();
+  if ((await linkRole.count()) > 0) {
+    return linkRole;
+  }
+
+  return page.locator(selectors.join(', ')).first();
+};
+
 test.describe('CTA Smoke Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Set a reasonable timeout
@@ -52,25 +90,12 @@ test.describe('CTA Smoke Tests', () => {
       await page.waitForLoadState('networkidle');
       
       // Find and click the CTA
-      const selectors = Array.isArray(cta.selector) ? cta.selector : [cta.selector];
-      let button: Locator | null = null;
+      const button = await findCta(page, cta);
 
-      for (const selector of selectors) {
-        const candidate = page.locator(selector).first();
-        if ((await candidate.count()) > 0) {
-          button = candidate;
-          break;
-        }
-      }
-
-      if (!button) {
-        button = page.locator(selectors.join(', ')).first();
-      }
-
-      await expect(button!).toBeVisible({ timeout: 5000 });
+      await expect(button).toBeVisible({ timeout: 5000 });
 
       // Click and wait for navigation
-      await button!.click();
+      await button.click();
       await page.waitForLoadState('networkidle');
       
       // be robust: wait, then assert on pathname

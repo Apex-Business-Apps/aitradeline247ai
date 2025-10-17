@@ -16,7 +16,7 @@ const path = require('node:path');
 const DIST_DIR = path.join(process.cwd(), 'dist');
 const INDEX_PATH = path.join(DIST_DIR, 'index.html');
 
-const MIME_TYPES = {
+const mimeMap = {
   '.js': 'application/javascript',
   '.css': 'text/css',
   '.html': 'text/html',
@@ -71,8 +71,8 @@ function verifyAsset(assetUrl) {
   
   // Check MIME type by extension
   const ext = path.extname(assetPath).toLowerCase();
-  const expectedMime = MIME_TYPES[ext];
-  
+  const expectedMime = mimeMap[ext];
+
   if (!expectedMime) {
     return { ok: true, warning: `Unknown MIME type for ${ext}` };
   }
