@@ -17,12 +17,21 @@ export function WebVitalsReporter() {
     }
 
     const reportMetric = (name: string, value: number, rating: 'good' | 'needs-improvement' | 'poor') => {
+      // CRITICAL FIX: Validate metric values - sometimes Performance Observer returns invalid timestamps
+      const roundedValue = Math.round(value);
+      const isValidMetric = roundedValue > 0 && roundedValue < 60000; // Must be between 0 and 60s for web vitals
+      
+      if (!isValidMetric) {
+        console.warn(`❌ Invalid ${name} metric: ${roundedValue}ms - ignoring`);
+        return;
+      }
+
       // Send to analytics via beacon
       if (navigator.sendBeacon) {
         const data = JSON.stringify({
           type: 'web_vital',
           metric: name,
-          value: Math.round(value),
+          value: roundedValue,
           rating,
           url: window.location.pathname,
           timestamp: Date.now()
@@ -33,7 +42,7 @@ export function WebVitalsReporter() {
       // Log to console in development
       if (import.meta.env.DEV) {
         const emoji = rating === 'good' ? '✅' : rating === 'needs-improvement' ? '⚠️' : '❌';
-        console.log(`${emoji} ${name}: ${Math.round(value)} (${rating})`);
+        console.log(`${emoji} ${name}: ${roundedValue}ms (${rating})`);
       }
     };
 

@@ -26,4 +26,10 @@ export default defineConfig({
     reuseExistingServer: true,
     timeout: 120000,
   },
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  use: {
+    baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:4173',
+  },
 });

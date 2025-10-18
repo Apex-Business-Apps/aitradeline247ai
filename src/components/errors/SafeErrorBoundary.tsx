@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
+import { reportReactError } from '@/lib/errorReporter';
 
 interface Props {
   children: ReactNode;
@@ -25,6 +26,7 @@ class SafeErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('🚨 Error Boundary caught an error:', error, errorInfo);
+    reportReactError(error, errorInfo);
   }
 
   handleReload = () => {

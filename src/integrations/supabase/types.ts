@@ -266,6 +266,144 @@ export type Database = {
         }
         Relationships: []
       }
+      billing_events: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_id: string
+          event_type: string
+          id: string
+          last_processed_at: string | null
+          payload: Json
+          processing_status: string
+          received_at: string
+          retry_count: number
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          last_processed_at?: string | null
+          payload?: Json
+          processing_status?: string
+          received_at?: string
+          retry_count?: number
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          last_processed_at?: string | null
+          payload?: Json
+          processing_status?: string
+          received_at?: string
+          retry_count?: number
+        }
+        Relationships: []
+      }
+      billing_invoices: {
+        Row: {
+          amount_due: number
+          amount_paid: number
+          billing_reason: string | null
+          created_at: string
+          currency: string
+          hosted_invoice_url: string | null
+          id: string
+          invoice_pdf: string | null
+          metadata: Json | null
+          organization_id: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_invoice_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount_due: number
+          amount_paid?: number
+          billing_reason?: string | null
+          created_at?: string
+          currency?: string
+          hosted_invoice_url?: string | null
+          id?: string
+          invoice_pdf?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_invoice_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number
+          billing_reason?: string | null
+          created_at?: string
+          currency?: string
+          hosted_invoice_url?: string | null
+          id?: string
+          invoice_pdf?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          status?: string
+          stripe_customer_id?: string
+          stripe_invoice_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      billing_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          metadata: Json | null
+          organization_id: string | null
+          payment_method: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_payment_intent_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          payment_method?: string | null
+          status: string
+          stripe_customer_id: string
+          stripe_payment_intent_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string | null
+          payment_method?: string | null
+          status?: string
+          stripe_customer_id?: string
+          stripe_payment_intent_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       blocklist_numbers: {
         Row: {
           created_at: string
@@ -311,6 +449,78 @@ export type Database = {
           service?: string | null
           status?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      business_profiles: {
+        Row: {
+          booking_rules: Json
+          brand_voice: Json
+          business_name: string
+          compliance: Json
+          created_at: string
+          escalation: Json
+          faq: Json
+          hours: Json
+          id: string
+          industry: string
+          organization_id: string
+          service_area: string | null
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          booking_rules?: Json
+          brand_voice?: Json
+          business_name: string
+          compliance?: Json
+          created_at?: string
+          escalation?: Json
+          faq?: Json
+          hours?: Json
+          id?: string
+          industry: string
+          organization_id: string
+          service_area?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          booking_rules?: Json
+          brand_voice?: Json
+          business_name?: string
+          compliance?: Json
+          created_at?: string
+          escalation?: Json
+          faq?: Json
+          hours?: Json
+          id?: string
+          industry?: string
+          organization_id?: string
+          service_area?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      buyer_path_sends: {
+        Row: {
+          event_type: string
+          id: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          sent_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -724,6 +934,45 @@ export type Database = {
           },
         ]
       }
+      consent_access_audit: {
+        Row: {
+          access_type: string
+          accessed_by: string | null
+          consent_id: string | null
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          reason: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_type: string
+          accessed_by?: string | null
+          consent_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          reason?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_type?: string
+          accessed_by?: string | null
+          consent_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          reason?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       consent_logs: {
         Row: {
           channel: string
@@ -1007,6 +1256,101 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      data_retention_policies: {
+        Row: {
+          active: boolean
+          created_at: string
+          date_column: string
+          deletion_criteria: Json | null
+          id: string
+          last_enforced_at: string | null
+          retention_days: number
+          table_name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          date_column?: string
+          deletion_criteria?: Json | null
+          id?: string
+          last_enforced_at?: string | null
+          retention_days: number
+          table_name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          date_column?: string
+          deletion_criteria?: Json | null
+          id?: string
+          last_enforced_at?: string | null
+          retention_days?: number
+          table_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      dsar_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          evidence_artifact_url: string | null
+          id: string
+          initiated_at: string
+          initiated_by: string | null
+          metadata: Json | null
+          organization_id: string | null
+          request_type: string
+          requester_email: string
+          requester_phone: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          evidence_artifact_url?: string | null
+          id?: string
+          initiated_at?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          request_type: string
+          requester_email: string
+          requester_phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          evidence_artifact_url?: string | null
+          id?: string
+          initiated_at?: string
+          initiated_by?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          request_type?: string
+          requester_email?: string
+          requester_phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dsar_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       encryption_errors: {
         Row: {
@@ -1584,6 +1928,48 @@ export type Database = {
             referencedColumns: ["code"]
           },
         ]
+      }
+      idempotency_keys: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          expires_at: string
+          id: string
+          idempotency_key: string
+          operation: string
+          request_hash: string
+          response_data: Json | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string
+          id?: string
+          idempotency_key: string
+          operation: string
+          request_hash: string
+          response_data?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          expires_at?: string
+          id?: string
+          idempotency_key?: string
+          operation?: string
+          request_hash?: string
+          response_data?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       leads: {
         Row: {
@@ -2606,6 +2992,152 @@ export type Database = {
           },
         ]
       }
+      tenant_phone_mappings: {
+        Row: {
+          created_at: string
+          id: string
+          number_type: string
+          phone_number: string
+          provisioned_at: string
+          tenant_id: string
+          twilio_number_sid: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          number_type?: string
+          phone_number: string
+          provisioned_at?: string
+          tenant_id: string
+          twilio_number_sid: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          number_type?: string
+          phone_number?: string
+          provisioned_at?: string
+          tenant_id?: string
+          twilio_number_sid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_phone_mappings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_usage_counters: {
+        Row: {
+          billing_period_end: string
+          billing_period_start: string
+          created_at: string
+          id: string
+          last_updated_at: string
+          phone_mapping_id: string
+          sms_count_inbound: number
+          sms_count_outbound: number
+          tenant_id: string
+          voice_minutes_inbound: number
+          voice_minutes_outbound: number
+        }
+        Insert: {
+          billing_period_end: string
+          billing_period_start: string
+          created_at?: string
+          id?: string
+          last_updated_at?: string
+          phone_mapping_id: string
+          sms_count_inbound?: number
+          sms_count_outbound?: number
+          tenant_id: string
+          voice_minutes_inbound?: number
+          voice_minutes_outbound?: number
+        }
+        Update: {
+          billing_period_end?: string
+          billing_period_start?: string
+          created_at?: string
+          id?: string
+          last_updated_at?: string
+          phone_mapping_id?: string
+          sms_count_inbound?: number
+          sms_count_outbound?: number
+          tenant_id?: string
+          voice_minutes_inbound?: number
+          voice_minutes_outbound?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_usage_counters_phone_mapping_id_fkey"
+            columns: ["phone_mapping_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_phone_mappings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_usage_counters_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_usage_logs: {
+        Row: {
+          call_sid: string | null
+          created_at: string
+          id: string
+          message_sid: string | null
+          occurred_at: string
+          phone_mapping_id: string
+          quantity: number
+          tenant_id: string
+          usage_type: string
+        }
+        Insert: {
+          call_sid?: string | null
+          created_at?: string
+          id?: string
+          message_sid?: string | null
+          occurred_at: string
+          phone_mapping_id: string
+          quantity: number
+          tenant_id: string
+          usage_type: string
+        }
+        Update: {
+          call_sid?: string | null
+          created_at?: string
+          id?: string
+          message_sid?: string | null
+          occurred_at?: string
+          phone_mapping_id?: string
+          quantity?: number
+          tenant_id?: string
+          usage_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_usage_logs_phone_mapping_id_fkey"
+            columns: ["phone_mapping_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_phone_mappings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_usage_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transcripts: {
         Row: {
           archived: boolean | null
@@ -2755,6 +3287,105 @@ export type Database = {
           },
         ]
       }
+      twilio_hosted_sms_orders: {
+        Row: {
+          business_name: string
+          contact_email: string
+          created_at: string
+          id: string
+          legal_address: string
+          loa_signed_at: string | null
+          messaging_service_added_at: string | null
+          metadata: Json | null
+          order_data: Json | null
+          order_sid: string
+          phone_number: string
+          status: string
+          subaccount_sid: string | null
+          submission_id: string | null
+          tenant_id: string
+          test_sms_sent_at: string | null
+          updated_at: string
+          verification_completed_at: string | null
+        }
+        Insert: {
+          business_name: string
+          contact_email: string
+          created_at?: string
+          id?: string
+          legal_address: string
+          loa_signed_at?: string | null
+          messaging_service_added_at?: string | null
+          metadata?: Json | null
+          order_data?: Json | null
+          order_sid: string
+          phone_number: string
+          status?: string
+          subaccount_sid?: string | null
+          submission_id?: string | null
+          tenant_id: string
+          test_sms_sent_at?: string | null
+          updated_at?: string
+          verification_completed_at?: string | null
+        }
+        Update: {
+          business_name?: string
+          contact_email?: string
+          created_at?: string
+          id?: string
+          legal_address?: string
+          loa_signed_at?: string | null
+          messaging_service_added_at?: string | null
+          metadata?: Json | null
+          order_data?: Json | null
+          order_sid?: string
+          phone_number?: string
+          status?: string
+          subaccount_sid?: string | null
+          submission_id?: string | null
+          tenant_id?: string
+          test_sms_sent_at?: string | null
+          updated_at?: string
+          verification_completed_at?: string | null
+        }
+        Relationships: []
+      }
+      twilio_messaging_services: {
+        Row: {
+          business_name: string
+          created_at: string
+          id: string
+          messaging_service_sid: string
+          metadata: Json | null
+          status: string
+          subaccount_sid: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          id?: string
+          messaging_service_sid: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          id?: string
+          messaging_service_sid?: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       twilio_numbers: {
         Row: {
           capabilities: Json | null
@@ -2801,6 +3432,195 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      twilio_port_orders: {
+        Row: {
+          a2p_brand_sid: string | null
+          a2p_campaign_sid: string | null
+          actual_foc_date: string | null
+          authorized_person: string
+          bill_upload_url: string | null
+          business_name: string
+          contact_email: string
+          created_at: string
+          current_carrier: string | null
+          estimated_foc_date: string | null
+          fallback_e164: string | null
+          id: string
+          legal_address: string
+          loa_document_url: string | null
+          loa_signed_at: string | null
+          metadata: Json | null
+          phone_number: string
+          port_completed_at: string | null
+          port_data: Json | null
+          port_order_sid: string
+          pre_provisioned: boolean | null
+          status: string
+          subaccount_sid: string | null
+          temporary_did: string | null
+          temporary_forwarding_active: boolean | null
+          temporary_forwarding_removed_at: string | null
+          tenant_id: string
+          test_call_verified_at: string | null
+          test_sms_verified_at: string | null
+          trust_hub_profile_sid: string | null
+          updated_at: string
+          webhook_config: Json | null
+        }
+        Insert: {
+          a2p_brand_sid?: string | null
+          a2p_campaign_sid?: string | null
+          actual_foc_date?: string | null
+          authorized_person: string
+          bill_upload_url?: string | null
+          business_name: string
+          contact_email: string
+          created_at?: string
+          current_carrier?: string | null
+          estimated_foc_date?: string | null
+          fallback_e164?: string | null
+          id?: string
+          legal_address: string
+          loa_document_url?: string | null
+          loa_signed_at?: string | null
+          metadata?: Json | null
+          phone_number: string
+          port_completed_at?: string | null
+          port_data?: Json | null
+          port_order_sid: string
+          pre_provisioned?: boolean | null
+          status?: string
+          subaccount_sid?: string | null
+          temporary_did?: string | null
+          temporary_forwarding_active?: boolean | null
+          temporary_forwarding_removed_at?: string | null
+          tenant_id: string
+          test_call_verified_at?: string | null
+          test_sms_verified_at?: string | null
+          trust_hub_profile_sid?: string | null
+          updated_at?: string
+          webhook_config?: Json | null
+        }
+        Update: {
+          a2p_brand_sid?: string | null
+          a2p_campaign_sid?: string | null
+          actual_foc_date?: string | null
+          authorized_person?: string
+          bill_upload_url?: string | null
+          business_name?: string
+          contact_email?: string
+          created_at?: string
+          current_carrier?: string | null
+          estimated_foc_date?: string | null
+          fallback_e164?: string | null
+          id?: string
+          legal_address?: string
+          loa_document_url?: string | null
+          loa_signed_at?: string | null
+          metadata?: Json | null
+          phone_number?: string
+          port_completed_at?: string | null
+          port_data?: Json | null
+          port_order_sid?: string
+          pre_provisioned?: boolean | null
+          status?: string
+          subaccount_sid?: string | null
+          temporary_did?: string | null
+          temporary_forwarding_active?: boolean | null
+          temporary_forwarding_removed_at?: string | null
+          tenant_id?: string
+          test_call_verified_at?: string | null
+          test_sms_verified_at?: string | null
+          trust_hub_profile_sid?: string | null
+          updated_at?: string
+          webhook_config?: Json | null
+        }
+        Relationships: []
+      }
+      twilio_quickstart_configs: {
+        Row: {
+          created_at: string
+          failover_url: string | null
+          fallback_e164: string
+          forwarding_kit_url: string | null
+          id: string
+          messaging_service_enrolled: boolean | null
+          metadata: Json | null
+          phone_number: string
+          phone_sid: string
+          status: string
+          status_callback: string
+          tenant_id: string
+          updated_at: string
+          voice_url: string
+        }
+        Insert: {
+          created_at?: string
+          failover_url?: string | null
+          fallback_e164: string
+          forwarding_kit_url?: string | null
+          id?: string
+          messaging_service_enrolled?: boolean | null
+          metadata?: Json | null
+          phone_number: string
+          phone_sid: string
+          status?: string
+          status_callback: string
+          tenant_id: string
+          updated_at?: string
+          voice_url: string
+        }
+        Update: {
+          created_at?: string
+          failover_url?: string | null
+          fallback_e164?: string
+          forwarding_kit_url?: string | null
+          id?: string
+          messaging_service_enrolled?: boolean | null
+          metadata?: Json | null
+          phone_number?: string
+          phone_sid?: string
+          status?: string
+          status_callback?: string
+          tenant_id?: string
+          updated_at?: string
+          voice_url?: string
+        }
+        Relationships: []
+      }
+      twilio_subaccounts: {
+        Row: {
+          business_name: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          status: string
+          subaccount_sid: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          status?: string
+          subaccount_sid?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       unsubscribes: {
         Row: {
@@ -3049,6 +3869,7 @@ export type Database = {
       voice_presets: {
         Row: {
           created_at: string
+          description: string | null
           id: string
           label: string
           max_reply_seconds: number | null
@@ -3058,6 +3879,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id: string
           label: string
           max_reply_seconds?: number | null
@@ -3067,6 +3889,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: string
           label?: string
           max_reply_seconds?: number | null
@@ -3103,6 +3926,45 @@ export type Database = {
           error_message?: string | null
           fell_back?: boolean
           started_at?: string
+        }
+        Relationships: []
+      }
+      voice_transcripts: {
+        Row: {
+          call_sid: string
+          captured_fields: Json | null
+          created_at: string
+          drift_flagged: boolean | null
+          drift_reason: string | null
+          id: string
+          kb_sources: string[] | null
+          model_output: string | null
+          transcript: string
+          used_kb: boolean | null
+        }
+        Insert: {
+          call_sid: string
+          captured_fields?: Json | null
+          created_at?: string
+          drift_flagged?: boolean | null
+          drift_reason?: string | null
+          id?: string
+          kb_sources?: string[] | null
+          model_output?: string | null
+          transcript: string
+          used_kb?: boolean | null
+        }
+        Update: {
+          call_sid?: string
+          captured_fields?: Json | null
+          created_at?: string
+          drift_flagged?: boolean | null
+          drift_reason?: string | null
+          id?: string
+          kb_sources?: string[] | null
+          model_output?: string | null
+          transcript?: string
+          used_kb?: boolean | null
         }
         Relationships: []
       }
@@ -3257,15 +4119,20 @@ export type Database = {
         Args: { ip: unknown }
         Returns: unknown
       }
+      audit_consent_access: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          by_access_type: Json
+          recent_accesses: Json
+          total_accesses: number
+          unique_users: number
+        }[]
+      }
       batch_encrypt_appointments: {
         Args:
           | { batch_size?: number }
           | { p_batch_size?: number; p_encryption_key?: string }
-        Returns: {
-          batch_duration_seconds: number
-          encrypted_count: number
-          failed_count: number
-        }[]
+        Returns: Json
       }
       binary_quantize: {
         Args: { "": string } | { "": unknown }
@@ -3295,6 +4162,10 @@ export type Database = {
       }
       check_hotline_rate_limit: {
         Args: { p_ani_hash: string; p_ip_hash: string }
+        Returns: Json
+      }
+      check_idempotency: {
+        Args: { p_key: string; p_operation: string; p_request_hash: string }
         Returns: Json
       }
       check_rag_health: {
@@ -3332,6 +4203,10 @@ export type Database = {
         Args: { "": string }
         Returns: string
       }
+      cleanup_expired_idempotency_keys: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       cleanup_expired_sessions: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -3354,6 +4229,10 @@ export type Database = {
       }
       cleanup_rate_limits: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      complete_idempotency: {
+        Args: { p_key: string; p_response: Json; p_status?: string }
         Returns: undefined
       }
       decrypt_pii: {
@@ -3400,6 +4279,14 @@ export type Database = {
       encrypt_pii_field: {
         Args: { iv_seed: string; plaintext_value: string }
         Returns: string
+      }
+      enforce_data_retention: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          executed_at: string
+          policy_name: string
+          rows_deleted: number
+        }[]
       }
       get_app_encryption_key: {
         Args: Record<PropertyKey, never>
@@ -3518,6 +4405,14 @@ export type Database = {
       get_my_security_summary: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      get_or_create_usage_counter: {
+        Args: {
+          p_occurred_at?: string
+          p_phone_mapping_id: string
+          p_tenant_id: string
+        }
+        Returns: string
       }
       get_org_appointments_secure: {
         Args: { limit_count?: number; org_id: string }
@@ -3818,12 +4713,33 @@ export type Database = {
         }
         Returns: undefined
       }
+      log_sms_usage: {
+        Args: {
+          p_direction: string
+          p_message_sid: string
+          p_occurred_at?: string
+          p_phone_number: string
+          p_tenant_id: string
+        }
+        Returns: undefined
+      }
       log_upgrade_step: {
         Args: {
           p_details?: Json
           p_phase: string
           p_status: string
           p_step: string
+        }
+        Returns: undefined
+      }
+      log_voice_usage: {
+        Args: {
+          p_call_sid: string
+          p_direction: string
+          p_duration_seconds: number
+          p_occurred_at?: string
+          p_phone_number: string
+          p_tenant_id: string
         }
         Returns: undefined
       }
@@ -3954,7 +4870,7 @@ export type Database = {
         Returns: Json
       }
       share_org: {
-        Args: { _user_a: string; _user_b: string }
+        Args: { user_a: string; user_b: string }
         Returns: boolean
       }
       sparsevec_out: {
@@ -4008,6 +4924,10 @@ export type Database = {
       vector_typmod_in: {
         Args: { "": unknown[] }
         Returns: number
+      }
+      verify_email_service_configured: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
     }
     Enums: {

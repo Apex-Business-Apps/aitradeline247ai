@@ -6,11 +6,32 @@ export const WebVitalsTracker = () => {
 
   useEffect(() => {
     const trackWebVital = (name: string, value: number, id?: string) => {
+      // CRITICAL FIX: Validate metric values before tracking
+      const roundedValue = Math.round(value);
+      
+      // Validate based on metric type
+      let isValid = false;
+      if (name === 'LCP' || name === 'FCP' || name === 'TTFB') {
+        isValid = roundedValue > 0 && roundedValue < 60000; // < 60s
+      } else if (name === 'FID' || name === 'INP') {
+        isValid = roundedValue >= 0 && roundedValue < 10000; // < 10s
+      } else if (name === 'CLS') {
+        isValid = value >= 0 && value < 10; // CLS is unitless score
+      } else {
+        // For other metrics like LoadTime, DOMReady
+        isValid = roundedValue > 0 && roundedValue < 120000; // < 2 minutes
+      }
+      
+      if (!isValid) {
+        console.warn(`Invalid ${name} metric: ${roundedValue} - skipping`);
+        return;
+      }
+      
       track({
         event_type: 'web_vital',
         event_data: {
           name,
-          value,
+          value: roundedValue,
           id,
           url: window.location.href,
           timestamp: Date.now()

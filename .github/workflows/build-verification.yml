@@ -1,0 +1,56 @@
+name: Build Verification
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verify-build:
+    name: Verify Production Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'placeholder-key' }}
+      
+      - name: Verify build assets
+        run: node scripts/verify-build.cjs
+      
+      - name: Check dist/ structure
+        run: |
+          echo "📦 Checking dist/ directory structure..."
+          ls -lh dist/
+          ls -lh dist/assets/ 2>/dev/null || echo "No assets/ directory (unusual)"
+          
+      - name: Verify critical files
+        run: |
+          echo "🔍 Verifying critical files exist..."
+          test -f dist/index.html && echo "✅ index.html exists" || (echo "❌ index.html missing" && exit 1)
+          test -f dist/sw.js && echo "✅ sw.js exists" || echo "⚠️  sw.js missing (PWA disabled?)"
+          test -f dist/manifest.webmanifest && echo "✅ manifest.webmanifest exists" || echo "⚠️  manifest missing"
+      
+      - name: Upload build artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-build-output
+          path: dist/
+          retention-days: 7

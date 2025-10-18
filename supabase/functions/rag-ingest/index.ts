@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import { normalizeTextForEmbedding } from '../_shared/textNormalization.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -53,7 +54,16 @@ function chunkText(text: string, targetTokens = 800, overlapTokens = 120): Chunk
   return chunks;
 }
 
-async function generateEmbedding(text: string, openaiKey: string): Promise<number[]> {
+async function generateEmbedding(
+  text: string, 
+  openaiKey: string,
+  explicitLang?: string
+): Promise<{ embedding: number[]; language: string }> {
+  // Apply multilingual normalization before embedding
+  const { normalized, language } = normalizeTextForEmbedding(text, explicitLang);
+  
+  console.log(`Generating embedding for language: ${language}`);
+  
   const response = await fetch('https://api.openai.com/v1/embeddings', {
     method: 'POST',
     headers: {
@@ -62,7 +72,8 @@ async function generateEmbedding(text: string, openaiKey: string): Promise<numbe
     },
     body: JSON.stringify({
       model: 'text-embedding-3-small',
-      input: text,
+      input: normalized,
+      dimensions: 1536, // Explicit dimension for consistency
     }),
   });
 
@@ -72,7 +83,10 @@ async function generateEmbedding(text: string, openaiKey: string): Promise<numbe
   }
 
   const data = await response.json();
-  return data.data[0].embedding;
+  return { 
+    embedding: data.data[0].embedding,
+    language 
+  };
 }
 
 serve(async (req) => {
@@ -126,13 +140,16 @@ serve(async (req) => {
         .limit(50);
 
       for (const transcript of transcripts || []) {
+        // Detect language from content
+        const { language: detectedLang } = normalizeTextForEmbedding(transcript.content);
+        
         const sourceId = await supabase.rpc('rag_upsert_source', {
           p_source_type: 'transcript',
           p_external_id: `transcript_${transcript.id}`,
           p_title: `Call ${transcript.call_sid}`,
           p_uri: `/transcripts/${transcript.id}`,
-          p_lang: 'en',
-          p_meta: { call_sid: transcript.call_sid }
+          p_lang: detectedLang, // Use detected language
+          p_meta: { call_sid: transcript.call_sid, detected_language: detectedLang }
         }).then(r => r.data);
 
         // Check if we need to re-embed (source was updated)
@@ -164,7 +181,11 @@ serve(async (req) => {
             .single();
 
           if (chunkData) {
-            const embedding = await generateEmbedding(chunk.text, openaiKey);
+            const { embedding, language: chunkLang } = await generateEmbedding(
+              chunk.text, 
+              openaiKey, 
+              detectedLang
+            );
             
             await supabase
               .from('rag_embeddings')
@@ -172,7 +193,7 @@ serve(async (req) => {
                 chunk_id: chunkData.id,
                 embedding: `[${embedding.join(',')}]`,
                 norm: Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0)),
-                meta: {}
+                meta: { language: chunkLang }
               });
 
             results.chunks_created++;
@@ -195,13 +216,16 @@ serve(async (req) => {
       for (const faq of faqs || []) {
         const content = `Q: ${faq.q}\n\nA: ${faq.a}`;
         
+        // Detect language from FAQ content
+        const { language: faqLang } = normalizeTextForEmbedding(content);
+        
         const sourceId = await supabase.rpc('rag_upsert_source', {
           p_source_type: 'faq',
           p_external_id: `faq_${faq.id}`,
           p_title: faq.q,
           p_uri: `/faqs/${faq.id}`,
-          p_lang: 'en',
-          p_meta: { org_id: faq.organization_id }
+          p_lang: faqLang, // Use detected language
+          p_meta: { org_id: faq.organization_id, detected_language: faqLang }
         }).then(r => r.data);
 
         const { data: existingChunks } = await supabase
@@ -230,7 +254,11 @@ serve(async (req) => {
             .single();
 
           if (chunkData) {
-            const embedding = await generateEmbedding(chunk.text, openaiKey);
+            const { embedding, language: chunkLang } = await generateEmbedding(
+              chunk.text, 
+              openaiKey,
+              faqLang
+            );
             
             await supabase
               .from('rag_embeddings')
@@ -238,7 +266,7 @@ serve(async (req) => {
                 chunk_id: chunkData.id,
                 embedding: `[${embedding.join(',')}]`,
                 norm: Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0)),
-                meta: {}
+                meta: { language: chunkLang }
               });
 
             results.chunks_created++;

@@ -10,6 +10,10 @@ export const featureFlags = {
   // Set to false to short-circuit all A/B test logic
   AB_ENABLED: false,
   
+  // React Error #310 Hardening - Runtime guards for hook violations
+  // Set to true to enable dev-mode telemetry and enhanced boot checks
+  H310_HARDENING: false,
+  
   // Add other feature flags here as needed
   ANALYTICS_ENABLED: true,
   ERROR_BOUNDARY_ENABLED: true,

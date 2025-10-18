@@ -21,10 +21,18 @@ serve(async (req) => {
       throw new Error('Missing Twilio credentials');
     }
 
-    const { phoneNumber, loaDocument } = await req.json();
+    const { 
+      phoneNumber, 
+      tenant_id,
+      business_name,
+      legal_address,
+      contact_email,
+      subaccount_sid 
+    } = await req.json();
+
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Log hosted SMS request
+    // Log hosted SMS request initiation
     const submissionId = crypto.randomUUID();
     
     await supabase.from('analytics_events').insert({
@@ -32,21 +40,83 @@ serve(async (req) => {
       event_data: {
         submission_id: submissionId,
         phone_number: phoneNumber,
+        tenant_id,
         timestamp: new Date().toISOString()
       },
       severity: 'info'
     });
 
-    // Note: Actual Twilio Hosted SMS LOA submission would go here
-    // This is a placeholder for the actual Twilio API integration
+    console.log('Initiating Hosted SMS order for:', phoneNumber);
 
-    console.log('Hosted SMS requested for:', phoneNumber);
+    // Create Twilio Hosted Number Order
+    const auth = btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`);
+    const twilioApiUrl = subaccount_sid 
+      ? `https://api.twilio.com/2010-04-01/Accounts/${subaccount_sid}/HostedNumber/HostedNumberOrders.json`
+      : `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/HostedNumber/HostedNumberOrders.json`;
+
+    const formData = new URLSearchParams();
+    formData.append('PhoneNumber', phoneNumber);
+    formData.append('ContactEmail', contact_email);
+    formData.append('ContactPhoneNumber', phoneNumber);
+    formData.append('AddressSid', ''); // Would need to create address resource first in production
+    formData.append('Email', contact_email);
+    formData.append('CcEmails[]', contact_email);
+    formData.append('FriendlyName', `${business_name} - Hosted SMS`);
+
+    const twilioResponse = await fetch(twilioApiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
+    });
+
+    if (!twilioResponse.ok) {
+      const errorText = await twilioResponse.text();
+      console.error('Twilio Hosted Number Order failed:', errorText);
+      throw new Error(`Twilio API error: ${errorText}`);
+    }
+
+    const orderData = await twilioResponse.json();
+    console.log('Hosted Number Order created:', orderData);
+
+    // Store the order details
+    await supabase.from('twilio_hosted_sms_orders').insert({
+      tenant_id,
+      phone_number: phoneNumber,
+      order_sid: orderData.sid,
+      status: orderData.status,
+      contact_email,
+      business_name,
+      legal_address,
+      subaccount_sid,
+      order_data: orderData,
+      submission_id: submissionId
+    });
+
+    // Log success
+    await supabase.from('analytics_events').insert({
+      event_type: 'hosted_sms_order_created',
+      event_data: {
+        submission_id: submissionId,
+        order_sid: orderData.sid,
+        phone_number: phoneNumber,
+        status: orderData.status,
+        tenant_id
+      },
+      severity: 'info'
+    });
 
     return new Response(JSON.stringify({
       success: true,
       submissionId,
+      orderSid: orderData.sid,
       phoneNumber,
-      status: 'pending_approval'
+      status: orderData.status,
+      message: 'Hosted SMS order created. Client will receive LOA email at ' + contact_email,
+      verificationUrl: orderData.verification_document_url,
+      loaUrl: orderData.loa_document_url
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });

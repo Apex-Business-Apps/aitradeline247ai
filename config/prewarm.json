@@ -1,0 +1,8 @@
+{
+  "endpoints": [
+    "/functions/v1/healthz"
+  ],
+  "interval_minutes": 5,
+  "timeout_ms": 3000,
+  "comment": "GET-only endpoints for cold-start prevention. Add more public GET endpoints here."
+}

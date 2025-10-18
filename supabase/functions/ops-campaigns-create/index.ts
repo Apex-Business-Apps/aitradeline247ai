@@ -73,12 +73,22 @@ serve(async (req: Request) => {
       .select('*')
       .not('email', 'is', null);
 
-    // Apply filters
+    // Apply filters with input sanitization to prevent SQL injection patterns
     if (body.lead_filters?.country) {
-      leadsQuery = leadsQuery.ilike('company', `%${body.lead_filters.country}%`);
+      // Validate and sanitize country filter - alphanumeric and spaces only
+      const countryFilter = body.lead_filters.country.trim().slice(0, 100);
+      if (!/^[a-zA-Z0-9\s\-]+$/.test(countryFilter)) {
+        throw new Error('Invalid country filter format');
+      }
+      leadsQuery = leadsQuery.ilike('company', `%${countryFilter}%`);
     }
     if (body.lead_filters?.company) {
-      leadsQuery = leadsQuery.ilike('company', `%${body.lead_filters.company}%`);
+      // Validate and sanitize company filter - alphanumeric and spaces only
+      const companyFilter = body.lead_filters.company.trim().slice(0, 100);
+      if (!/^[a-zA-Z0-9\s\-\.&]+$/.test(companyFilter)) {
+        throw new Error('Invalid company filter format');
+      }
+      leadsQuery = leadsQuery.ilike('company', `%${companyFilter}%`);
     }
 
     const { data: eligibleLeads, error: leadsError } = await leadsQuery;
@@ -189,9 +199,12 @@ serve(async (req: Request) => {
     );
 
   } catch (error) {
+    // DevOps SRE: Log detailed errors internally, return generic message to client
     console.error('Campaign creation function error:', error);
+    
+    // Return generic error to prevent information disclosure
     return new Response(
-      JSON.stringify({ error: error.message || 'Internal server error' }),
+      JSON.stringify({ error: 'Unable to create campaign. Please check your input and try again.' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

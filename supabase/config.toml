@@ -1,5 +1,17 @@
 project_id = "hysvqdwmhxnblxfqnszn"
 
+[functions.mfa-setup]
+verify_jwt = true
+
+[functions.mfa-verify]
+verify_jwt = true
+
+[functions.mfa-disable]
+verify_jwt = true
+
+[functions.mfa-backup-verify]
+verify_jwt = true
+
 # Edge Functions Configuration
 [functions.unsubscribe]
 verify_jwt = false  # Public endpoint for email unsubscribe
@@ -156,9 +168,41 @@ verify_jwt = true  # Admin only - hosted SMS setup
 [functions.ops-twilio-create-port]
 verify_jwt = true  # Admin only - port order creation
 
+# TRUST•VOICE: Reputation setup
+[functions.ops-twilio-trust-setup]
+verify_jwt = true  # Admin only - Trust Hub and reputation configuration
+
+# OPS•HEALTH: Health monitoring and testing
+[functions.ops-voice-health-check]
+verify_jwt = true  # Admin only - voice health checks
+
+[functions.ops-messaging-health-check]
+verify_jwt = true  # Admin only - messaging health checks
+
+# BILLING•MAP: Usage mapping and tracking
+[functions.ops-map-number-to-tenant]
+verify_jwt = true  # Admin only - map numbers to tenants for billing
+
 # PROMPT H: A2P compliance
 [functions.ops-twilio-a2p]
 verify_jwt = true  # Admin only - A2P workflow
+
+# WIZARD•CREATE: Client onboarding automation
+[functions.ops-twilio-ensure-subaccount]
+verify_jwt = true  # Admin only - ensure Twilio subaccount exists
+
+[functions.ops-twilio-ensure-messaging-service]
+verify_jwt = true  # Admin only - ensure Messaging Service exists
+
+# FLOW•QUICKSTART: Buy + Wire + Forwarding Kit
+[functions.ops-twilio-quickstart-forward]
+verify_jwt = true  # Admin only - complete quick-start flow
+
+[functions.ops-generate-forwarding-kit]
+verify_jwt = false  # Service-to-service call
+
+[functions.ops-test-call]
+verify_jwt = false  # Public test call page
 
 # PROMPT DF-1 & DF-2: Legacy webhook aliases (permanent)
 [functions.twilio-voice]
@@ -172,3 +216,47 @@ verify_jwt = false  # Alias to /webcomms-sms-reply
 
 [functions.twilio-sms-status]
 verify_jwt = false  # Alias to /webcomms-sms-status
+
+# BILLING: Stripe webhook processing with idempotency
+[functions.stripe-webhook]
+verify_jwt = false  # Stripe webhook - signature verified in function
+
+# INFRA: Health checks and pre-warming
+[functions.healthz]
+verify_jwt = false  # Public health check endpoint
+
+[functions.prewarm-cron]
+verify_jwt = false  # Cron-triggered pre-warm job
+
+# PROMPT VOICE-FRONTDOOR: Canadian consent flow with speech-based opt-out
+[functions.voice-frontdoor]
+verify_jwt = false  # Twilio webhook - main entry point
+
+[functions.voice-consent-speech]
+verify_jwt = false  # Twilio webhook - speech consent handler
+
+[functions.voice-route]
+verify_jwt = false  # Twilio webhook - AI-first routing with human fallback
+
+[functions.voice-route-action]
+verify_jwt = false  # Twilio webhook - routing action callback
+
+# PRIVACY: Recording retention purge for PIPEDA compliance
+[functions.recording-purge]
+verify_jwt = false  # Cron-triggered daily retention purge
+
+# P13: Compliance & Privacy Ops - PIPEDA/CASL DSAR endpoints
+[functions.admin-check]
+verify_jwt = true  # Server-side admin verification
+
+[functions.dsar-export]
+verify_jwt = true  # Authenticated users can export their data, admins can export any user
+
+[functions.dsar-delete]
+verify_jwt = true  # Admin-only: right to be forgotten
+
+[functions.consent-logs-export]
+verify_jwt = true  # Admin-only: CASL compliance export
+
+[functions.retention-enforcement]
+verify_jwt = false  # Cron-triggered daily data retention enforcement

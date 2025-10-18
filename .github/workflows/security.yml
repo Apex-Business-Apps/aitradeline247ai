@@ -1,0 +1,36 @@
+name: Security Gates
+on: 
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  security-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+      
+      - name: Make script executable
+        run: chmod +x scripts/predeploy-security.sh
+      
+      - name: Run predeploy security checks
+        run: bash scripts/predeploy-security.sh
+        env:
+          NODE_ENV: production
+          ALLOW_INSECURE_TWILIO_WEBHOOKS: ${{ secrets.ALLOW_INSECURE_TWILIO_WEBHOOKS || 'false' }}
+      
+      - name: Verify Twilio config
+        run: |
+          if [ "${{ secrets.ALLOW_INSECURE_TWILIO_WEBHOOKS }}" = "true" ]; then
+            echo "⚠️  WARNING: ALLOW_INSECURE_TWILIO_WEBHOOKS is set to true in secrets"
+            echo "   This should only be used in non-production environments"
+          else
+            echo "✅ Twilio webhook security properly configured"
+          fi

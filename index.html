@@ -125,8 +125,35 @@
 </head>
 
   <body>
+    <!-- EMERGENCY SYSTEM: Ensure React can mount no matter what -->
+    <script>
+      (function() {
+        // Force root visibility only - no error screens
+        var style = document.createElement('style');
+        style.textContent = '#root { min-height: 100vh; opacity: 1 !important; visibility: visible !important; display: flex; flex-direction: column; }';
+        document.head.appendChild(style);
+      })();
+    </script>
+    
     <a class="skip-link" href="#main">Skip to content</a>
     <div id="root"></div>
+    
+    <!-- React Bundle with Error Handling -->
+    <script>
+      console.log('🔍 Loading React bundle...');
+      
+      // Detect bundle loading errors
+      window.addEventListener('error', function(e) {
+        if (e.filename && e.filename.includes('main.tsx')) {
+          console.error('🚨 React bundle failed to load:', e.message);
+          var root = document.getElementById('root');
+          if (root) {
+            root.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;font-family:system-ui"><div style="max-width:600px;text-align:center"><h1 style="color:#dc2626;font-size:2rem;margin-bottom:1rem">⚠️ Bundle Error</h1><p style="color:#4b5563;margin-bottom:2rem">Failed to load application bundle.</p><button onclick="location.reload()" style="background:#ff6b35;color:white;padding:0.75rem 2rem;border:none;border-radius:0.5rem;font-size:1rem;cursor:pointer">Reload Page</button></div></div>';
+          }
+        }
+      }, true);
+    </script>
+    
     <script type="module" src="/src/main.tsx"></script>
     
     <!-- Google tag (gtag.js) — GA4 -->
@@ -174,13 +201,15 @@
     })();
     </script>
     
-    <!-- PWA Service Worker Registration (Production Only) -->
-    <script type="module">
+    <!-- PWA Service Worker Registration -->
+    <script>
       (function() {
+        // Check if service workers are supported
         if (!('serviceWorker' in navigator)) {
           return;
         }
 
+        // Check for safe mode
         var params = new URLSearchParams(window.location.search);
         var safe = params.get('safe') === '1' || window.__SAFE_MODE__ === true;
 
@@ -189,19 +218,36 @@
           navigator.serviceWorker.getRegistrations().then(function(registrations) {
             registrations.forEach(function(registration) {
               registration.unregister();
+              console.log('🛡️ Safe Mode: Unregistered service worker');
             });
           });
           return;
         }
 
-        if (import.meta.env?.PROD) {
+        // Only register in production (detect by checking if hostname is not localhost/127.0.0.1)
+        var isProduction = window.location.hostname !== 'localhost' && 
+                          window.location.hostname !== '127.0.0.1' &&
+                          !window.location.hostname.startsWith('192.168.') &&
+                          !window.location.hostname.endsWith('.local');
+
+        if (isProduction) {
           window.addEventListener('load', function() {
             navigator.serviceWorker.register('/sw.js')
               .then(function(registration) {
-                console.log('TradeLine 24/7 SW registered successfully:', registration.scope);
-              }, function(err) {
-                console.log('TradeLine 24/7 SW registration failed:', err);
+                console.log('✅ TradeLine 24/7 SW registered:', registration.scope);
+              })
+              .catch(function(err) {
+                console.warn('⚠️  TradeLine 24/7 SW registration failed:', err);
               });
+          });
+        } else {
+          console.log('🔧 Dev Mode: service worker registration skipped');
+          // Unregister any existing service workers in dev
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            registrations.forEach(function(registration) {
+              registration.unregister();
+              console.log('🔧 Dev Mode: Unregistered service worker');
+            });
           });
         }
       })();

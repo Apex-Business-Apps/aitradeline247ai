@@ -17,6 +17,9 @@ import { SmokeChecks } from '@/components/testing/SmokeChecks';
 import { RagSearchFab } from "@/components/rag/RagSearchFab";
 import { RagSearchDrawer } from "@/components/rag/RagSearchDrawer";
 import { TwilioLinkGuard } from "@/components/TwilioLinkGuard";
+import { CanonicalRedirect } from "@/components/CanonicalRedirect";
+import { PreviewDiagnostics } from "@/components/dev/PreviewDiagnostics";
+import "@/lib/errorReporter"; // Initialize global error tracking
 
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
 import StartupSplash from "@/components/StartupSplash";
@@ -54,7 +57,7 @@ import StagingTest from "./pages/ops/StagingTest";
 import VoiceHealth from "./pages/ops/VoiceHealth";
 import CallLogs from "./pages/CallLogs";
 import PhoneApps from "./pages/PhoneApps";
-import NumberOnboarding from "./pages/ops/NumberOnboarding";
+import ClientNumberOnboarding from "./pages/ops/ClientNumberOnboarding";
 import TwilioEvidence from "./pages/ops/TwilioEvidence";
 import MessagingHealth from "./pages/ops/MessagingHealth";
 
@@ -68,6 +71,7 @@ const AppWithMonitoring = () => {
 
   return (
     <>
+      <CanonicalRedirect />
       <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
@@ -110,7 +114,7 @@ const AppWithMonitoring = () => {
         <Route path="/ops/staging-test" element={<main id="main"><StagingTest /></main>} />
         <Route path="/ops/voice-health" element={<main id="main"><VoiceHealth /></main>} />
         <Route path="/ops/messaging-health" element={<main id="main"><MessagingHealth /></main>} />
-        <Route path="/ops/number-onboarding" element={<main id="main"><NumberOnboarding /></main>} />
+        <Route path="/ops/numbers/onboard" element={<main id="main"><ClientNumberOnboarding /></main>} />
         <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
         
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -153,6 +157,7 @@ const App = () => {
               <MiniChat />
               <RagSearchFab onClick={() => setRagDrawerOpen(true)} />
               <RagSearchDrawer open={ragDrawerOpen} onOpenChange={setRagDrawerOpen} />
+              <PreviewDiagnostics />
             </BrowserRouter>
           </AppErrorBoundary>
         </TooltipProvider>

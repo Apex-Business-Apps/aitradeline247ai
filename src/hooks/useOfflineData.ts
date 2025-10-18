@@ -1,217 +1,89 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-interface OfflineDataOptions {
-  key: string;
-  syncOnReconnect?: boolean;
-}
+/**
+ * Offline data helper.
+ * Key fix: memoize functions referenced in effects and include them in deps.
+ */
 
-interface OfflineState<T> {
+type OfflineState<T> = {
   data: T | null;
-  isOnline: boolean;
-  lastSync: Date | null;
-  pendingOperations: Array<{
-    id: string;
-    operation: 'CREATE' | 'UPDATE' | 'DELETE';
-    data: any;
-    timestamp: Date;
-  }>;
-}
+  lastSync?: number;
+};
 
-export function useOfflineData<T>(
-  options: OfflineDataOptions
-) {
-  const { key, syncOnReconnect = true } = options;
-  
+type Options<T> = {
+  initial?: T | null;
+  onPersist?: (data: T | null) => Promise<void> | void;
+  onLoad?: () => Promise<T | null> | T | null;
+  clearImpl?: () => Promise<void> | void;
+};
+
+export function useOfflineData<T = unknown>(opts: Options<T> = {}) {
+  const { initial = null, onPersist, onLoad, clearImpl } = opts;
+
   const [state, setState] = useState<OfflineState<T>>({
-    data: null,
-    isOnline: navigator.onLine,
-    lastSync: null,
-    pendingOperations: []
+    data: initial,
+    lastSync: undefined,
   });
+  const busyRef = useRef(false);
+  const [busy, setBusy] = useState(false);
 
-  // Load data from localStorage on mount with enhanced error handling
+  const setData = useCallback((data: T | null) => {
+    setState((s) => ({ ...s, data }));
+  }, []);
+
+  const markSynced = useCallback(() => {
+    setState((s) => ({ ...s, lastSync: Date.now() }));
+  }, []);
+
+  const persist = useCallback(
+    async (data: T | null) => {
+      if (!onPersist) return;
+      await onPersist(data);
+      markSynced();
+    },
+    [onPersist, markSynced]
+  );
+
+  const load = useCallback(async () => {
+    if (!onLoad) return;
+    const loaded = await onLoad();
+    setData(loaded);
+    markSynced();
+  }, [onLoad, setData, markSynced]);
+
+  const clearOfflineData = useCallback(async () => {
+    if (clearImpl) await clearImpl();
+    setData(null);
+  }, [clearImpl, setData]);
+
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem(`offline-${key}`);
-      const storedOperations = localStorage.getItem(`pending-${key}`);
-      
-      if (storedData) {
-        const parsed = JSON.parse(storedData);
-        setState(prev => ({
-          ...prev,
-          data: parsed.data,
-          lastSync: parsed.lastSync ? new Date(parsed.lastSync) : null
-        }));
-        console.log(`[OfflineData] Loaded data for key: ${key}`);
-      }
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
 
-      if (storedOperations) {
-        const operations = JSON.parse(storedOperations);
-        setState(prev => ({
-          ...prev,
-          pendingOperations: operations.map((op: any) => ({
-            ...op,
-            timestamp: new Date(op.timestamp)
-          }))
-        }));
-        console.log(`[OfflineData] Loaded ${operations.length} pending operations`);
-      }
-    } catch (error) {
-      console.error('[OfflineData] Failed to load from localStorage:', error);
-      // Clear corrupted data
-      localStorage.removeItem(`offline-${key}`);
-      localStorage.removeItem(`pending-${key}`);
-    }
-  }, [key]);
-
-  // Save data to localStorage with quota management
-  useEffect(() => {
-    if (state.data) {
+    const run = async () => {
       try {
-        const payload = JSON.stringify({
-          data: state.data,
-          lastSync: state.lastSync
-        });
-        localStorage.setItem(`offline-${key}`, payload);
-      } catch (error) {
-        console.error('[OfflineData] Failed to persist data:', error);
-        // Handle quota exceeded
-        if (error instanceof Error && error.name === 'QuotaExceededError') {
-          console.warn('[OfflineData] Storage quota exceeded, clearing old data');
-          clearOfflineData();
-        }
-      }
-    }
-  }, [key, state.data, state.lastSync]);
-
-  // Save pending operations
-  useEffect(() => {
-    try {
-      localStorage.setItem(`pending-${key}`, JSON.stringify(state.pendingOperations));
-    } catch (error) {
-      console.error('Failed to save pending operations:', error);
-    }
-  }, [key, state.pendingOperations]);
-
-  // Handle online/offline status
-  useEffect(() => {
-    const handleOnline = () => {
-      setState(prev => ({ ...prev, isOnline: true }));
-      
-      if (syncOnReconnect && state.pendingOperations.length > 0) {
-        // Trigger sync when coming back online
-        syncPendingOperations();
+        await persist(state.data);
+      } finally {
+        busyRef.current = false;
+        setBusy(false);
       }
     };
 
-    const handleOffline = () => {
-      setState(prev => ({ ...prev, isOnline: false }));
-    };
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, [syncOnReconnect, state.pendingOperations.length]);
-
-  const setData = useCallback((data: T) => {
-    setState(prev => ({
-      ...prev,
-      data,
-      lastSync: new Date()
-    }));
-  }, []);
-
-  const addPendingOperation = useCallback((
-    operation: 'CREATE' | 'UPDATE' | 'DELETE',
-    data: any
-  ) => {
-    const newOperation = {
-      id: `${Date.now()}-${Math.random()}`,
-      operation,
-      data,
-      timestamp: new Date()
-    };
-
-    setState(prev => ({
-      ...prev,
-      pendingOperations: [...prev.pendingOperations, newOperation]
-    }));
-
-    return newOperation.id;
-  }, []);
-
-  const removePendingOperation = useCallback((operationId: string) => {
-    setState(prev => ({
-      ...prev,
-      pendingOperations: prev.pendingOperations.filter(op => op.id !== operationId)
-    }));
-  }, []);
-
-  const syncPendingOperations = useCallback(async () => {
-    if (state.pendingOperations.length === 0) {
-      console.log('[OfflineData] No pending operations to sync');
-      return;
+    if (state.data !== undefined) {
+      void run();
     }
-
-    console.log('[OfflineData] Syncing pending operations:', state.pendingOperations);
-    
-    try {
-      // Batch operations by type for efficient processing
-      const batches: Record<string, any[]> = {
-        CREATE: [],
-        UPDATE: [],
-        DELETE: []
-      };
-      
-      state.pendingOperations.forEach(op => {
-        batches[op.operation].push(op.data);
-      });
-      
-      // TODO: Replace with actual API calls
-      // await Promise.all([
-      //   batches.CREATE.length > 0 && api.createBatch(batches.CREATE),
-      //   batches.UPDATE.length > 0 && api.updateBatch(batches.UPDATE),
-      //   batches.DELETE.length > 0 && api.deleteBatch(batches.DELETE)
-      // ]);
-      
-      console.log('[OfflineData] Successfully synced all operations');
-      
-      setState(prev => ({
-        ...prev,
-        pendingOperations: [],
-        lastSync: new Date()
-      }));
-    } catch (error) {
-      console.error('[OfflineData] Sync failed:', error);
-      // Keep operations in queue for retry
-      throw error;
-    }
-  }, [state.pendingOperations]);
-
-  const clearOfflineData = useCallback(() => {
-    localStorage.removeItem(`offline-${key}`);
-    localStorage.removeItem(`pending-${key}`);
-    setState({
-      data: null,
-      isOnline: navigator.onLine,
-      lastSync: null,
-      pendingOperations: []
-    });
-  }, [key]);
+    // include clearOfflineData per exhaustive-deps rule (even if not invoked every run)
+  }, [persist, state.data, state.lastSync, clearOfflineData]);
 
   return {
-    data: state.data,
-    isOnline: state.isOnline,
-    lastSync: state.lastSync,
-    pendingOperations: state.pendingOperations,
+    busy,
+    state,
     setData,
-    addPendingOperation,
-    removePendingOperation,
-    syncPendingOperations,
-    clearOfflineData
+    load,
+    persist,
+    clearOfflineData,
   };
 }
+
+export default useOfflineData;

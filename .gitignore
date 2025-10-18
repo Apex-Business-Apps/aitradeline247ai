@@ -7,19 +7,31 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Build artifacts
+node_modules/
+dist/
+dist-ssr/
+
+# Env files (keep real secrets out of git)
 *.local
 .env
 .env.*
+
+# Allow only templates like .env.example
+!*.example
+
+# Native projects are regenerated in CI
+ios/
+android/
+
+# Credentials (never commit)
 .git-credentials
 .netrc
 .npmrc
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+# Editor junk
+.vscode/
+.vscode/extensions.json
 .idea
 .DS_Store
 *.suo
