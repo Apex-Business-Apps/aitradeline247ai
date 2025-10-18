@@ -35,6 +35,12 @@ jobs:
       - name: Build web
         run: npm run build
 
+      - name: Ensure iOS project exists
+        run: |
+          if [ ! -f ios/App/App.xcodeproj/project.pbxproj ]; then
+            npx cap add ios
+          fi
+
       - name: Capacitor sync (iOS)
         run: npx cap sync ios
 
