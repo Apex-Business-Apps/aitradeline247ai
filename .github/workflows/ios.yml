@@ -35,52 +35,30 @@ jobs:
       - name: Build web
         run: npm run build
 
-      - name: Ensure iOS project exists
-        run: |
-          if [ ! -f ios/App/App.xcodeproj/project.pbxproj ]; then
-            npx cap add ios
-          fi
+      # ✅ Create project only when missing (never when it exists)
+- name: Ensure iOS project exists
+  shell: bash
+  run: |
+    if [ ! -d ios/App ]; then
+      npx cap add ios
+    fi
 
-      - name: Capacitor sync (iOS)
-        run: npx cap sync ios
+# ✅ Sync web → iOS now that the project exists
+- name: Capacitor sync (iOS)
+  run: npx cap sync ios
 
-      - name: Setup Ruby + CocoaPods
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-      - name: Install CocoaPods
-        run: gem install cocoapods --no-document
+# ✅ CocoaPods must run inside ios/App
+- name: Pod install (ios/App)
+  working-directory: ios/App
+  run: pod install --repo-update
 
-      - name: Install iOS pods
-        working-directory: ios/App
-        run: pod install --repo-update
+# (Optional) Build with xcodebuild; workspace is the correct entry point
+- name: Xcode build (no signing)
+  working-directory: ios/App
+  run: |
+    xcodebuild -workspace App.xcworkspace \
+               -scheme App \
+               -configuration Release \
+               -sdk iphoneos \
+               clean build
 
-      - name: Xcode archive (no signing)
-        working-directory: ios/App
-        run: |
-          xcodebuild -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath "$(pwd)/build/App.xcarchive" \
-            clean archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
-
-      - name: Export .ipa (ad-hoc unsigned)
-        working-directory: ios/App
-        run: |
-          mkdir -p build_out
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportPath build_out \
-            -exportOptionsPlist exportOptions.plist || true
-          ls -l build_out || true
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-build-artifacts
-          path: |
-            ios/App/build_out/**/*.ipa
-            ios/App/build/**/*.app
-          if-no-files-found: warn
