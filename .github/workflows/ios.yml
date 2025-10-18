@@ -37,7 +37,7 @@ jobs:
         run: |
           npx cap sync ios
 
-      - name: Install CocoaPods (if Podfile exists)
+      - name: CocoaPods (if Podfile exists)
         run: |
           set -euo pipefail
           if [ -f ios/App/Podfile ]; then
@@ -59,8 +59,7 @@ jobs:
           echo "workspace=$WS" >> $GITHUB_OUTPUT
           echo "SCHEME=App" >> $GITHUB_ENV
 
-      # BUILD FOR SIMULATOR (no signing required)
-      - name: Build (iOS Simulator)
+      - name: Build (iOS Simulator, no signing)
         run: |
           set -euo pipefail
           xcodebuild \
