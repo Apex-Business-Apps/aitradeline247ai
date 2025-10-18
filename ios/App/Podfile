@@ -1,6 +1,5 @@
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
-project 'App.xcodeproj'
 
 target 'App' do
   pod 'Capacitor', :path => '../node_modules/@capacitor/ios'
@@ -10,11 +9,10 @@ target 'App' do
   pod 'CapacitorKeyboard', :path => '../node_modules/@capacitor/keyboard'
   pod 'CapacitorStatusBar', :path => '../node_modules/@capacitor/status-bar'
   pod 'CapacitorSplashScreen', :path => '../node_modules/@capacitor/splash-screen'
-
   post_install do |installer|
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    installer.pods_project.targets.each do |t|
+      t.build_configurations.each do |c|
+        c.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
       end
     end
   end
