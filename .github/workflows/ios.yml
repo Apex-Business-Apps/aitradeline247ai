@@ -1,76 +1,81 @@
-name: ios
+name: ios / Build iOS (Capacitor)
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - '.github/**'
-      - '**/*.md'
   pull_request:
-    branches: [ main ]
+    paths:
+      - "ios/**"
+      - "src/**"
+      - "public/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "yarn.lock"
+      - "package-lock.json"
+  workflow_dispatch:
 
 jobs:
-  ios-build:
-    name: Build iOS (Capacitor)
-    runs-on: macos-latest
-
-    permissions:
-      contents: read
+  ios-build-simulator:
+    runs-on: macos-13
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node 20
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
 
-      - name: Install deps
+      - name: Install deps & build web
         run: |
-          npm ci || npm i
+          set -euo pipefail
+          if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm i && pnpm build;
+          elif [ -f yarn.lock ]; then yarn install --frozen-lockfile && yarn build;
+          else npm ci && npm run build; fi
 
-      - name: Build web
-        run: npm run build
-
-      - name: Capacitor sync (iOS)
-        run: npx cap sync ios
-
-      - name: Setup Ruby + CocoaPods
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-      - name: Install CocoaPods
+      - name: Capacitor sync iOS
         run: |
-          gem install cocoapods --no-document
-          cd ios/App && pod repo update && pod install
+          npx cap sync ios
 
-      - name: Xcode archive (no signing)
+      - name: Install CocoaPods (if Podfile exists)
         run: |
-          xcodebuild -workspace ios/App/App.xcworkspace \
-            -scheme App \
+          set -euo pipefail
+          if [ -f ios/App/Podfile ]; then
+            sudo gem install cocoapods -N
+            cd ios/App
+            pod repo update
+            pod install
+          fi
+
+      - name: Detect workspace
+        id: detect
+        run: |
+          set -euo pipefail
+          WS=$(ls ios/**/App.xcworkspace 2>/dev/null | head -n 1)
+          if [ -z "$WS" ]; then
+            echo "No App.xcworkspace found under ios/**"
+            exit 1
+          fi
+          echo "workspace=$WS" >> $GITHUB_OUTPUT
+          echo "SCHEME=App" >> $GITHUB_ENV
+
+      # BUILD FOR SIMULATOR (no signing required)
+      - name: Build (iOS Simulator)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -workspace "${{ steps.detect.outputs.workspace }}" \
+            -scheme "${SCHEME}" \
             -configuration Release \
-            -sdk iphoneos \
-            -archivePath $PWD/build/App.xcarchive \
-            clean archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            clean build | xcpretty
+        env:
+          NSUnbufferedIO: "YES"
 
-      - name: Export .ipa (ad-hoc unsigned)
-        run: |
-          mkdir -p build_out
-          xcodebuild -exportArchive \
-            -archivePath $PWD/build/App.xcarchive \
-            -exportPath build_out \
-            -exportOptionsPlist ios/App/exportOptions.plist || true
-          ls -l build_out || true
-
-      - name: Upload artifacts
+      - name: Upload build logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-build-artifacts
-          path: |
-            build_out/**/*.ipa
-            ios/App/build/**/*.app
-          if-no-files-found: warn
+          name: ios-simulator-build-logs
+          path: ~/Library/Logs/xcbuild/*
