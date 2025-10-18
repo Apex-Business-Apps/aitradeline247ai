@@ -50,6 +50,18 @@ const findCta = async (page: Page, cta: CTAConfig): Promise<Locator> => {
     }
   }
 
+  const fallbackSelector = selectors.join(', ');
+
+  try {
+    await page.waitForSelector(fallbackSelector, { timeout: 3000, state: 'visible' });
+    const fallbackLocator = page.locator(fallbackSelector).first();
+    if ((await fallbackLocator.count()) > 0) {
+      return fallbackLocator;
+    }
+  } catch (error) {
+    // continue to role-based lookup for maximum resiliency
+  }
+
   const labelText = selectors
     .map((selector) => {
       const quoted = selector.match(/"([^"]+)"/g);
@@ -72,7 +84,7 @@ const findCta = async (page: Page, cta: CTAConfig): Promise<Locator> => {
     return linkRole;
   }
 
-  return page.locator(selectors.join(', ')).first();
+  return page.locator(fallbackSelector).first();
 };
 
 test.describe('CTA Smoke Tests', () => {

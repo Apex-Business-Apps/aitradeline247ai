@@ -80,7 +80,7 @@ function verifyAsset(assetUrl) {
   // Check if file is empty
   const stats = fs.statSync(assetPath);
   if (stats.size === 0) {
-    return { ok: true, warning: 'File is empty (0 bytes)' };
+    return { ok: true, warning: 'File is empty (0 bytes)', path: assetPath };
   }
   
   // For .js files, verify it's not HTML
@@ -133,7 +133,8 @@ function main() {
       log('error', `${asset.type} "${asset.url}" → ${result.error}`);
       failed++;
     } else if (result.warning) {
-      log('warn', `${asset.type} "${asset.url}" → ${result.warning}`);
+      const warningDetails = result.path ? `${result.warning} [${result.path}]` : result.warning;
+      log('warn', `${asset.type} "${asset.url}" → ${warningDetails}`);
       warnings++;
       passed++;
     } else {
