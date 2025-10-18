@@ -1,7 +1,15 @@
-
-:root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-}
-html, body {
-  font-family: var(--font-sans);
-}
+<!-- Performance: local BrandFont + system fallback -->
+<link rel="preload" href="/assets/fonts/BrandFont.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  :root {
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+                 "Noto Sans", Ubuntu, Cantarell, "Helvetica Neue", Arial,
+                 "Apple Color Emoji", "Segoe UI Emoji";
+  }
+  @font-face {
+    font-family: "BrandFont";
+    src: url("/assets/fonts/BrandFont.woff2") format("woff2");
+    font-display: swap;
+  }
+  html, body { font-family: "BrandFont", var(--font-sans); }
+</style>
