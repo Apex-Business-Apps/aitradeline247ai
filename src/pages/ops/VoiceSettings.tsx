@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -32,12 +32,7 @@ export default function VoiceSettings() {
   const [panicMode, setPanicMode] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    loadConfig();
-    loadPresets();
-  }, []);
-
-  const loadConfig = async () => {
+  const loadConfig = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('voice_config')
@@ -73,9 +68,9 @@ export default function VoiceSettings() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
-  const loadPresets = async () => {
+  const loadPresets = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('voice_presets')
@@ -87,7 +82,12 @@ export default function VoiceSettings() {
     } catch (error: any) {
       console.error('Failed to load presets:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadConfig();
+    loadPresets();
+  }, [loadConfig, loadPresets]);
 
   const saveConfig = async (updates: any) => {
     setSaving(true);

@@ -49,12 +49,17 @@ test.describe('Preview Environment Health', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     
-    // Filter out known non-critical errors
-    const criticalErrors = errors.filter(err => 
-      !err.includes('favicon') && 
-      !err.includes('404') &&
-      !err.includes('DevTools')
-    );
+    // Filter out known non-critical errors/noise from third-parties (fonts, tag managers, CSP notices)
+    const noisePatterns = [
+      /favicon/i,
+      /404/i,
+      /DevTools/i,
+      /fonts\.googleapis\.com/i,
+      /fonts\.gstatic\.com/i,
+      /googletagmanager\.com/i,
+      /Content Security Policy/i,
+    ];
+    const criticalErrors = errors.filter(err => !noisePatterns.some(re => re.test(err)));
     
     expect(criticalErrors).toHaveLength(0);
   });

@@ -6,7 +6,12 @@ const BASE_URL = process.env.BASE_URL || 'http://localhost:4173';
 const CTAS = [
   // Homepage CTAs
   { name: 'Start Free Trial (Hero)', page: '/', selector: 'button:has-text("Start Free Trial")', expectedUrl: '/auth' },
-  { name: 'Grow Now (Lead Form)', page: '/', selector: 'button:has-text("Grow Now")', expectedUrl: '/auth' },
+  {
+    name: 'Grow Now (Lead Form)',
+    page: '/',
+    role: { role: 'button', name: /grow now/i },
+    expectedUrl: '/auth',
+  },
   
   // Pricing page CTAs
   { name: 'Start Zero-Monthly', page: '/pricing', selector: 'a:has-text("Start Zero-Monthly")', expectedUrl: '/auth' },
@@ -35,7 +40,9 @@ test.describe('CTA Smoke Tests', () => {
       await page.waitForLoadState('networkidle');
       
       // Find and click the CTA
-      const button = page.locator(cta.selector).first();
+      const button = cta.role
+        ? page.getByRole(cta.role.role as any, { name: cta.role.name })
+        : page.locator(cta.selector!).first();
       await expect(button).toBeVisible({ timeout: 5000 });
       
       // Click and wait for navigation

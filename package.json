@@ -10,7 +10,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "node server.mjs",
-    "verify:app": "node scripts/verify-app.cjs"
+    "verify:app": "node scripts/verify-app.cjs",
+    "check:fn:secret-encrypt": "npx deno@latest check supabase/functions/secret-encrypt/index.ts",
+    "deploy:fn:secret-encrypt": "node ./scripts/deploy-secret-encrypt.js",
+    "deploy:fn:secret-encrypt:manual": "SUPABASE_DEPLOY=1 node ./scripts/deploy-secret-encrypt.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.3",

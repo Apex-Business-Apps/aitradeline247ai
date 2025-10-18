@@ -23,7 +23,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (shouldFilterByLanguage) {
       (filters as AnyObject).lang = (body as AnyObject).queryLang;
-      // eslint-disable-next-line no-console
       console.log(`Applied automatic language filter: ${(body as AnyObject).queryLang}`);
     }
 
@@ -35,7 +34,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       sources: [],
     });
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error('rag-answer error', err);
     return res.status(500).json({ ok: false, error: 'internal_error' });
   }
