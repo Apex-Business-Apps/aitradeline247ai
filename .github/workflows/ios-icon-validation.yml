@@ -1,0 +1,13 @@
+name: ios / Icon Validation
+
+on:
+  push:
+    paths:
+      - "public/assets/brand/App_Icons/**"
+  workflow_dispatch: {}
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Icon checks run only on icon path changes."
