@@ -1,0 +1,13 @@
+workflows:
+  ios_capacitor_testflight:
+    name: iOS Capacitor → TestFlight (No-Mac)
+    environment:
+      vars:
+        MARKETING_VERSION: "1.0.0"        # <- bump as needed
+        BUILD_NUMBER: "1005"              # <- must be higher than last TF build
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"               # if your scheme name differs, use that
+      groups:
+        - appstore_connect                # we'll create this secure group in Codemagic UI
+    scripts:
+      - name: Install deps & sync iOS
