@@ -434,3 +434,4 @@ All endpoints tested successfully:
 - ✅ Guardrails enforce max top_k=20 and query length=2000
 - ✅ Logs include request_id, user_id, latency, confidence
 - ✅ No UI/UX elements touched
+

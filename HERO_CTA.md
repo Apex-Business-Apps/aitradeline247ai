@@ -454,3 +454,4 @@ onClick={() => window.location.href = '/contact'}
 **Broken CTAs:** 3/9 (33%) — Features hero + FAQ buttons  
 
 **After fixes:** 9/9 (100%) expected
+

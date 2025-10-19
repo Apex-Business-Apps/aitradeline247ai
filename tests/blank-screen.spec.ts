@@ -161,3 +161,4 @@ test.describe('PIPEDA Compliance', () => {
     await expect(section).toBeInViewport();
   });
 });
+

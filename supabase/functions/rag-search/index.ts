@@ -1,42 +1,59 @@
-// supabase/functions/rag-search/index.ts
-// Node 20+ compatible, no-prototype-builtins safe
+/* 
+  Supabase Edge Function (Deno compatible)
+  Purpose: RAG search with optional language filter
+  Lint fix: avoid `no-prototype-builtins` by using Object.hasOwn
+*/
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+type AnyRecord = Record<string, unknown>;
 
-type AnyObject = Record<string, unknown>;
-
-function normalizeFilters(input: unknown): AnyObject {
-  if (input && typeof input === 'object') return input as AnyObject;
-  return {};
+function normalizeFilters(input: unknown): AnyRecord {
+  return input && typeof input === 'object' ? (input as AnyRecord) : {};
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  try {
-    const body = (req.method === 'POST' ? req.body : {}) ?? {};
-    const filters = normalizeFilters((body as AnyObject).filters);
+function hasOwn(obj: AnyRecord, key: PropertyKey): boolean {
+  // Safe own-property check; no direct .hasOwnProperty calls
+  // Use Object.hasOwn when available (Node 20+ / modern runtimes)
+  // Fallback would be: Object.prototype.hasOwnProperty.call(obj, key)
+  // but Supabase Deno supports Object.hasOwn
+  // @ts-ignore - TS lib may not know older targets
+  return Object.hasOwn(obj, key);
+}
 
-    // Add language filter if not explicitly set (unless explicitly disabled)
-    const shouldFilterByLanguage =
-      !Object.hasOwn(filters, 'lang') &&
-      (body as AnyObject)?.queryLang &&
-      (body as AnyObject)?.autoLang !== false;
+async function handleRagSearch(req: Request): Promise<Response> {
+  const body: AnyRecord =
+    (await req
+      .json()
+      .catch(() => ({}))) ?? {};
 
-    if (shouldFilterByLanguage) {
-      (filters as AnyObject).lang = (body as AnyObject).queryLang;
-      // console left for CI visibility; replace with logger if desired
-      // eslint-disable-next-line no-console
-      console.log(`Applied automatic language filter: ${(body as AnyObject).queryLang}`);
-    }
+  const filters = normalizeFilters(body.filters);
+  const queryLang = body.queryLang as string | undefined;
+  const autoLang = body.autoLang as boolean | undefined;
 
-    // TODO: your real search logic here
-    return res.status(200).json({
-      ok: true,
-      filters,
-      results: [],
-    });
-  } catch (err) {
+  // Add language filter if not explicitly set (unless explicitly disabled)
+  const shouldFilterByLanguage = !hasOwn(filters, 'lang') && !!queryLang && autoLang !== false;
+
+  if (shouldFilterByLanguage && queryLang) {
+    filters.lang = queryLang;
+    // keep log for observability in CI; replace with your logger if needed
     // eslint-disable-next-line no-console
-    console.error('rag-search error', err);
-    return res.status(500).json({ ok: false, error: 'internal_error' });
+    console.log(`Applied automatic language filter: ${queryLang}`);
   }
+
+  // TODO: plug in your real search pipeline here and return results
+  const response = {
+    ok: true,
+    filters,
+    results: [] as unknown[],
+  };
+
+  return new Response(JSON.stringify(response), {
+    headers: { 'content-type': 'application/json' },
+    status: 200,
+  });
 }
+
+ apexbusiness-systems-patch-1
+// Deno entrypoint (Supabase Edge Functions)
+Deno.serve((req: Request) => handleRagSearch(req));
+=======
+        main

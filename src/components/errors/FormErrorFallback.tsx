@@ -60,3 +60,4 @@ export const FormErrorFallback = ({ error, onRetry }: FormErrorFallbackProps) =>
     </Alert>
   );
 };
+

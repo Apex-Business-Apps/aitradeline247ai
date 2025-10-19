@@ -29,3 +29,4 @@ This applies to setup time ONLY. Other uses of "24 hours" (e.g., response times,
 ## Future Guidelines
 
 Additional content guidelines will be added here as the project evolves.
+

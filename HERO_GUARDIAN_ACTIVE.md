@@ -286,3 +286,4 @@ Any DOM changes to these components will trigger re-validation.
 ---
 
 **🔒 Hero Guardian is your permanent safety net. It runs automatically and requires no configuration.**
+

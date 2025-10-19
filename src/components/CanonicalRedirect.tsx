@@ -10,7 +10,7 @@ import { useEffect } from 'react';
  * - tradeline247ai.com -> www.tradeline247ai.com
  * 
  * Does NOT redirect:
- * - Lovable preview environments (.lovableproject.com, .lovable.app, .lovable.dev)
+ * - Lovable preview environments (.lovableproject.com, .https://tradeline247aicom.lovable.app/, .lovable.dev)
  * - Local development (localhost, 127.0.0.1, .local, 192.168.x.x)
  * - Auth callback routes
  */
@@ -25,7 +25,7 @@ export const CanonicalRedirect = () => {
 
       // ENHANCED Preview detection - explicitly check all Lovable domains
       const isPreview = hostname.includes('lovableproject.com') || 
-                        hostname.includes('lovable.app') || 
+                        hostname.includes('https://tradeline247aicom.lovable.app/') || 
                         hostname.includes('lovable.dev') ||
                         hostname.includes('.gptengineer.app') ||
                         hostname.includes('.lovable.');
@@ -88,3 +88,4 @@ export const CanonicalRedirect = () => {
   // This component doesn't render anything
   return null;
 };
+

@@ -313,3 +313,4 @@ SELECT tablename FROM pg_tables WHERE tablename IN ('unsubscribes', 'campaigns',
 ---
 
 *"If we shut down, you shut down." - Understood. This system is NOT production-ready. Fix critical issues immediately.*
+
