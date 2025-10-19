@@ -38,3 +38,4 @@ export function startLayoutCanon() {
     }
   }, 10000); // Check every 10 seconds
 }
+

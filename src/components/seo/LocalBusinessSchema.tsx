@@ -43,3 +43,4 @@ export const LocalBusinessSchema: React.FC = () => {
     </Helmet>
   );
 };
+

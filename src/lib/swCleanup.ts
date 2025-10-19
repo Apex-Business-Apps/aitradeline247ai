@@ -68,3 +68,4 @@ export async function runSwCleanup(): Promise<void> {
     localStorage.setItem(cleanupKey, 'done');
   }
 }
+

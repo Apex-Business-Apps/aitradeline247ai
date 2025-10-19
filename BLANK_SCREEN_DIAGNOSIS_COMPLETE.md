@@ -17,11 +17,11 @@ The preview environment detection was missing `.lovableproject.com` domain:
 
 ```javascript
 // OLD - Missing lovableproject.com
-const isPreview = hostname.endsWith('.lovable.app') || hostname.endsWith('.lovable.dev');
+const isPreview = hostname.endsWith('.https://tradeline247aicom.lovable.app/') || hostname.endsWith('.lovable.dev');
 
 // NEW - Complete detection
 const isPreview = hostname.endsWith('.lovableproject.com') || 
-                  hostname.endsWith('.lovable.app') || 
+                  hostname.endsWith('.https://tradeline247aicom.lovable.app/') || 
                   hostname.endsWith('.lovable.dev');
 ```
 
@@ -68,7 +68,7 @@ const isPreview = hostname.endsWith('.lovableproject.com') ||
 | Environment | Domain Pattern | Redirect? | Logs? |
 |------------|---------------|-----------|-------|
 | Lovable Preview | `*.lovableproject.com` | ❌ No | ✅ Yes |
-| Lovable Preview | `*.lovable.app` | ❌ No | ✅ Yes |
+| Lovable Preview | `*.https://tradeline247aicom.lovable.app/` | ❌ No | ✅ Yes |
 | Lovable Preview | `*.lovable.dev` | ❌ No | ✅ Yes |
 | Local Dev | `localhost` | ❌ No | ✅ Yes |
 | Local Dev | `127.0.0.1` | ❌ No | ✅ Yes |
@@ -183,3 +183,4 @@ Watch for these logs in console:
 - `↪️ Canonical redirect: apex → www` - Redirect happening
 
 If you see NO logs, that indicates a critical error preventing JavaScript execution - check browser console for errors.
+

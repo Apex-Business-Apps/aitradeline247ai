@@ -78,3 +78,4 @@ Track in analytics_events:
 - `css_render_failure` - CSS errors
 - `component_mount_error` - React errors
 - `edge_function_timeout` - cold starts
+

@@ -446,3 +446,4 @@ psql -c "SELECT COUNT(*) FROM billing_events WHERE event_id = '$EVENT_ID';"
 - Stripe Support: https://support.stripe.com
 - Edge Function Logs: https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/functions/stripe-webhook/logs
 - Database Issues: Check `billing_events` table for failed events
+

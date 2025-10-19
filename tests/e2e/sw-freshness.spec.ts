@@ -155,3 +155,4 @@ test.describe('Service Worker Freshness', () => {
     expect(bootTimeout).toBeFalsy();
   });
 });
+

@@ -295,3 +295,4 @@ Upgrading to Pro ($25/month) unlocks:
 - Check usage: https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/settings/usage
 - Function logs: https://supabase.com/dashboard/project/hysvqdwmhxnblxfqnszn/functions
 - Database activity: Project → Database → Query Performance
+

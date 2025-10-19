@@ -141,3 +141,4 @@ if (typeof window !== 'undefined' && window.location.hostname.includes('lovable'
     }, 1000);
   });
 }
+

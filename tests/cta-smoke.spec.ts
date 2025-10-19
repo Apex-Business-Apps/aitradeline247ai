@@ -72,3 +72,4 @@ test.describe('CTA Smoke Tests', () => {
     });
   }
 });
+
