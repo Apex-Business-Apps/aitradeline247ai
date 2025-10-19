@@ -16,7 +16,7 @@ import { useSecureAnalytics } from '@/hooks/useSecureAnalytics';
  * Should be mounted at the app root level
  */
 export const SecurityMonitor = () => {
-  const { sessionTimeoutWarning } = useEnhancedSessionSecurity();
+  const { recordActivity } = useEnhancedSessionSecurity();
   const { trackPrivacyPageView, trackPrivacyError } = usePrivacyAnalytics();
 
   useEffect(() => {
@@ -117,18 +117,10 @@ export const SecurityMonitor = () => {
     return cleanupDeviceMonitoring;
   }, [trackPrivacyPageView, trackPrivacyError]);
 
-  // Visual indicator for session timeout warning
-  useEffect(() => {
-    if (sessionTimeoutWarning) {
-      document.body.classList.add('session-warning');
-    } else {
-      document.body.classList.remove('session-warning');
-    }
-
-    return () => {
-      document.body.classList.remove('session-warning');
-    };
-  }, [sessionTimeoutWarning]);
+ // Session activity monitoring
+useEffect(() => {
+  recordActivity();
+}, [recordActivity]);
 
   // This component doesn't render anything visible
   return null;
