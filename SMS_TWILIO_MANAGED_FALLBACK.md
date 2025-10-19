@@ -247,3 +247,4 @@ If you previously implemented `sms-inbound-fallback` edge function:
 ---
 
 **REMINDER:** This is the **recommended approach** for production. TwiML Bin fallback is simpler, faster, and more reliable than custom edge functions.
+

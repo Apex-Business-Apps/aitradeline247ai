@@ -29,3 +29,4 @@ export function watchRoiTableCanon() {
   const ro = (window as any).ResizeObserver ? new ResizeObserver(() => applyRoiTableCanon()) : null;
   ro?.observe(document.documentElement);
 }
+

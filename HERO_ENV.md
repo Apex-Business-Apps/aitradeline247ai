@@ -358,3 +358,4 @@ console.log('Layout canon:', present.length === 3 ? '✅ PASS' : '⚠️ MISSING
 2. ✅ No env var changes needed (heroes already production-ready)
 
 **Production-ready for deployment without environment configuration.**
+

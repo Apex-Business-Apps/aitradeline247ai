@@ -176,3 +176,4 @@ Before activating US SMS:
 ---
 
 **REMINDER:** This checklist must be completed BEFORE sending any SMS from US local or toll-free numbers. Failure to comply will result in carrier filtering and message blocks.
+

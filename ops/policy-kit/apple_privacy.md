@@ -68,3 +68,4 @@ All voice processing occurs server-side via Twilio cloud telephony. The app prov
 **Email:** info@tradeline247ai.com  
 **Phone:** +1-587-742-8885  
 **Address:** Edmonton, AB, Canada
+

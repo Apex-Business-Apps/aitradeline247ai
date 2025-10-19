@@ -33,3 +33,4 @@ export default defineConfig({
     baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:4173',
   },
 });
+

@@ -1,81 +1,10 @@
-name: iOS CI (Build & Upload)
+name: ios / Build & Upload (manual)
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ release/ios-v1 ]
+  workflow_dispatch: {}
 
 jobs:
-  build-upload:
-    runs-on: macos-latest
-
+  noop:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-
-      - name: Node install
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install deps & build web
-        run: |
-          npm ci
-          npm run build
-
-      - name: Install Capacitor iOS toolchain (idempotent)
-        run: |
-          npm i -D @capacitor/cli @capacitor/assets
-          npm i @capacitor/core @capacitor/ios
-
-          # 1) INIT only if no config file present
-          if [ ! -f "capacitor.config.ts" ] && [ ! -f "capacitor.config.js" ] && [ ! -f "capacitor.config.json" ]; then
-            npx cap init "TradeLine 24/7" com.apex.tradeline247 --web-dir=dist --npm-client npm
-          else
-            echo "✓ Capacitor config already exists — skipping init"
-          fi
-
-          # 2) ADD iOS only if ios/ folder is missing
-          if [ ! -d "ios" ]; then
-            npx cap add ios
-          else
-            echo "✓ iOS platform already present — skipping add"
-          fi
-
-          # 3) Sync/copy web assets into iOS shell
-          npx cap copy ios
-          npx cap sync ios
-
-      - name: CocoaPods (install pods inside ios/App)
-        run: |
-          sudo gem install cocoapods -N
-          cd ios/App
-          pod install --repo-update
-
-      - name: Xcode build (archive)
-        run: |
-          xcodebuild -workspace ios/App/App.xcworkspace \
-                     -scheme App \
-                     -configuration Release \
-                     -destination 'generic/platform=iOS' \
-                     -archivePath $PWD/ios/build/App.xcarchive \
-                     archive \
-                     DEVELOPMENT_TEAM=$APPLE_TEAM_ID
-        env:
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-
-      - name: Fastlane (upload to TestFlight)
-        run: |
-          gem install fastlane -N
-          # Build & upload via gym/pilot (uses the workspace created by Pods)
-          bundle exec fastlane ios beta || fastlane ios beta
-        env:
-          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
-          ASC_API_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_API_KEY: ${{ secrets.ASC_API_KEY }}
-          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER }}
-          APP_STORE_CONNECT_USERNAME: ${{ secrets.APP_STORE_CONNECT_USERNAME }}
+      - run: echo "Upload is handled by Codemagic (App Store Connect API key). Trigger only if needed."

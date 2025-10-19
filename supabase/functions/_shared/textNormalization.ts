@@ -150,3 +150,4 @@ export function generateCacheKey(text: string, model: string): string {
   // In production, use proper hashing
   return btoa(textForHash).substring(0, 32);
 }
+

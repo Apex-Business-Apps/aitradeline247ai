@@ -155,3 +155,4 @@ All six key routes verified for proper SEO tags:
 4. Submit sitemap in Bing WMT
 5. Request indexing for 6 key URLs
 6. Establish weekly /compare data refresh routine
+
