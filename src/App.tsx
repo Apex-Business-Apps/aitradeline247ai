@@ -37,7 +37,6 @@ import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Demo from "./pages/Demo";
-import Security from "./pages/Security";
 import Compare from "./pages/Compare";
 import CRMIntegration from "./pages/integrations/CRMIntegration";
 import EmailIntegration from "./pages/integrations/EmailIntegration";
@@ -72,7 +71,6 @@ const AppWithMonitoring = () => {
   return (
     <>
       <CanonicalRedirect />
-      <SecurityMonitor />
       <AnalyticsTracker />
       <WebVitalsTracker />
       <WebVitalsReporter />
