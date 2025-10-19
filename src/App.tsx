@@ -9,19 +9,19 @@ import { AnalyticsTracker } from "@/components/sections/AnalyticsTracker";
 import { WebVitalsTracker } from "@/components/monitoring/WebVitalsTracker";
 import { WebVitalsReporter } from "@/components/monitoring/WebVitalsReporter";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from "react-helmet-async";
 import { SecurityMonitor } from "@/components/security/SecurityMonitor";
 import { MiniChat } from "@/components/ui/MiniChat";
-import { AppErrorBoundary } from '@/components/errors/ErrorBoundary';
-import { SmokeChecks } from '@/components/testing/SmokeChecks';
+import { AppErrorBoundary } from "@/components/errors/ErrorBoundary";
+import { SmokeChecks } from "@/components/testing/SmokeChecks";
 import { RagSearchFab } from "@/components/rag/RagSearchFab";
 import { RagSearchDrawer } from "@/components/rag/RagSearchDrawer";
 import { TwilioLinkGuard } from "@/components/TwilioLinkGuard";
 import { CanonicalRedirect } from "@/components/CanonicalRedirect";
 import { PreviewDiagnostics } from "@/components/dev/PreviewDiagnostics";
 import "@/lib/errorReporter"; // Initialize global error tracking
-
 import "@/utils/keyboardNavigation"; // Initialize keyboard navigation utilities
+
 import StartupSplash from "@/components/StartupSplash";
 import LayoutCanon from "@/components/LayoutCanon";
 import Index from "./pages/Index";
@@ -60,8 +60,37 @@ import ClientNumberOnboarding from "./pages/ops/ClientNumberOnboarding";
 import TwilioEvidence from "./pages/ops/TwilioEvidence";
 import MessagingHealth from "./pages/ops/MessagingHealth";
 
-
 const queryClient = new QueryClient();
+
+/**
+ * Minimal, fast health endpoints for synthetic checks
+ * These render instantly and always return a 200 from the SPA.
+ */
+const Healthz: React.FC = () => (
+  <div
+    data-testid="healthz"
+    aria-label="healthz"
+    style={{
+      fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
+      padding: "1rem",
+    }}
+  >
+    ok
+  </div>
+);
+
+const Readyz: React.FC = () => (
+  <div
+    data-testid="readyz"
+    aria-label="readyz"
+    style={{
+      fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
+      padding: "1rem",
+    }}
+  >
+    ok
+  </div>
+);
 
 // App monitoring wrapper component
 const AppWithMonitoring = () => {
@@ -74,10 +103,18 @@ const AppWithMonitoring = () => {
       <AnalyticsTracker />
       <WebVitalsTracker />
       <WebVitalsReporter />
+      {/* Keep mounted to catch early errors */}
+      <SecurityMonitor />
       <LayoutCanon />
       <SmokeChecks />
       <TwilioLinkGuard />
+
       <Routes>
+        {/* Health probes first: ultra-fast 200s */}
+        <Route path="/healthz" element={<Healthz />} />
+        <Route path="/readyz" element={<Readyz />} />
+
+        {/* Primary app routes */}
         <Route path="/" element={<main id="main"><Index /></main>} />
         <Route path="/auth" element={<main id="main"><Auth /></main>} />
         <Route path="/thank-you" element={<main id="main"><ThankYou /></main>} />
@@ -87,7 +124,7 @@ const AppWithMonitoring = () => {
         <Route path="/faq" element={<main id="main"><FAQ /></main>} />
         <Route path="/contact" element={<main id="main"><Contact /></main>} />
         <Route path="/demo" element={<main id="main"><Demo /></main>} />
-        <Route path="/security" element={<main id="main"><Security /></main>} />
+        {/* 🔥 Removed broken /security route that referenced a non-existent component */}
         <Route path="/compare" element={<main id="main"><Compare /></main>} />
         <Route path="/privacy" element={<main id="main"><Privacy /></main>} />
         <Route path="/terms" element={<main id="main"><Terms /></main>} />
@@ -114,31 +151,30 @@ const AppWithMonitoring = () => {
         <Route path="/ops/messaging-health" element={<main id="main"><MessagingHealth /></main>} />
         <Route path="/ops/numbers/onboard" element={<main id="main"><ClientNumberOnboarding /></main>} />
         <Route path="/ops/twilio-evidence" element={<main id="main"><TwilioEvidence /></main>} />
-        
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+        {/* Catch-all must be last */}
         <Route path="*" element={<main id="main"><NotFound /></main>} />
       </Routes>
     </>
   );
 };
 
-
 const App = () => {
   const [ragDrawerOpen, setRagDrawerOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setRagDrawerOpen(prev => !prev);
+        setRagDrawerOpen((prev) => !prev);
       }
-      if (e.key === 'Escape' && ragDrawerOpen) {
+      if (e.key === "Escape" && ragDrawerOpen) {
         setRagDrawerOpen(false);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [ragDrawerOpen]);
 
   return (
@@ -165,6 +201,3 @@ const App = () => {
 };
 
 export default App;
-
-
-
