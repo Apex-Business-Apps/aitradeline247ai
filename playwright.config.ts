@@ -8,29 +8,24 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:4173',
+    baseURL:
+      process.env.BASE_URL ||
+      process.env.E2E_BASE_URL ||
+      'http://localhost:4173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    bypassCSP: true,
   },
-
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-
   webServer: {
     command: 'npm run preview',
     url: 'http://localhost:4173',
     reuseExistingServer: true,
     timeout: 120000,
   },
-import { defineConfig } from '@playwright/test';
-
-export default defineConfig({
-  use: {
-    baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:4173',
-  },
 });
-
