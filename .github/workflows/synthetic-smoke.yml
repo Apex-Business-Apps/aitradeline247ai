@@ -1,14 +1,21 @@
 name: Synthetic Smoke Tests
 
 on:
-  schedule:
-    - cron: '*/5 * * * *' # Every 5 minutes
-  workflow_dispatch: # Allow manual trigger
+  pull_request:
+    types: [opened, synchronize, labeled]
+  push:
+    branches: [ main ]
 
 jobs:
-  smoke-tests:
+  smoke:
+    # PRs: run only when label 'run-e2e' is present; always run on push to main
+    if: >
+      github.event_name == 'push' ||
+      contains(join(github.event.pull_request.labels.*.name, ','), 'run-e2e')
     runs-on: ubuntu-latest
-    
+    steps:
+      - uses: actions/checkout@v4
+      # ... your existing steps ...    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -89,12 +96,13 @@ jobs:
             exit 1
           fi
       
-      - name: Create issue on failure (main only)
+     - name: Create issue on failure (main only)
   if: failure() && github.ref == 'refs/heads/main'
   uses: actions-ecosystem/action-create-issue@v1
   with:
     title: "Synthetic Smoke Test Failure"
     body: "See workflow logs for details."
+
 
             
             await github.rest.issues.create({
