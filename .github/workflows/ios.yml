@@ -44,18 +44,21 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
       - name: Install CocoaPods
-        run: |
-          gem install cocoapods --no-document
-          cd ios/App && pod repo update && pod install
+        run: gem install cocoapods --no-document
 
-      - name: Xcode archive (no signing)
+      - name: Pod install (ios/App)
+        working-directory: ios/App
+        run: pod install --repo-update
+
+      - name: Xcode build (workspace)
+        working-directory: ios/App
         run: |
-          xcodebuild -workspace ios/App/App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath $PWD/build/App.xcarchive \
-            clean archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     -archivePath $PWD/build/App.xcarchive \
+                     clean build
 
       - name: Export .ipa (ad-hoc unsigned)
         run: |

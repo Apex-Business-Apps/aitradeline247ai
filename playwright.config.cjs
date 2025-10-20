@@ -10,6 +10,7 @@ module.exports = defineConfig({
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:5000',
+    bypassCSP: true,
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
   },
