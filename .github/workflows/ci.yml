@@ -11,23 +11,23 @@ jobs:
     name: ci/build
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build application
         run: npm run build
-      
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -39,20 +39,20 @@ jobs:
     name: ci/test
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run tests
         run: npm test || echo "No tests configured yet"
 
@@ -60,37 +60,48 @@ jobs:
     name: ci/lint
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
 
-       
-       - name: Install deps
-         run: npm ci
+      - name: Run linter
+        run: npm run lint || npx eslint src/ --max-warnings 0
 
-       - name: Build app
-         run: npm run build
+  ci-e2e:
+    name: ci/e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
 
-       - name: Start preview server
-         run: npm run preview &
-       - name: Wait for preview
-         run: npx wait-on http://localhost:5173
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-       - name: Run CTA smoke tests
-         run: npx playwright test
-       - name: Run CTA smoke tests
-         run: BASE_URL=http://localhost:5173 npx playwright test --config=playwright.config.cjs
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-      
-       - name: Run linter
-         run: npm run lint || npx eslint src/ --max-warnings 0
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Playwright tests (TypeScript config)
+        run: npx playwright test
+
+      - name: Run Playwright tests (CommonJS config)
+        env:
+          BASE_URL: http://localhost:4173
+        run: npx playwright test --config=playwright.config.cjs
