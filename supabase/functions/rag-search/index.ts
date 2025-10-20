@@ -1,45 +1,41 @@
-/* 
-  Supabase Edge Function (Deno compatible)
-  Purpose: RAG search with optional language filter
-  Lint fix: avoid `no-prototype-builtins` by using Object.hasOwn
-*/
+/**
+ * Supabase Edge Function (Deno)
+ * Purpose: RAG search with optional language filter.
+ * Notes:
+ * - Uses Object.hasOwn for safe own-property checks (no-prototype-builtins compliant).
+ * - Defensive JSON parsing; falls back to {} on bad input.
+ */
 
 type AnyRecord = Record<string, unknown>;
 
-function normalizeFilters(input: unknown): AnyRecord {
-  return input && typeof input === 'object' ? (input as AnyRecord) : {};
+function normalizeRecord(input: unknown): AnyRecord {
+  return input && typeof input === "object" ? (input as AnyRecord) : {};
 }
 
+/** Safe own-property check (modern runtimes support Object.hasOwn). */
 function hasOwn(obj: AnyRecord, key: PropertyKey): boolean {
-  // Safe own-property check; no direct .hasOwnProperty calls
-  // Use Object.hasOwn when available (Node 20+ / modern runtimes)
-  // Fallback would be: Object.prototype.hasOwnProperty.call(obj, key)
-  // but Supabase Deno supports Object.hasOwn
-  // @ts-ignore - TS lib may not know older targets
+  // @ts-ignore: lib.d.ts may not include Object.hasOwn in some toolchains
   return Object.hasOwn(obj, key);
 }
 
 async function handleRagSearch(req: Request): Promise<Response> {
   const body: AnyRecord =
-    (await req
-      .json()
-      .catch(() => ({}))) ?? {};
+    (await req.json().catch(() => ({}))) ?? {};
 
-  const filters = normalizeFilters(body.filters);
-  const queryLang = body.queryLang as string | undefined;
+  const filters = normalizeRecord(body.filters);
+  const queryLang = (body.queryLang as string | undefined)?.trim();
   const autoLang = body.autoLang as boolean | undefined;
 
-  // Add language filter if not explicitly set (unless explicitly disabled)
-  const shouldFilterByLanguage = !hasOwn(filters, 'lang') && !!queryLang && autoLang !== false;
-
-  if (shouldFilterByLanguage && queryLang) {
+  // If caller didn't provide filters.lang but provided queryLang,
+  // add it automatically unless autoLang === false
+  if (!hasOwn(filters, "lang") && queryLang && autoLang !== false) {
     filters.lang = queryLang;
-    // keep log for observability in CI; replace with your logger if needed
+    // Minimal observability
     // eslint-disable-next-line no-console
-    console.log(`Applied automatic language filter: ${queryLang}`);
+    console.log(`[rag-search] Applied automatic language filter: ${queryLang}`);
   }
 
-  // TODO: plug in your real search pipeline here and return results
+  // TODO: plug in your real search pipeline here
   const response = {
     ok: true,
     filters,
@@ -47,13 +43,10 @@ async function handleRagSearch(req: Request): Promise<Response> {
   };
 
   return new Response(JSON.stringify(response), {
-    headers: { 'content-type': 'application/json' },
+    headers: { "content-type": "application/json" },
     status: 200,
   });
 }
 
- apexbusiness-systems-patch-1
-// Deno entrypoint (Supabase Edge Functions)
+/** Deno / Supabase Edge entrypoint */
 Deno.serve((req: Request) => handleRagSearch(req));
-=======
-        main
