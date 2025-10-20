@@ -11,6 +11,7 @@ export default defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:4173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    bypassCSP: true,
   },
 
   projects: [
@@ -26,11 +27,4 @@ export default defineConfig({
     reuseExistingServer: true,
     timeout: 120000,
   },
-import { defineConfig } from '@playwright/test';
-
-export default defineConfig({
-  use: {
-    baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:4173',
-  },
 });
-

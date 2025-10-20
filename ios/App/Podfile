@@ -1,5 +1,11 @@
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
+
+app_project_path = File.expand_path('App.xcodeproj', __dir__)
+unless File.exist?(app_project_path)
+  raise "Unable to find App.xcodeproj at #{app_project_path}. Run `npx cap sync ios` before installing pods."
+end
+
 project 'App.xcodeproj'
 
 target 'App' do

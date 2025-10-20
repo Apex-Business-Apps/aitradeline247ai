@@ -4,7 +4,39 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  noop:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: macos-14
+    env:
+      NODE_VERSION: '20'
+      IOS_SCHEME: App
+      IOS_WORKSPACE: ios/App/App.xcworkspace
+
     steps:
-      - run: echo "Upload is handled by Codemagic (App Store Connect API key). Trigger only if needed."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Sync Capacitor iOS project
+        run: npx cap sync ios
+
+      - name: Install CocoaPods dependencies
+        working-directory: ios/App
+        run: pod install --repo-update
+
+      - name: Build iOS workspace (simulator)
+        run: |
+          set -eo pipefail
+          xcodebuild \
+            -workspace "${IOS_WORKSPACE}" \
+            -scheme "${IOS_SCHEME}" \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            build
