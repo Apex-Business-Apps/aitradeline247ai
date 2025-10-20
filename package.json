@@ -1,8 +1,11 @@
 {
-    "name":  "vite_react_shadcn_ts",
-    "private":  true,
-    "version":  "0.0.0",
-    "type":  "module",
+    "name": "vite_react_shadcn_ts",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "engines": {
+    "node": "20.x",
+    "npm": ">=9",
     "dependencies":  {
                          "@capacitor/android":  "^7.4.3",
                          "@capacitor/cli":  "^7.4.3",
