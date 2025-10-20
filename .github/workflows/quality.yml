@@ -1,28 +1,27 @@
-name: Quality - ESLint & Scanner
+name: ci/lint
 
 on:
   pull_request:
     paths:
-      - "src/**"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - "yarn.lock"
-      - "package-lock.json"
-  workflow_dispatch: {}
+      - 'src/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'tsconfig*'
+      - '.eslintrc*'
+      - '.github/workflows/quality.yml'
+  push:
+    branches: [ main ]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    concurrency:
+      group: lint-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: "20" }
-      - name: Install deps
-        run: |
-          if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm i;
-          elif [ -f yarn.lock ]; then yarn install --frozen-lockfile;
-          else npm ci; fi
-      - name: ESLint
-        run: |
-          npm run lint || npm run eslint || echo "No lint script; skipping"
+        with: { node-version: '20' }
+      - run: npm ci
+      - run: npm run lint
