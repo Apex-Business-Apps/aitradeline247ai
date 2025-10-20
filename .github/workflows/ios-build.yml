@@ -2,13 +2,11 @@ name: ci / ios-build
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]   # run on main only so PRs stay quiet
 
 jobs:
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-14
     timeout-minutes: 45
 
     steps:
@@ -16,13 +14,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Build web assets
+        run: npm run build
 
       - name: Sync Capacitor iOS project
         run: npx cap sync ios
@@ -35,15 +36,14 @@ jobs:
           pod repo update
           pod install
 
-      - name: Build iOS workspace
+      - name: Build iOS workspace (Simulator, no signing)
         working-directory: ios/App
         run: |
-          set -euo pipefail
+          set -o pipefail
           xcodebuild \
             -workspace App.xcworkspace \
             -scheme App \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO \
-            build
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
