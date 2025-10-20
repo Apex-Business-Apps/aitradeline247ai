@@ -1,81 +1,150 @@
 workflows:
-  ios_capacitor_testflight:
-    name: iOS Capacitor → TestFlight (No Mac)
+  ios_systems_audit:
+    name: iOS Systems & Functions Audit (no publish)
     max_build_duration: 60
     environment:
-      ios_signing:
-        distribution_type: app-store
+      xcode: latest
+      node: 20
+      cocoapods: default
       vars:
-        MARKETING_VERSION: "1.0.0"         # bump as needed
-        BUILD_NUMBER: "1007"               # must be > last TestFlight build
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
-      groups:
-        - appstore_connect                 # set in Codemagic UI
-    triggering:
-      events: [ manual ]
-
     scripts:
-      - name: Install Node deps & build web
+      - name: Install deps + static checks
         script: |
-          if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm i && pnpm build;
-          elif [ -f yarn.lock ]; then yarn install --frozen-lockfile && yarn build;
-          else npm ci && npm run build; fi
+          set -euo pipefail
+          echo "=== Audit: install & static checks ==="
+          npm ci
+          npm run lint --if-present
+          npm run typecheck --if-present
+          mkdir -p audit
+          {
+            echo "# TradeLine247 — Systems & Functions Audit"
+            echo "Date/TZ: $(date -u) (UTC)"
+            echo
+            echo "## Repo Hygiene"
+            echo "- node: $(node -v || true)"
+            echo "- npm: $(npm -v || true)"
+          } > audit/AUDIT_REPORT.md
 
-      - name: Capacitor sync iOS
+      - name: Capacitor sync + CocoaPods
         script: |
+          set -euo pipefail
+          echo "=== Audit: Capacitor sync & Pods ==="
           npx cap sync ios
+          pushd ios/App >/dev/null
+            pod repo update || true
+            pod install --repo-update
+          popd >/dev/null
 
-      - name: CocoaPods (if Podfile exists)
+      - name: iOS sanity checks (workspace/scheme/build for Simulator)
         script: |
-          if [ -f ios/App/Podfile ]; then
-            gem install cocoapods -N
-            cd ios/App && pod repo update && pod install
+          set -euo pipefail
+          echo "=== Audit: iOS sanity ==="
+          test -f ios/App/App.xcworkspace || { echo "FAIL: ios/App/App.xcworkspace missing"; exit 1; }
+          test -f ios/App/Info.plist || { echo "FAIL: ios/App/Info.plist missing"; exit 1; }
+
+          echo "## iOS Project" >> audit/AUDIT_REPORT.md
+          xcodebuild -list -workspace ios/App/App.xcworkspace | tee audit/xcode-list.txt >/dev/null || true
+          if xcodebuild -list -workspace ios/App/App.xcworkspace | grep -q "App"; then
+            echo "- Scheme 'App' present" >> audit/AUDIT_REPORT.md
+          else
+            echo "- WARN: Scheme 'App' not listed" >> audit/AUDIT_REPORT.md
           fi
 
-      - name: Bump Info.plist (no agvtool)
-        script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $MARKETING_VERSION" ios/App/App/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" ios/App/App/Info.plist
-
-      - name: Archive (device build)
-        script: |
-          xcodebuild -workspace "$XCODE_WORKSPACE" \
+          # Build for Simulator (no signing)
+          set +e
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
             -scheme "$XCODE_SCHEME" \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath "$CM_BUILD_DIR/TradeLine247.xcarchive" \
-            clean archive CODE_SIGN_STYLE=Automatic | xcpretty
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath build \
+            | xcpretty
+          BUILD_RC=${PIPESTATUS[0]}
+          set -e
+          if [ "$BUILD_RC" -eq 0 ]; then
+            echo "- Simulator build: PASS" >> audit/AUDIT_REPORT.md
+          else
+            echo "- Simulator build: FAIL (see build logs)" >> audit/AUDIT_REPORT.md
+          fi
 
-      - name: Export IPA (App Store)
+      - name: AppIcon & Info.plist privacy checks (warn-only)
         script: |
-          cat > $CM_BUILD_DIR/ExportOptions.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0"><dict>
-            <key>method</key><string>app-store</string>
-            <key>compileBitcode</key><false/>
-            <key>uploadSymbols</key><true/>
-            <key>signingStyle</key><string>automatic</string>
-            <key>destination</key><string>export</string>
-          </dict></plist>
-          EOF
-          xcodebuild -exportArchive \
-            -archivePath "$CM_BUILD_DIR/TradeLine247.xcarchive" \
-            -exportOptionsPlist "$CM_BUILD_DIR/ExportOptions.plist" \
-            -exportPath "$CM_BUILD_DIR/export" | xcpretty
+          set -euo pipefail
+          echo "=== Audit: Icons & Privacy keys ==="
+          ICON_DIR="ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          if [ -d "$ICON_DIR" ]; then
+            echo "- AppIcon set present" >> audit/AUDIT_REPORT.md
+          else
+            echo "- WARN: AppIcon set missing at $ICON_DIR" >> audit/AUDIT_REPORT.md
+          fi
 
-      - name: Publish to TestFlight (ASC API key)
+          PRIV_KEYS="NSCameraUsageDescription NSMicrophoneUsageDescription NSPhotoLibraryUsageDescription NSUserTrackingUsageDescription"
+          echo "## Privacy Keys" >> audit/AUDIT_REPORT.md
+          for k in $PRIV_KEYS; do
+            if /usr/libexec/PlistBuddy -c "Print :$k" ios/App/Info.plist >/dev/null 2>&1; then
+              echo "- $k: OK" >> audit/AUDIT_REPORT.md
+            else
+              echo "- $k: (missing or not required): WARN if capability used" >> audit/AUDIT_REPORT.md
+            fi
+          done
+
+      - name: Summarize & package audit artifacts
         script: |
-          cm-publish-app-store-connect \
-            --path "$CM_BUILD_DIR/export/*.ipa" \
-            --bundle-id "$BUNDLE_ID" \
-            --submit-for-beta-review false
-
+          set -euo pipefail
+          echo >> audit/AUDIT_REPORT.md
+          echo "## Next Steps" >> audit/AUDIT_REPORT.md
+          echo "- If build failed: open Xcode logs under build/ for error details." >> audit/AUDIT_REPORT.md
+          echo "- Ensure App Store Connect API vars exist in Codemagic env group before release run." >> audit/AUDIT_REPORT.md
     artifacts:
-      - $CM_BUILD_DIR/export/*.ipa
-      - $CM_BUILD_DIR/TradeLine247.xcarchive
+      - audit/**/*
+      - build/Logs/**/*
+    # No publishing — this workflow never uploads or signs anything.
 
+  ios_capacitor_testflight:
+    name: iOS Capacitor → TestFlight (No-Mac)
+    max_build_duration: 120
+    environment:
+      xcode: latest
+      node: 20
+      cocoapods: default
+      groups:
+        - appstore_connect    # contains APP_STORE_CONNECT_* / APPLE_TEAM_ID / BUNDLE_ID
+      vars:
+        MARKETING_VERSION: "1.0.0"
+        BUILD_NUMBER: "1005"          # bump > previous TestFlight
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+    scripts:
+      - name: Install deps & sync iOS
+        script: |
+          set -euo pipefail
+          npm ci
+          npx cap sync ios
+      - name: CocoaPods (inside ios/App)
+        script: |
+          set -euo pipefail
+          cd ios/App
+          pod repo update || true
+          pod install --repo-update
+      - name: Build IPA (App Store)
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-method app-store \
+            --build-number "$BUILD_NUMBER" \
+            --marketing-version "$MARKETING_VERSION"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - ios/build/**/*
     publishing:
       app_store_connect:
-        auth: api_key
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        submit_to_testflight: true
+        bundle_id: $BUNDLE_ID
