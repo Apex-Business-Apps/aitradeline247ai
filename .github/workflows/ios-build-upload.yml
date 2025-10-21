@@ -31,9 +31,25 @@ jobs:
       - name: Sync Capacitor project
         run: npx cap sync ios
 
+      - name: Verify Xcode project exists
+        run: |
+          test -f ios/App/App.xcodeproj/project.pbxproj || {
+            echo 'Missing ios/App/App.xcodeproj. Run `npx cap sync ios` locally to regenerate.'
+            exit 1
+          }
+
       - name: Install pods
         working-directory: ios/App
-        run: pod install
+        run: |
+          set -euo pipefail
+          pod install
+
+      - name: Confirm CocoaPods workspace
+        run: |
+          test -f ios/App/App.xcworkspace/contents.xcworkspacedata || {
+            echo 'CocoaPods workspace missing after installation. Check Podfile and pod install output.'
+            exit 1
+          }
 
       - name: Build iOS workspace
         run: |

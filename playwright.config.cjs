@@ -12,6 +12,7 @@ module.exports = defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:5000',
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
+    // Permit inline script/style execution under test to work around CSP during CI runs.
     bypassCSP: true,
   },
   projects: [

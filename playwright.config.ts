@@ -13,6 +13,8 @@ export default defineConfig({
     baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Allow inline scripts/styles that our CSP would normally block so Playwright can
+    // exercise pages that rely on framework-driven hydration during tests.
     bypassCSP: true,
   },
   projects: [

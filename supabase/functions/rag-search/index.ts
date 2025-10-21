@@ -14,7 +14,7 @@ function normalizeRecord(input: unknown): AnyRecord {
 
 /** Safe own-property check (modern runtimes support Object.hasOwn). */
 function hasOwn(obj: AnyRecord, key: PropertyKey): boolean {
-  // @ts-ignore: lib.d.ts may not include Object.hasOwn in some toolchains
+  // @ts-expect-error: lib.d.ts may not include Object.hasOwn in some toolchains
   return Object.hasOwn(obj, key);
 }
 

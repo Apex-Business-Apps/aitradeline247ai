@@ -1,6 +1,15 @@
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
-project 'App.xcodeproj'
+
+app_project_path = File.expand_path('App.xcodeproj', __dir__)
+unless File.exist?(File.join(app_project_path, 'project.pbxproj'))
+  raise <<~MSG
+    Unable to locate the generated Xcode project at #{app_project_path}.
+    Run `npx cap sync ios` before installing pods so the workspace exists.
+  MSG
+end
+
+project app_project_path
 
 target 'App' do
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
