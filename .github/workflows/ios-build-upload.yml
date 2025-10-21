@@ -32,8 +32,12 @@ jobs:
         run: npx cap sync ios
 
       - name: Install pods
-        working-directory: ios/App
-        run: pod install
+        shell: bash
+        run: |
+          set -euo pipefail
+          pushd ios/App >/dev/null
+            pod install --repo-update
+          popd >/dev/null
 
       - name: Build iOS workspace
         run: |

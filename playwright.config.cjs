@@ -12,6 +12,7 @@ module.exports = defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:5000',
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
+    // Allow inline scripts/styles when Playwright injects helpers so CI doesn't trip the app CSP
     bypassCSP: true,
   },
   projects: [

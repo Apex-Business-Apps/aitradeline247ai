@@ -1,6 +1,17 @@
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
-project 'App.xcodeproj'
+
+app_project_path = File.expand_path('App.xcodeproj', __dir__)
+unless File.exist?(app_project_path)
+  warn_message = "Expected iOS project at #{app_project_path}. Run `npx cap add ios` or open Xcode to regenerate it."
+  if defined?(Pod::UI)
+    Pod::UI.warn(warn_message)
+  else
+    puts("[warn] #{warn_message}")
+  end
+end
+
+project app_project_path
 
 target 'App' do
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'

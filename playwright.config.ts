@@ -13,6 +13,7 @@ export default defineConfig({
     baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Allow inline scripts/styles when Playwright injects helpers so tests don't fail on strict CSP
     bypassCSP: true,
   },
   projects: [
