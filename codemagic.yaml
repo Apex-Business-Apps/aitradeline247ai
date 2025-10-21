@@ -146,4 +146,4 @@ workflows:
         key_id: $ASC_API_KEY           # your Key ID variable name
         api_key: $ASC_PRIVATE_KEY      # contents of the .p8 file
         submit_to_testflight: true
-        bundle_id: $ASC_BUNDLE_ID      # e.g., "TradeLine-key - com.apex.tradeline" or "com.apex.tradeline"
+        
