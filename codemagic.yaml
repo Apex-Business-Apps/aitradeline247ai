@@ -7,7 +7,7 @@ workflows:
       node: 20
       cocoapods: default
       groups:
-        - "Apple Store Keys"   # APP_STORE_CONNECT_API_KEY, APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_TEAM_ID
+        - "Apple Store Keys"   # APP_STORE_CONNECT_* + TEAM_ID
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
@@ -22,16 +22,14 @@ workflows:
           set -euo pipefail
           npm run build
 
-      - name: Normalize webDir for Capacitor (ensure dist/)
+      - name: Ensure dist/ for Capacitor
         script: |
           set -euo pipefail
           if [ -f dist/index.html ]; then
             echo "dist/ present ✅"
           elif [ -f build/index.html ]; then
             echo "build/ present; copying to dist/"
-            rm -rf dist
-            mkdir -p dist
-            cp -a build/. dist/
+            rm -rf dist && mkdir -p dist && cp -a build/. dist/
           else
             echo "❌ No web assets found (dist/ or build/ missing)."
             exit 1
@@ -68,10 +66,10 @@ workflows:
       node: 20
       cocoapods: default
       groups:
-        - "Apple Store Keys"   # loads APP_STORE_CONNECT_* and TEAM_ID
+        - "Apple Store Keys"
       vars:
-        MARKETING_VERSION: "1.0.0"      # bump as needed
-        BUILD_NUMBER: "1005"            # must be > last TestFlight build
+        MARKETING_VERSION: "1.0.0"   # bump as needed
+        BUILD_NUMBER: "1005"         # > last uploaded build
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
     scripts:
@@ -85,16 +83,14 @@ workflows:
           set -euo pipefail
           npm run build
 
-      - name: Normalize webDir for Capacitor (ensure dist/)
+      - name: Ensure dist/ for Capacitor
         script: |
           set -euo pipefail
           if [ -f dist/index.html ]; then
             echo "dist/ present ✅"
           elif [ -f build/index.html ]; then
             echo "build/ present; copying to dist/"
-            rm -rf dist
-            mkdir -p dist
-            cp -a build/. dist/
+            rm -rf dist && mkdir -p dist && cp -a build/. dist/
           else
             echo "❌ No web assets found (dist/ or build/ missing)."
             exit 1
@@ -123,9 +119,8 @@ workflows:
       - ios/build/**/*
     publishing:
       app_store_connect:
-        api_key:  $APP_STORE_CONNECT_API_KEY     # .p8 private key contents
-        key_id:   $APP_STORE_CONNECT_KEY_ID      # 10-char Key ID
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID  # GUID
+        api_key:  $APP_STORE_CONNECT_API_KEY     # .p8 contents
+        key_id:   $APP_STORE_CONNECT_KEY_ID      # Key ID
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID  # Issuer GUID
         submit_to_testflight: true
-        # Optional if you want to force it (else it uses the archive's bundle id):
-        # bundle_id: com.apex.tradeline
+        # optional: bundle_id: com.apex.tradeline
