@@ -1,31 +1,85 @@
-- name: Ensure iOS platform (idempotent)
-  script: |
-    set -euo pipefail
-    echo "== Capacitor platforms =="
-    npx cap ls || true
+# Optional shared blocks
+definitions:
+  env_common:
+    xcode: latest
+    cocoapods: default
+    node: 20.11.1
+    npm: 10
 
-    # Detect if iOS is already installed (works even if paths differ)
-    if npx cap ls | awk '/ios/ && /installed/ { f=1 } END{ exit f?0:1 }'; then
-      echo "✅ iOS platform already installed -> skip 'cap add ios'"
-    else
-      echo "🆕 Adding iOS platform..."
-      # Ensure package present (handles repos that didn’t commit /ios)
-      npm i -D @capacitor/ios
-      npx cap add ios
-    fi
+workflows:
+  ios_capacitor_testflight:
+    name: iOS Capacitor → TestFlight (No-Mac)
+    instance_type: mac_mini_m1
+    max_build_duration: 60
 
-- name: Sync iOS & CocoaPods
-  script: |
-    set -euo pipefail
-    # Always sync (copies web + updates native)
-    npx cap sync ios
+    environment:
+      groups:
+        - "Apple Store Keys"         # must match your Codemagic group name exactly
+      <<: *env_common                # remove this line if you don’t want to use definitions/env_common
 
-    # Install pods in the native app folder
-    cd ios/App
-    pod repo update || true
-    pod install --repo-update
+    scripts:
+      - name: Build web assets
+        script: |
+          set -euo pipefail
+          npm ci
+          npm run build
 
-    # Probes
-    test -d App.xcworkspace || { echo "❌ Missing ios/App/App.xcworkspace (pod install failed)"; exit 1; }
-    test -d App.xcodeproj || { echo "❌ Missing ios/App/App.xcodeproj (Capacitor add/sync failed)"; exit 1; }
-    echo "✅ CocoaPods ready"
+      - name: Ensure iOS platform (idempotent)
+        script: |
+          set -euo pipefail
+          npx cap ls || true
+          if npx cap ls | awk '/ios/ && /installed/ { f=1 } END{ exit f?0:1 }'; then
+            echo "iOS already installed"
+          else
+            npm i -D @capacitor/ios
+            npx cap add ios
+          fi
+
+      - name: Sync iOS & CocoaPods
+        script: |
+          set -euo pipefail
+          npx cap sync ios
+          cd ios/App
+          pod repo update || true
+          pod install --repo-update
+          test -d App.xcworkspace || { echo "Missing App.xcworkspace"; exit 1; }
+
+      - name: Xcode archive
+        script: |
+          set -euo pipefail
+          xcodebuild -workspace "ios/App/App.xcworkspace" \
+            -scheme "App" -configuration Release -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+            -allowProvisioningUpdates -quiet clean archive
+
+      - name: Export IPA
+        script: |
+          set -euo pipefail
+          cat > exportOptions.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store</string>
+            <key>destination</key><string>export</string>
+            <key>teamID</key><string>${APP_STORE_CONNECT_TEAM_ID}</string>
+            <key>stripSwiftSymbols</key><true/>
+            <key>compileBitcode</key><false/>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath "$CM_BUILD_DIR/export"
+
+    artifacts:
+      - $CM_BUILD_DIR/export/*.ipa
+      - $CM_BUILD_DIR/App.xcarchive
+
+    publishing:
+      app_store_connect:
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_ID
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          private_key: $APP_STORE_CONNECT_API_KEY
+        submit_to_testflight: true
