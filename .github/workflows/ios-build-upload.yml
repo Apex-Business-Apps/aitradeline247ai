@@ -7,6 +7,13 @@ jobs:
   build-ios:
     name: Build iOS Workspace
     runs-on: macos-latest
+    timeout-minutes: 60
+
+    env:
+      XCODE_WORKSPACE: ios/App/App.xcworkspace
+      XCODE_SCHEME: App
+      DERIVED_DATA: ios/build
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,26 +30,34 @@ jobs:
       - name: Build web assets
         run: npm run build
 
-      - name: Install CocoaPods
+      - name: Ensure CocoaPods
         run: |
-          sudo gem install cocoapods --no-document
+          pod --version || sudo gem install cocoapods --no-document
           pod --version
 
-      - name: Sync Capacitor project
+      - name: Sync Capacitor (iOS)
         run: npx cap sync ios
 
-      - name: Install pods
+      - name: Install Pods
         working-directory: ios/App
-        run: pod install
+        run: pod install --repo-update
 
-      - name: Build iOS workspace
+      - name: Build iOS workspace (simulator)
         run: |
           set -euo pipefail
           xcodebuild \
-            -workspace ios/App/App.xcworkspace \
-            -scheme App \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
             -configuration Release \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath ios/build \
+            -derivedDataPath "$DERIVED_DATA" \
             build
+
+      # Optional: keep build outputs for debugging
+      - name: Upload derived data (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-derived-data
+          path: ${{ env.DERIVED_DATA }}
