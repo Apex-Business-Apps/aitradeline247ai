@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "verify:icons": "node scripts/verify_icons.mjs",
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
@@ -107,3 +108,4 @@
     "vite": "^5.4.19"
   }
 }
+

@@ -1163,7 +1163,7 @@ resend.emails.send() ✅
 - ✅ Security gates active
 
 ### DNS & Domain
-- **Preview URL:** id-preview--555a4971-4138-435e-a7ee-dfa3d713d1d3.lovable.app ✅
+- **Preview URL:** id-preview--555a4971-4138-435e-a7ee-dfa3d713d1d3.https://tradeline247aicom.lovable.app/ ✅
 - **Production Domain:** TBD (awaiting user config)
 - **Canonical Redirect:** Implemented ✅
 
@@ -1342,3 +1342,4 @@ resend.emails.send() ✅
 **Verified By:** AI Build/Release + Product/UX + DevOps Squad  
 **Next Review:** Post-launch (+24h)  
 **Approval:** ✅ **APPROVED FOR PRODUCTION**
+

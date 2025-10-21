@@ -25,7 +25,7 @@ npx lhci autorun \
 
 ### For Production URL Testing
 ```bash
-URL="https://your-staging-url.lovable.app"
+URL="https://your-staging-url.https://tradeline247aicom.lovable.app/"
 npx lhci autorun \
   --collect.url="$URL" \
   --collect.numberOfRuns=3 \

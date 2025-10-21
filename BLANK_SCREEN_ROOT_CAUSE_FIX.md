@@ -28,7 +28,7 @@ if (import.meta.env.PROD && typeof window !== 'undefined') {
 
 1. **Lovable Preview Builds are Production Builds**
    - `import.meta.env.PROD` is `true` in Lovable previews
-   - Preview URL: `xxx.lovable.app` ≠ `tradeline247ai.com`
+   - Preview URL: `xxx.https://tradeline247aicom.lovable.app/` ≠ `tradeline247ai.com`
    - Condition is met → redirect happens
 
 2. **Redirect Happens BEFORE React Mounts**
@@ -50,12 +50,12 @@ if (import.meta.env.PROD && typeof window !== 'undefined') {
 
 ```typescript
 // Canonical domain redirect (ONLY on www.tradeline247ai.com)
-// Skip for dev, preview (lovable.app), and other non-production environments
+// Skip for dev, preview (https://tradeline247aicom.lovable.app/), and other non-production environments
 if (typeof window !== 'undefined') {
   const hostname = window.location.hostname;
   const isWWW = hostname === 'www.tradeline247ai.com';
   const isApex = hostname === 'tradeline247ai.com';
-  const isPreview = hostname.endsWith('.lovable.app') || hostname.endsWith('.lovable.dev');
+  const isPreview = hostname.endsWith('.https://tradeline247aicom.lovable.app/') || hostname.endsWith('.lovable.dev');
   const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
   
   // Only redirect apex to www in actual production, not in preview/dev
@@ -76,7 +76,7 @@ if (typeof window !== 'undefined') {
 
 1. **✅ Hostname-Based Detection**
    - Checks `window.location.hostname` instead of `import.meta.env.PROD`
-   - Explicitly detects preview environments (`*.lovable.app`, `*.lovable.dev`)
+   - Explicitly detects preview environments (`*.https://tradeline247aicom.lovable.app/`, `*.lovable.dev`)
    - Detects localhost for local development
 
 2. **✅ Redirect ONLY for Apex → WWW**
@@ -100,7 +100,7 @@ if (typeof window !== 'undefined') {
 
 ### 1. Lovable Preview Environment
 ```
-URL: https://xxx.lovable.app/
+URL: https://xxx.https://tradeline247aicom.lovable.app//
 Expected Console: "🔧 Preview/Dev environment detected, skipping canonical redirect"
 Expected Result: Page loads normally, React mounts, content visible
 ```
@@ -161,7 +161,7 @@ if (import.meta.env.PROD && current !== canonical) {
 ```typescript
 // GOOD: Only redirects on actual production domain
 const hostname = window.location.hostname;
-if (hostname === 'tradeline247ai.com' && !hostname.endsWith('.lovable.app')) {
+if (hostname === 'tradeline247ai.com' && !hostname.endsWith('.https://tradeline247aicom.lovable.app/')) {
   window.location.replace('https://www.tradeline247ai.com' + path);
 }
 ```
@@ -178,7 +178,7 @@ if (hostname === 'tradeline247ai.com' && !hostname.endsWith('.lovable.app')) {
 
 After deploying this fix:
 
-- [ ] Open preview URL (e.g., `https://xxx.lovable.app/`)
+- [ ] Open preview URL (e.g., `https://xxx.https://tradeline247aicom.lovable.app//`)
 - [ ] Verify page is NOT blank
 - [ ] Check console for "🔧 Preview/Dev environment detected"
 - [ ] Navigate to multiple routes (/, /pricing, /features)
@@ -220,3 +220,4 @@ After deploying this fix:
 - **Preview Safe:** All preview environments now work correctly
 
 **Status:** ✅ READY FOR IMMEDIATE DEPLOYMENT
+

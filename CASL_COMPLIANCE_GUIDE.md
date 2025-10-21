@@ -220,3 +220,4 @@ Current implementation is **TCPA-ready** - just add DNC checks.
 | Sample CEM compliant | ✅ | Templates documented |
 
 **Status:** ✅ CASL-compliant and production-ready
+

@@ -135,3 +135,4 @@ export async function prefetchCriticalData(queryClient: QueryClient) {
     staleTime: 60_000
   });
 }
+

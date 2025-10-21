@@ -83,3 +83,4 @@ test.describe('React Error #310 Detection', () => {
     expect(bootTimeout).toBeUndefined();
   });
 });
+

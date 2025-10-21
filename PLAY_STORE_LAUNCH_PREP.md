@@ -303,3 +303,4 @@ Before hitting "Submit for Review":
 Once all items are checked, submit for review. Expected review time: 1-7 days.
 
 Good luck with your Play Store launch! 🎉
+

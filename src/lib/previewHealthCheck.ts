@@ -21,7 +21,7 @@ export async function runPreviewHealthCheck(): Promise<HealthCheckResult> {
   
   // Check 1: Environment detection
   const isPreview = hostname.includes('lovableproject.com') || 
-                    hostname.includes('lovable.app') || 
+                    hostname.includes('https://tradeline247aicom.lovable.app/') || 
                     hostname.includes('lovable.dev') ||
                     hostname.includes('.gptengineer.app');
   
@@ -158,3 +158,4 @@ if (typeof window !== 'undefined') {
     originalError.apply(console, args);
   };
 }
+

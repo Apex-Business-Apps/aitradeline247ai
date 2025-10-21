@@ -290,3 +290,4 @@ npx lighthouse https://yoursite.com/ \
 - ✅ 67-85% improvement in layout stability
 
 **Production-ready for mobile and PWA deployment.**
+

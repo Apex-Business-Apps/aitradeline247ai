@@ -118,3 +118,4 @@ export const WinsSection: React.FC = () => {
     </Card>
   );
 };
+

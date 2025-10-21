@@ -1,47 +1,30 @@
 name: CTA Smoke Tests
 
 on:
-  push:
-    branches: [ main, master ]
   pull_request:
-    branches: [ main, master ]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "yarn.lock"
+      - "package-lock.json"
+  workflow_dispatch: {}
 
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    
+    timeout-minutes: 15
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Install Playwright browsers
-        run: npx playwright install chromium
-      
-      - name: Build application
-        run: npm run build
-      
-      - name: Start preview server
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Install deps & build
         run: |
-          npm run preview &
-          sleep 5
-      
+          if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm i && pnpm build;
+          elif [ -f yarn.lock ]; then yarn install --frozen-lockfile && yarn build;
+          else npm ci && npm run build; fi
       - name: Run CTA smoke tests
-        run: npx playwright test tests/cta-smoke.spec.ts
-      
-      - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-results
-          path: test-results/
-          retention-days: 7
+        run: |
+          npx playwright install --with-deps
+          npx playwright test tests/cta-smoke.spec.ts

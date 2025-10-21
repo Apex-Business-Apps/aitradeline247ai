@@ -100,3 +100,4 @@
 ## Next Steps
 
 Proceed to `HERO_FIXES.md` for detailed remediation plan.
+
