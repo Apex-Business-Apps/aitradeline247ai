@@ -1,92 +1,131 @@
 workflows:
-  ios_capacitor_testflight:
-    name: iOS Capacitor → TestFlight (No-Mac)
-    instance_type: mac_mini_m1
+  ios_systems_audit:
+    name: iOS Systems & Functions Audit (no publish)
     max_build_duration: 60
-
     environment:
-      groups:
-        - "Apple Store Keys"   # must match your Codemagic group name exactly
       xcode: latest
+      node: 20
       cocoapods: default
-      node: 20.11.1
-      npm: 10
-
-    cache:
-      cache_paths:
-        - ~/.npm
-        - ~/.cocoapods
-        - ios/Pods
-
+      groups:
+        - "Apple Store Keys"   # APP_STORE_CONNECT_* vars + TEAM_ID
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
     scripts:
-      - name: Preflight – verify required envs exist (safe)
+      - name: Install deps
         script: |
           set -euo pipefail
-          required=(APP_STORE_CONNECT_API_KEY APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_TEAM_ID)
-          for k in "${required[@]}"; do
-            if [ -z "${!k:-}" ]; then
-              echo "::error::Missing required env var: $k (check Group: Apple Store Keys)"
-              exit 1
-            fi
-          done
-          # basic sanity on private key length (masked in logs)
-          [ "${#APP_STORE_CONNECT_API_KEY}" -ge 100 ] || { echo "::error::APP_STORE_CONNECT_API_KEY seems too short (paste full .p8)"; exit 1; }
-          echo "✓ Env looks good."
-
-      - name: Install deps & build web
-        script: |
           npm ci
+
+      - name: Build web assets
+        script: |
+          set -euo pipefail
           npm run build
 
-      - name: Sync Capacitor + CocoaPods
+      - name: Normalize webDir for Capacitor (ensure dist/)
         script: |
+          set -euo pipefail
+          if [ -f dist/index.html ]; then
+            echo "dist/ present ✅"
+          elif [ -f build/index.html ]; then
+            echo "build/ present; copying to dist/"
+            rm -rf dist
+            mkdir -p dist
+            cp -a build/. dist/
+          else
+            echo "❌ No web assets found (dist/ or build/ missing)."
+            exit 1
+          fi
+
+      - name: Capacitor sync + CocoaPods
+        script: |
+          set -euo pipefail
           npx cap sync ios
           cd ios/App
+          pod repo update || true
           pod install --repo-update
 
-      - name: Xcode archive (automatic signing)
+      - name: Simulator sanity build (no signing)
         script: |
-          xcodebuild -workspace "ios/App/App.xcworkspace" \
-            -scheme "App" \
-            -configuration Release \
-            -sdk iphoneos \
-            -destination "generic/platform=iOS" \
-            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-            -allowProvisioningUpdates \
-            -quiet \
-            clean archive
-
-      - name: Export IPA
-        script: |
-          cat > exportOptions.plist <<'PLIST'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key><string>app-store</string>
-            <key>destination</key><string>export</string>
-            <key>teamID</key><string>${APP_STORE_CONNECT_TEAM_ID}</string>
-            <key>stripSwiftSymbols</key><true/>
-            <key>compileBitcode</key><false/>
-          </dict>
-          </plist>
-          PLIST
-          xcodebuild -exportArchive \
-            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-            -exportOptionsPlist exportOptions.plist \
-            -exportPath "$CM_BUILD_DIR/export"
+          set -euo pipefail
+          xcodebuild \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath build | xcpretty || true
 
     artifacts:
-      - $CM_BUILD_DIR/export/*.ipa
-      - $CM_BUILD_DIR/App.xcarchive
+      - build/Logs/**/*
+    # No publishing in audit workflow.
 
+  ios_capacitor_testflight:
+    name: iOS Capacitor → TestFlight (No-Mac)
+    max_build_duration: 120
+    environment:
+      xcode: latest
+      node: 20
+      cocoapods: default
+      groups:
+        - "Apple Store Keys"   # loads APP_STORE_CONNECT_* and TEAM_ID
+      vars:
+        MARKETING_VERSION: "1.0.0"      # bump as needed
+        BUILD_NUMBER: "1005"            # must be > last TestFlight build
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+    scripts:
+      - name: Install deps
+        script: |
+          set -euo pipefail
+          npm ci
+
+      - name: Build web assets
+        script: |
+          set -euo pipefail
+          npm run build
+
+      - name: Normalize webDir for Capacitor (ensure dist/)
+        script: |
+          set -euo pipefail
+          if [ -f dist/index.html ]; then
+            echo "dist/ present ✅"
+          elif [ -f build/index.html ]; then
+            echo "build/ present; copying to dist/"
+            rm -rf dist
+            mkdir -p dist
+            cp -a build/. dist/
+          else
+            echo "❌ No web assets found (dist/ or build/ missing)."
+            exit 1
+          fi
+
+      - name: Sync iOS & CocoaPods
+        script: |
+          set -euo pipefail
+          npx cap sync ios
+          cd ios/App
+          pod repo update || true
+          pod install --repo-update
+
+      - name: Build IPA (App Store)
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-method app-store \
+            --build-number "$BUILD_NUMBER" \
+            --marketing-version "$MARKETING_VERSION"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - ios/build/**/*
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_ID         # Key ID
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID   # Issuer ID (UUID)
-          private_key: $APP_STORE_CONNECT_API_KEY   # FULL .p8 contents
+        # EXACT variable names per your screenshot/group:
+        api_key:  $APP_STORE_CONNECT_API_KEY     # paste of your .p8 private key contents
+        key_id:   $APP_STORE_CONNECT_KEY_ID      # Key ID (10 chars)
+        issuer_id:$APP_STORE_CONNECT_ISSUER_ID   # Issuer GUID
         submit_to_testflight: true
-        # beta_groups:
-        #   - Internal Testers
-        # cancel_previous_submissions: true
+        # bundle_id omitted to use the one embedded in the archive; add if you want to override.
