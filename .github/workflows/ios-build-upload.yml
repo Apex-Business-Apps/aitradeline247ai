@@ -4,7 +4,45 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  noop:
-    runs-on: ubuntu-latest
+  build-ios:
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      BASE_URL: https://www.tradeline247ai.com
+
     steps:
-      - run: echo "Upload is handled by Codemagic (App Store Connect API key). Trigger only if needed."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Sync Capacitor iOS project
+        run: npx cap sync ios
+
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods --no-document
+
+      - name: Install pods
+        working-directory: ios/App
+        run: pod install --repo-update
+
+      - name: Build iOS workspace
+        run: |
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            clean build
