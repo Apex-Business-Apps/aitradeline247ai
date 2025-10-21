@@ -6,7 +6,7 @@ workflows:
 
     environment:
       groups:
-        - "Apple Store Keys"     # <-- matches your Codemagic group name exactly
+        - "Apple Store Keys"   # must match your Codemagic group name exactly
       xcode: latest
       cocoapods: default
       node: 20.11.1
@@ -19,6 +19,20 @@ workflows:
         - ios/Pods
 
     scripts:
+      - name: Preflight – verify required envs exist (safe)
+        script: |
+          set -euo pipefail
+          required=(APP_STORE_CONNECT_API_KEY APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_TEAM_ID)
+          for k in "${required[@]}"; do
+            if [ -z "${!k:-}" ]; then
+              echo "::error::Missing required env var: $k (check Group: Apple Store Keys)"
+              exit 1
+            fi
+          done
+          # basic sanity on private key length (masked in logs)
+          [ "${#APP_STORE_CONNECT_API_KEY}" -ge 100 ] || { echo "::error::APP_STORE_CONNECT_API_KEY seems too short (paste full .p8)"; exit 1; }
+          echo "✓ Env looks good."
+
       - name: Install deps & build web
         script: |
           npm ci
@@ -51,7 +65,7 @@ workflows:
           <dict>
             <key>method</key><string>app-store</string>
             <key>destination</key><string>export</string>
-            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+            <key>teamID</key><string>${APP_STORE_CONNECT_TEAM_ID}</string>
             <key>stripSwiftSymbols</key><true/>
             <key>compileBitcode</key><false/>
           </dict>
@@ -69,9 +83,9 @@ workflows:
     publishing:
       app_store_connect:
         api_key:
-          key_id: $ASC_API_KEY           # Key ID (safe as env)
-          issuer_id: $ASC_ISSUER_ID      # Issuer UUID (env)
-          private_key: $ASC_PRIVATE_KEY  # .p8 contents (secret)
+          key_id: $APP_STORE_CONNECT_KEY_ID         # Key ID
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID   # Issuer ID (UUID)
+          private_key: $APP_STORE_CONNECT_API_KEY   # FULL .p8 contents
         submit_to_testflight: true
         # beta_groups:
         #   - Internal Testers
