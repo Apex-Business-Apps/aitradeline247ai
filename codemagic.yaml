@@ -6,6 +6,8 @@ workflows:
       xcode: latest
       node: 20
       cocoapods: default
+      groups:
+        - Apple Store Keys          # ASC_ISSUER_ID, ASC_API_KEY, ASC_PRIVATE_KEY, ASC_BUNDLE_ID, APPLE_TEAM_ID
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
@@ -20,9 +22,9 @@ workflows:
           mkdir -p audit
           {
             echo "# TradeLine247 — Systems & Functions Audit"
-            echo "Date/TZ: $(date -u) (UTC)"
+            echo "Date (UTC): $(date -u)"
             echo
-            echo "## Repo Hygiene"
+            echo "## Tooling"
             echo "- node: $(node -v || true)"
             echo "- npm: $(npm -v || true)"
           } > audit/AUDIT_REPORT.md
@@ -37,7 +39,7 @@ workflows:
             pod install --repo-update
           popd >/dev/null
 
-      - name: iOS sanity checks (workspace/scheme/build for Simulator)
+      - name: iOS sanity checks (simulator build; no signing)
         script: |
           set -euo pipefail
           echo "=== Audit: iOS sanity ==="
@@ -52,16 +54,14 @@ workflows:
             echo "- WARN: Scheme 'App' not listed" >> audit/AUDIT_REPORT.md
           fi
 
-          # Build for Simulator (no signing)
           set +e
           xcodebuild \
-            -workspace ios/App/App.xcworkspace \
+            -workspace "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination "generic/platform=iOS Simulator" \
-            -derivedDataPath build \
-            | xcpretty
+            -derivedDataPath build | xcpretty
           BUILD_RC=${PIPESTATUS[0]}
           set -e
           if [ "$BUILD_RC" -eq 0 ]; then
@@ -73,7 +73,6 @@ workflows:
       - name: AppIcon & Info.plist privacy checks (warn-only)
         script: |
           set -euo pipefail
-          echo "=== Audit: Icons & Privacy keys ==="
           ICON_DIR="ios/App/App/Assets.xcassets/AppIcon.appiconset"
           if [ -d "$ICON_DIR" ]; then
             echo "- AppIcon set present" >> audit/AUDIT_REPORT.md
@@ -96,12 +95,12 @@ workflows:
           set -euo pipefail
           echo >> audit/AUDIT_REPORT.md
           echo "## Next Steps" >> audit/AUDIT_REPORT.md
-          echo "- If build failed: open Xcode logs under build/ for error details." >> audit/AUDIT_REPORT.md
-          echo "- Ensure App Store Connect API vars exist in Codemagic env group before release run." >> audit/AUDIT_REPORT.md
+          echo "- If build failed: inspect build/ logs." >> audit/AUDIT_REPORT.md
+          echo "- Ensure Apple Store Keys envs exist before release run." >> audit/AUDIT_REPORT.md
     artifacts:
       - audit/**/*
       - build/Logs/**/*
-    # No publishing — this workflow never uploads or signs anything.
+    # No publishing in audit workflow.
 
   ios_capacitor_testflight:
     name: iOS Capacitor → TestFlight (No-Mac)
@@ -111,10 +110,10 @@ workflows:
       node: 20
       cocoapods: default
       groups:
-        - appstore_connect    # contains APP_STORE_CONNECT_* / APPLE_TEAM_ID / BUNDLE_ID
+        - Apple Store Keys          # loads ASC_* and APPLE_TEAM_ID
       vars:
-        MARKETING_VERSION: "1.0.0"
-        BUILD_NUMBER: "1005"          # bump > previous TestFlight
+        MARKETING_VERSION: "1.0.0"   # bump as needed
+        BUILD_NUMBER: "1005"         # must be > last TestFlight build
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
     scripts:
@@ -143,8 +142,8 @@ workflows:
       - ios/build/**/*
     publishing:
       app_store_connect:
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        issuer_id: $ASC_ISSUER_ID
+        key_id: $ASC_API_KEY           # your Key ID variable name
+        api_key: $ASC_PRIVATE_KEY      # contents of the .p8 file
         submit_to_testflight: true
-        bundle_id: $BUNDLE_ID
+        bundle_id: $ASC_BUNDLE_ID      # e.g., "TradeLine-key - com.apex.tradeline" or "com.apex.tradeline"
