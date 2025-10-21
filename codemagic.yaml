@@ -7,7 +7,7 @@ workflows:
       node: 20
       cocoapods: default
       groups:
-        - "Apple Store Keys"   # APP_STORE_CONNECT_* + TEAM_ID
+        - "Apple Store Keys"   # APP_STORE_CONNECT_API_KEY, APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_TEAM_ID
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
@@ -56,7 +56,7 @@ workflows:
 
     artifacts:
       - build/Logs/**/*
-    # No publishing in audit workflow.
+    # No publishing here — audit only.
 
   ios_capacitor_testflight:
     name: iOS Capacitor → TestFlight (No-Mac)
@@ -66,12 +66,12 @@ workflows:
       node: 20
       cocoapods: default
       groups:
-        - "Apple Store Keys"
+        - "Apple Store Keys"   # loads APP_STORE_CONNECT_* + TEAM_ID
       vars:
-        MARKETING_VERSION: "1.0.0"   # bump as needed
-        BUILD_NUMBER: "1005"         # > last uploaded build
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
+        # OPTIONAL: auto-increment build number to avoid "must be higher" errors.
+        # APP_STORE_APPLE_ID: ""  # e.g., 1234567890 (ASC > App Information > Apple ID)
     scripts:
       - name: Install deps
         script: |
@@ -96,6 +96,19 @@ workflows:
             exit 1
           fi
 
+      # OPTIONAL: uncomment to auto-bump CFBundleVersion based on last ASC build
+      # - name: Auto-increment build number from App Store
+      #   script: |
+      #     set -euo pipefail
+      #     if [ -n "${APP_STORE_APPLE_ID:-}" ]; then
+      #       LATEST=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" || echo 0)
+      #       echo "Last ASC build: ${LATEST}"
+      #       cd ios/App
+      #       agvtool new-version -all $(( ${LATEST:-0} + 1 ))
+      #     else
+      #       echo "APP_STORE_APPLE_ID not set; skipping auto-increment."
+      #     fi
+
       - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
@@ -104,23 +117,23 @@ workflows:
           pod repo update || true
           pod install --repo-update
 
-      - name: Build IPA (App Store)
+      - name: Build IPA (uses Version/Build from project)
         script: |
           set -euo pipefail
           xcode-project build-ipa \
             --workspace "$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME" \
-            --archive-method app-store \
-            --build-number "$BUILD_NUMBER" \
-            --marketing-version "$MARKETING_VERSION"
+            --archive-method app-store
+            # (no --marketing-version / --build-number overrides)
 
     artifacts:
       - build/ios/ipa/*.ipa
       - ios/build/**/*
     publishing:
       app_store_connect:
-        api_key:  $APP_STORE_CONNECT_API_KEY     # .p8 contents
+        # EXACT envs from your "Apple Store Keys" group
+        api_key:  $APP_STORE_CONNECT_API_KEY     # .p8 private key contents
         key_id:   $APP_STORE_CONNECT_KEY_ID      # Key ID
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID  # Issuer GUID
         submit_to_testflight: true
-        # optional: bundle_id: com.apex.tradeline
+        # bundle_id: com.apex.tradeline   # (optional; archive's bundle id is normally enough)
