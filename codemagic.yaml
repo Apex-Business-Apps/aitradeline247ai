@@ -1,28 +1,57 @@
-- name: Ensure iOS platform & CocoaPods
-  script: |
-    set -euo pipefail
+scripts:
+  - name: Install deps & build web
+    script: |
+      set -euo pipefail
+      npm ci
+      npm run build
 
-    # 0) Debug: show current tree (helps if this ever fails)
-    echo "== before =="
-    ls -la || true
-    test -d ios && ls -la ios || true
-    test -d ios/App && ls -la ios/App || true
+  - name: Ensure iOS platform & CocoaPods
+    script: |
+      set -euo pipefail
+      # If the iOS project doesn't exist (fresh runner), create it
+      if [ ! -d ios/App/App.xcodeproj ]; then
+        echo "iOS platform missing → npx cap add ios"
+        rm -rf ios || true
+        npx cap add ios
+      fi
 
-    # 1) Create iOS platform if missing (fresh CI runner)
-    if [ ! -d ios/App/App.xcodeproj ]; then
-      echo "iOS platform or Xcode project missing → running 'npx cap add ios'"
-      rm -rf ios || true
-      npx cap add ios
-    fi
+      # Sync Capacitor + install pods
+      npx cap sync ios
+      cd ios/App
+      pod repo update || true
+      pod install --repo-update
+      test -d App.xcworkspace || { echo "❌ CocoaPods failed to create workspace"; exit 1; }
 
-    # 2) Sync Capacitor (copies web assets + updates plugins)
-    npx cap sync ios
+  - name: Xcode archive (automatic signing)
+    script: |
+      set -euo pipefail
+      xcodebuild -workspace "ios/App/App.xcworkspace" \
+        -scheme "App" \
+        -configuration Release \
+        -sdk iphoneos \
+        -destination "generic/platform=iOS" \
+        -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+        -allowProvisioningUpdates \
+        -quiet \
+        clean archive
 
-    # 3) Install pods inside native iOS app
-    cd ios/App
-    pod repo update || true
-    pod install --repo-update
-
-    echo "== after =="
-    ls -la .
-    test -d App.xcworkspace && echo "✅ Found App.xcworkspace"
+  - name: Export IPA
+    script: |
+      set -euo pipefail
+      cat > exportOptions.plist <<'PLIST'
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>method</key><string>app-store</string>
+        <key>destination</key><string>export</string>
+        <key>teamID</key><string>${APP_STORE_CONNECT_TEAM_ID}</string>
+        <key>stripSwiftSymbols</key><true/>
+        <key>compileBitcode</key><false/>
+      </dict>
+      </plist>
+      PLIST
+      xcodebuild -exportArchive \
+        -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+        -exportOptionsPlist exportOptions.plist \
+        -exportPath "$CM_BUILD_DIR/export"
