@@ -1,9 +1,39 @@
-<key>NSCameraUsageDescription</key>
-<string>This app uses the camera to scan IDs and receipts.</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>This app uses the microphone for voice notes.</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>This app lets you attach photos from your library.</string>
-<key>NSUserTrackingUsageDescription</key>
-<string>This app may request permission to track for relevant analytics and improvements.</string>
-v
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- REQUIRED CORE KEYS -->
+  <key>CFBundleIdentifier</key>
+  <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+
+  <key>CFBundleName</key>
+  <string>$(PRODUCT_NAME)</string>
+
+  <!-- Marketing version (user-facing), keep as string like 1.0.0 -->
+  <key>CFBundleShortVersionString</key>
+  <string>$(MARKETING_VERSION)</string>
+
+  <!-- Build number (monotonically increasing), keep as string -->
+  <key>CFBundleVersion</key>
+  <string>$(CURRENT_PROJECT_VERSION)</string>
+
+  <key>CFBundleExecutable</key>
+  <string>$(EXECUTABLE_NAME)</string>
+
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+
+  <key>LSRequiresIPhoneOS</key>
+  <true/>
+
+  <!-- Add privacy descriptions ONLY for capabilities you use -->
+  <!-- <key>NSCameraUsageDescription</key>
+  <string>This app uses the camera to scan IDs and receipts.</string> -->
+  <!-- <key>NSMicrophoneUsageDescription</key>
+  <string>This app uses the microphone for voice notes.</string> -->
+  <!-- <key>NSPhotoLibraryUsageDescription</key>
+  <string>This app lets you attach photos from your library.</string> -->
+  <!-- <key>NSUserTrackingUsageDescription</key>
+  <string>This app may request permission to track for analytics and improvements.</string> -->
+</dict>
+</plist>
