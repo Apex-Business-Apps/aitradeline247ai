@@ -26,7 +26,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run preview',
+    command: 'npm run build && npm run preview',
     url: localPreviewUrl,
     reuseExistingServer: true,
     timeout: 120000,
