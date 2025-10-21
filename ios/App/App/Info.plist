@@ -1,0 +1,9 @@
+<key>NSCameraUsageDescription</key>
+<string>This app uses the camera to scan IDs and receipts.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>This app uses the microphone for voice notes.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app lets you attach photos from your library.</string>
+<key>NSUserTrackingUsageDescription</key>
+<string>This app may request permission to track for relevant analytics and improvements.</string>
+v
