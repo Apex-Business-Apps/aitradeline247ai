@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -28,11 +28,7 @@ export default function TwilioWire() {
 
   const WEBHOOK_URLS = getWebhookUrls(environment);
 
-  useEffect(() => {
-    loadNumbers();
-  }, []);
-
-  const loadNumbers = async () => {
+  const loadNumbers = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('ops-twilio-list-numbers');
@@ -47,7 +43,11 @@ export default function TwilioWire() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadNumbers();
+  }, [loadNumbers]);
 
   const applyWebhooks = async () => {
     if (!selectedNumber) {

@@ -1,9 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import { useRouteHealthCheck, VALID_ROUTES } from '@/hooks/useRouteValidator';
+
+const PAGE_NAMES: Record<string, string> = {
+  '/': 'Home Page',
+  '/features': 'Features Page',
+  '/pricing': 'Pricing Page',
+  '/faq': 'FAQ Page',
+  '/contact': 'Contact Page',
+  '/privacy': 'Privacy Policy',
+  '/terms': 'Terms of Service',
+  '/auth': 'Authentication',
+  '/dashboard': 'Dashboard',
+  '/dashboard/integrations/crm': 'CRM Integration',
+  '/dashboard/integrations/email': 'Email Integration',
+  '/dashboard/integrations/phone': 'Phone Integration',
+  '/dashboard/integrations/messaging': 'Messaging Integration',
+  '/dashboard/integrations/mobile': 'Mobile Integration',
+  '/dashboard/integrations/automation': 'Automation Integration',
+  '/design-tokens': 'Design Tokens',
+  '/components': 'Component Showcase',
+  '/call-center': 'Call Center',
+  '/admin/kb': 'Admin Knowledge Base'
+};
 
 interface PageTest {
   route: string;
@@ -18,29 +40,7 @@ export const PageHealthChecker: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
   const { routeHealth, checkAllRoutes, healthyCount, totalRoutes } = useRouteHealthCheck();
 
-  const pageNames: Record<string, string> = {
-    '/': 'Home Page',
-    '/features': 'Features Page',
-    '/pricing': 'Pricing Page',
-    '/faq': 'FAQ Page',
-    '/contact': 'Contact Page',
-    '/privacy': 'Privacy Policy',
-    '/terms': 'Terms of Service',
-    '/auth': 'Authentication',
-    '/dashboard': 'Dashboard',
-    '/dashboard/integrations/crm': 'CRM Integration',
-    '/dashboard/integrations/email': 'Email Integration',
-    '/dashboard/integrations/phone': 'Phone Integration',
-    '/dashboard/integrations/messaging': 'Messaging Integration',
-    '/dashboard/integrations/mobile': 'Mobile Integration',
-    '/dashboard/integrations/automation': 'Automation Integration',
-    '/design-tokens': 'Design Tokens',
-    '/components': 'Component Showcase',
-    '/call-center': 'Call Center',
-    '/admin/kb': 'Admin Knowledge Base'
-  };
-
-  const runPageTests = async () => {
+  const runPageTests = useCallback(async () => {
     setIsRunning(true);
     const newTests: PageTest[] = [];
 
@@ -49,7 +49,7 @@ export const PageHealthChecker: React.FC = () => {
       
       try {
         // Simulate page test by checking if route is known
-        const pageName = pageNames[route] || route;
+        const pageName = PAGE_NAMES[route] || route;
         
         // Simple validation - in a real app you might actually navigate or ping
         const isValid = route.startsWith('/');
@@ -68,7 +68,7 @@ export const PageHealthChecker: React.FC = () => {
       } catch (error) {
         newTests.push({
           route,
-          name: pageNames[route] || route,
+          name: PAGE_NAMES[route] || route,
           status: 'error',
           message: error instanceof Error ? error.message : 'Unknown error'
         });
@@ -77,11 +77,11 @@ export const PageHealthChecker: React.FC = () => {
 
     setTests(newTests);
     setIsRunning(false);
-  };
+  }, []);
 
   useEffect(() => {
     runPageTests();
-  }, []);
+  }, [runPageTests]);
 
   const getStatusIcon = (status: PageTest['status']) => {
     switch (status) {

@@ -14,8 +14,11 @@ function normalizeRecord(input: unknown): AnyRecord {
 
 /** Safe own-property check (modern runtimes support Object.hasOwn). */
 function hasOwn(obj: AnyRecord, key: PropertyKey): boolean {
-  // @ts-ignore: lib.d.ts may not include Object.hasOwn in some toolchains
-  return Object.hasOwn(obj, key);
+  if (typeof Object.hasOwn === "function") {
+    return Object.hasOwn(obj, key);
+  }
+
+  return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
 async function handleRagSearch(req: Request): Promise<Response> {
@@ -31,7 +34,6 @@ async function handleRagSearch(req: Request): Promise<Response> {
   if (!hasOwn(filters, "lang") && queryLang && autoLang !== false) {
     filters.lang = queryLang;
     // Minimal observability
-    // eslint-disable-next-line no-console
     console.log(`[rag-search] Applied automatic language filter: ${queryLang}`);
   }
 

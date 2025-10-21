@@ -1,9 +1,53 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SEOHead } from "@/components/seo/SEOHead";
 
 const Privacy = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) {
+      return;
+    }
+
+    const targetId = location.hash.replace('#', '');
+    if (!targetId) {
+      return;
+    }
+
+    const scrollToSection = () => {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
+    };
+
+    let loadHandler: (() => void) | null = null;
+
+    if (document.readyState === 'complete') {
+      scrollToSection();
+    } else {
+      loadHandler = () => {
+        scrollToSection();
+        if (loadHandler) {
+          window.removeEventListener('load', loadHandler);
+        }
+      };
+      window.addEventListener('load', loadHandler);
+    }
+
+    const frame = requestAnimationFrame(scrollToSection);
+    return () => {
+      cancelAnimationFrame(frame);
+      if (loadHandler) {
+        window.removeEventListener('load', loadHandler);
+      }
+    };
+  }, [location.hash]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead 

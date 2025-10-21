@@ -19,7 +19,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      // Shadcn component modules intentionally export helper utilities alongside
+      // their React components. Treat this rule as opt-in to avoid noisy false
+      // positives while still keeping Fast Refresh intact.
+      "react-refresh/only-export-components": "off",
       
       // 🚫 Core guard: never render more hooks than previous render
       "react-hooks/rules-of-hooks": "error",
