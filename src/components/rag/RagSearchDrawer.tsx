@@ -266,3 +266,4 @@ export function RagSearchDrawer({ open, onOpenChange }: RagSearchDrawerProps) {
     </Sheet>
   );
 }
+

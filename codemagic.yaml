@@ -1,0 +1,149 @@
+workflows:
+  ios_systems_audit:
+    name: iOS Systems & Functions Audit (no publish)
+    max_build_duration: 60
+    environment:
+      xcode: latest
+      node: 20
+      cocoapods: default
+      groups:
+        - Apple Store Keys          # ASC_ISSUER_ID, ASC_API_KEY, ASC_PRIVATE_KEY, ASC_BUNDLE_ID, APPLE_TEAM_ID
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+    scripts:
+      - name: Install deps + static checks
+        script: |
+          set -euo pipefail
+          echo "=== Audit: install & static checks ==="
+          npm ci
+          npm run lint --if-present
+          npm run typecheck --if-present
+          mkdir -p audit
+          {
+            echo "# TradeLine247 — Systems & Functions Audit"
+            echo "Date (UTC): $(date -u)"
+            echo
+            echo "## Tooling"
+            echo "- node: $(node -v || true)"
+            echo "- npm: $(npm -v || true)"
+          } > audit/AUDIT_REPORT.md
+
+      - name: Capacitor sync + CocoaPods
+        script: |
+          set -euo pipefail
+          echo "=== Audit: Capacitor sync & Pods ==="
+          npx cap sync ios
+          pushd ios/App >/dev/null
+            pod repo update || true
+            pod install --repo-update
+          popd >/dev/null
+
+      - name: iOS sanity checks (simulator build; no signing)
+        script: |
+          set -euo pipefail
+          echo "=== Audit: iOS sanity ==="
+          test -f ios/App/App.xcworkspace || { echo "FAIL: ios/App/App.xcworkspace missing"; exit 1; }
+          test -f ios/App/Info.plist || { echo "FAIL: ios/App/Info.plist missing"; exit 1; }
+
+          echo "## iOS Project" >> audit/AUDIT_REPORT.md
+          xcodebuild -list -workspace ios/App/App.xcworkspace | tee audit/xcode-list.txt >/dev/null || true
+          if xcodebuild -list -workspace ios/App/App.xcworkspace | grep -q "App"; then
+            echo "- Scheme 'App' present" >> audit/AUDIT_REPORT.md
+          else
+            echo "- WARN: Scheme 'App' not listed" >> audit/AUDIT_REPORT.md
+          fi
+
+          set +e
+          xcodebuild \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath build | xcpretty
+          BUILD_RC=${PIPESTATUS[0]}
+          set -e
+          if [ "$BUILD_RC" -eq 0 ]; then
+            echo "- Simulator build: PASS" >> audit/AUDIT_REPORT.md
+          else
+            echo "- Simulator build: FAIL (see build logs)" >> audit/AUDIT_REPORT.md
+          fi
+
+      - name: AppIcon & Info.plist privacy checks (warn-only)
+        script: |
+          set -euo pipefail
+          ICON_DIR="ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          if [ -d "$ICON_DIR" ]; then
+            echo "- AppIcon set present" >> audit/AUDIT_REPORT.md
+          else
+            echo "- WARN: AppIcon set missing at $ICON_DIR" >> audit/AUDIT_REPORT.md
+          fi
+
+          PRIV_KEYS="NSCameraUsageDescription NSMicrophoneUsageDescription NSPhotoLibraryUsageDescription NSUserTrackingUsageDescription"
+          echo "## Privacy Keys" >> audit/AUDIT_REPORT.md
+          for k in $PRIV_KEYS; do
+            if /usr/libexec/PlistBuddy -c "Print :$k" ios/App/Info.plist >/dev/null 2>&1; then
+              echo "- $k: OK" >> audit/AUDIT_REPORT.md
+            else
+              echo "- $k: (missing or not required): WARN if capability used" >> audit/AUDIT_REPORT.md
+            fi
+          done
+
+      - name: Summarize & package audit artifacts
+        script: |
+          set -euo pipefail
+          echo >> audit/AUDIT_REPORT.md
+          echo "## Next Steps" >> audit/AUDIT_REPORT.md
+          echo "- If build failed: inspect build/ logs." >> audit/AUDIT_REPORT.md
+          echo "- Ensure Apple Store Keys envs exist before release run." >> audit/AUDIT_REPORT.md
+    artifacts:
+      - audit/**/*
+      - build/Logs/**/*
+    # No publishing in audit workflow.
+
+  ios_capacitor_testflight:
+    name: iOS Capacitor → TestFlight (No-Mac)
+    max_build_duration: 120
+    environment:
+      xcode: latest
+      node: 20
+      cocoapods: default
+      groups:
+        - Apple Store Keys          # loads ASC_* and APPLE_TEAM_ID
+      vars:
+        MARKETING_VERSION: "1.0.0"   # bump as needed
+        BUILD_NUMBER: "1005"         # must be > last TestFlight build
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+    scripts:
+      - name: Install deps & sync iOS
+        script: |
+          set -euo pipefail
+          npm ci
+          npx cap sync ios
+      - name: CocoaPods (inside ios/App)
+        script: |
+          set -euo pipefail
+          cd ios/App
+          pod repo update || true
+          pod install --repo-update
+      - name: Build IPA (App Store)
+        script: |
+          set -euo pipefail
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME" \
+            --archive-method app-store \
+            --build-number "$BUILD_NUMBER" \
+            --marketing-version "$MARKETING_VERSION"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - ios/build/**/*
+    publishing:
+      app_store_connect:
+        issuer_id: $ASC_ISSUER_ID
+        key_id: $ASC_API_KEY           # your Key ID variable name
+        api_key: $ASC_PRIVATE_KEY      # contents of the .p8 file
+        submit_to_testflight: true
+        

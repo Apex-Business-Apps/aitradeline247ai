@@ -447,3 +447,4 @@ INSERT INTO public.encryption_key_audit (
 - ✅ Rollback is straightforward if needed
 
 This architecture enables future improvements (like Vault) without disrupting the core encryption logic.
+

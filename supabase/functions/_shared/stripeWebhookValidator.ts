@@ -71,3 +71,4 @@ export function getStripeSignature(req: Request): string | null {
          req.headers.get("Stripe-Signature") || 
          null;
 }
+

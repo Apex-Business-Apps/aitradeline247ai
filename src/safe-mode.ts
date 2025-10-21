@@ -40,3 +40,4 @@ if (hasWindow && import.meta.env.DEV && 'serviceWorker' in navigator) {
 }
 
 export { isSafeMode };
+

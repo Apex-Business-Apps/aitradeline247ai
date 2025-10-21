@@ -20,7 +20,7 @@ export function PreviewDiagnostics() {
     // Auto-run on mount in preview/dev
     const hostname = window.location.hostname;
     const isPreview = hostname.includes('lovableproject.com') || 
-                      hostname.includes('lovable.app') || 
+                      hostname.includes('https://tradeline247aicom.lovable.app/') || 
                       hostname.includes('lovable.dev') ||
                       import.meta.env.DEV;
     
@@ -156,3 +156,4 @@ if (typeof window !== 'undefined') {
     }
   });
 }
+

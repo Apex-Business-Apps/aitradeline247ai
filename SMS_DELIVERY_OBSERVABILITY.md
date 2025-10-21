@@ -91,7 +91,7 @@
 
 ### Accessing the Dashboard
 
-**URL:** `https://yoursite.lovable.app/sms-delivery`
+**URL:** `https://yoursite.https://tradeline247aicom.lovable.app//sms-delivery`
 
 **Requirements:**
 - Admin role required
@@ -393,3 +393,4 @@ curl -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/Mes
 ✅ **Production Ready:** Full observability active
 
 **Next Action:** Configure alerting for high failure rates (optional)
+

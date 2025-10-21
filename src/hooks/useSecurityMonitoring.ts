@@ -50,3 +50,4 @@ export const useSecurityMonitoring = () => {
     staleTime: 30000, // Consider data stale after 30 seconds
   });
 };
+

@@ -275,3 +275,4 @@ voice-answer (validate signature, check concurrency)
 ---
 
 **Acceptance Complete:** Greeting → realtime stream <1s handshake → bidirectional audio → DTMF-0 override → 3s watchdog fallback → transcript emailed. Evidence logged (NO PII).
+

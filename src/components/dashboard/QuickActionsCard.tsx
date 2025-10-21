@@ -61,3 +61,4 @@ export const QuickActionsCard: React.FC = () => {
     </Card>
   );
 };
+

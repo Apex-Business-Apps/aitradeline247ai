@@ -328,3 +328,4 @@ async function handleSubscriptionEvent(supabase: any, event: any): Promise<void>
   // Subscription events can be handled based on your business logic
   console.log(`Subscription event: ${event.type}`, event.data.object.id);
 }
+

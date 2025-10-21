@@ -161,3 +161,4 @@ export const performanceMonitor = new PerformanceMonitor();
 if (typeof window !== 'undefined') {
   (window as any).__performanceMonitor = performanceMonitor;
 }
+

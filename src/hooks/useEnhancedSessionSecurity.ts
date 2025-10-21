@@ -78,3 +78,4 @@ export function useEnhancedSessionSecurity(opts: SecurityOptions = {}) {
 }
 
 export default useEnhancedSessionSecurity;
+

@@ -179,3 +179,4 @@
 
 ## Revision History
 - 2025-10-12: Initial guidelines document created (I18N•01)
+

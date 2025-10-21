@@ -52,3 +52,4 @@ export async function ensureMembership(user: User): Promise<MembershipResult> {
     return { orgId: null, error: e?.message || "Unexpected error during trial setup" };
   }
 }
+

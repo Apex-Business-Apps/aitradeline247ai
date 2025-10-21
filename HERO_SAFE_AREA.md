@@ -191,3 +191,4 @@ All hero sections are safe-area compliant across:
 - Portrait and landscape orientations
 
 **No content is obscured by device UI elements.**
+
