@@ -1,159 +1,28 @@
-workflows:
-  ios_systems_audit:
-    name: iOS Systems & Functions Audit (no publish)
-    max_build_duration: 60
-    environment:
-      xcode: latest
-      node: 20
-      cocoapods: default
-      groups:
-        - "Apple Store Keys"   # APP_STORE_CONNECT_API_KEY, APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_TEAM_ID
-      vars:
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
-        XCODE_SCHEME: "App"
-    scripts:
-      - name: Install deps
-        script: |
-          set -euo pipefail
-          npm ci
+- name: Ensure iOS platform & CocoaPods
+  script: |
+    set -euo pipefail
 
-      - name: Build web assets
-        script: |
-          set -euo pipefail
-          npm run build
+    # 0) Debug: show current tree (helps if this ever fails)
+    echo "== before =="
+    ls -la || true
+    test -d ios && ls -la ios || true
+    test -d ios/App && ls -la ios/App || true
 
-      - name: Ensure dist/ for Capacitor
-        script: |
-          set -euo pipefail
-          if [ -f dist/index.html ]; then
-            echo "dist/ present ✅"
-          elif [ -f build/index.html ]; then
-            echo "build/ present; copying to dist/"
-            rm -rf dist && mkdir -p dist && cp -a build/. dist/
-          else
-            echo "❌ No web assets found (dist/ or build/ missing)."
-            exit 1
-          fi
+    # 1) Create iOS platform if missing (fresh CI runner)
+    if [ ! -d ios/App/App.xcodeproj ]; then
+      echo "iOS platform or Xcode project missing → running 'npx cap add ios'"
+      rm -rf ios || true
+      npx cap add ios
+    fi
 
-      - name: Ensure iOS platform exists
-        script: |
-          set -euo pipefail
-          if [ ! -d "ios/App/App.xcodeproj" ]; then
-            echo "iOS platform not found, adding it..."
-            npx cap add ios
-          else
-            echo "iOS platform already exists ✅"
-          fi
+    # 2) Sync Capacitor (copies web assets + updates plugins)
+    npx cap sync ios
 
-      - name: Capacitor sync + CocoaPods
-        script: |
-          set -euo pipefail
-          npx cap sync ios
-          cd ios/App
-          pod repo update || true
-          pod install --repo-update
+    # 3) Install pods inside native iOS app
+    cd ios/App
+    pod repo update || true
+    pod install --repo-update
 
-      - name: Simulator sanity build (no signing)
-        script: |
-          set -euo pipefail
-          xcodebuild \
-            -workspace "$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
-            -configuration Debug \
-            -sdk iphonesimulator \
-            -destination "generic/platform=iOS Simulator" \
-            -derivedDataPath build | xcpretty || true
-
-    artifacts:
-      - build/Logs/**/*
-    # No publishing here — audit only.
-
-  ios_capacitor_testflight:
-    name: iOS Capacitor → TestFlight (No-Mac)
-    max_build_duration: 120
-    environment:
-      xcode: latest
-      node: 20
-      cocoapods: default
-      groups:
-        - "Apple Store Keys"   # loads APP_STORE_CONNECT_* + TEAM_ID
-      vars:
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
-        XCODE_SCHEME: "App"
-        # OPTIONAL: auto-increment build number to avoid "must be higher" errors.
-        # APP_STORE_APPLE_ID: ""  # e.g., 1234567890 (ASC > App Information > Apple ID)
-    scripts:
-      - name: Install deps
-        script: |
-          set -euo pipefail
-          npm ci
-
-      - name: Build web assets
-        script: |
-          set -euo pipefail
-          npm run build
-
-      - name: Ensure dist/ for Capacitor
-        script: |
-          set -euo pipefail
-          if [ -f dist/index.html ]; then
-            echo "dist/ present ✅"
-          elif [ -f build/index.html ]; then
-            echo "build/ present; copying to dist/"
-            rm -rf dist && mkdir -p dist && cp -a build/. dist/
-          else
-            echo "❌ No web assets found (dist/ or build/ missing)."
-            exit 1
-          fi
-
-      # OPTIONAL: uncomment to auto-bump CFBundleVersion based on last ASC build
-      # - name: Auto-increment build number from App Store
-      #   script: |
-      #     set -euo pipefail
-      #     if [ -n "${APP_STORE_APPLE_ID:-}" ]; then
-      #       LATEST=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" || echo 0)
-      #       echo "Last ASC build: ${LATEST}"
-      #       cd ios/App
-      #       agvtool new-version -all $(( ${LATEST:-0} + 1 ))
-      #     else
-      #       echo "APP_STORE_APPLE_ID not set; skipping auto-increment."
-      #     fi
-
-      - name: Ensure iOS platform exists
-        script: |
-          set -euo pipefail
-          if [ ! -d "ios/App/App.xcodeproj" ]; then
-            echo "iOS platform not found, adding it..."
-            npx cap add ios
-          else
-            echo "iOS platform already exists ✅"
-          fi
-
-      - name: Sync iOS & CocoaPods
-        script: |
-          set -euo pipefail
-          npx cap sync ios
-          cd ios/App
-          pod repo update || true
-          pod install --repo-update
-
-      - name: Build IPA (uses Version/Build from project)
-        script: |
-          set -euo pipefail
-          xcode-project build-ipa \
-            --workspace "$XCODE_WORKSPACE" \
-            --scheme "$XCODE_SCHEME" \
-            --archive-method app-store
-            # (no --marketing-version / --build-number overrides)
-
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - ios/build/**/*
-    publishing:
-      app_store_connect:
-        # EXACT envs from your "Apple Store Keys" group
-        api_key:  $APP_STORE_CONNECT_API_KEY     # .p8 private key contents
-        key_id:   $APP_STORE_CONNECT_KEY_ID      # Key ID
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID  # Issuer GUID
-        submit_to_testflight: true
-        # bundle_id: com.apex.tradeline   # (optional; archive's bundle id is normally enough)
+    echo "== after =="
+    ls -la .
+    test -d App.xcworkspace && echo "✅ Found App.xcworkspace"
