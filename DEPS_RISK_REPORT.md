@@ -397,3 +397,4 @@ For reproducible builds, these versions are confirmed secure:
   "i18next": "25.5.2"
 }
 ```
+

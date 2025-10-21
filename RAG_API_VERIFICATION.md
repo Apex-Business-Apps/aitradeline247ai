@@ -214,3 +214,4 @@ curl -X POST https://hysvqdwmhxnblxfqnszn.supabase.co/functions/v1/rag-answer \
 - **Answer**: `https://hysvqdwmhxnblxfqnszn.supabase.co/functions/v1/rag-answer`
 
 Both endpoints are deployed automatically with the project and respect all existing security policies.
+

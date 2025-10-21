@@ -40,3 +40,4 @@ export default function ProtectedAdminRoute({ children }: { children: React.Reac
   // Authorized - render admin content
   return <>{children}</>;
 }
+

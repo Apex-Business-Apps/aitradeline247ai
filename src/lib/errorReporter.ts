@@ -102,7 +102,7 @@ class ErrorReporter {
 
   private getEnvironment(): string {
     const hostname = window.location.hostname;
-    if (hostname.includes('lovableproject.com') || hostname.includes('lovable.app')) {
+    if (hostname.includes('lovableproject.com') || hostname.includes('https://tradeline247aicom.lovable.app/')) {
       return 'preview';
     }
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
@@ -191,3 +191,4 @@ export function reportReactError(error: Error, errorInfo: any) {
     }
   });
 }
+

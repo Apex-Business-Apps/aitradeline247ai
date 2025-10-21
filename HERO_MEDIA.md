@@ -265,3 +265,4 @@ All hero media assets:
 - ✅ Maintain quality (SVG for crispness at any DPI)
 
 **No visual regressions. Production-ready.**
+

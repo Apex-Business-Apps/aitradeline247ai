@@ -134,3 +134,4 @@ export function clearDetectionHistory(): void {
     console.warn('[BlankScreenDetector] Failed to clear history:', e);
   }
 }
+

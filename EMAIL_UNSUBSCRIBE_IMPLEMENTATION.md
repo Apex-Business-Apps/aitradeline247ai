@@ -148,3 +148,4 @@ SET status = 'archived'
 WHERE status = 'completed' 
 AND completed_at < NOW() - INTERVAL '90 days';
 ```
+

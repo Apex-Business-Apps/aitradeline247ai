@@ -6,3 +6,4 @@
   "timeout_ms": 3000,
   "comment": "GET-only endpoints for cold-start prevention. Add more public GET endpoints here."
 }
+

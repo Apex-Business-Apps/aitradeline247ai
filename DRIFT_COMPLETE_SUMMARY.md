@@ -254,3 +254,4 @@ GROUP BY consent_basis;
 ---
 
 **Status**: All infrastructure complete. Ready for DNS setup → test sends → gradual production rollout.
+
