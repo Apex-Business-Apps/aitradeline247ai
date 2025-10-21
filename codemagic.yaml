@@ -35,6 +35,16 @@ workflows:
             exit 1
           fi
 
+      - name: Ensure iOS platform exists
+        script: |
+          set -euo pipefail
+          if [ ! -d "ios/App/App.xcodeproj" ]; then
+            echo "iOS platform not found, adding it..."
+            npx cap add ios
+          else
+            echo "iOS platform already exists ✅"
+          fi
+
       - name: Capacitor sync + CocoaPods
         script: |
           set -euo pipefail
@@ -109,6 +119,16 @@ workflows:
       #       echo "APP_STORE_APPLE_ID not set; skipping auto-increment."
       #     fi
 
+      - name: Ensure iOS platform exists
+        script: |
+          set -euo pipefail
+          if [ ! -d "ios/App/App.xcodeproj" ]; then
+            echo "iOS platform not found, adding it..."
+            npx cap add ios
+          else
+            echo "iOS platform already exists ✅"
+          fi
+
       - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
@@ -137,3 +157,28 @@ workflows:
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID  # Issuer GUID
         submit_to_testflight: true
         # bundle_id: com.apex.tradeline   # (optional; archive's bundle id is normally enough)
+
+
+
+Approve ✅
+
+Lovable
+Worked for 32s
+3:37 PM on Oct 21
+
+Thought for 15 seconds
+I'll add a step to ensure the iOS platform exists before syncing.
+
+Show all
+1 edit made
+Added step to auto-generate iOS platform if missing before CocoaPods sync in both workflows.
+
+
+Saving changes...
+View more
+An internal error occurred
+
+
+
+Did you get to save it?
+
