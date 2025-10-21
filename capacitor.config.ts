@@ -1,23 +1,10 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.tradeline247ai.app',
+  appId: 'com.apex.tradeline',   // must match your ASC bundle id
   appName: 'TradeLine 24/7',
   webDir: 'dist',
-  // Production builds use compiled dist/
-  // For dev hot-reload, uncomment and use: https://555a4971-4138-435e-a7ee-dfa3d713d1d3.lovableproject.com?forceHideBadge=true
-  // server: {
-  //   url: 'https://555a4971-4138-435e-a7ee-dfa3d713d1d3.lovableproject.com?forceHideBadge=true',
-  //   cleartext: true
-  // },
-  plugins: {
-    SplashScreen: {
-      launchShowDuration: 2000,
-      backgroundColor: '#FFB347',
-      showSpinner: false
-    }
-  }
+  bundledWebRuntime: false
 };
 
 export default config;
-
