@@ -3,14 +3,17 @@ use_frameworks! :linkage => :static
 project 'App.xcodeproj'
 
 target 'App' do
-  pod 'Capacitor', :path => '../node_modules/@capacitor/ios'
-  pod 'CapacitorCordova', :path => '../node_modules/@capacitor/ios'
+  # Node modules live two levels up from ios/App in the monorepo layout.
+  node_modules_path = File.expand_path('../../node_modules', __dir__)
 
-  pod 'CapacitorApp', :path => '../node_modules/@capacitor/app'
-  pod 'CapacitorHaptics', :path => '../node_modules/@capacitor/haptics'
-  pod 'CapacitorKeyboard', :path => '../node_modules/@capacitor/keyboard'
-  pod 'CapacitorStatusBar', :path => '../node_modules/@capacitor/status-bar'
-  pod 'CapacitorSplashScreen', :path => '../node_modules/@capacitor/splash-screen'
+  pod 'Capacitor', :path => "#{node_modules_path}/@capacitor/ios"
+  pod 'CapacitorCordova', :path => "#{node_modules_path}/@capacitor/ios"
+
+  pod 'CapacitorApp', :path => "#{node_modules_path}/@capacitor/app"
+  pod 'CapacitorHaptics', :path => "#{node_modules_path}/@capacitor/haptics"
+  pod 'CapacitorKeyboard', :path => "#{node_modules_path}/@capacitor/keyboard"
+  pod 'CapacitorStatusBar', :path => "#{node_modules_path}/@capacitor/status-bar"
+  pod 'CapacitorSplashScreen', :path => "#{node_modules_path}/@capacitor/splash-screen"
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
