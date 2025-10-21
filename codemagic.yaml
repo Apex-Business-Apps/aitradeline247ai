@@ -1,57 +1,31 @@
-scripts:
-  - name: Install deps & build web
-    script: |
-      set -euo pipefail
-      npm ci
-      npm run build
+- name: Ensure iOS platform (idempotent)
+  script: |
+    set -euo pipefail
+    echo "== Capacitor platforms =="
+    npx cap ls || true
 
-  - name: Ensure iOS platform & CocoaPods
-    script: |
-      set -euo pipefail
-      # If the iOS project doesn't exist (fresh runner), create it
-      if [ ! -d ios/App/App.xcodeproj ]; then
-        echo "iOS platform missing → npx cap add ios"
-        rm -rf ios || true
-        npx cap add ios
-      fi
+    # Detect if iOS is already installed (works even if paths differ)
+    if npx cap ls | awk '/ios/ && /installed/ { f=1 } END{ exit f?0:1 }'; then
+      echo "✅ iOS platform already installed -> skip 'cap add ios'"
+    else
+      echo "🆕 Adding iOS platform..."
+      # Ensure package present (handles repos that didn’t commit /ios)
+      npm i -D @capacitor/ios
+      npx cap add ios
+    fi
 
-      # Sync Capacitor + install pods
-      npx cap sync ios
-      cd ios/App
-      pod repo update || true
-      pod install --repo-update
-      test -d App.xcworkspace || { echo "❌ CocoaPods failed to create workspace"; exit 1; }
+- name: Sync iOS & CocoaPods
+  script: |
+    set -euo pipefail
+    # Always sync (copies web + updates native)
+    npx cap sync ios
 
-  - name: Xcode archive (automatic signing)
-    script: |
-      set -euo pipefail
-      xcodebuild -workspace "ios/App/App.xcworkspace" \
-        -scheme "App" \
-        -configuration Release \
-        -sdk iphoneos \
-        -destination "generic/platform=iOS" \
-        -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-        -allowProvisioningUpdates \
-        -quiet \
-        clean archive
+    # Install pods in the native app folder
+    cd ios/App
+    pod repo update || true
+    pod install --repo-update
 
-  - name: Export IPA
-    script: |
-      set -euo pipefail
-      cat > exportOptions.plist <<'PLIST'
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-        <key>method</key><string>app-store</string>
-        <key>destination</key><string>export</string>
-        <key>teamID</key><string>${APP_STORE_CONNECT_TEAM_ID}</string>
-        <key>stripSwiftSymbols</key><true/>
-        <key>compileBitcode</key><false/>
-      </dict>
-      </plist>
-      PLIST
-      xcodebuild -exportArchive \
-        -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-        -exportOptionsPlist exportOptions.plist \
-        -exportPath "$CM_BUILD_DIR/export"
+    # Probes
+    test -d App.xcworkspace || { echo "❌ Missing ios/App/App.xcworkspace (pod install failed)"; exit 1; }
+    test -d App.xcodeproj || { echo "❌ Missing ios/App/App.xcodeproj (Capacitor add/sync failed)"; exit 1; }
+    echo "✅ CocoaPods ready"
