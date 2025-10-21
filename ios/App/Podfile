@@ -1,6 +1,15 @@
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
-project 'App.xcodeproj'
+
+app_project_path = File.expand_path('App.xcodeproj', __dir__)
+# Allow running `pod install` from repo root by resolving the project path explicitly.
+
+unless File.exist?(app_project_path)
+  fallback_path = File.expand_path('App/App.xcodeproj', __dir__)
+  app_project_path = fallback_path if File.exist?(fallback_path)
+end
+
+project app_project_path
 
 target 'App' do
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'

@@ -32,8 +32,7 @@ jobs:
         run: npx cap sync ios
 
       - name: Install pods
-        working-directory: ios/App
-        run: pod install
+        run: pod install --project-directory=ios/App
 
       - name: Build iOS workspace
         run: |
