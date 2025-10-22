@@ -73,12 +73,9 @@ workflows:
           ls -1 ~/Library/MobileDevice/Provisioning\ Profiles || true
           grep -H -A2 -m1 -r "$DIST_PROFILE_NAME" ~/Library/MobileDevice/Provisioning\ Profiles || true
 
-      - name: Xcode archive (automatic signing + pinned profile)
+      - name: Xcode archive (automatic signing, no manual profile)
         script: |
           set -euo pipefail
-          if [ -z "${DIST_PROFILE_NAME:-}" ]; then
-            echo "❌ DIST_PROFILE_NAME is empty. Set it to your App Store profile name for $BUNDLE_ID"; exit 1;
-          fi
           xcodebuild -workspace "ios/App/App.xcworkspace" \
             -scheme "App" \
             -configuration Release \
@@ -90,14 +87,14 @@ workflows:
             DEVELOPMENT_TEAM="$TEAM_ID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
             CURRENT_PROJECT_VERSION="${IOS_BUILD_NUM:-1}" \
-            PROVISIONING_PROFILE_SPECIFIER="$DIST_PROFILE_NAME" \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
             -quiet \
             clean archive
+
 
       - name: Export IPA (map bundle → profile)
         script: |
           set -euo pipefail
+          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name}"
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -117,7 +114,7 @@ workflows:
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -exportOptionsPlist exportOptions.plist \
             -exportPath "$CM_BUILD_DIR/export"
-          ls -lah "$CM_BUILD_DIR/export" || true
+
 
     artifacts:
       - $CM_BUILD_DIR/export/*.ipa
