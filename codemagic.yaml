@@ -5,9 +5,9 @@ workflows:
     max_build_duration: 60
 
     environment:
-      xcode: 15.4
       groups:
-        - appstore_credentials   # must contain APP_STORE_CONNECT_PRIVATE_KEY
+        - appstore_credentials        # must contain the three vars listed below
+      xcode: 15.4
       vars:
         BUNDLE_ID: "com.apex.tradeline247"
         TEAM_ID: "NWGUYF42KW"
@@ -43,13 +43,14 @@ workflows:
       - name: Preflight ASC vars
         script: |
           set -euo pipefail
-          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}" || { echo "::error::Missing APP_STORE_CONNECT_PRIVATE_KEY (.p8 contents)"; exit 1; }
-          echo "✓ ASC private key present"
+          : "${APP_STORE_CONNECT_API_KEY:?Missing APP_STORE_CONNECT_API_KEY (.p8 contents)}"
+          : "${APP_STORE_CONNECT_KEY_IDENTIFIER:?Missing APP_STORE_CONNECT_KEY_IDENTIFIER (Key ID)}"
+          : "${APP_STORE_CONNECT_ISSUER_ID:?Missing APP_STORE_CONNECT_ISSUER_ID (Issuer ID)}"
+          echo "✓ ASC vars present"
 
       - name: Xcode archive (automatic signing)
         script: |
           set -euo pipefail
-          # Build and sign. Allow Xcode to create/manage provisioning on-the-fly.
           xcodebuild -workspace "ios/App/App.xcworkspace" \
             -scheme "App" \
             -configuration Release \
@@ -85,11 +86,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Codemagic-required shape: three fields under api_key
-        api_key:
-          key_id: 5XDRL75994
-          issuer_id: 7efaf094-3c6f-4c6c-afdb-d6e2c84871c7
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        api_key: $APP_STORE_CONNECT_API_KEY
+        key_id: 5XDRL75994
+        issuer_id: 7efaf094-3c6f-4c6c-afdb-d6e2c84871c7
         submit_to_testflight: true
-        # beta_groups:
-        #   - Internal Testers
