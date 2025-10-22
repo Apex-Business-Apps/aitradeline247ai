@@ -1,31 +1,38 @@
+require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
+
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
+install! 'cocoapods', :disable_input_output_paths => true
 
 project_path = File.expand_path('App.xcodeproj', __dir__)
 unless File.exist?(project_path)
   abort <<~MSG
     Missing Xcode project at #{project_path}.
-    Run `npx cap sync ios` before installing pods.
+    Run `npx cap sync ios` to regenerate the native project before installing pods.
   MSG
 end
 
 project 'App.xcodeproj'
 
-target 'App' do
-  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
-  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
-
+def capacitor_additional_pods
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
   pod 'CapacitorKeyboard', :path => '../../node_modules/@capacitor/keyboard'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
   pod 'CapacitorSplashScreen', :path => '../../node_modules/@capacitor/splash-screen'
+end
 
-  post_install do |installer|
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-      end
+target 'App' do
+  capacitor_pods
+  capacitor_additional_pods
+end
+
+post_install do |installer|
+  assertDeploymentTarget(installer)
+
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
     end
   end
 end

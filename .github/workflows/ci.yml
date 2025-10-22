@@ -123,6 +123,15 @@ jobs:
       - name: Build web assets
         run: npm run build
 
+      - name: Ensure iOS project scaffold
+        run: |
+          set -euo pipefail
+          if [ ! -d ios/App/App.xcodeproj ]; then
+            rm -rf ios
+            npx cap add ios
+            git checkout -- ios/App/Podfile ios/App/App/Assets.xcassets ios/App/App/Info.plist
+          fi
+
       - name: Ensure CocoaPods
         run: |
           if ! command -v pod >/dev/null 2>&1; then
