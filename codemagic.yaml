@@ -5,8 +5,12 @@ workflows:
     max_build_duration: 60
 
     environment:
+      # Import the group that holds your secrets:
+      #   APP_STORE_CONNECT_API_KEY          (full .p8 contents, BEGIN/END lines included)
+      #   APP_STORE_CONNECT_KEY_IDENTIFIER   (Key ID, e.g. 5XDRL75994)
+      #   APP_STORE_CONNECT_ISSUER_ID        (Issuer ID UUID)
       groups:
-        - appstore_credentials        # must contain the three vars listed below
+        - appstore_credentials
       xcode: 15.4
       vars:
         BUNDLE_ID: "com.apex.tradeline247"
@@ -20,27 +24,28 @@ workflows:
           npm run build
 
       - name: Ensure iOS platform (idempotent)
-  script: |
-    set -euo pipefail
-    # If the native project exists, skip `cap add ios`
-    if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ]; then
-      echo "✅ ios platform already present — skipping add"
-    else
-      echo "🆕 Adding iOS platform..."
-      npm i -D @capacitor/ios
-      npx cap add ios
-    fi
+        script: |
+          set -euo pipefail
+          # If native iOS project exists, do NOT run `cap add ios`
+          if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ] || [ -d ios ]; then
+            echo "✅ ios/ exists — skipping 'npx cap add ios'"
+          else
+            echo "🆕 Adding iOS platform..."
+            npm i -D @capacitor/ios
+            npx cap add ios
+          fi
 
-- name: Sync iOS & CocoaPods
-  script: |
-    set -euo pipefail
-    # Always sync: copies web assets + updates native deps
-    npx cap sync ios
-    cd ios/App
-    pod repo update || true
-    pod install --repo-update
-    test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
-      - name: Preflight ASC vars
+      - name: Sync iOS & CocoaPods
+        script: |
+          set -euo pipefail
+          # Sync is the right daily-driver: copy web assets + update native deps
+          npx cap sync ios
+          cd ios/App
+          pod repo update || true
+          pod install --repo-update
+          test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
+
+      - name: Preflight ASC vars (fail fast if missing)
         script: |
           set -euo pipefail
           : "${APP_STORE_CONNECT_API_KEY:?Missing APP_STORE_CONNECT_API_KEY (.p8 contents)}"
@@ -86,7 +91,10 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_API_KEY
-        key_id: 5XDRL75994
-        issuer_id: 7efaf094-3c6f-4c6c-afdb-d6e2c84871c7
+        # Codemagic requires these three SIBLING fields (not nested):
+        api_key:  $APP_STORE_CONNECT_API_KEY
+        key_id:   $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id:$APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
+        # beta_groups:
+        #   - Internal Testers
