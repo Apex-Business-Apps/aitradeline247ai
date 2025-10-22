@@ -1,7 +1,7 @@
 workflows:
   ios_capacitor_testflight:
     name: iOS Capacitor → TestFlight
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m2
     max_build_duration: 60
 
     integrations:
@@ -75,6 +75,20 @@ workflows:
 
           test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
 
+      - name: Fetch signing assets from App Store Connect
+        script: |
+          set -euo pipefail
+          : "${BUNDLE_ID:?Set BUNDLE_ID (e.g. com.example.app) in Codemagic environment}"
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --strict-match-identifier
+
+      - name: Import signing certificates into keychain
+        script: |
+          set -euo pipefail
+          keychain initialize
+          keychain add-certificates
+
       - name: Set iOS build number from Codemagic
         script: |
           set -euo pipefail
@@ -85,15 +99,63 @@ workflows:
             echo "↪️  IOS_BUILD_NUM not set; skipping Info.plist patch"
           fi
 
-      - name: Debug installed provisioning profiles (optional)
+      - name: Verify signing assets
         script: |
-          security find-identity -v -p codesigning || true
-          ls -1 ~/Library/MobileDevice/Provisioning\ Profiles || true
+          set -euo pipefail
+          security find-identity -v -p codesigning
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          if [ ! -d "$PROFILE_DIR" ]; then
+            echo "❌ Provisioning profile directory $PROFILE_DIR not found"
+            exit 1
+          fi
+          ls -1 "$PROFILE_DIR"
+
           if [ -n "${DIST_PROFILE_NAME:-}" ]; then
-            grep -H -A2 -m1 -r "$DIST_PROFILE_NAME" ~/Library/MobileDevice/Provisioning\ Profiles || true
+            python - <<'PY'
+import glob
+import os
+import plistlib
+import subprocess
+import sys
+
+profile_dir = os.path.expanduser('~/Library/MobileDevice/Provisioning Profiles')
+target = os.environ.get('DIST_PROFILE_NAME')
+profiles = sorted(glob.glob(os.path.join(profile_dir, '*.mobileprovision')))
+
+match_path = None
+for path in profiles:
+    data = subprocess.run(
+        ['security', 'cms', '-D', '-i', path],
+        check=True,
+        capture_output=True,
+    ).stdout
+    info = plistlib.loads(data)
+    name = info.get('Name')
+    if name == target:
+        match_path = path
+        break
+
+if not match_path:
+    print(f"❌ Provisioning profile named '{target}' not found in {profile_dir}", file=sys.stderr)
+    if profiles:
+        print('Available profiles:', file=sys.stderr)
+        for path in profiles:
+            data = subprocess.run(
+                ['security', 'cms', '-D', '-i', path],
+                check=True,
+                capture_output=True,
+            ).stdout
+            name = plistlib.loads(data).get('Name')
+            print(f"- {name} ({path})", file=sys.stderr)
+    else:
+        print('No provisioning profiles downloaded.', file=sys.stderr)
+    sys.exit(1)
+
+print(f"✅ Provisioning profile ready: {match_path}")
+PY
           fi
 
-      # >>> THIS is the new pair you needed INSIDE scripts:
+      # Apply the downloaded provisioning profiles to the generated Xcode project.
       - name: Apply provisioning profiles to Xcode project (per-target)
         script: |
           set -euo pipefail
