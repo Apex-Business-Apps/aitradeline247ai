@@ -28,14 +28,21 @@ workflows:
           npm ci
           npm run build
 
-      - name: Ensure iOS platform (idempotent)
+      - name: Ensure iOS platform (idempotent + self-heal)
         script: |
           set -euo pipefail
-          # If ios/ exists, don't run "cap add ios" (it would error with 'already exists').
-          if [ -d ios ]; then
-            echo "iOS platform folder already exists — skipping 'cap add ios'"
+          PROJ_DIR="ios/App"
+          XCPROJ="$PROJ_DIR/App.xcodeproj"
+          XCWORK="$PROJ_DIR/App.xcworkspace"
+
+          if [[ -d "$XCPROJ" || -d "$XCWORK" ]]; then
+            echo "✅ Found Xcode project/workspace — nothing to add."
           else
-            echo "Adding iOS platform..."
+            if [[ -d ios ]]; then
+              echo "⚠️  'ios/' exists but no Xcode project — recreating Capacitor iOS platform"
+              rm -rf ios
+            fi
+            echo "🆕 Adding iOS platform..."
             npm i -D @capacitor/ios
             npx cap add ios
           fi
@@ -43,12 +50,18 @@ workflows:
       - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
+          # Sync web assets + native deps
           npx cap sync ios
+
+          # CocoaPods install
           cd ios/App
           command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
           pod repo update || true
           pod install --repo-update
-          test -d App.xcworkspace || { echo "Missing App.xcworkspace after pod install"; exit 1; }
+
+          # Sanity: workspace must exist after pods
+          test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
+
 
       - name: Fetch signing files (App Store distribution)
         script: |
