@@ -4,7 +4,6 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 60
 
-    # Use the saved Apple key from Team integrations > Developer Portal
     integrations:
       app_store_connect: APEX Business Systems
 
@@ -13,10 +12,9 @@ workflows:
       vars:
         BUNDLE_ID: "com.apex.tradeline247"
         TEAM_ID: "NWGUYF42KW"
-        # Uncomment to force a monotonic iOS build number from Codemagic:
-        # IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER # or BUILD_NUMBER
+        # Codemagic supplies PROJECT_BUILD_NUMBER automatically (monotonic)
+        IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER
 
-    # Make builds faster & repeatable
     cache:
       cache_paths:
         - ~/.npm
@@ -39,7 +37,7 @@ workflows:
             echo "✅ Found iOS project — skipping add"
           else
             if [ -d ios ]; then
-              echo "⚠️ ios/ exists but no Xcode project — cleaning and re-adding"
+              echo "⚠️  ios/ exists but no Xcode project — cleaning and re-adding"
               rm -rf ios
             fi
             echo "🆕 Adding iOS platform..."
@@ -57,23 +55,23 @@ workflows:
           pod install --repo-update
           test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
 
-      # Optional: stamp iOS build number from Codemagic (keeps TestFlight happy)
-      # Requires Xcode project set to "Automatically manage signing".
-      - name: Set iOS build number (optional)
+      - name: Set iOS build number from Codemagic
         script: |
           set -euo pipefail
           if [ -n "${IOS_BUILD_NUM:-}" ]; then
-            # Set CFBundleVersion across the project
+            # 1) Info.plist (CFBundleVersion)
             /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${IOS_BUILD_NUM}" ios/App/App/Info.plist || true
-            agvtool new-version -all "${IOS_BUILD_NUM}" || true
-            echo "ℹ️ iOS build number set to ${IOS_BUILD_NUM}"
+            # 2) Also set MARKETING_VERSION if you want (optional):
+            # /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.0" ios/App/App/Info.plist || true
+            echo "ℹ️  CFBundleVersion set to ${IOS_BUILD_NUM}"
           else
-            echo "↪️ Skipping build-number stamping"
+            echo "↪️  IOS_BUILD_NUM not set; skipping Info.plist patch"
           fi
 
-      - name: Xcode archive (automatic signing)
+      - name: Xcode archive (automatic signing + build number)
         script: |
           set -euo pipefail
+          # Force automatic signing: provide team + bundle ID, and inject build number
           xcodebuild -workspace "ios/App/App.xcworkspace" \
             -scheme "App" \
             -configuration Release \
@@ -81,6 +79,10 @@ workflows:
             -destination "generic/platform=iOS" \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
+            CURRENT_PROJECT_VERSION="${IOS_BUILD_NUM:-1}" \
             -quiet \
             clean archive
 
@@ -112,4 +114,4 @@ workflows:
         auth: integration
         submit_to_testflight: true
         # beta_groups:
-        # - Internal Testers
+        #   - Internal Testers
