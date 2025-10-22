@@ -4,17 +4,23 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 60
 
+    # Use the saved Apple key from Team integrations > Developer Portal
+    integrations:
+      app_store_connect: APEX Business Systems
+
     environment:
-      # Import the env group that holds the 3 Apple secrets:
-      #   APP_STORE_CONNECT_API_KEY          (full .p8 contents, BEGIN/END included)
-      #   APP_STORE_CONNECT_KEY_IDENTIFIER   (Key ID, 10 chars)
-      #   APP_STORE_CONNECT_ISSUER_ID        (Issuer ID, UUID)
-      groups:
-        - appstore_credentials
       xcode: 15.4
       vars:
         BUNDLE_ID: "com.apex.tradeline247"
         TEAM_ID: "NWGUYF42KW"
+        # Uncomment to force a monotonic iOS build number from Codemagic:
+        # IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER # or BUILD_NUMBER
+
+    # Make builds faster & repeatable
+    cache:
+      cache_paths:
+        - ~/.npm
+        - ~/Library/Caches/CocoaPods
 
     scripts:
       - name: Install deps & build web
@@ -23,18 +29,17 @@ workflows:
           npm ci
           npm run build
 
-           - name: Ensure iOS platform (idempotent + self-heal)
+      - name: Ensure iOS platform (idempotent + self-heal)
         script: |
           set -euo pipefail
           PROJECT_DIR="ios/App"
           XCPROJ="$PROJECT_DIR/App.xcodeproj"
           XCWORK="$PROJECT_DIR/App.xcworkspace"
-
           if [ -d "$XCPROJ" ] || [ -d "$XCWORK" ]; then
-            echo "✅ Found iOS project ($XCPROJ / $XCWORK) — skipping add"
+            echo "✅ Found iOS project — skipping add"
           else
             if [ -d ios ]; then
-              echo "⚠️  ios/ exists but no Xcode project — re-adding cleanly"
+              echo "⚠️ ios/ exists but no Xcode project — cleaning and re-adding"
               rm -rf ios
             fi
             echo "🆕 Adding iOS platform..."
@@ -47,18 +52,24 @@ workflows:
           set -euo pipefail
           npx cap sync ios
           cd ios/App
-          # Make sure CocoaPods is available on the image (usually is, but safe):
           command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
           pod repo update || true
           pod install --repo-update
           test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
 
+      # Optional: stamp iOS build number from Codemagic (keeps TestFlight happy)
+      # Requires Xcode project set to "Automatically manage signing".
+      - name: Set iOS build number (optional)
         script: |
           set -euo pipefail
-          : "${APP_STORE_CONNECT_API_KEY:?Missing APP_STORE_CONNECT_API_KEY (.p8 contents)}"
-          : "${APP_STORE_CONNECT_KEY_IDENTIFIER:?Missing APP_STORE_CONNECT_KEY_IDENTIFIER (Key ID)}"
-          : "${APP_STORE_CONNECT_ISSUER_ID:?Missing APP_STORE_CONNECT_ISSUER_ID (Issuer ID)}"
-          echo "✓ ASC vars present"
+          if [ -n "${IOS_BUILD_NUM:-}" ]; then
+            # Set CFBundleVersion across the project
+            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${IOS_BUILD_NUM}" ios/App/App/Info.plist || true
+            agvtool new-version -all "${IOS_BUILD_NUM}" || true
+            echo "ℹ️ iOS build number set to ${IOS_BUILD_NUM}"
+          else
+            echo "↪️ Skipping build-number stamping"
+          fi
 
       - name: Xcode archive (automatic signing)
         script: |
@@ -98,10 +109,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Three sibling fields required by Codemagic:
-        api_key:  $APP_STORE_CONNECT_API_KEY
-        key_id:   $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        auth: integration
         submit_to_testflight: true
         # beta_groups:
-        #   - Internal Testers
+        # - Internal Testers
