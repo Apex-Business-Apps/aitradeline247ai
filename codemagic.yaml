@@ -20,26 +20,26 @@ workflows:
           npm run build
 
       - name: Ensure iOS platform (idempotent)
-        script: |
-          set -euo pipefail
-          npx cap ls || true
-          if npx cap ls | awk '/ios/ && /installed/ { f=1 } END{ exit f?0:1 }'; then
-            echo "✅ iOS already installed"
-          else
-            echo "🆕 Adding iOS platform..."
-            npm i -D @capacitor/ios
-            npx cap add ios
-          fi
+  script: |
+    set -euo pipefail
+    # If the native project exists, skip `cap add ios`
+    if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ]; then
+      echo "✅ ios platform already present — skipping add"
+    else
+      echo "🆕 Adding iOS platform..."
+      npm i -D @capacitor/ios
+      npx cap add ios
+    fi
 
-      - name: Sync iOS & CocoaPods
-        script: |
-          set -euo pipefail
-          npx cap sync ios
-          cd ios/App
-          pod repo update || true
-          pod install --repo-update
-          test -d App.xcworkspace || { echo "❌ Missing ios/App/App.xcworkspace"; exit 1; }
-
+- name: Sync iOS & CocoaPods
+  script: |
+    set -euo pipefail
+    # Always sync: copies web assets + updates native deps
+    npx cap sync ios
+    cd ios/App
+    pod repo update || true
+    pod install --repo-update
+    test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
       - name: Preflight ASC vars
         script: |
           set -euo pipefail
