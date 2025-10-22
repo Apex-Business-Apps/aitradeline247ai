@@ -4,14 +4,13 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
 
-    # Use the Apple Developer Portal key you configured in Codemagic UI.
     integrations:
       app_store_connect: APEX Business Systems
 
     environment:
       xcode: 15.4
       groups:
-        - appstore_credentials   # APP_STORE_CONNECT_* live here
+        - appstore_credentials        # APP_STORE_CONNECT_* live here
       vars:
         TEAM_ID: "NWGUYF42KW"
         BUNDLE_ID: "com.apex.tradeline"
@@ -30,20 +29,18 @@ workflows:
           npm run build
 
       - name: Ensure iOS platform (idempotent)
-    script: |
-     set -euo pipefail
-     # If the ios folder exists at all, DON'T call `cap add ios` (Capacitor exits 1)
-     if [ -d ios ]; then
-      echo "✅ ios/ exists — skipping 'cap add ios'"
-      exit 0
-      fi
+        script: |
+          set -euo pipefail
+          # If ios/ exists, don't run "cap add ios" (it would error with 'already exists').
+          if [ -d ios ]; then
+            echo "iOS platform folder already exists — skipping 'cap add ios'"
+          else
+            echo "Adding iOS platform..."
+            npm i -D @capacitor/ios
+            npx cap add ios
+          fi
 
-    echo "🆕 ios/ missing — adding iOS platform…"
-    npm i -D @capacitor/ios
-    npx cap add ios
-
-
-     - name: Sync iOS & CocoaPods
+      - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
           npx cap sync ios
@@ -51,11 +48,12 @@ workflows:
           command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
           pod repo update || true
           pod install --repo-update
-          test -d App.xcworkspace || { echo "❌ Missing App.xcworkspace"; exit 1; }
+          test -d App.xcworkspace || { echo "Missing App.xcworkspace after pod install"; exit 1; }
 
-      - name: Fetch signing files (App Store dist)
+      - name: Fetch signing files (App Store distribution)
         script: |
           set -euo pipefail
+          # Correct CLI usage: bundle id is positional (no --bundle-id flag)
           app-store-connect fetch-signing-files \
             --issuer-id @env:APP_STORE_CONNECT_ISSUER_ID \
             --key-id @env:APP_STORE_CONNECT_KEY_IDENTIFIER \
@@ -67,9 +65,13 @@ workflows:
         script: |
           set -euo pipefail
           keychain initialize
-          # Add any .p12 downloaded by the fetch step (passwordless or managed by Apple)
-          keychain add-certificates --certificate "$HOME/Library/MobileDevice/Certificates/"*.p12 || true
-          # Apply profiles to the app project only
+          # Add any .p12 the fetch step put under Certificates
+          if ls "$HOME/Library/MobileDevice/Certificates/"*.p12 >/dev/null 2>&1; then
+            keychain add-certificates --certificate "$HOME/Library/MobileDevice/Certificates/"*.p12
+          else
+            echo "No .p12 certificates found (Apple-managed certs may already be present)"
+          fi
+          # Apply profiles only to our app project (avoid touching Pods)
           xcode-project use-profiles --project "ios/App/App.xcodeproj"
 
       - name: Set iOS build number (Info.plist)
@@ -77,7 +79,9 @@ workflows:
           set -euo pipefail
           if [ -n "${IOS_BUILD_NUM:-}" ]; then
             /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${IOS_BUILD_NUM}" ios/App/App/Info.plist || true
-            echo "ℹ️ CFBundleVersion = ${IOS_BUILD_NUM}"
+            echo "CFBundleVersion set to ${IOS_BUILD_NUM}"
+          else
+            echo "IOS_BUILD_NUM not set; skipping Info.plist patch"
           fi
 
       - name: Xcode archive (manual signing)
@@ -100,8 +104,15 @@ workflows:
       - name: Export IPA (App Store)
         script: |
           set -euo pipefail
-          # Try to detect a matching profile name from the profiles folder for mapping.
-          PROFILE_NAME="$(/bin/ls -1 ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision | head -n1 | xargs -I{} /usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin <<< \"$(security cms -D -i {} )\" || true)"
+          # Attempt to detect a profile name for mapping (first installed profile)
+          PROFILE_PATH="$(ls -1 ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision | head -n1 || true)"
+          if [ -n "$PROFILE_PATH" ]; then
+            PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin <<< "$(security cms -D -i "$PROFILE_PATH")")"
+          else
+            echo "No provisioning profiles found in ~/Library/MobileDevice/Provisioning Profiles"
+            PROFILE_NAME=""
+          fi
+
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -130,8 +141,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Upload & TestFlight actions use the UI integration key
-        auth: integration
+        auth: integration          # uses "APEX Business Systems" integration
         submit_to_testflight: true
         # beta_groups:
         #   - Internal Testers
