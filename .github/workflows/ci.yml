@@ -45,7 +45,13 @@ jobs:
       # 1) Detect if package.json has a "test" script
       - name: Detect test script
         id: pkg
-        run: echo "has_test=$(node -p \"require('./package.json').scripts?.test||''\")" >> "$GITHUB_OUTPUT"
+        run: |
+          node - <<'NODE' >>"$GITHUB_OUTPUT"
+          const pkg = require('./package.json');
+          const scripts = pkg.scripts || {};
+          const hasTest = Object.prototype.hasOwnProperty.call(scripts, 'test');
+          process.stdout.write(`has_test=${hasTest ? 'true' : ''}\n`);
+          NODE
 
       # 2) Only run tests if the script actually exists
       - name: Run tests (if present)

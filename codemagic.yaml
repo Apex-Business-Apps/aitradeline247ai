@@ -9,6 +9,7 @@ workflows:
 
     environment:
       xcode: 15.4
+      node: 20.15.1
       vars:
         TEAM_ID: "NWGUYF42KW"
         BUNDLE_ID: "com.apex.tradeline"
@@ -44,8 +45,12 @@ workflows:
               rm -rf ios
             fi
             echo "🆕 Adding iOS platform..."
-            npm i -D @capacitor/ios
+            if [ ! -d node_modules/@capacitor/ios ]; then
+              echo "❌ Missing @capacitor/ios in node_modules. Ensure npm ci completed successfully."
+              exit 1
+            fi
             npx cap add ios
+            git checkout -- ios/App/Podfile ios/App/App/Assets.xcassets ios/App/App/Info.plist
           fi
 
       - name: Sync iOS & CocoaPods (fast)
