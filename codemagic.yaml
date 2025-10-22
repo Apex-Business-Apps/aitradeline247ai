@@ -29,17 +29,28 @@ workflows:
       - name: Ensure iOS platform (idempotent + self-heal)
         script: |
           set -euo pipefail
+          ROOT_IOS_DIR="ios"
           PROJECT_DIR="ios/App"
           XCPROJ="$PROJECT_DIR/App.xcodeproj"
           XCWORK="$PROJECT_DIR/App.xcworkspace"
 
-          if [ -d "$XCPROJ" ] || [ -d "$XCWORK" ]; then
-            echo "✅ iOS project exists — keeping it"
+          have_workspace=false
+          if [ -d "$XCWORK" ] || [ -d "$XCPROJ" ]; then
+            have_workspace=true
+          fi
+
+          if $have_workspace; then
+            echo "✅ Found Xcode project/workspace — skipping 'cap add ios'"
           else
-            echo "🆕 Adding iOS platform…"
+            if [ -d "$ROOT_IOS_DIR" ]; then
+              echo "⚠️  Found 'ios/' but no Xcode project — cleaning stale native folder"
+              rm -rf "$ROOT_IOS_DIR"
+            fi
+            echo "🆕 Adding iOS platform fresh…"
             npm i -D @capacitor/ios
             npx cap add ios
           fi
+
 
       - name: Sync iOS & CocoaPods (fast)
         script: |
