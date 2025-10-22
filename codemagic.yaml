@@ -23,13 +23,20 @@ workflows:
           npm ci
           npm run build
 
-      - name: Ensure iOS platform (idempotent)
+           - name: Ensure iOS platform (idempotent + self-heal)
         script: |
           set -euo pipefail
-          # If native iOS project exists, do NOT run `cap add ios`
-          if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ] || [ -d ios ]; then
-            echo "✅ ios/ exists — skipping 'npx cap add ios'"
+          PROJECT_DIR="ios/App"
+          XCPROJ="$PROJECT_DIR/App.xcodeproj"
+          XCWORK="$PROJECT_DIR/App.xcworkspace"
+
+          if [ -d "$XCPROJ" ] || [ -d "$XCWORK" ]; then
+            echo "✅ Found iOS project ($XCPROJ / $XCWORK) — skipping add"
           else
+            if [ -d ios ]; then
+              echo "⚠️  ios/ exists but no Xcode project — re-adding cleanly"
+              rm -rf ios
+            fi
             echo "🆕 Adding iOS platform..."
             npm i -D @capacitor/ios
             npx cap add ios
@@ -38,14 +45,14 @@ workflows:
       - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
-          # Sync copies web assets + updates native deps
           npx cap sync ios
           cd ios/App
+          # Make sure CocoaPods is available on the image (usually is, but safe):
+          command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
           pod repo update || true
           pod install --repo-update
           test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
 
-      - name: Preflight ASC vars (fail fast if missing)
         script: |
           set -euo pipefail
           : "${APP_STORE_CONNECT_API_KEY:?Missing APP_STORE_CONNECT_API_KEY (.p8 contents)}"
