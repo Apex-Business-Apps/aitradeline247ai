@@ -1,18 +1,20 @@
 workflows:
   ios_capacitor_testflight:
     name: iOS Capacitor → TestFlight
-    # Use M2 so the warning disappears
     instance_type: mac_mini_m2
     max_build_duration: 60
 
     integrations:
-      # Name shown in your Codemagic "Apple Developer Portal" integration
+      # This MUST match the label you see in Codemagic > Integrations > Apple Developer Portal
       app_store_connect: APEX Business Systems
 
     environment:
-      groups:
-        - appstore_credentials   # TEAM_ID, BUNDLE_ID, DIST_PROFILE_NAME, PROJECT_BUILD_NUMBER (optional)
       xcode: 15.4
+      # Put these in Codemagic UI > Environment variables (group "appstore_credentials")
+      # TEAM_ID: NWGUYF42KW
+      # BUNDLE_ID: com.apex.tradeline
+      # DIST_PROFILE_NAME: TL247_mobpro_tradeline_01  # exact provision profile name
+      # PROJECT_BUILD_NUMBER: 21                        # (optional) monotonic build
       vars:
         IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER
 
@@ -28,12 +30,12 @@ workflows:
           npm ci
           npm run build
 
-      - name: Ensure iOS platform (idempotent)
+      - name: Ensure iOS platform (idempotent & safe)
         script: |
           set -euo pipefail
-          XCPROJ="ios/App/App.xcodeproj"
-          if [ -d "$XCPROJ" ]; then
-            echo "✅ Found iOS project — skipping add"
+          # Never guess — ask Capacitor if 'ios' is installed
+          if npx cap ls | sed -n '/Platforms:/,$p' | grep -qE '^\s*ios(\s|$)'; then
+            echo "✅ Capacitor reports iOS platform present — skipping add"
           else
             echo "🆕 Adding iOS platform…"
             npm i -D @capacitor/ios
@@ -60,20 +62,18 @@ workflows:
             echo "↪️  IOS_BUILD_NUM not set; skipping Info.plist patch"
           fi
 
-      - name: Install signing certs & provisioning profiles
+      - name: Install signing certs & provisioning profiles (uploaded in UI)
         script: |
           set -euo pipefail
-          # Installs all uploaded .p12 + .mobileprovision from Codemagic UI into a temporary keychain
           keychain initialize
           keychain add-certificates
+          echo "🔐 Installed signing certs and provisioning profiles to login keychain"
 
-      - name: Apply provisioning profiles to Xcode project (per-target)
+      - name: Apply provisioning profiles to Xcode project (all targets)
         script: |
           set -euo pipefail
-          # Force the correct (manual) profiles into the App and Pods targets
           xcode-project use-profiles --project "ios/App/App.xcodeproj"
-          echo "✅ Profiles applied to Xcode project"
-          # (If you ever see “applied to Pods target” warnings, this is expected per Codemagic docs.) 
+          echo "✅ Provisioning profiles applied to App and Pods targets"
 
       - name: Xcode archive (manual signing)
         script: |
@@ -94,22 +94,20 @@ workflows:
       - name: Export IPA (App Store)
         script: |
           set -euo pipefail
-          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name}"
+          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name in Codemagic env}"
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store</string>
+            <key>teamID</key><string>${TEAM_ID}</string>
+            <key>stripSwiftSymbols</key><true/>
+            <key>compileBitcode</key><false/>
+            <key>provisioningProfiles</key>
             <dict>
-              <key>method</key><string>app-store</string>
-              <key>teamID</key><string>${TEAM_ID}</string>
-              <key>stripSwiftSymbols</key><true/>
-              <key>compileBitcode</key><false/>
-              <key>provisioningProfiles</key>
-              <dict>
-                <key>${BUNDLE_ID}</key><string>${DIST_PROFILE_NAME}</string>
-              </dict>
+              <key>${BUNDLE_ID}</key><string>${DIST_PROFILE_NAME}</string>
             </dict>
-          </plist>
+          </dict></plist>
           PLIST
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
