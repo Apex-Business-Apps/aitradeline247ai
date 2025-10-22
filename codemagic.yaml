@@ -1,63 +1,95 @@
 workflows:
   ios_capacitor_testflight:
     name: iOS Capacitor → TestFlight
-    max_build_duration: 120
-    instance_type: mac_mini_m2
-
-    # Use ONE auth path only. OPTION A (recommended): env vars
-    # If you instead use the Codemagic "Developer Portal" integration, delete the env-var block below
-    # and uncomment the `integrations` + publishing.auth=integration block further down.
+    instance_type: mac_mini_m1
+    max_build_duration: 60
 
     environment:
+      xcode: 15.4
       groups:
-        - appstore_credentials   # must contain the three vars below (see notes)
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.apex.tradeline     # <- your real bundle id
+        - appstore_credentials   # must contain APP_STORE_CONNECT_PRIVATE_KEY
       vars:
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
-        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.apex.tradeline247"
+        TEAM_ID: "NWGUYF42KW"
 
     scripts:
-      - name: Install deps
+      - name: Install deps & build web
         script: |
+          set -euo pipefail
           npm ci
+          npm run build
 
-      - name: Build web assets
-        script: npm run build
-
-      - name: Sync Capacitor iOS
-        script: npx cap sync ios
-
-      - name: Install CocoaPods
+      - name: Ensure iOS platform (idempotent)
         script: |
+          set -euo pipefail
+          npx cap ls || true
+          if npx cap ls | awk '/ios/ && /installed/ { f=1 } END{ exit f?0:1 }'; then
+            echo "✅ iOS already installed"
+          else
+            echo "🆕 Adding iOS platform..."
+            npm i -D @capacitor/ios
+            npx cap add ios
+          fi
+
+      - name: Sync iOS & CocoaPods
+        script: |
+          set -euo pipefail
+          npx cap sync ios
           cd ios/App
+          pod repo update || true
           pod install --repo-update
+          test -d App.xcworkspace || { echo "❌ Missing ios/App/App.xcworkspace"; exit 1; }
 
-      - name: Apply signing profiles
-        script: xcode-project use-profiles
-
-      - name: Build IPA
+      - name: Preflight ASC vars
         script: |
-          cd ios/App
-          xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME"
+          set -euo pipefail
+          test -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}" || { echo "::error::Missing APP_STORE_CONNECT_PRIVATE_KEY (.p8 contents)"; exit 1; }
+          echo "✓ ASC private key present"
+
+      - name: Xcode archive (automatic signing)
+        script: |
+          set -euo pipefail
+          # Build and sign. Allow Xcode to create/manage provisioning on-the-fly.
+          xcodebuild -workspace "ios/App/App.xcworkspace" \
+            -scheme "App" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+            -allowProvisioningUpdates \
+            -quiet \
+            clean archive
+
+      - name: Export IPA
+        script: |
+          set -euo pipefail
+          cat > exportOptions.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store</string>
+            <key>teamID</key><string>NWGUYF42KW</string>
+            <key>destination</key><string>export</string>
+            <key>stripSwiftSymbols</key><true/>
+            <key>compileBitcode</key><false/>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath "$CM_BUILD_DIR/export"
 
     artifacts:
-      - ios/App/build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      - $CM_BUILD_DIR/export/*.ipa
+      - $CM_BUILD_DIR/App.xcarchive
 
     publishing:
       app_store_connect:
-        # OPTION A — Env vars (matches docs; do NOT include `auth: integration`)
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY          # the .p8 contents
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER        # Key ID
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID          # Issuer ID
-
+        # Codemagic-required shape: three fields under api_key
+        api_key:
+          key_id: 5XDRL75994
+          issuer_id: 7efaf094-3c6f-4c6c-afdb-d6e2c84871c7
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
-        beta_groups:
-          - Internal Testers
-
-        # OPTION B — Codemagic UI integration (comment out the 3 lines above and use the 2 lines below)
-        # auth: integration
-        # (and put this at workflow root): integrations: { app_store_connect: <Your-Key-Name> }
+        # beta_groups:
+        #   - Internal Testers
