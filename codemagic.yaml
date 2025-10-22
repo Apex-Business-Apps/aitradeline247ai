@@ -5,10 +5,10 @@ workflows:
     max_build_duration: 60
 
     environment:
-      # Import the group that holds your secrets:
-      #   APP_STORE_CONNECT_API_KEY          (full .p8 contents, BEGIN/END lines included)
-      #   APP_STORE_CONNECT_KEY_IDENTIFIER   (Key ID, e.g. 5XDRL75994)
-      #   APP_STORE_CONNECT_ISSUER_ID        (Issuer ID UUID)
+      # Import the env group that holds the 3 Apple secrets:
+      #   APP_STORE_CONNECT_API_KEY          (full .p8 contents, BEGIN/END included)
+      #   APP_STORE_CONNECT_KEY_IDENTIFIER   (Key ID, 10 chars)
+      #   APP_STORE_CONNECT_ISSUER_ID        (Issuer ID, UUID)
       groups:
         - appstore_credentials
       xcode: 15.4
@@ -38,7 +38,7 @@ workflows:
       - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
-          # Sync is the right daily-driver: copy web assets + update native deps
+          # Sync copies web assets + updates native deps
           npx cap sync ios
           cd ios/App
           pod repo update || true
@@ -91,10 +91,10 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Codemagic requires these three SIBLING fields (not nested):
+        # Three sibling fields required by Codemagic:
         api_key:  $APP_STORE_CONNECT_API_KEY
         key_id:   $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id:$APP_STORE_CONNECT_ISSUER_ID
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         # beta_groups:
         #   - Internal Testers
