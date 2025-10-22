@@ -123,15 +123,15 @@ jobs:
       - name: Build web assets
         run: npm run build
 
-      - name: Sync Capacitor iOS project
-        run: npx cap sync ios
-
       - name: Ensure CocoaPods
         run: |
           if ! command -v pod >/dev/null 2>&1; then
             sudo gem install cocoapods --no-document
           fi
           pod --version
+
+      - name: Sync Capacitor iOS project
+        run: npx cap sync ios
 
       - name: Install iOS pods
         working-directory: ios/App
