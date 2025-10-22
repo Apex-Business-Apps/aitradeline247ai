@@ -30,17 +30,20 @@ workflows:
           npm run build
 
       - name: Ensure iOS platform (idempotent)
-        script: |
-          set -euo pipefail
-          if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ]; then
-            echo "✅ iOS project present — skipping 'cap add ios'"
-          else
-            echo "🆕 Adding iOS platform…"
-            npm i -D @capacitor/ios
-            npx cap add ios
-          fi
+    script: |
+     set -euo pipefail
+     # If the ios folder exists at all, DON'T call `cap add ios` (Capacitor exits 1)
+     if [ -d ios ]; then
+      echo "✅ ios/ exists — skipping 'cap add ios'"
+      exit 0
+      fi
 
-      - name: Sync iOS & CocoaPods
+    echo "🆕 ios/ missing — adding iOS platform…"
+    npm i -D @capacitor/ios
+    npx cap add ios
+
+
+     - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
           npx cap sync ios
