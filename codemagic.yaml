@@ -4,17 +4,20 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 60
 
+    # Use the saved Apple key from Team integrations > Developer Portal
     integrations:
       app_store_connect: APEX Business Systems
 
     environment:
       xcode: 15.4
       vars:
-        BUNDLE_ID: "com.apex.tradeline247"
+        # >>> MATCHES YOUR APP STORE CONNECT APP <<<
+        BUNDLE_ID: "com.apex.tradeline"
         TEAM_ID: "NWGUYF42KW"
-        # Codemagic supplies PROJECT_BUILD_NUMBER automatically (monotonic)
+        # Codemagic supplies PROJECT_BUILD_NUMBER (monotonic). Use it for iOS build number.
         IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER
 
+    # Speed up builds
     cache:
       cache_paths:
         - ~/.npm
@@ -59,19 +62,16 @@ workflows:
         script: |
           set -euo pipefail
           if [ -n "${IOS_BUILD_NUM:-}" ]; then
-            # 1) Info.plist (CFBundleVersion)
             /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${IOS_BUILD_NUM}" ios/App/App/Info.plist || true
-            # 2) Also set MARKETING_VERSION if you want (optional):
-            # /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.0" ios/App/App/Info.plist || true
             echo "ℹ️  CFBundleVersion set to ${IOS_BUILD_NUM}"
           else
             echo "↪️  IOS_BUILD_NUM not set; skipping Info.plist patch"
           fi
 
-      - name: Xcode archive (automatic signing + build number)
+      - name: Xcode archive (automatic signing + correct bundle)
         script: |
           set -euo pipefail
-          # Force automatic signing: provide team + bundle ID, and inject build number
+          # Force automatic signing + point to the App Store bundle id
           xcodebuild -workspace "ios/App/App.xcworkspace" \
             -scheme "App" \
             -configuration Release \
