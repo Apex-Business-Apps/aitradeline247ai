@@ -4,20 +4,19 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 60
 
-    # Use the saved Apple key from Team integrations > Developer Portal
     integrations:
       app_store_connect: APEX Business Systems
 
     environment:
       xcode: 15.4
       vars:
-        # >>> MATCHES YOUR APP STORE CONNECT APP <<<
-        BUNDLE_ID: "com.apex.tradeline"
         TEAM_ID: "NWGUYF42KW"
-        # Codemagic supplies PROJECT_BUILD_NUMBER (monotonic). Use it for iOS build number.
-        IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER
+        BUNDLE_ID: "com.apex.tradeline"          # ← must match App Store app
+        IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER     # monotonic build number
+        # Set this in the UI to EXACT profile name you created
+        # (e.g., TL247_mobpro_tradeline_01)
+        DIST_PROFILE_NAME: $DIST_PROFILE_NAME
 
-    # Speed up builds
     cache:
       cache_paths:
         - ~/.npm
@@ -68,10 +67,18 @@ workflows:
             echo "↪️  IOS_BUILD_NUM not set; skipping Info.plist patch"
           fi
 
-      - name: Xcode archive (automatic signing + correct bundle)
+      - name: Debug installed provisioning profiles (optional)
+        script: |
+          security find-identity -v -p codesigning || true
+          ls -1 ~/Library/MobileDevice/Provisioning\ Profiles || true
+          grep -H -A2 -m1 -r "$DIST_PROFILE_NAME" ~/Library/MobileDevice/Provisioning\ Profiles || true
+
+      - name: Xcode archive (automatic signing + pinned profile)
         script: |
           set -euo pipefail
-          # Force automatic signing + point to the App Store bundle id
+          if [ -z "${DIST_PROFILE_NAME:-}" ]; then
+            echo "❌ DIST_PROFILE_NAME is empty. Set it to your App Store profile name for $BUNDLE_ID"; exit 1;
+          fi
           xcodebuild -workspace "ios/App/App.xcworkspace" \
             -scheme "App" \
             -configuration Release \
@@ -83,13 +90,15 @@ workflows:
             DEVELOPMENT_TEAM="$TEAM_ID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
             CURRENT_PROJECT_VERSION="${IOS_BUILD_NUM:-1}" \
+            PROVISIONING_PROFILE_SPECIFIER="$DIST_PROFILE_NAME" \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
             -quiet \
             clean archive
 
-      - name: Export IPA
+      - name: Export IPA (map bundle → profile)
         script: |
           set -euo pipefail
-          cat > exportOptions.plist <<'PLIST'
+          cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0"><dict>
@@ -98,12 +107,17 @@ workflows:
             <key>destination</key><string>export</string>
             <key>stripSwiftSymbols</key><true/>
             <key>compileBitcode</key><false/>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>${BUNDLE_ID}</key><string>${DIST_PROFILE_NAME}</string>
+            </dict>
           </dict></plist>
           PLIST
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -exportOptionsPlist exportOptions.plist \
             -exportPath "$CM_BUILD_DIR/export"
+          ls -lah "$CM_BUILD_DIR/export" || true
 
     artifacts:
       - $CM_BUILD_DIR/export/*.ipa
