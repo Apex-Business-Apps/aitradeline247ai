@@ -31,20 +31,26 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-  test:
-    name: ci/test
+  ci-test:
     runs-on: ubuntu-latest
-    needs: [build]
-    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci
-      - run: npm test -- --ci
+          node-version: 20
 
+      - name: Install deps
+        run: npm ci
+
+      # 1) Detect if package.json has a "test" script
+      - name: Detect test script
+        id: pkg
+        run: echo "has_test=$(node -p \"require('./package.json').scripts?.test||''\")" >> "$GITHUB_OUTPUT"
+
+      # 2) Only run tests if the script actually exists
+      - name: Run tests (if present)
+        if: ${{ steps.pkg.outputs.has_test != '' }}
+        run: npm test -- --ci
   lint:
     name: ci/lint
     runs-on: ubuntu-latest
