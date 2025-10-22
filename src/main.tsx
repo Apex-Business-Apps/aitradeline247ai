@@ -10,6 +10,7 @@ import { initBootSentinel } from "./lib/bootSentinel";
 import { runSwCleanup } from "./lib/swCleanup";
 import { featureFlags } from "./config/featureFlags";
 import "./i18n/config";
+import "./safe-mode";
 
 console.log('✅ Core modules loaded');
 

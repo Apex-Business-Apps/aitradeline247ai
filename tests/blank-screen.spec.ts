@@ -53,10 +53,14 @@ test.describe('Blank Screen Prevention', () => {
     // Safe mode should force visibility
     await expect(page.locator('#root')).toBeVisible({ timeout: 2000 });
 
-    await page.waitForTimeout(500);
+    await page.waitForFunction(() => (window as any).__SAFE_MODE__ === true);
 
-    const hasSafeMode = logs.some(log => log.includes('SAFE MODE ACTIVE'));
-    expect(hasSafeMode).toBe(true);
+    await expect
+      .poll(() => logs.some(log => log.includes('SAFE MODE ACTIVE')), { timeout: 2000 })
+      .toBeTruthy();
+
+    const htmlSafe = await page.evaluate(() => document.documentElement.getAttribute('data-safe'));
+    expect(htmlSafe).toBe('1');
   });
 
   test('css renders without errors', async ({ page }) => {
@@ -95,12 +99,12 @@ test.describe('Blank Screen Prevention', () => {
     await expect(page.locator('header').first()).toBeVisible();
     await expect(page.locator('main#main')).toBeVisible();
     await expect(page.locator('footer').first()).toBeVisible();
-    
+
     // Hero content
     await expect(page.locator('#hero-h1')).toBeVisible();
-    
+
     // Navigation
-    await expect(page.getByRole('navigation')).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible();
   });
 });
 

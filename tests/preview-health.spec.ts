@@ -112,10 +112,14 @@ test.describe('Preview Environment Health', () => {
 
     await page.goto('/?safe=1');
 
-    await page.waitForTimeout(500);
+    await page.waitForFunction(() => (window as any).__SAFE_MODE__ === true);
 
-    const hasSafeModeLog = logs.some(log => log.includes('SAFE MODE'));
-    expect(hasSafeModeLog).toBeTruthy();
+    await expect
+      .poll(() => logs.some(log => log.includes('SAFE MODE')), { timeout: 2000 })
+      .toBeTruthy();
+
+    const htmlSafe = await page.evaluate(() => document.documentElement.getAttribute('data-safe'));
+    expect(htmlSafe).toBe('1');
   });
 
   test('should have fast initial load time', async ({ page }) => {
