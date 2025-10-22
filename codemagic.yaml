@@ -1,10 +1,11 @@
 workflows:
   ios_capacitor_testflight:
     name: iOS Capacitor → TestFlight
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m2
     max_build_duration: 60
 
     integrations:
+      # This must exactly match the name you see in Codemagic > Integrations
       app_store_connect: APEX Business Systems
 
     environment:
@@ -12,16 +13,11 @@ workflows:
       vars:
         TEAM_ID: "NWGUYF42KW"
         BUNDLE_ID: "com.apex.tradeline"
-        IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER
-        # Set this in Codemagic UI to the exact profile name, e.g. TL247_mobpro_tradeline_01
-        DIST_PROFILE_NAME: $DIST_PROFILE_NAME
 
     cache:
       cache_paths:
-        - ios/App/Pods
-        - ~/.cocoapods/repos
-        - ~/Library/Caches/CocoaPods
         - ~/.npm
+        - ~/Library/Caches/CocoaPods
 
     scripts:
       - name: Install deps & build web
@@ -36,14 +32,11 @@ workflows:
           PROJECT_DIR="ios/App"
           XCPROJ="$PROJECT_DIR/App.xcodeproj"
           XCWORK="$PROJECT_DIR/App.xcworkspace"
+
           if [ -d "$XCPROJ" ] || [ -d "$XCWORK" ]; then
-            echo "✅ Found iOS project — skipping add"
+            echo "✅ iOS project exists — keeping it"
           else
-            if [ -d ios ]; then
-              echo "⚠️  ios/ exists but no Xcode project — cleaning and re-adding"
-              rm -rf ios
-            fi
-            echo "🆕 Adding iOS platform..."
+            echo "🆕 Adding iOS platform…"
             npm i -D @capacitor/ios
             npx cap add ios
           fi
@@ -53,48 +46,42 @@ workflows:
           set -euo pipefail
           npx cap sync ios
           cd ios/App
-
           command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
-          pod --version
-
-          # Prefer CDN for speed; only update repos if the fast path fails
-          if ! grep -q 'https://cdn.cocoapods.org' Podfile; then
-            printf "source 'https://cdn.cocoapods.org/'\n%s" "$(cat Podfile)" > Podfile
-          fi
-
-          if ! pod install --no-repo-update --quiet; then
-            echo "⚠️ Fast install failed, updating specs once…"
-            pod repo update || true
-            pod install --repo-update --verbose
-          fi
-
+          pod repo update || true
+          pod install --repo-update
           test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
 
       - name: Set iOS build number from Codemagic
         script: |
           set -euo pipefail
-          if [ -n "${IOS_BUILD_NUM:-}" ]; then
-            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${IOS_BUILD_NUM}" ios/App/App/Info.plist || true
-            echo "ℹ️  CFBundleVersion set to ${IOS_BUILD_NUM}"
-          else
-            echo "↪️  IOS_BUILD_NUM not set; skipping Info.plist patch"
-          fi
+          IOS_BUILD_NUM="${PROJECT_BUILD_NUMBER:-1}"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${IOS_BUILD_NUM}" ios/App/App/Info.plist || true
+          echo "ℹ️  CFBundleVersion = ${IOS_BUILD_NUM}"
 
-      - name: Debug installed provisioning profiles (optional)
-        script: |
-          security find-identity -v -p codesigning || true
-          ls -1 ~/Library/MobileDevice/Provisioning\ Profiles || true
-          if [ -n "${DIST_PROFILE_NAME:-}" ]; then
-            grep -H -A2 -m1 -r "$DIST_PROFILE_NAME" ~/Library/MobileDevice/Provisioning\ Profiles || true
-          fi
-
-      # >>> THIS is the new pair you needed INSIDE scripts:
-      - name: Apply provisioning profiles to Xcode project (per-target)
+      - name: Install signing certs & provisioning profiles (ASC integration)
         script: |
           set -euo pipefail
+          # 1) Initialize keychain
+          keychain initialize
+
+          # 2) Fetch signing files for the App Store (creates if missing)
+          app-store-connect fetch-signing-files \
+            --type IOS_APP_STORE \
+            --bundle-id "$BUNDLE_ID" \
+            --create
+
+          # 3) Import all fetched certs
+          keychain add-certificates
+
+          # 4) Apply matching profiles to each target (manual signing)
           xcode-project use-profiles --project "ios/App/App.xcodeproj"
 
-      - name: Xcode archive (manual via applied profiles)
+          echo "🔎 Codesigning identities:"
+          security find-identity -v -p codesigning || true
+          echo "🔎 Installed profiles:"
+          ls -1 ~/Library/MobileDevice/Provisioning\ Profiles || true
+
+      - name: Xcode archive (manual signing via applied profiles)
         script: |
           set -euo pipefail
           xcodebuild -workspace "ios/App/App.xcworkspace" \
@@ -106,27 +93,27 @@ workflows:
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM="$TEAM_ID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
-            CURRENT_PROJECT_VERSION="${IOS_BUILD_NUM:-1}" \
             -quiet \
             clean archive
 
-      - name: Export IPA (map bundle → profile)
+      - name: Export IPA (App Store)
         script: |
           set -euo pipefail
-          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name (e.g. TL247_mobpro_tradeline_01)}"
+          # Grab the name of the profile that matches our bundle id
+          PROFILE_NAME=$(grep -H -A1 -r "<key>Name</key>" ~/Library/MobileDevice/Provisioning\ Profiles \
+            | sed -n "N;s/.*Name.*\n.*<string>\(.*\)<\/string>.*/\1/p" | head -n1)
+
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0"><dict>
             <key>method</key><string>app-store</string>
-            <key>teamID</key><string>NWGUYF42KW</string>
-            <key>destination</key><string>export</string>
+            <key>teamID</key><string>${TEAM_ID}</string>
+            <key>provisioningProfiles</key><dict>
+              <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>
+            </dict>
             <key>stripSwiftSymbols</key><true/>
             <key>compileBitcode</key><false/>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>${BUNDLE_ID}</key><string>${DIST_PROFILE_NAME}</string>
-            </dict>
           </dict></plist>
           PLIST
 
