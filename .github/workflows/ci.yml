@@ -27,79 +27,50 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
       - run: npm ci
       - run: npm run build
 
-  ci-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install deps
-        run: npm ci
-
-      # 1) Detect if package.json has a "test" script
-      - name: Detect test script
-        id: pkg
-        run: echo "has_test=$(node -p \"require('./package.json').scripts?.test||''\")" >> "$GITHUB_OUTPUT"
-
-      # 2) Only run tests if the script actually exists
-      - name: Run tests (if present)
-        if: ${{ steps.pkg.outputs.has_test != '' }}
-        run: npm test -- --ci
   lint:
     name: ci/lint
     runs-on: ubuntu-latest
-    needs: [build]
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
       - run: npm ci
-      - run: npm run lint
+      - run: npm run lint --if-present
 
-  e2e:
-    name: ci/e2e
+  test:
+    name: ci/test
     runs-on: ubuntu-latest
-    needs: [build, test, lint]
-    timeout-minutes: 25
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-      - name: Build app
-        run: npm run build
-      - name: Start preview server
-        run: |
-          npm run preview &> preview.log &
-          echo $! > preview.pid
-      - name: Wait for server
-        run: npx wait-on http://localhost:4173 --timeout 120000
-      - name: Run Playwright tests
-        env:
-          E2E_BASE_URL: http://localhost:4173
-        run: npx playwright test --reporter=line
-      - name: Upload Playwright report (on fail)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/**
-      - name: Stop preview
-        if: always()
-        run: |
-          if [ -f preview.pid ]; then kill $(cat preview.pid) || true; fi
-          sleep 2 || true
-          pkill -f "vite preview" || true
+          cache: npm
+      - name: Detect test script
+        id: pkg
+        run: echo "has_test=$(node -p \"(require('./package.json').scripts||{}).test||''\")" >> $GITHUB_OUTPUT
+      - name: Install deps
+        if: ${{ steps.pkg.outputs.has_test != '' }}
+        run: npm ci
+      - name: Run tests (if present)
+        if: ${{ steps.pkg.outputs.has_test != '' }}
+        run: npm test -- --ci
+      - name: Skip (no tests)
+        if: ${{ steps.pkg.outputs.has_test == '' }}
+        run: echo "No test script defined — skipping."
+
+  e2e:
+    name: ci/e2e
+    runs-on: ubuntu-latest
+    needs: [ build, test ]
+    if: false  # enable when you actually add e2e
+    steps:
+      - run: echo "E2E disabled for now."
