@@ -6,71 +6,59 @@ workflows:
 
     environment:
       groups:
-        # Create this Codemagic group with masked vars:
-        #   APP_STORE_CONNECT_KEY_IDENTIFIER
-        #   APP_STORE_CONNECT_ISSUER_ID
-        #   APP_STORE_CONNECT_PRIVATE_KEY    (full .p8 contents)
-        #   APPLE_TEAM_ID                    (Team ID, e.g., NWGUYF42KW)
-        - appstore_credentials
+        - appstore_credentials   # holds: APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
       vars:
-        # Safe defaults; override in UI if you want.
-        APP_VERSION: "1.0.0"
-        # APP_BUILD must be non-empty and parseable as a string/int. We auto-generate if blank.
-        APP_BUILD: ""
+        APP_VERSION: "1.0.0"     # keep non-empty
       xcode: "16.0"
-      cocoapods: default
+      cocoapods: "default"
       node: "20.11.1"
       npm: "10"
 
-    cache:
-      cache_paths:
-        - ~/.npm
-        - ~/.cocoapods
-        - ios/Pods
-
     scripts:
-      - name: Resolve version/build (idempotent)
+      - name: Resolve version/build
         script: |
           set -euo pipefail
           : "${APP_VERSION:=1.0.0}"
-          if [ -z "${APP_BUILD:-}" ]; then APP_BUILD="$(date +%y%m%d%H)"; fi
-          echo "APP_VERSION=$APP_VERSION" | tee -a $CM_ENV
-          echo "APP_BUILD=$APP_BUILD" | tee -a $CM_ENV
+          APP_BUILD="$(date +%y%m%d%H%M)"     # generate at runtime
+          echo "APP_VERSION=$APP_VERSION" >> "$CM_ENV"
+          echo "APP_BUILD=$APP_BUILD"     >> "$CM_ENV"
 
-      - name: Install deps & build web (idempotent)
+      - name: Install deps & build web
         script: |
           set -euo pipefail
           npm ci
           npm run build
 
-      - name: Capacitor iOS sync + CocoaPods (idempotent)
+      - name: Ensure iOS platform + Capacitor copy
         script: |
           set -euo pipefail
-          # Ensure iOS folder was created previously (we don't 'cap add ios' on CI)
+          # Add iOS platform if this repo doesn't include ios/
+          [ -d ios ] || npx cap add ios --skip-deps-check
+          # Copy web assets & config into native project (safe on CI)
           npx cap copy ios
-          # If you truly need plugin/native updates too, swap copy->sync:
-          # npx cap sync ios
-          cd ios/App
-          pod install
 
-      - name: Set version/build in Info.plist (idempotent)
+      - name: CocoaPods (deterministic)
         script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $APP_VERSION" "App/Info.plist" || true
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $APP_BUILD" "App/Info.plist" || true
+          set -euo pipefail
+          cd ios/App
+          pod install    # use --repo-update only if podspecs are stale
+
+      - name: Set Info.plist version
+        script: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $APP_VERSION" ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $APP_BUILD"             ios/App/App/Info.plist
 
       - name: Xcode archive (automatic signing)
         script: |
           set -euo pipefail
           xcodebuild -workspace "ios/App/App.xcworkspace" \
-            -scheme "App" \
-            -configuration Release \
-            -sdk iphoneos \
+            -scheme "App" -configuration Release -sdk iphoneos \
             -destination "generic/platform=iOS" \
-            -archivePath "$CM_BUILD_DIR/TradeLine247.xcarchive" \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -allowProvisioningUpdates \
             clean archive
 
-      - name: Export IPA (app-store)
+      - name: Export IPA (App Store)
         script: |
           set -euo pipefail
           cat > exportOptions.plist <<PLIST
@@ -78,21 +66,16 @@ workflows:
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0"><dict>
             <key>method</key><string>app-store</string>
-            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
-            <key>stripSwiftSymbols</key><true/>
-            <key>compileBitcode</key><false/>
           </dict></plist>
           PLIST
           xcodebuild -exportArchive \
-            -archivePath "$CM_BUILD_DIR/TradeLine247.xcarchive" \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -exportOptionsPlist exportOptions.plist \
             -exportPath "$CM_BUILD_DIR/export"
 
     artifacts:
-      - $CM_BUILD_DIR/export/*.ipa
-      - $CM_BUILD_DIR/TradeLine247.xcarchive
-      - ios/App/Pods/**/*
-      - ios/App/App.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+      - "$CM_BUILD_DIR/export/*.ipa"
+      - "$CM_BUILD_DIR/App.xcarchive"
 
     publishing:
       app_store_connect:
@@ -101,6 +84,3 @@ workflows:
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
           private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
-        # Optional:
-        # beta_groups:
-        #   - Internal Testers
