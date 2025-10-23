@@ -5,24 +5,19 @@ workflows:
     max_build_duration: 60
 
     integrations:
+      # This MUST match the label you see in Codemagic > Integrations > Apple Developer Portal
       app_store_connect: APEX Business Systems
 
     environment:
       xcode: 15.4
       node: 20.15.1
       vars:
-        TEAM_ID: "NWGUYF42KW"
-        BUNDLE_ID: "com.apex.tradeline"
         IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER
-        # Set this in Codemagic UI to the exact profile name, e.g. TL247_mobpro_tradeline_01
-        DIST_PROFILE_NAME: $DIST_PROFILE_NAME
 
     cache:
       cache_paths:
-        - ios/App/Pods
-        - ~/.cocoapods/repos
-        - ~/Library/Caches/CocoaPods
         - ~/.npm
+        - ~/Library/Caches/CocoaPods
 
     scripts:
       - name: Install deps & build web
@@ -31,14 +26,18 @@ workflows:
           npm ci
           npm run build
 
-      - name: Ensure iOS platform (idempotent + self-heal)
+      - name: Ensure iOS platform (idempotent & self-heal)
         script: |
           set -euo pipefail
-          PROJECT_DIR="ios/App"
-          XCPROJ="$PROJECT_DIR/App.xcodeproj"
-          XCWORK="$PROJECT_DIR/App.xcworkspace"
-          if [ -d "$XCPROJ" ] || [ -d "$XCWORK" ]; then
-            echo "✅ Found iOS project — skipping add"
+          # If we already have a native project, don't try to add again
+          if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ]; then
+            echo "✅ Native iOS project present — skipping add"
+          # If ios/ exists but no Xcode project, self-heal by recreating it cleanly
+          elif [ -d ios ]; then
+            echo "⚠️  ios/ exists but no Xcode project — recreating"
+            rm -rf ios
+            npm i -D @capacitor/ios
+            npx cap add ios
           else
             if [ -d ios ]; then
               echo "⚠️  ios/ exists but no Xcode project — cleaning and re-adding"
@@ -53,26 +52,15 @@ workflows:
             git checkout -- ios/App/Podfile ios/App/App/Assets.xcassets ios/App/App/Info.plist
           fi
 
-      - name: Sync iOS & CocoaPods (fast)
+
+      - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
           npx cap sync ios
           cd ios/App
-
           command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
-          pod --version
-
-          # Prefer CDN for speed; only update repos if the fast path fails
-          if ! grep -q 'https://cdn.cocoapods.org' Podfile; then
-            printf "source 'https://cdn.cocoapods.org/'\n%s" "$(cat Podfile)" > Podfile
-          fi
-
-          if ! pod install --no-repo-update --quiet; then
-            echo "⚠️ Fast install failed, updating specs once…"
-            pod repo update || true
-            pod install --repo-update --verbose
-          fi
-
+          pod repo update || true
+          pod install --repo-update
           test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
 
       - name: Fetch signing assets from App Store Connect
@@ -160,8 +148,9 @@ PY
         script: |
           set -euo pipefail
           xcode-project use-profiles --project "ios/App/App.xcodeproj"
+          echo "✅ Provisioning profiles applied to App and Pods targets"
 
-      - name: Xcode archive (manual via applied profiles)
+      - name: Xcode archive (manual signing)
         script: |
           set -euo pipefail
           xcodebuild -workspace "ios/App/App.xcworkspace" \
@@ -177,17 +166,16 @@ PY
             -quiet \
             clean archive
 
-      - name: Export IPA (map bundle → profile)
+      - name: Export IPA (App Store)
         script: |
           set -euo pipefail
-          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name (e.g. TL247_mobpro_tradeline_01)}"
+          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name in Codemagic env}"
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0"><dict>
             <key>method</key><string>app-store</string>
-            <key>teamID</key><string>NWGUYF42KW</string>
-            <key>destination</key><string>export</string>
+            <key>teamID</key><string>${TEAM_ID}</string>
             <key>stripSwiftSymbols</key><true/>
             <key>compileBitcode</key><false/>
             <key>provisioningProfiles</key>
@@ -196,7 +184,6 @@ PY
             </dict>
           </dict></plist>
           PLIST
-
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -exportOptionsPlist exportOptions.plist \
