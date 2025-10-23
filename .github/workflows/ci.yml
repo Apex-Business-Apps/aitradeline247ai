@@ -83,11 +83,7 @@ jobs:
       - name: Build web assets
         run: npm run build
       - name: Sync Capacitor iOS wrapper
-        run: npx --yes cap sync ios
-      - name: Verify iOS project exists
-        run: |
-          set -euo pipefail
-          test -f ios/App/App.xcodeproj/project.pbxproj
+        run: npx cap sync ios
       - name: Install CocoaPods dependencies
         working-directory: ios/App
         run: pod install
