@@ -16,7 +16,7 @@ export default defineConfig({
     baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    bypassCSP: true,
+    bypassCSP: true, // allow inline script/style overrides during tests
   },
   projects: [
     {

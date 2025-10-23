@@ -12,7 +12,7 @@ module.exports = defineConfig({
     baseURL: process.env.BASE_URL || 'http://localhost:5000',
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
-    bypassCSP: true,
+    bypassCSP: true, // allow inline script/style overrides during tests
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
