@@ -67,6 +67,41 @@ jobs:
         if: ${{ steps.pkg.outputs.has_test == '' }}
         run: echo "No test script defined — skipping."
 
+  ios:
+    name: ci/ios-build
+    runs-on: macos-14
+    needs: [ build, lint, test ]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install npm dependencies
+        run: npm ci
+      - name: Build web assets
+        run: npm run build
+      - name: Sync Capacitor iOS wrapper
+        run: npx cap sync ios
+      - name: Verify iOS project exists
+        run: test -f ios/App/App.xcodeproj/project.pbxproj
+      - name: Install CocoaPods dependencies
+        working-directory: ios/App
+        run: pod install
+      - name: Build iOS workspace (simulator)
+        working-directory: ios/App
+        run: |
+          set -eo pipefail
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
   e2e:
     name: ci/e2e
     runs-on: ubuntu-latest
