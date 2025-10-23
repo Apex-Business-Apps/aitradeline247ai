@@ -5,16 +5,12 @@ workflows:
     max_build_duration: 60
 
     integrations:
-      # This MUST match the label you see in Codemagic > Integrations > Apple Developer Portal
-      app_store_connect: APEX Business Systems
+      app_store_connect: APEX Business Systems  # your Codemagic ASC integration name
 
     environment:
       xcode: 15.4
-      # Put these in Codemagic UI > Environment variables (group "appstore_credentials")
-      # TEAM_ID: NWGUYF42KW
-      # BUNDLE_ID: com.apex.tradeline
-      # DIST_PROFILE_NAME: TL247_mobpro_tradeline_01  # exact provision profile name
-      # PROJECT_BUILD_NUMBER: 21                        # (optional) monotonic build
+      groups:
+        - appstore_credentials     # TEAM_ID, BUNDLE_ID, DIST_PROFILE_NAME, ASC vars, etc.
       vars:
         IOS_BUILD_NUM: $PROJECT_BUILD_NUMBER
 
@@ -33,31 +29,33 @@ workflows:
       - name: Ensure iOS platform (idempotent & self-heal)
         script: |
           set -euo pipefail
-          # If we already have a native project, don't try to add again
-          if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ]; then
+          PROJ_DIR="ios/App"
+          XCPROJ="$PROJ_DIR/App.xcodeproj"
+          XCWORK="$PROJ_DIR/App.xcworkspace"
+
+          if [ -d "$XCPROJ" ] || [ -d "$XCWORK" ]; then
             echo "✅ Native iOS project present — skipping add"
-          # If ios/ exists but no Xcode project, self-heal by recreating it cleanly
-          elif [ -d ios ]; then
-            echo "⚠️  ios/ exists but no Xcode project — recreating"
-            rm -rf ios
-            npm i -D @capacitor/ios
-            npx cap add ios
           else
+            if [ -d ios ]; then
+              echo "⚠️  ios/ exists but no Xcode project — recreating cleanly"
+              rm -rf ios
+            fi
             echo "🆕 Adding iOS platform…"
             npm i -D @capacitor/ios
             npx cap add ios
           fi
 
-
       - name: Sync iOS & CocoaPods
         script: |
           set -euo pipefail
           npx cap sync ios
+
           cd ios/App
           command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
           pod repo update || true
           pod install --repo-update
-          test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
+
+          test -d "App.xcworkspace" || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
 
       - name: Set iOS build number from Codemagic (optional)
         script: |
@@ -72,15 +70,34 @@ workflows:
       - name: Install signing certs & provisioning profiles (uploaded in UI)
         script: |
           set -euo pipefail
+          # Pulls the .p12 + .mobileprovision you attached on the app's Code signing page
           keychain initialize
           keychain add-certificates
-          echo "🔐 Installed signing certs and provisioning profiles to login keychain"
+          echo "🔐 Imported app-level certificates and provisioning profiles."
+
+      - name: Fallback — fetch signing files from App Store Connect
+        script: |
+          set -euo pipefail
+          # If no profiles were pulled from the UI, fetch & install via ASC
+          if ! ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision >/dev/null 2>&1; then
+            echo "No .mobileprovision found from UI, fetching via App Store Connect…"
+            app-store-connect fetch-signing-files \
+              --type IOS_APP_STORE \
+              --bundle-id "$BUNDLE_ID" \
+              --create \
+              --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+              --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+              --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+              --output "~/Library/MobileDevice/Provisioning Profiles"
+            # Import any downloaded certificates/profiles into the build keychain
+            keychain add-certificates
+          fi
 
       - name: Apply provisioning profiles to Xcode project (all targets)
         script: |
           set -euo pipefail
           xcode-project use-profiles --project "ios/App/App.xcodeproj"
-          echo "✅ Provisioning profiles applied to App and Pods targets"
+          echo "✅ Applied profiles to App and Pods targets"
 
       - name: Xcode archive (manual signing)
         script: |
@@ -101,21 +118,25 @@ workflows:
       - name: Export IPA (App Store)
         script: |
           set -euo pipefail
-          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name in Codemagic env}"
+          : "${DIST_PROFILE_NAME:?Set DIST_PROFILE_NAME to your App Store profile name}"
+
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0"><dict>
-            <key>method</key><string>app-store</string>
-            <key>teamID</key><string>${TEAM_ID}</string>
-            <key>stripSwiftSymbols</key><true/>
-            <key>compileBitcode</key><false/>
-            <key>provisioningProfiles</key>
+          <plist version="1.0">
             <dict>
-              <key>${BUNDLE_ID}</key><string>${DIST_PROFILE_NAME}</string>
+              <key>method</key>                 <string>app-store</string>
+              <key>teamID</key>                 <string>${TEAM_ID}</string>
+              <key>stripSwiftSymbols</key>      <true/>
+              <key>compileBitcode</key>         <false/>
+              <key>provisioningProfiles</key>
+              <dict>
+                <key>${BUNDLE_ID}</key>         <string>${DIST_PROFILE_NAME}</string>
+              </dict>
             </dict>
-          </dict></plist>
+          </plist>
           PLIST
+
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -exportOptionsPlist exportOptions.plist \
