@@ -17,6 +17,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     bypassCSP: true, // bypass CSP so inline fixtures used in tests stop breaking Codemagic builds
+    bypassCSP: true, // allow inline script/style overrides during tests
   },
   projects: [
     {

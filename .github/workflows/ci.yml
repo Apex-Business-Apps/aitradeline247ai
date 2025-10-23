@@ -99,6 +99,8 @@ jobs:
             echo "Run 'npx cap add ios' locally and commit the generated workspace." >&2
             exit 1
           fi
+      - name: Sync Capacitor iOS wrapper
+        run: npx cap sync ios
       - name: Install CocoaPods dependencies
         working-directory: ios/App
         run: pod install
