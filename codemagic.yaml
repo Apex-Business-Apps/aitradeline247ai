@@ -70,28 +70,30 @@ workflows:
       - name: Install signing certs & provisioning profiles (uploaded in UI)
         script: |
           set -euo pipefail
-          # Pulls the .p12 + .mobileprovision you attached on the app's Code signing page
           keychain initialize
-          keychain add-certificates
-          echo "🔐 Imported app-level certificates and provisioning profiles."
+          # Try app-scoped uploads first (fast path). Don't fail if none found.
+          if ! keychain add-certificates; then
+            echo "No app-scoped .p12 found. Will fetch from App Store Connect…"
+          fi
 
       - name: Fallback — fetch signing files from App Store Connect
         script: |
           set -euo pipefail
-          # If no profiles were pulled from the UI, fetch & install via ASC
-          if ! ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision >/dev/null 2>&1; then
-            echo "No .mobileprovision found from UI, fetching via App Store Connect…"
+          # If no distribution identity is present after the previous step, fetch from ASC.
+          if ! security find-identity -v -p codesigning | grep -q "Apple Distribution"; then
+            echo "Fetching signing files via ASC integration for ${BUNDLE_ID}"
             app-store-connect fetch-signing-files \
+              --auth integration \
               --type IOS_APP_STORE \
-              --bundle-id "$BUNDLE_ID" \
-              --create \
-              --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-              --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-              --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
-              --output "~/Library/MobileDevice/Provisioning Profiles"
-            # Import any downloaded certificates/profiles into the build keychain
+              --bundle-id "${BUNDLE_ID}" \
+              --certificate-key "Apple Distribution" \
+              --create
+            # Import what we just fetched
             keychain add-certificates
           fi
+          security find-identity -v -p codesigning
+          ls -1 ~/Library/MobileDevice/Provisioning\ Profiles || true
+
 
       - name: Apply provisioning profiles to Xcode project (all targets)
         script: |
