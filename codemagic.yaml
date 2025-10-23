@@ -30,17 +30,24 @@ workflows:
           npm ci
           npm run build
 
-      - name: Ensure iOS platform (idempotent & safe)
+      - name: Ensure iOS platform (idempotent & self-heal)
         script: |
           set -euo pipefail
-          # Never guess — ask Capacitor if 'ios' is installed
-          if npx cap ls | sed -n '/Platforms:/,$p' | grep -qE '^\s*ios(\s|$)'; then
-            echo "✅ Capacitor reports iOS platform present — skipping add"
+          # If we already have a native project, don't try to add again
+          if [ -d ios/App/App.xcodeproj ] || [ -d ios/App/App.xcworkspace ]; then
+            echo "✅ Native iOS project present — skipping add"
+          # If ios/ exists but no Xcode project, self-heal by recreating it cleanly
+          elif [ -d ios ]; then
+            echo "⚠️  ios/ exists but no Xcode project — recreating"
+            rm -rf ios
+            npm i -D @capacitor/ios
+            npx cap add ios
           else
             echo "🆕 Adding iOS platform…"
             npm i -D @capacitor/ios
             npx cap add ios
           fi
+
 
       - name: Sync iOS & CocoaPods
         script: |
