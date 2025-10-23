@@ -4,13 +4,23 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
-      groups: [appstore_credentials]   # holds the 3 ASC vars (+ optional APPLE_TEAM_ID)
+      groups: [appstore_credentials]   # holds APP_STORE_CONNECT_* secrets
       vars:
         APP_VERSION: "1.0.0"           # keep non-empty; do NOT declare APP_BUILD here
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
       npm: "10"
+    scripts:
+      - name: "Resolve version/build"
+        script: |
+          set -euo pipefail
+          : "${APP_VERSION:=1.0.0}"
+          APP_BUILD="$(date +%y%m%d%H%M)"
+          echo "APP_VERSION=$APP_VERSION" >> "$CM_ENV"
+          echo "APP_BUILD=$APP_BUILD"     >> "$CM_ENV"
+      - name: "Echo ok"
+        script: echo "codemagic.yaml parsed. Ready to extend."
     publishing:
       app_store_connect:
         api_key:
