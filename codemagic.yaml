@@ -1,93 +1,53 @@
 workflows:
   ios_capacitor_testflight:
-    name: iOS • Capacitor → TestFlight
-    instance_type: mac_mini_m1
+    name: iOS Capacitor TestFlight
+    instance_type: mac_mini_m2
     max_build_duration: 60
-
     environment:
       groups:
         - appstore_credentials
+      node: "18.20.0"
+      cocoapods: "1.12.1"
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.apex.tradeline
       vars:
         APP_VERSION: "1.0.0"
-      xcode: "16.0"
-      cocoapods: "default"
-      node: "20.11.1"
-      npm: "10"
     scripts:
-      - name: Resolve version/build
-        script: |
-          set -euo pipefail
-          : "${APP_VERSION:=1.0.0}"
-          APP_BUILD="$(date +%y%m%d%H%M)"
-          {
-            echo "APP_VERSION=$APP_VERSION"
-            echo "APP_BUILD=$APP_BUILD"
-          } >> "$CM_ENV"
       - name: Install npm dependencies
-        script: npm ci
-      - name: Build web assets
-        script: npm run build
-      - name: Sync Capacitor iOS wrapper
-        script: npx cap sync ios
-      - name: Install CocoaPods dependencies
         script: |
           set -euo pipefail
+          # Install Node.js dependencies
+          npm ci
+      - name: Ensure iOS platform and update
+        script: |
+          set -euo pipefail
+          # If iOS platform is not added, add it
+          if [ ! -d ios ]; then
+            npx cap add ios
+          fi
+          # Sync Capacitor project: install plugins and copy web assets
+          npx cap sync ios
+      - name: Install iOS CocoaPods dependencies
+        script: |
+          set -euo pipefail
+          # Navigate to iOS project directory and install CocoaPods
           cd ios/App
           pod install
-      - name: Prepare export options
-        script: |
-          cat <<'PLIST' > "$CM_BUILD_DIR/ExportOptions.plist"
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-            <dict>
-              <key>method</key>
-              <string>app-store</string>
-              <key>signingStyle</key>
-              <string>automatic</string>
-              <key>stripSwiftSymbols</key>
-              <true/>
-              <key>uploadBitcode</key>
-              <false/>
-              <key>compileBitcode</key>
-              <true/>
-              <key>destination</key>
-              <string>export</string>
-              <key>manageAppVersionAndBuildNumber</key>
-              <true/>
-            </dict>
-          </plist>
-          PLIST
-      - name: Archive iOS build
+      - name: Set up code signing on Xcode project
         script: |
           set -euo pipefail
-          cd ios/App
-          xcodebuild \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-            -allowProvisioningUpdates \
-            DEVELOPMENT_TEAM="${TEAM_ID}" \
-            MARKETING_VERSION="$APP_VERSION" \
-            CURRENT_PROJECT_VERSION="$APP_BUILD" \
-            clean archive
-      - name: Export IPA
+          # Apply provisioning profiles and certificates
+          xcode-project use-profiles
+      - name: Build iOS App Archive
         script: |
           set -euo pipefail
-          xcodebuild \
-            -exportArchive \
-            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-            -exportOptionsPlist "$CM_BUILD_DIR/ExportOptions.plist" \
-            -exportPath "$CM_BUILD_DIR/export"
-    artifacts:
-      - $CM_BUILD_DIR/App.xcarchive
-      - $CM_BUILD_DIR/export/*.ipa
+          # Build the app and create an .ipa archive
+          xcode-project build-ipa --workspace ios/App/App.xcworkspace --scheme App
     publishing:
       app_store_connect:
-        api_key:
-          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        auth: api_key
+        key_id: $KEY_ID
+        issuer_id: $ISSUER_ID
+        api_key: $PRIVATE_KEY
         submit_to_testflight: true
