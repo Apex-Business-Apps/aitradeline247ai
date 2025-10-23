@@ -2,7 +2,7 @@ require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
 platform :ios, '13.0'
 use_frameworks! :linkage => :static
-project File.join(__dir__, 'App.xcodeproj')
+project File.expand_path('App.xcodeproj', __dir__)
 
 def capacitor_pods
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
