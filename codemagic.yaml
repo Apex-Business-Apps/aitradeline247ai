@@ -3,62 +3,52 @@ workflows:
     name: "iOS • Capacitor → TestFlight"
     instance_type: mac_mini_m2
     max_build_duration: 60
-
     environment:
-      groups:
-        - appstore_credentials   # holds: APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
+      groups: [appstore_credentials]     # holds APP_STORE_CONNECT_* and (optionally) APPLE_TEAM_ID
       vars:
-        APP_VERSION: "1.0.0"     # keep non-empty
+        APP_VERSION: "1.0.0"             # keep non-empty
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
       npm: "10"
 
     scripts:
-      - name: Resolve version/build
+      - name: "Resolve version/build"
         script: |
           set -euo pipefail
           : "${APP_VERSION:=1.0.0}"
-          APP_BUILD="$(date +%y%m%d%H%M)"     # generate at runtime
+          APP_BUILD="$(date +%y%m%d%H%M)"
           echo "APP_VERSION=$APP_VERSION" >> "$CM_ENV"
           echo "APP_BUILD=$APP_BUILD"     >> "$CM_ENV"
 
-      - name: Install deps & build web
+      - name: "Build web"
         script: |
           set -euo pipefail
           npm ci
           npm run build
 
-      - name: Ensure iOS platform + Capacitor copy
+      - name: "Capacitor copy + CocoaPods"
         script: |
           set -euo pipefail
-          # Add iOS platform if this repo doesn't include ios/
-          [ -d ios ] || npx cap add ios --skip-deps-check
-          # Copy web assets & config into native project (safe on CI)
-          npx cap copy ios
-
-      - name: CocoaPods (deterministic)
-        script: |
-          set -euo pipefail
+          npx cap copy ios              # use 'sync' only when you need native dep updates
           cd ios/App
-          pod install    # use --repo-update only if podspecs are stale
+          pod install                   # deterministic; add --repo-update only if needed
 
-      - name: Set Info.plist version
+      - name: "Set Info.plist version"
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $APP_VERSION" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $APP_BUILD"             ios/App/App/Info.plist
 
-      - name: Xcode archive (automatic signing)
+      - name: "Archive"
         script: |
           set -euo pipefail
           xcodebuild -workspace "ios/App/App.xcworkspace" \
             -scheme "App" -configuration Release -sdk iphoneos \
             -destination "generic/platform=iOS" \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-            -allowProvisioningUpdates \
-            clean archive
+            -allowProvisioningUpdates clean archive
 
-      - name: Export IPA (App Store)
+      - name: "Export IPA"
         script: |
           set -euo pipefail
           cat > exportOptions.plist <<PLIST
