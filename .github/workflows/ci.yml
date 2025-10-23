@@ -27,12 +27,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
       - run: npm ci
       - run: npm run build
 
-  ci-test:
+  lint:
+    name: ci/lint
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,24 +54,33 @@ jobs:
           const hasTest = Object.prototype.hasOwnProperty.call(scripts, 'test');
           process.stdout.write(`has_test=${hasTest ? 'true' : ''}\n`);
           NODE
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint --if-present
 
-      # 2) Only run tests if the script actually exists
-      - name: Run tests (if present)
-        if: ${{ steps.pkg.outputs.has_test != '' }}
-        run: npm test -- --ci
-  lint:
-    name: ci/lint
+  test:
+    name: ci/test
     runs-on: ubuntu-latest
-    needs: [build]
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
+          cache: npm
+      - name: Detect test script
+        id: pkg
+        run: echo "has_test=$(node -p \"(require('./package.json').scripts||{}).test||''\")" >> $GITHUB_OUTPUT
+      - name: Install deps
+        if: ${{ steps.pkg.outputs.has_test != '' }}
+        run: npm ci
+      - name: Run tests (if present)
+        if: ${{ steps.pkg.outputs.has_test != '' }}
+        run: npm test -- --ci
+      - name: Skip (no tests)
+        if: ${{ steps.pkg.outputs.has_test == '' }}
+        run: echo "No test script defined — skipping."
 
   e2e:
     name: ci/e2e
@@ -168,3 +179,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build
+    needs: [ build, test ]
+    if: false  # enable when you actually add e2e
+    steps:
+      - run: echo "E2E disabled for now."
