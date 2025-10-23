@@ -24,8 +24,12 @@ if (hasWindow && isSafeMode) {
 
   const root = document.getElementById('root');
   if (root) {
-    root.style.opacity = '1';
-    root.style.visibility = 'visible';
+    // Forcefully reset styles that could keep the preview blank.
+    root.style.setProperty('display', 'block', 'important');
+    root.style.setProperty('opacity', '1', 'important');
+    root.style.setProperty('visibility', 'visible', 'important');
+    root.style.removeProperty('filter');
+    root.style.removeProperty('transform');
   }
 }
 

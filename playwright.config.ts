@@ -16,6 +16,7 @@ export default defineConfig({
     baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Allow inline scripts/styles in tests despite production CSP.
     bypassCSP: true,
   },
   projects: [
