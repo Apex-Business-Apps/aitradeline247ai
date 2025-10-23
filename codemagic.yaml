@@ -6,100 +6,88 @@ workflows:
 
     environment:
       groups:
-        - appstore_credentials       # (Codemagic UI group with your Apple/ASC secrets)
-      xcode: 15.4                  # Pin Xcode version for consistency
+        - appstore_credentials
       vars:
-        BUNDLE_ID: "com.example.app"   # Your iOS bundle identifier
-        TEAM_ID: "ABCDEFGHIJ"          # Your Apple Team ID
-
-    cache:
-      cache_paths:
-        - ~/.npm
-        - ~/Library/Caches/CocoaPods
-
+        APP_VERSION: "1.0.0"
+      xcode: "16.0"
+      cocoapods: "default"
+      node: "20.11.1"
+      npm: "10"
     scripts:
-      - name: Install deps & build web
+      - name: Resolve version/build
         script: |
           set -euo pipefail
-          npm ci
-          npm run build
-
-      - name: Ensure iOS platform (idempotent + self-heal)
+          : "${APP_VERSION:=1.0.0}"
+          APP_BUILD="$(date +%y%m%d%H%M)"
+          {
+            echo "APP_VERSION=$APP_VERSION"
+            echo "APP_BUILD=$APP_BUILD"
+          } >> "$CM_ENV"
+      - name: Install npm dependencies
+        script: npm ci
+      - name: Build web assets
+        script: npm run build
+      - name: Sync Capacitor iOS wrapper
+        script: npx cap sync ios
+      - name: Install CocoaPods dependencies
         script: |
           set -euo pipefail
-          PROJECT_DIR="ios/App"
-          XCPROJ="$PROJECT_DIR/App.xcodeproj"
-          XCWORK="$PROJECT_DIR/App.xcworkspace"
-          if [ -d "$XCPROJ" ] || [ -d "$XCWORK" ]; then
-            echo "✅ iOS project exists — skipping add"
-          else
-            if [ -d ios ]; then
-              echo "⚠️ ios/ exists but no Xcode project — re-adding cleanly"
-              rm -rf ios
-            fi
-            echo "🆕 Adding iOS platform..."
-            npm i -D @capacitor/ios
-            npx cap add ios
-          fi
-
-      - name: Sync iOS & CocoaPods
-        script: |
-          set -euo pipefail
-          npx cap sync ios
           cd ios/App
-          command -v pod >/dev/null 2>&1 || sudo gem install cocoapods --no-document
-          pod repo update || true
-          pod install --repo-update
-          test -d App.xcworkspace || { echo "❌ CocoaPods didn't produce App.xcworkspace"; exit 1; }
-
-      - name: Preflight ASC vars (fail fast if missing)
+          pod install
+      - name: Prepare export options
+        script: |
+          cat <<'PLIST' > "$CM_BUILD_DIR/ExportOptions.plist"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+            <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>stripSwiftSymbols</key>
+              <true/>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>compileBitcode</key>
+              <true/>
+              <key>destination</key>
+              <string>export</string>
+              <key>manageAppVersionAndBuildNumber</key>
+              <true/>
+            </dict>
+          </plist>
+          PLIST
+      - name: Archive iOS build
         script: |
           set -euo pipefail
-          : "${APP_STORE_CONNECT_API_KEY:?Missing APP_STORE_CONNECT_API_KEY (.p8 contents)}"
-          : "${APP_STORE_CONNECT_KEY_IDENTIFIER:?Missing APP_STORE_CONNECT_KEY_IDENTIFIER (Key ID)}"
-          : "${APP_STORE_CONNECT_ISSUER_ID:?Missing APP_STORE_CONNECT_ISSUER_ID (Issuer ID)}"
-          echo "✓ ASC vars present"
-
-      - name: Xcode archive (automatic signing)
-        script: |
-          set -euo pipefail
-          xcodebuild -workspace "ios/App/App.xcworkspace" \
-            -scheme "App" \
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
             -configuration Release \
             -sdk iphoneos \
-            -destination "generic/platform=iOS" \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -allowProvisioningUpdates \
-            -quiet \
+            DEVELOPMENT_TEAM="${TEAM_ID}" \
+            MARKETING_VERSION="$APP_VERSION" \
+            CURRENT_PROJECT_VERSION="$APP_BUILD" \
             clean archive
-
       - name: Export IPA
         script: |
           set -euo pipefail
-          cat > exportOptions.plist <<'PLIST'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
-          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0"><dict>
-            <key>method</key><string>app-store</string>
-            <key>teamID</key><string>${TEAM_ID}</string>
-            <key>destination</key><string>export</string>
-            <key>stripSwiftSymbols</key><true/>
-            <key>compileBitcode</key><false/>
-          </dict></plist>
-          PLIST
-          xcodebuild -exportArchive \
+          xcodebuild \
+            -exportArchive \
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
-            -exportOptionsPlist exportOptions.plist \
+            -exportOptionsPlist "$CM_BUILD_DIR/ExportOptions.plist" \
             -exportPath "$CM_BUILD_DIR/export"
-
     artifacts:
-      - $CM_BUILD_DIR/export/*.ipa
       - $CM_BUILD_DIR/App.xcarchive
-
+      - $CM_BUILD_DIR/export/*.ipa
     publishing:
       app_store_connect:
-        api_key:  $APP_STORE_CONNECT_API_KEY       # (full .p8 contents; provided via env group)
-        key_id:   $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id:$APP_STORE_CONNECT_ISSUER_ID
+        api_key:
+          key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
