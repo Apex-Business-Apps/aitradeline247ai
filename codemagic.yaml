@@ -19,6 +19,10 @@ workflows:
         script: |
           set -euo pipefail
           npm ci
+      - name: Build web app
+        script: |
+          set -euo pipefail
+          npm run build
       - name: Ensure iOS platform and sync
         script: |
           set -euo pipefail
@@ -26,6 +30,16 @@ workflows:
             npx cap add ios
           fi
           npx cap sync ios
+      - name: Update version numbers
+        script: |
+          set -euo pipefail
+          cd ios/App
+          # Update MARKETING_VERSION and CURRENT_PROJECT_VERSION in project.pbxproj
+          sed -i '' "s/MARKETING_VERSION = .*/MARKETING_VERSION = ${APP_VERSION};/g" App.xcodeproj/project.pbxproj
+          sed -i '' "s/CURRENT_PROJECT_VERSION = .*/CURRENT_PROJECT_VERSION = ${APP_BUILD};/g" App.xcodeproj/project.pbxproj
+          echo "✅ Updated version to ${APP_VERSION} (${APP_BUILD})"
+          # Verify changes
+          grep -A 2 "MARKETING_VERSION" App.xcodeproj/project.pbxproj | head -4
       - name: Install CocoaPods
         script: |
           set -euo pipefail
