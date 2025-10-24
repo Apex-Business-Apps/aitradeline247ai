@@ -82,8 +82,25 @@ jobs:
         run: npm ci
       - name: Build web assets
         run: npm run build
+      - name: Verify web build artifacts
+        shell: bash
+        run: |
+          set -eu
+          if [ ! -f dist/index.html ]; then
+            echo "::error title=Missing web bundle::Expected dist/index.html after 'npm run build'." >&2
+            exit 1
+          fi
       - name: Sync Capacitor iOS wrapper
-        run: npx cap sync ios
+        run: npx --yes cap sync ios
+      - name: Verify iOS project exists
+        shell: bash
+        run: |
+          set -eu
+          if [ ! -f ios/App/App.xcodeproj/project.pbxproj ]; then
+            echo "::error title=Missing Xcode project::Expected ios/App/App.xcodeproj/project.pbxproj before running CocoaPods." >&2
+            echo "Run 'npx cap add ios' locally and commit the generated workspace." >&2
+            exit 1
+          fi
       - name: Install CocoaPods dependencies
         working-directory: ios/App
         run: pod install
