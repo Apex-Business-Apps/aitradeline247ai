@@ -68,8 +68,14 @@ workflows:
           #!/bin/bash
           set -euo pipefail
 
-          TEAM_ID="${TEAM_ID:-NWGUYF42KW}"
-          export TEAM_ID
+          TEAM_ID_VALUE="${TEAM_ID:-NWGUYF42KW}"
+          if [[ -z "$TEAM_ID_VALUE" ]]; then
+            echo "TEAM_ID is not set and no default is available." >&2
+            echo "Define TEAM_ID in Codemagic or provide a default in codemagic.yaml." >&2
+            exit 1
+          fi
+
+          export TEAM_ID="$TEAM_ID_VALUE"
 
           missing=()
           for var in APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
@@ -80,11 +86,13 @@ workflows:
 
           if (( ${#missing[@]} )); then
             printf 'Missing required environment variables: %s\n' "${missing[*]}" >&2
-            echo "Populate the ios_config (TEAM_ID) and appstore_credentials groups in Codemagic." >&2
+            echo "Populate the appstore_credentials group in Codemagic with the App Store Connect API key metadata." >&2
             exit 1
           fi
 
-          printf 'TEAM_ID=%s\n' "$TEAM_ID" >> "$CM_ENV"
+          {
+            printf 'TEAM_ID=%s\n' "$TEAM_ID_VALUE"
+          } >> "$CM_ENV"
       - name: Install CocoaPods dependencies
         script: |
           set -euo pipefail
