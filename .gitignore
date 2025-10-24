@@ -20,8 +20,7 @@ dist-ssr/
 # Allow only templates like .env.example
 !*.example
 
-# Native projects are regenerated in CI
-ios/
+# Native Android project is regenerated in CI
 android/
 
 # Credentials (never commit)
@@ -39,3 +38,7 @@ android/
 *.njsproj
 *.sln
 *.sw?
+
+# CocoaPods output (generated in CI/mac builds)
+ios/App/Pods/
+ios/App/Podfile.lock
