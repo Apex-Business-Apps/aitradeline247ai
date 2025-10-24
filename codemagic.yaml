@@ -32,7 +32,7 @@ workflows:
       - name: Verify web build artifacts
         script: |
           #!/bin/bash
-          set -eu
+          set -euo pipefail
           if [ ! -f dist/index.html ]; then
             echo "Missing dist/index.html after npm run build" >&2
             exit 1
@@ -40,12 +40,12 @@ workflows:
       - name: Sync Capacitor iOS wrapper
         script: |
           #!/bin/bash
-          set -eu
+          set -euo pipefail
           npx --yes cap sync ios
       - name: Verify iOS project exists
         script: |
           #!/bin/bash
-          set -eu
+          set -euo pipefail
           missing=0
           PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
           WORKSPACE_PATH="${XCODE_WORKSPACE}"
@@ -87,7 +87,7 @@ workflows:
       - name: Verify signing environment
         script: |
           #!/bin/bash
-          set -eu
+          set -euo pipefail
           missing=0
           for var in TEAM_ID APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
             if [ -z "${!var:-}" ]; then

@@ -85,7 +85,7 @@ jobs:
       - name: Verify web build artifacts
         shell: bash
         run: |
-          set -eu
+          set -euo pipefail
           if [ ! -f dist/index.html ]; then
             echo "::error title=Missing web bundle::Expected dist/index.html after 'npm run build'." >&2
             exit 1
@@ -93,12 +93,12 @@ jobs:
       - name: Sync Capacitor iOS wrapper
         shell: bash
         run: |
-          set -eu
+          set -euo pipefail
           npx --yes cap sync ios
       - name: Verify iOS project exists
         shell: bash
         run: |
-          set -eu
+          set -euo pipefail
           missing=0
           PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
           WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
@@ -119,12 +119,12 @@ jobs:
         shell: bash
         working-directory: ios/App
         run: |
-          set -eo pipefail
+          set -euo pipefail
           pod install
       - name: Build iOS workspace (simulator)
         working-directory: ios/App
         run: |
-          set -eo pipefail
+          set -euo pipefail
           WORKSPACE_NAME="$(basename "${XCODE_WORKSPACE:-ios/App/App.xcworkspace}")"
           SCHEME_NAME="${XCODE_SCHEME:-App}"
           xcodebuild \
