@@ -77,8 +77,38 @@ jobs:
         run: npm ci
       - name: Build web assets
         run: npm run build
+      - name: Verify web build artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f dist/index.html ]]; then
+            echo "::error title=Missing web bundle::Expected dist/index.html after 'npm run build'." >&2
+            exit 1
+          fi
       - name: Sync Capacitor iOS wrapper
         run: npx --yes cap sync ios
+      - name: Verify iOS project exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
+          WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
+          WORKSPACE_FILE="${WORKSPACE_PATH%/}/contents.xcworkspacedata"
+
+          missing=0
+          if [[ ! -f "$PROJECT_FILE" ]]; then
+            echo "::error title=Missing Xcode project::Expected $PROJECT_FILE after syncing Capacitor." >&2
+            missing=1
+          fi
+          if [[ ! -f "$WORKSPACE_FILE" ]]; then
+            echo "::error title=Missing Xcode workspace::Expected $WORKSPACE_FILE after syncing Capacitor." >&2
+            missing=1
+          fi
+
+          if (( missing )); then
+            echo "Run 'npx cap add ios' locally and commit the generated ios/App wrapper." >&2
+            exit 1
+          fi
       - name: Install CocoaPods dependencies
         shell: bash
         working-directory: ios/App
