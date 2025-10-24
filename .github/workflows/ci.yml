@@ -72,6 +72,9 @@ jobs:
     runs-on: macos-14
     needs: [ build, lint, test ]
     timeout-minutes: 45
+    env:
+      XCODE_WORKSPACE: ios/App/App.xcworkspace
+      XCODE_SCHEME: App
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -101,7 +104,8 @@ jobs:
           set -euo pipefail
           missing=0
           PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
-          WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
+          WORKSPACE_PATH="$XCODE_WORKSPACE"
           if [ ! -f "$PROJECT_FILE" ]; then
             echo "::error title=Missing Xcode project::Expected $PROJECT_FILE before running CocoaPods." >&2
             echo "Run 'npx cap add ios' locally and commit the generated workspace." >&2
@@ -125,8 +129,10 @@ jobs:
         working-directory: ios/App
         run: |
           set -euo pipefail
-          WORKSPACE_NAME="$(basename "${XCODE_WORKSPACE:-ios/App/App.xcworkspace}")"
-          SCHEME_NAME="${XCODE_SCHEME:-App}"
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
+          : "${XCODE_SCHEME:=App}"
+          WORKSPACE_NAME="$(basename "$XCODE_WORKSPACE")"
+          SCHEME_NAME="$XCODE_SCHEME"
           xcodebuild \
             -workspace "$WORKSPACE_NAME" \
             -scheme "$SCHEME_NAME" \
