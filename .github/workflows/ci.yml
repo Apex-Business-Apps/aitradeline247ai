@@ -85,7 +85,7 @@ jobs:
       - name: Verify web build artifacts
         shell: bash
         run: |
-          set -euo pipefail
+          set -eu
           if [ ! -f dist/index.html ]; then
             echo "::error title=Missing web bundle::Expected dist/index.html after 'npm run build'." >&2
             exit 1
@@ -93,22 +93,20 @@ jobs:
       - name: Sync Capacitor iOS wrapper
         shell: bash
         run: |
-          set -euo pipefail
+          set -eu
           npx --yes cap sync ios
       - name: Verify iOS project exists
         shell: bash
         run: |
-          set -euo pipefail
+          set -eu
           missing=0
-          PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
-          WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
-          if [ ! -f "$PROJECT_FILE" ]; then
-            echo "::error title=Missing Xcode project::Expected $PROJECT_FILE before running CocoaPods." >&2
+          if [ ! -f ios/App/App.xcodeproj/project.pbxproj ]; then
+            echo "::error title=Missing Xcode project::Expected ios/App/App.xcodeproj/project.pbxproj before running CocoaPods." >&2
             echo "Run 'npx cap add ios' locally and commit the generated workspace." >&2
             missing=1
           fi
-          if [ ! -f "$WORKSPACE_PATH/contents.xcworkspacedata" ]; then
-            echo "::error title=Missing Xcode workspace::Expected $WORKSPACE_PATH/contents.xcworkspacedata to exist." >&2
+          if [ ! -f ios/App/App.xcworkspace/contents.xcworkspacedata ]; then
+            echo "::error title=Missing Xcode workspace::Expected ios/App/App.xcworkspace/contents.xcworkspacedata to exist." >&2
             echo "Open the project in Xcode and save the workspace, or rerun 'npx cap sync ios'." >&2
             missing=1
           fi
@@ -119,17 +117,15 @@ jobs:
         shell: bash
         working-directory: ios/App
         run: |
-          set -euo pipefail
+          set -eo pipefail
           pod install
       - name: Build iOS workspace (simulator)
         working-directory: ios/App
         run: |
-          set -euo pipefail
-          WORKSPACE_NAME="$(basename "${XCODE_WORKSPACE:-ios/App/App.xcworkspace}")"
-          SCHEME_NAME="${XCODE_SCHEME:-App}"
+          set -eo pipefail
           xcodebuild \
-            -workspace "$WORKSPACE_NAME" \
-            -scheme "$SCHEME_NAME" \
+            -workspace App.xcworkspace \
+            -scheme App \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
