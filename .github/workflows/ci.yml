@@ -80,14 +80,16 @@ jobs:
       - name: Sync Capacitor iOS wrapper
         run: npx --yes cap sync ios
       - name: Install CocoaPods dependencies
+        shell: bash
+        working-directory: ios/App
         run: |
           set -euo pipefail
-          cd ios/App
           pod install
       - name: Build iOS workspace (simulator)
+        shell: bash
+        working-directory: ios/App
         run: |
           set -euo pipefail
-          cd ios/App
           xcodebuild \
             -workspace "$(basename "$XCODE_WORKSPACE")" \
             -scheme "$XCODE_SCHEME" \

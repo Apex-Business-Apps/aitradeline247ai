@@ -8,6 +8,7 @@ workflows:
         - appstore_credentials
       vars:
         APP_VERSION: "1.0.0"
+        TEAM_ID: "NWGUYF42KW"
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
