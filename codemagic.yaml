@@ -60,8 +60,11 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
+        # Using App Store Connect API Key (.p8) from appstore_credentials group
         auth: api_key
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         private_key: $APP_STORE_CONNECT_PRIVATE_KEY
         submit_to_testflight: true
+        # Optionally specify app for multi-app repos
+        # app_id: $APP_STORE_ID
