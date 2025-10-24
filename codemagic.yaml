@@ -61,9 +61,9 @@ workflows:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        # Using App Store Connect API Key (.p8) from appstore_credentials group
-        auth: api_key
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        # Codemagic publishing section doesn't support env var references for api_key auth
+        # Must use 'integration' method which uses team-level App Store Connect integration
+        # Your credentials from appstore_credentials group should be added to:
+        # Codemagic → Team settings → Team integrations → App Store Connect
+        auth: integration
         submit_to_testflight: true
