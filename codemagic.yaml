@@ -45,13 +45,15 @@ workflows:
           #!/bin/bash
           set -eu
           missing=0
-          if [ ! -f ios/App/App.xcodeproj/project.pbxproj ]; then
-            echo "Expected ios/App/App.xcodeproj/project.pbxproj before running pod install" >&2
+          PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
+          WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
+          if [ ! -f "$PROJECT_FILE" ]; then
+            echo "Expected $PROJECT_FILE before running pod install" >&2
             echo "Run 'npx cap add ios' locally and commit the generated wrapper" >&2
             missing=1
           fi
-          if [ ! -f ios/App/App.xcworkspace/contents.xcworkspacedata ]; then
-            echo "Expected ios/App/App.xcworkspace/contents.xcworkspacedata before running pod install" >&2
+          if [ ! -f "$WORKSPACE_PATH/contents.xcworkspacedata" ]; then
+            echo "Expected $WORKSPACE_PATH/contents.xcworkspacedata before running pod install" >&2
             echo "Ensure the workspace is committed or regenerate it with 'npx cap sync ios'" >&2
             missing=1
           fi
