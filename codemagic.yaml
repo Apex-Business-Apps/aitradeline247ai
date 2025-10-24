@@ -106,6 +106,36 @@ workflows:
             echo "Populate TEAM_ID and the App Store Connect API key variables in Codemagic's Environment groups." >&2
             exit 1
           fi
+      - name: Fetch signing assets
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          python3 -m pip install --upgrade pip >/dev/null
+          python3 -m pip install --quiet codemagic-cli-tools
+          export PATH="$HOME/.local/bin:$HOME/Library/Python/3.11/bin:$HOME/Library/Python/3.10/bin:$HOME/Library/Python/3.9/bin:$PATH"
+
+          app-store-connect fetch-signing-files \
+            --type IOS_APP_STORE \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --create \
+            "$BUNDLE_ID"
+
+          CERT_DIR="$HOME/Library/MobileDevice/Certificates"
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          CERT_PATH="$(find "$CERT_DIR" -maxdepth 1 -name '*.p12' -print -quit)"
+          CERT_PASSWORD_FILE="$(find "$CERT_DIR" -maxdepth 1 -name 'certificate_password.txt' -print -quit)"
+          PROFILE_PATH="$(find "$PROFILE_DIR" -maxdepth 1 -name '*.mobileprovision' -print -quit)"
+
+          if [ -z "$CERT_PATH" ] || [ -z "$CERT_PASSWORD_FILE" ] || [ -z "$PROFILE_PATH" ]; then
+            echo "Failed to fetch signing materials from App Store Connect." >&2
+            exit 1
+          fi
+
+          keychain initialize
+          keychain add-certificates --certificate "$CERT_PATH" --certificate-password "@file:$CERT_PASSWORD_FILE"
+          xcode-project use-profiles --project ios/App/App.xcodeproj --profile "$PROFILE_PATH" --archive-method app-store
       - name: Install CocoaPods dependencies
         script: |
           #!/bin/bash
