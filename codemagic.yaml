@@ -40,7 +40,10 @@ workflows:
             exit 1
           fi
       - name: Sync Capacitor iOS wrapper
-        script: npx --yes cap sync ios
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          npx --yes cap sync ios
       - name: Verify iOS project exists
         script: |
           #!/bin/bash
@@ -70,12 +73,10 @@ workflows:
 
           TEAM_ID_VALUE="${TEAM_ID:-NWGUYF42KW}"
           if [[ -z "$TEAM_ID_VALUE" ]]; then
-            echo "TEAM_ID is not set and no default is available." >&2
-            echo "Define TEAM_ID in Codemagic or provide a default in codemagic.yaml." >&2
+            echo "TEAM_ID is not set and no fallback is defined." >&2
+            echo "Set TEAM_ID in Codemagic (ios_config group) or inline in codemagic.yaml." >&2
             exit 1
           fi
-
-          export TEAM_ID="$TEAM_ID_VALUE"
 
           missing=()
           for var in APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do

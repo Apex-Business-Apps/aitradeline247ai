@@ -86,7 +86,10 @@ jobs:
             exit 1
           fi
       - name: Sync Capacitor iOS wrapper
-        run: npx --yes cap sync ios
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes cap sync ios
       - name: Verify iOS project exists
         shell: bash
         run: |
