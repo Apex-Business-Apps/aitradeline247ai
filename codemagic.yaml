@@ -9,9 +9,6 @@ workflows:
         - ios_config
       vars:
         APP_VERSION: "1.0.0"
-        TEAM_ID: "68f86a5f423e890dce5bdf0"
-        APP_STORE_CONNECT_KEY_IDENTIFIER: "5XDRL75994"
-        APP_STORE_CONNECT_ISSUER_ID: "7efaf094-3c6f-4c6c-afdb-d6e2c84871c7"
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
@@ -95,7 +92,7 @@ workflows:
             fi
           done
           if [ "$missing" -ne 0 ]; then
-            echo "Populate the appstore_credentials group in Codemagic with the required Apple API key details." >&2
+            echo "Populate the ios_config (TEAM_ID) and appstore_credentials (App Store Connect API key) groups in Codemagic." >&2
             exit 1
           fi
       - name: Install CocoaPods dependencies
