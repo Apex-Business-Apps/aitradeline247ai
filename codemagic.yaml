@@ -6,12 +6,14 @@ workflows:
     environment:
       groups:
         - appstore_credentials
-        - ios_signing
       vars:
         APP_VERSION: "1.0.0"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         BUNDLE_ID: "com.apex.tradeline"
+        TEAM_ID: "NWGUYF42KW"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "5XDRL75994"
+        APP_STORE_CONNECT_ISSUER_ID: "7efaf094-3c6f-4c6c-afdb-d6e2c84871c7"
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
@@ -94,59 +96,82 @@ workflows:
           #!/bin/bash
           set -euo pipefail
           missing=0
-          for var in TEAM_ID APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY IOS_CERTIFICATE_BASE64 IOS_CERTIFICATE_PASSWORD IOS_PROVISIONING_PROFILE_BASE64; do
+          for var in TEAM_ID APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
             if [ -z "${!var:-}" ]; then
               echo "Missing required environment variable: $var" >&2
               missing=1
             fi
           done
           if [ "$missing" -ne 0 ]; then
-            echo "Populate the appstore_credentials (App Store Connect API key) and ios_signing (certificate/provisioning profile) groups in Codemagic's Environment variables." >&2
+            echo "Populate TEAM_ID and the App Store Connect API key variables in Codemagic's Environment groups." >&2
             exit 1
           fi
-      - name: Import signing assets
+      - name: Fetch signing assets
         script: |
           #!/bin/bash
           set -euo pipefail
-          SIGNING_DIR="$CM_BUILD_DIR/signing"
-          mkdir -p "$SIGNING_DIR"
+          python3 -m pip install --upgrade pip >/dev/null
+          python3 -m pip install --quiet codemagic-cli-tools
+          export PATH="$HOME/.local/bin:$HOME/Library/Python/3.11/bin:$HOME/Library/Python/3.10/bin:$HOME/Library/Python/3.9/bin:$PATH"
 
-          KEYCHAIN_NAME="codemagic-build.keychain"
-          KEYCHAIN_PATH="$HOME/Library/Keychains/$KEYCHAIN_NAME-db"
+          KEY_FILE="$CM_BUILD_DIR/appstore_connect_key.p8"
+          python3 - "$KEY_FILE" <<'PY'
+import base64
+import os
+import sys
 
-          security create-keychain -p "" "$KEYCHAIN_NAME"
-          security set-keychain-settings "$KEYCHAIN_NAME"
-          security unlock-keychain -p "" "$KEYCHAIN_NAME"
-          EXISTING_KEYCHAINS="$(security list-keychains | tr -d '"')"
-          security list-keychains -s "$KEYCHAIN_PATH" $EXISTING_KEYCHAINS
-          security default-keychain -s "$KEYCHAIN_NAME"
+key = os.environ.get("APP_STORE_CONNECT_PRIVATE_KEY", "").strip()
+if not key:
+    raise SystemExit("APP_STORE_CONNECT_PRIVATE_KEY is empty")
 
-          CERT_PATH="$SIGNING_DIR/certificate.p12"
-          PROFILE_PATH="$SIGNING_DIR/profile.mobileprovision"
-          PROFILE_DEST="$HOME/Library/MobileDevice/Provisioning Profiles"
+if "-----BEGIN" in key:
+    data = key if key.endswith("\n") else key + "\n"
+else:
+    try:
+        data = base64.b64decode(key).decode("utf-8")
+    except Exception as exc:  # noqa: BLE001 - propagate helpful failure for CI logs
+        raise SystemExit(f"Failed to decode APP_STORE_CONNECT_PRIVATE_KEY: {exc}")
 
-          echo "$IOS_CERTIFICATE_BASE64" | base64 --decode > "$CERT_PATH"
-          echo "$IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
+with open(sys.argv[1], "w", encoding="utf-8") as fh:
+    fh.write(data if data.endswith("\n") else data + "\n")
+PY
+          chmod 600 "$KEY_FILE"
 
-          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$IOS_CERTIFICATE_PASSWORD" -A -T /usr/bin/codesign -T /usr/bin/security
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" "$KEYCHAIN_PATH"
+          app-store-connect fetch-signing-files \
+            --type IOS_APP_STORE \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "@$KEY_FILE" \
+            --create \
+            "$BUNDLE_ID"
+
+          CERT_DIR="$HOME/Library/MobileDevice/Certificates"
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          CERT_PATH="$(find "$CERT_DIR" -maxdepth 1 -name '*.p12' -print -quit)"
+          CERT_PASSWORD_FILE="$(find "$CERT_DIR" -maxdepth 1 -name 'certificate_password.txt' -print -quit)"
+          PROFILE_PATH="$(find "$PROFILE_DIR" -maxdepth 1 -name '*.mobileprovision' -print -quit)"
+
+          if [ -z "$CERT_PATH" ] || [ -z "$CERT_PASSWORD_FILE" ] || [ -z "$PROFILE_PATH" ]; then
+            echo "Failed to fetch signing materials from App Store Connect." >&2
+            exit 1
+          fi
 
           PROFILE_INFO="$(mktemp)"
           security cms -D -i "$PROFILE_PATH" > "$PROFILE_INFO"
           PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_INFO")"
           PROFILE_UUID="$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_INFO")"
-          rm -f "$PROFILE_INFO"
 
           if [ -z "$PROFILE_NAME" ] || [ -z "$PROFILE_UUID" ]; then
             echo "Unable to parse provisioning profile metadata." >&2
             exit 1
           fi
 
-          mkdir -p "$PROFILE_DEST"
-          cp "$PROFILE_PATH" "$PROFILE_DEST/$PROFILE_UUID.mobileprovision"
+          rm -f "$PROFILE_INFO" "$KEY_FILE"
+
+          keychain initialize
+          keychain add-certificates --certificate "$CERT_PATH" --certificate-password "@file:$CERT_PASSWORD_FILE"
 
           {
-            printf 'SIGNING_KEYCHAIN_PATH=%s\n' "$KEYCHAIN_PATH"
             printf 'PROVISIONING_PROFILE_PATH=%s\n' "$PROFILE_PATH"
             printf 'PROVISIONING_PROFILE_NAME=%s\n' "$PROFILE_NAME"
             printf 'PROVISIONING_PROFILE_UUID=%s\n' "$PROFILE_UUID"
@@ -159,11 +184,7 @@ workflows:
           pod install
       - name: Prepare export options
         script: |
-          #!/bin/bash
-          set -euo pipefail
-          : "${BUNDLE_ID:=com.apex.tradeline}"
-          : "${PROVISIONING_PROFILE_NAME:?Missing PROVISIONING_PROFILE_NAME from signing step}"
-          cat <<PLIST > "$CM_BUILD_DIR/ExportOptions.plist"
+          cat <<'PLIST' > "$CM_BUILD_DIR/ExportOptions.plist"
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -171,12 +192,7 @@ workflows:
               <key>method</key>
               <string>app-store</string>
               <key>signingStyle</key>
-              <string>manual</string>
-              <key>provisioningProfiles</key>
-              <dict>
-                <key>${BUNDLE_ID}</key>
-                <string>${PROVISIONING_PROFILE_NAME}</string>
-              </dict>
+              <string>automatic</string>
               <key>stripSwiftSymbols</key>
               <true/>
               <key>uploadBitcode</key>
@@ -199,7 +215,6 @@ workflows:
           : "${BUNDLE_ID:=com.apex.tradeline}"
           : "${PROVISIONING_PROFILE_NAME:?Missing PROVISIONING_PROFILE_NAME from signing step}"
           : "${PROVISIONING_PROFILE_UUID:?Missing PROVISIONING_PROFILE_UUID from signing step}"
-          : "${SIGNING_KEYCHAIN_PATH:?Missing SIGNING_KEYCHAIN_PATH from signing step}"
           WORKSPACE="$XCODE_WORKSPACE"
           SCHEME="$XCODE_SCHEME"
           BUNDLE="$BUNDLE_ID"
@@ -217,7 +232,6 @@ workflows:
             PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_NAME" \
             PROVISIONING_PROFILE="$PROVISIONING_PROFILE_UUID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE" \
-            OTHER_CODE_SIGN_FLAGS="--keychain $SIGNING_KEYCHAIN_PATH" \
             MARKETING_VERSION="$APP_VERSION" \
             CURRENT_PROJECT_VERSION="$APP_BUILD" \
             clean archive
