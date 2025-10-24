@@ -114,11 +114,15 @@ workflows:
           python3 -m pip install --quiet codemagic-cli-tools
           export PATH="$HOME/.local/bin:$HOME/Library/Python/3.11/bin:$HOME/Library/Python/3.10/bin:$HOME/Library/Python/3.9/bin:$PATH"
 
+          KEY_FILE="$CM_BUILD_DIR/appstore_connect_key.p8"
+          printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+
           app-store-connect fetch-signing-files \
             --type IOS_APP_STORE \
             --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
             --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --private-key "@$KEY_FILE" \
             --create \
             "$BUNDLE_ID"
 
@@ -143,7 +147,7 @@ workflows:
             exit 1
           fi
 
-          rm -f "$PROFILE_INFO"
+          rm -f "$PROFILE_INFO" "$KEY_FILE"
 
           keychain initialize
           keychain add-certificates --certificate "$CERT_PATH" --certificate-password "@file:$CERT_PASSWORD_FILE"
