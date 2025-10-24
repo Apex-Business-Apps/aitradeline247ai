@@ -67,8 +67,12 @@ workflows:
         script: |
           #!/bin/bash
           set -euo pipefail
+
+          TEAM_ID="${TEAM_ID:-NWGUYF42KW}"
+          export TEAM_ID
+
           missing=()
-          for var in TEAM_ID APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
+          for var in APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
             if [[ -z "${!var:-}" ]]; then
               missing+=("$var")
             fi
@@ -76,9 +80,11 @@ workflows:
 
           if (( ${#missing[@]} )); then
             printf 'Missing required environment variables: %s\n' "${missing[*]}" >&2
-            echo "Populate the ios_config and appstore_credentials groups in Codemagic." >&2
+            echo "Populate the ios_config (TEAM_ID) and appstore_credentials groups in Codemagic." >&2
             exit 1
           fi
+
+          printf 'TEAM_ID=%s\n' "$TEAM_ID" >> "$CM_ENV"
       - name: Install CocoaPods dependencies
         script: |
           set -euo pipefail
