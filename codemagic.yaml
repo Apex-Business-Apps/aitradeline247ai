@@ -153,6 +153,15 @@ PY
             exit 1
           fi
 
+          PROFILE_PLIST="$CM_BUILD_DIR/profile.plist"
+          security cms -D -i "$PROFILE_PATH" > "$PROFILE_PLIST"
+          PROFILE_UUID="$(/usr/libexec/PlistBuddy -c 'Print UUID' "$PROFILE_PLIST")"
+          PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print Name' "$PROFILE_PLIST")"
+          if [ -z "$PROFILE_UUID" ] || [ -z "$PROFILE_NAME" ]; then
+            echo "Unable to parse provisioning profile metadata." >&2
+            exit 1
+          fi
+
           PROJECT_PATH="ios/App/App.xcodeproj"
           xcode-project use-profiles \
             --project "$PROJECT_PATH" \
@@ -163,6 +172,11 @@ PY
 
           keychain initialize
           keychain add-certificates --certificate "$CERT_PATH" --certificate-password "@file:$CERT_PASSWORD_FILE"
+
+          {
+            printf 'PROVISIONING_PROFILE_SPECIFIER=%s\n' "$PROFILE_NAME"
+            printf 'PROVISIONING_PROFILE_UUID=%s\n' "$PROFILE_UUID"
+          } >> "$CM_ENV"
       - name: Install CocoaPods dependencies
         script: |
           #!/bin/bash
@@ -213,6 +227,10 @@ PY
             -allowProvisioningUpdates \
             DEVELOPMENT_TEAM="${TEAM_ID}" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER="${PROVISIONING_PROFILE_SPECIFIER}" \
+            PROVISIONING_PROFILE="${PROVISIONING_PROFILE_UUID}" \
             MARKETING_VERSION="$APP_VERSION" \
             CURRENT_PROJECT_VERSION="$APP_BUILD" \
             clean archive
@@ -234,23 +252,36 @@ PY
             exit 1
           fi
 
-          if [ -z "${APP_STORE_CONNECT_PRIVATE_KEY:-}" ]; then
-            echo "APP_STORE_CONNECT_PRIVATE_KEY is not set; unable to upload to TestFlight." >&2
-            exit 1
-          fi
+          KEY_FILE="$CM_BUILD_DIR/appstore_key_upload.p8"
+          python3 - "$KEY_FILE" <<'PY'
+import base64
+import os
+import sys
 
-          KEY_FILE="$CM_BUILD_DIR/appstore_key.p8"
-          printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$KEY_FILE"
+key = os.environ.get("APP_STORE_CONNECT_PRIVATE_KEY", "").strip()
+if not key:
+    raise SystemExit("APP_STORE_CONNECT_PRIVATE_KEY is empty")
+
+if "-----BEGIN" in key:
+    data = key if key.endswith("\n") else key + "\n"
+else:
+    try:
+        data = base64.b64decode(key).decode("utf-8")
+    except Exception as exc:
+        raise SystemExit(f"Failed to decode APP_STORE_CONNECT_PRIVATE_KEY: {exc}")
+
+with open(sys.argv[1], "w", encoding="utf-8") as fh:
+    fh.write(data if data.endswith("\n") else data + "\n")
+PY
           chmod 600 "$KEY_FILE"
 
           echo "Uploading $IPA_PATH to TestFlight via App Store Connect API key"
-          xcrun altool \
-            --upload-app \
-            --type ios \
-            --file "$IPA_PATH" \
-            --apiKey "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
-            --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
-            --apiKeyFile "$KEY_FILE"
+          app-store-connect upload \
+            --type IOS \
+            --path "$IPA_PATH" \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "@$KEY_FILE"
 
           rm -f "$KEY_FILE"
     artifacts:
