@@ -55,7 +55,7 @@ workflows:
           xcode-project build-ipa \
             --workspace ios/App/App.xcworkspace \
             --scheme App \
-            --archive-flags="-allowProvisioningUpdates"
+            --config Release
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:

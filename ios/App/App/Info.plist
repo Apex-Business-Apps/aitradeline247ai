@@ -6,7 +6,7 @@
   <string>en</string>
 
   <key>CFBundleDisplayName</key>
-  <string>$(PRODUCT_NAME)</string>
+  <string>TradeLine 24/7</string>
 
   <!-- REQUIRED CORE KEYS -->
   <key>CFBundleIdentifier</key>
