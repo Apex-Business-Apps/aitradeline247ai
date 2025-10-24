@@ -133,9 +133,26 @@ workflows:
             exit 1
           fi
 
+          PROFILE_INFO="$(mktemp)"
+          security cms -D -i "$PROFILE_PATH" > "$PROFILE_INFO"
+          PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_INFO")"
+          PROFILE_UUID="$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_INFO")"
+
+          if [ -z "$PROFILE_NAME" ] || [ -z "$PROFILE_UUID" ]; then
+            echo "Unable to parse provisioning profile metadata." >&2
+            exit 1
+          fi
+
+          rm -f "$PROFILE_INFO"
+
           keychain initialize
           keychain add-certificates --certificate "$CERT_PATH" --certificate-password "@file:$CERT_PASSWORD_FILE"
-          xcode-project use-profiles --project ios/App/App.xcodeproj --profile "$PROFILE_PATH" --archive-method app-store
+
+          {
+            printf 'PROVISIONING_PROFILE_PATH=%s\n' "$PROFILE_PATH"
+            printf 'PROVISIONING_PROFILE_NAME=%s\n' "$PROFILE_NAME"
+            printf 'PROVISIONING_PROFILE_UUID=%s\n' "$PROFILE_UUID"
+          } >> "$CM_ENV"
       - name: Install CocoaPods dependencies
         script: |
           #!/bin/bash
@@ -173,6 +190,8 @@ workflows:
           : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
           : "${XCODE_SCHEME:=App}"
           : "${BUNDLE_ID:=com.apex.tradeline}"
+          : "${PROVISIONING_PROFILE_NAME:?Missing PROVISIONING_PROFILE_NAME from signing step}"
+          : "${PROVISIONING_PROFILE_UUID:?Missing PROVISIONING_PROFILE_UUID from signing step}"
           WORKSPACE="$XCODE_WORKSPACE"
           SCHEME="$XCODE_SCHEME"
           BUNDLE="$BUNDLE_ID"
@@ -185,6 +204,10 @@ workflows:
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -allowProvisioningUpdates \
             DEVELOPMENT_TEAM="${TEAM_ID}" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_NAME" \
+            PROVISIONING_PROFILE="$PROVISIONING_PROFILE_UUID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE" \
             MARKETING_VERSION="$APP_VERSION" \
             CURRENT_PROJECT_VERSION="$APP_BUILD" \
