@@ -71,9 +71,9 @@ workflows:
           #!/bin/bash
           set -euo pipefail
 
-          TEAM_ID_VALUE="${TEAM_ID:-NWGUYF42KW}"
+          TEAM_ID_VALUE="${TEAM_ID:-}"
           if [[ -z "$TEAM_ID_VALUE" ]]; then
-            echo "TEAM_ID is not configured. Set it in the ios_config group or inline in codemagic.yaml." >&2
+            printf 'TEAM_ID is not configured. Add it to the ios_config environment group or declare it under environment.vars.\n' >&2
             exit 1
           fi
 
@@ -85,7 +85,9 @@ workflows:
           done
 
           if (( ${#missing[@]} )); then
-            printf '::warning::Missing App Store Connect credentials: %s\n' "${missing[*]}"
+            printf 'Missing App Store Connect credentials: %s\n' "${missing[*]}" >&2
+            echo 'Populate them in the appstore_credentials environment group before rerunning the workflow.' >&2
+            exit 1
           fi
 
           {
