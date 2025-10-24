@@ -2,19 +2,15 @@ workflows:
   tradeline247-capacitor-testflight:
     name: TradeLine247 → TestFlight (Capacitor)
     instance_type: mac_mini_m2
-
-    # If you have an ASC integration configured, set the name here; else you can remove 'integrations'
-    integrations:
-      app_store_connect: TradeLine247-ASC-Key
+    max_build_duration: 60
 
     environment:
       xcode: 16.4
       node: 20
       cocoapods: default
-      # Load BOTH of your groups so TEAM_ID is visible:
       groups:
-        - appstore_credentials   # APP_STORE_CONNECT_* live here
-        - ios_config             # TEAM_ID, XCODE_*, BUNDLE_ID live here
+        - appstore_credentials    # contains your ASC env vars
+        - ios_config              # contains TEAM_ID, XCODE_*, BUNDLE_ID
       vars:
         TEAM_ID: "NWGUYF42KW"
         BUNDLE_ID: "com.apex.tradeline"
@@ -28,26 +24,27 @@ workflows:
         - $CM_BUILD_DIR/node_modules
 
     scripts:
-      - name: Verify env (now non-fatal and clear)
+      - name: Verify ASC env presence (names only)
         script: |
           set -e
-          for V in TEAM_ID BUNDLE_ID XCODE_SCHEME XCODE_WORKSPACE; do
-            if [ -z "${!V:-}" ]; then echo "Missing required env: $V"; exit 1; fi
-          done
+          echo "=== ENV VAR NAMES PRESENT ==="
+          printenv | cut -d= -f1 | grep '^APP_STORE_CONNECT_' | sort || true
+          echo "=== REQUIRED CHECKS ==="
+          [ -n "${APP_STORE_CONNECT_PRIVATE_KEY:-}" ] || { echo "Missing APP_STORE_CONNECT_PRIVATE_KEY"; exit 1; }
+          [ -n "${APP_STORE_CONNECT_ISSUER_ID:-}" ] || { echo "Missing APP_STORE_CONNECT_ISSUER_ID"; exit 1; }
+          if [ -z "${APP_STORE_CONNECT_KEY_IDENTIFIER:-}" ] && [ -z "${APP_STORE_CONNECT_KEY_IDENTIFIE:-}" ]; then
+            echo "Missing Key ID var: APP_STORE_CONNECT_KEY_IDENTIFIER"; exit 1;
+          fi
           echo "TEAM_ID=$TEAM_ID"
           echo "BUNDLE_ID=$BUNDLE_ID"
-          echo "XCODE_SCHEME=$XCODE_SCHEME"
           echo "XCODE_WORKSPACE=$XCODE_WORKSPACE"
+          echo "XCODE_SCHEME=$XCODE_SCHEME"
 
-      - name: Install Node deps & build web assets
+      - name: Node install & web build
         script: |
           set -e
           npm ci || npm install
-          if npm run | grep -qE '(^|\s)build(\s|:)'; then
-            npm run build
-          else
-            npx ionic build || true
-          fi
+          npm run build || npx ionic build || true
 
       - name: Sync Capacitor iOS wrapper
         script: |
@@ -62,40 +59,45 @@ workflows:
           pod install
           cd -
 
-      - name: Fetch signing (ASC integration or env fallback)
+      - name: Fetch signing using env creds
         script: |
           set -e
           KEY_ID="${APP_STORE_CONNECT_KEY_IDENTIFIER:-$APP_STORE_CONNECT_KEY_IDENTIFIE}"
-          if [ -n "${CM_INTEGRATION_APP_STORE_CONNECT:-}" ]; then
-            echo "Using App Store Connect integration"
-            app-store-connect fetch-signing-files "$BUNDLE_ID" --create --type IOS_APP_STORE --team-id "$TEAM_ID"
-          else
-            echo "Using env-based ASC credentials"
-            app-store-connect fetch-signing-files "$BUNDLE_ID" --create --type IOS_APP_STORE \
-              --key-id "$KEY_ID" \
-              --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
-              --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
-              --team-id "$TEAM_ID"
-          fi
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --create --type IOS_APP_STORE \
+            --team-id "$TEAM_ID" \
+            --key-id "$KEY_ID" \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY"
           keychain initialize
           keychain add-certificates
 
-      - name: Apply provisioning (scope to your workspace)
+      - name: Apply provisioning to your workspace
         script: |
           set -e
           xcode-project use-profiles --workspace "$XCODE_WORKSPACE"
 
-      - name: Bump build number from TestFlight (optional)
+      - name: Optional: bump build number from TestFlight
         script: |
           set -e
-          APPLE_ID="${APP_APPLE_ID:-$APP_STORE_ID}"
-          if [[ "$APPLE_ID" =~ ^[0-9]+$ ]]; then
-            LATEST=$(app-store-connect get-latest-testflight-build-number "$APPLE_ID" || echo 0)
+          # Provide your numeric App Store "Apple ID" as APP_APPLE_ID to enable this.
+          if [[ "${APP_APPLE_ID:-}" =~ ^[0-9]+$ ]]; then
+            LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_APPLE_ID" || echo 0)
             NEXT=$((LATEST + 1))
             echo "Using next build number: $NEXT"
             agvtool new-version -all "$NEXT" || true
           else
-            echo "Skipping bump: provide numeric APP_APPLE_ID in env to auto-increment build numbers."
+            echo "No APP_APPLE_ID set; skipping auto bump."
+          fi
+
+      - name: Non-fatal privacy/encryption lint
+        script: |
+          set -e
+          if ! find . -name "PrivacyInfo.xcprivacy" -print -quit | grep -q . ; then
+            echo "WARNING: No PrivacyInfo.xcprivacy found. Ensure privacy manifest if using Required-Reason APIs."
+          fi
+          INFOPLIST=$(grep -rl --include=Info.plist '<key>CFBundleIdentifier</key>' . | head -n1 || true)
+          if [ -n "$INFOPLIST" ] && ! /usr/libexec/PlistBuddy -c "Print :ITSAppUsesNonExemptEncryption" "$INFOPLIST" >/dev/null 2>&1; then
+            echo "NOTICE: Consider ITSAppUsesNonExemptEncryption in Info.plist if applicable."
           fi
 
       - name: Build IPA
@@ -114,8 +116,7 @@ workflows:
 
     publishing:
       app_store_connect:
-        # If using integration, you can set: auth: integration
-        # Using env-based auth to match your current setup (works even with the typo'd KEY var).
+        # Using env-based auth (no integration needed):
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: ${APP_STORE_CONNECT_KEY_IDENTIFIER:-$APP_STORE_CONNECT_KEY_IDENTIFIE}
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
