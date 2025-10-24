@@ -67,6 +67,71 @@ jobs:
         if: ${{ steps.pkg.outputs.has_test == '' }}
         run: echo "No test script defined — skipping."
 
+  ios:
+    name: ci/ios-build
+    runs-on: macos-14
+    needs: [ build, lint, test ]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install npm dependencies
+        run: npm ci
+      - name: Build web assets
+        run: npm run build
+      - name: Verify web build artifacts
+        shell: bash
+        run: |
+          set -eu
+          if [ ! -f dist/index.html ]; then
+            echo "::error title=Missing web bundle::Expected dist/index.html after 'npm run build'." >&2
+            exit 1
+          fi
+      - name: Sync Capacitor iOS wrapper
+        shell: bash
+        run: |
+          set -eu
+          npx --yes cap sync ios
+      - name: Verify iOS project exists
+        shell: bash
+        run: |
+          set -eu
+          missing=0
+          if [ ! -f ios/App/App.xcodeproj/project.pbxproj ]; then
+            echo "::error title=Missing Xcode project::Expected ios/App/App.xcodeproj/project.pbxproj before running CocoaPods." >&2
+            echo "Run 'npx cap add ios' locally and commit the generated workspace." >&2
+            missing=1
+          fi
+          if [ ! -f ios/App/App.xcworkspace/contents.xcworkspacedata ]; then
+            echo "::error title=Missing Xcode workspace::Expected ios/App/App.xcworkspace/contents.xcworkspacedata to exist." >&2
+            echo "Open the project in Xcode and save the workspace, or rerun 'npx cap sync ios'." >&2
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+      - name: Install CocoaPods dependencies
+        shell: bash
+        working-directory: ios/App
+        run: |
+          set -eo pipefail
+          pod install
+      - name: Build iOS workspace (simulator)
+        working-directory: ios/App
+        run: |
+          set -eo pipefail
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
   e2e:
     name: ci/e2e
     runs-on: ubuntu-latest
