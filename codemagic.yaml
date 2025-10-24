@@ -9,6 +9,9 @@ workflows:
         - ios_config
       vars:
         APP_VERSION: "1.0.0"
+        TEAM_ID: "68f86a5f423e890dce5bdf0"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "5XDRL75994"
+        APP_STORE_CONNECT_ISSUER_ID: "7efaf094-3c6f-4c6c-afdb-d6e2c84871c7"
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
