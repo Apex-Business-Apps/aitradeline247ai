@@ -109,11 +109,29 @@ workflows:
           set -euo pipefail
           python3 -m pip install --upgrade pip >/dev/null
           python3 -m pip install --quiet codemagic-cli-tools
-          PYTHON_USER_BINS="$HOME/Library/Python/3.11/bin:$HOME/Library/Python/3.10/bin:$HOME/Library/Python/3.9/bin"
-          export PATH="$HOME/.local/bin:$PYTHON_USER_BINS:$PATH"
+          export PATH="$HOME/.local/bin:$HOME/Library/Python/3.11/bin:$HOME/Library/Python/3.10/bin:$HOME/Library/Python/3.9/bin:$PATH"
 
           KEY_FILE="$CM_BUILD_DIR/appstore_connect_key.p8"
-          printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$KEY_FILE"
+          python3 - "$KEY_FILE" <<'PY'
+import base64
+import os
+import sys
+
+key = os.environ.get("APP_STORE_CONNECT_PRIVATE_KEY", "").strip()
+if not key:
+    raise SystemExit("APP_STORE_CONNECT_PRIVATE_KEY is empty")
+
+if "-----BEGIN" in key:
+    data = key if key.endswith("\n") else key + "\n"
+else:
+    try:
+        data = base64.b64decode(key).decode("utf-8")
+    except Exception as exc:  # noqa: BLE001 - propagate helpful failure for CI logs
+        raise SystemExit(f"Failed to decode APP_STORE_CONNECT_PRIVATE_KEY: {exc}")
+
+with open(sys.argv[1], "w", encoding="utf-8") as fh:
+    fh.write(data if data.endswith("\n") else data + "\n")
+PY
           chmod 600 "$KEY_FILE"
 
           app-store-connect fetch-signing-files \
@@ -135,33 +153,16 @@ workflows:
             exit 1
           fi
 
-          PROFILE_INFO="$(mktemp)"
-          security cms -D -i "$PROFILE_PATH" > "$PROFILE_INFO"
-          PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_INFO")"
-          PROFILE_UUID="$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_INFO")"
+          PROJECT_PATH="ios/App/App.xcodeproj"
+          xcode-project use-profiles \
+            --project "$PROJECT_PATH" \
+            --profile "$PROFILE_PATH" \
+            --archive-method app-store
 
-          security find-identity -v -p codesigning
-          SIGNING_IDENTITY="$(security find-identity -v -p codesigning | awk -F'"' '/Apple Distribution/ {print $2; exit}')"
-          if [ -z "$SIGNING_IDENTITY" ]; then
-            SIGNING_IDENTITY="$(security find-identity -v -p codesigning | awk -F'"' 'NR==1 {print $2}')"
-          fi
-
-          if [ -z "$PROFILE_NAME" ] || [ -z "$PROFILE_UUID" ] || [ -z "$SIGNING_IDENTITY" ]; then
-            echo "Unable to parse provisioning profile metadata." >&2
-            exit 1
-          fi
-
-          rm -f "$PROFILE_INFO" "$KEY_FILE"
+          rm -f "$KEY_FILE"
 
           keychain initialize
           keychain add-certificates --certificate "$CERT_PATH" --certificate-password "@file:$CERT_PASSWORD_FILE"
-
-          {
-            printf 'PROVISIONING_PROFILE_PATH=%s\n' "$PROFILE_PATH"
-            printf 'PROVISIONING_PROFILE_NAME=%s\n' "$PROFILE_NAME"
-            printf 'PROVISIONING_PROFILE_UUID=%s\n' "$PROFILE_UUID"
-            printf 'CODE_SIGN_IDENTITY=%s\n' "$SIGNING_IDENTITY"
-          } >> "$CM_ENV"
       - name: Install CocoaPods dependencies
         script: |
           #!/bin/bash
@@ -199,10 +200,6 @@ workflows:
           : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
           : "${XCODE_SCHEME:=App}"
           : "${BUNDLE_ID:=com.apex.tradeline}"
-          : "${CODE_SIGN_IDENTITY:?Missing CODE_SIGN_IDENTITY from signing step}"
-          : "${PROVISIONING_PROFILE_NAME:?Missing PROVISIONING_PROFILE_NAME from signing step}"
-          : "${PROVISIONING_PROFILE_UUID:?Missing PROVISIONING_PROFILE_UUID from signing step}"
-          : "${PROVISIONING_PROFILE_PATH:?Missing PROVISIONING_PROFILE_PATH from signing step}"
           WORKSPACE="$XCODE_WORKSPACE"
           SCHEME="$XCODE_SCHEME"
           BUNDLE="$BUNDLE_ID"
@@ -215,12 +212,6 @@ workflows:
             -archivePath "$CM_BUILD_DIR/App.xcarchive" \
             -allowProvisioningUpdates \
             DEVELOPMENT_TEAM="${TEAM_ID}" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="$CODE_SIGN_IDENTITY" \
-            CODE_SIGNING_REQUIRED=YES \
-            CODE_SIGNING_ALLOWED=YES \
-            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_NAME" \
-            PROVISIONING_PROFILE="$PROVISIONING_PROFILE_UUID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE" \
             MARKETING_VERSION="$APP_VERSION" \
             CURRENT_PROJECT_VERSION="$APP_BUILD" \
@@ -260,6 +251,8 @@ workflows:
             --apiKey "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
             --apiKeyFile "$KEY_FILE"
+
+          rm -f "$KEY_FILE"
     artifacts:
       - $CM_BUILD_DIR/App.xcarchive
       - $CM_BUILD_DIR/export/*.ipa
