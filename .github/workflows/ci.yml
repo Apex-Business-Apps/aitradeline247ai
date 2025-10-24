@@ -1,40 +1,36 @@
-name: CI Pipeline
+name: ci
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
-  workflow_dispatch: {}
-
-permissions:
-  contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: 20.11.1
 
 jobs:
   build:
     name: ci/build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci
-      - run: npm run build
+      - name: Install dependencies
+        run: npm ci
+      - name: Build web bundle
+        run: npm run build
 
   lint:
     name: ci/lint
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,35 +38,96 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
       - run: npm ci
-      - run: npm run lint --if-present
+      - run: npm run lint
 
   test:
     name: ci/test
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Detect test script
-        id: pkg
-        run: echo "has_test=$(node -p \"(require('./package.json').scripts||{}).test||''\")" >> $GITHUB_OUTPUT
-      - name: Install deps
-        if: ${{ steps.pkg.outputs.has_test != '' }}
-        run: npm ci
-      - name: Run tests (if present)
-        if: ${{ steps.pkg.outputs.has_test != '' }}
-        run: npm test -- --ci
-      - name: Skip (no tests)
-        if: ${{ steps.pkg.outputs.has_test == '' }}
-        run: echo "No test script defined — skipping."
+      - run: npm ci
+      - name: Run unit tests
+        run: |
+          if npm run | grep -q "test"; then
+            npm test -- --watch=false
+          else
+            echo "No test script defined — skipping."
+          fi
 
-  e2e:
-    name: ci/e2e
-    runs-on: ubuntu-latest
-    needs: [ build, test ]
-    if: false  # enable when you actually add e2e
+  ios:
+    name: ci/ios-build
+    runs-on: macos-14
+    needs: [ build, lint, test ]
+    timeout-minutes: 45
+    env:
+      XCODE_WORKSPACE: ios/App/App.xcworkspace
+      XCODE_SCHEME: App
     steps:
-      - run: echo "E2E disabled for now."
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install npm dependencies
+        run: npm ci
+      - name: Build web assets
+        run: npm run build
+      - name: Verify web build artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f dist/index.html ]]; then
+            echo "::error title=Missing web bundle::Expected dist/index.html after 'npm run build'." >&2
+            exit 1
+          fi
+      - name: Sync Capacitor iOS wrapper
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes cap sync ios
+      - name: Verify iOS project exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
+          WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
+          WORKSPACE_FILE="${WORKSPACE_PATH%/}/contents.xcworkspacedata"
+
+          missing=0
+          if [[ ! -f "$PROJECT_FILE" ]]; then
+            echo "::error title=Missing Xcode project::Expected $PROJECT_FILE after syncing Capacitor." >&2
+            missing=1
+          fi
+          if [[ ! -f "$WORKSPACE_FILE" ]]; then
+            echo "::error title=Missing Xcode workspace::Expected $WORKSPACE_FILE after syncing Capacitor." >&2
+            missing=1
+          fi
+
+          if (( missing )); then
+            echo "Run 'npx cap add ios' locally and commit the generated ios/App wrapper." >&2
+            exit 1
+          fi
+      - name: Install CocoaPods dependencies
+        shell: bash
+        working-directory: ios/App
+        run: |
+          set -euo pipefail
+          pod install
+      - name: Build iOS workspace (simulator)
+        shell: bash
+        working-directory: ios/App
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -workspace "$(basename "$XCODE_WORKSPACE")" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
