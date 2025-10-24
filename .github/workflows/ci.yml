@@ -126,6 +126,7 @@ jobs:
           set -euo pipefail
           pod install
       - name: Build iOS workspace (simulator)
+        shell: bash
         working-directory: ios/App
         run: |
           set -euo pipefail
