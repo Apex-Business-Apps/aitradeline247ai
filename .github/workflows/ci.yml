@@ -72,6 +72,9 @@ jobs:
     runs-on: macos-14
     needs: [ build, lint, test ]
     timeout-minutes: 45
+    env:
+      XCODE_WORKSPACE: ios/App/App.xcworkspace
+      XCODE_SCHEME: App
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
