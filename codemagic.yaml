@@ -4,37 +4,253 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
-  groups:
-    - appstore_credentials   
+      groups:
+        - appstore_credentials
       vars:
-        APP_VERSION: "1.0.0"           # keep non-empty; do NOT declare APP_BUILD here
+        APP_VERSION: "1.0.0"
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.apex.tradeline"
+        TEAM_ID: "NWGUYF42KW"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "5XDRL75994"
+        APP_STORE_CONNECT_ISSUER_ID: "7efaf094-3c6f-4c6c-afdb-d6e2c84871c7"
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
       npm: "10"
-  scripts:
-  - name: Resolve version/build
-    script: |
-      set -euo pipefail
-      : "${APP_VERSION:=1.0.0}"
-      APP_BUILD="$(date +%y%m%d%H%M)"
-      echo "APP_VERSION=$APP_VERSION" >> "$CM_ENV"
-      echo "APP_BUILD=$APP_BUILD"     >> "$CM_ENV"
-  scripts:
-      - name: "Resolve version/build"
+    scripts:
+      - name: Resolve version/build
         script: |
           set -euo pipefail
           : "${APP_VERSION:=1.0.0}"
           APP_BUILD="$(date +%y%m%d%H%M)"
-          echo "APP_VERSION=$APP_VERSION" >> "$CM_ENV"
-          echo "APP_BUILD=$APP_BUILD"     >> "$CM_ENV"
-      - name: "Echo ok"
-        script: echo "codemagic.yaml parsed. Ready to extend."
- publishing:
-   app_store_connect:
-    api_key:
-      key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-      issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-      private_key: $APP_STORE_CONNECT_PRIVATE_KEY
-      submit_to_testflight: true
+          {
+            echo "APP_VERSION=$APP_VERSION"
+            echo "APP_BUILD=$APP_BUILD"
+          } >> "$CM_ENV"
+      - name: Install npm dependencies
+        script: npm ci
+      - name: Build web assets
+        script: npm run build
+      - name: Verify web build artifacts
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          if [ ! -f dist/index.html ]; then
+            echo "Missing dist/index.html after npm run build" >&2
+            exit 1
+          fi
+      - name: Sync Capacitor iOS wrapper
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          npx --yes cap sync ios
+      - name: Verify iOS project exists
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          missing=0
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
+          PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
+          WORKSPACE_PATH="$XCODE_WORKSPACE"
+          if [ ! -f "$PROJECT_FILE" ]; then
+            echo "Expected $PROJECT_FILE before running pod install" >&2
+            echo "Run 'npx cap add ios' locally and commit the generated wrapper" >&2
+            missing=1
+          fi
+          if [ ! -f "$WORKSPACE_PATH/contents.xcworkspacedata" ]; then
+            echo "Expected $WORKSPACE_PATH/contents.xcworkspacedata before running pod install" >&2
+            echo "Ensure the workspace is committed or regenerate it with 'npx cap sync ios'" >&2
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+      - name: Normalize Xcode configuration
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
+          : "${XCODE_SCHEME:=App}"
+          : "${BUNDLE_ID:=com.apex.tradeline}"
+          WORKSPACE="$XCODE_WORKSPACE"
+          SCHEME="$XCODE_SCHEME"
+          BUNDLE="$BUNDLE_ID"
+          STORE_ID="${APP_STORE_ID:-}"
 
+          echo "Using Xcode workspace: $WORKSPACE"
+          echo "Using Xcode scheme: $SCHEME"
+          echo "Using bundle identifier: $BUNDLE"
+          if [ -z "$STORE_ID" ]; then
+            echo "Warning: APP_STORE_ID not provided; TestFlight upload will succeed but App Store metadata sync is unavailable." >&2
+          fi
+
+          {
+            printf 'XCODE_WORKSPACE=%s\n' "$WORKSPACE"
+            printf 'XCODE_SCHEME=%s\n' "$SCHEME"
+            printf 'BUNDLE_ID=%s\n' "$BUNDLE"
+            printf 'APP_STORE_ID=%s\n' "$STORE_ID"
+          } >> "$CM_ENV"
+      - name: Verify signing environment
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          missing=0
+          for var in TEAM_ID APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
+            if [ -z "${!var:-}" ]; then
+              echo "Missing required environment variable: $var" >&2
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Populate TEAM_ID and the App Store Connect API key variables in Codemagic's Environment groups." >&2
+            exit 1
+          fi
+      - name: Fetch signing assets
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          python3 -m pip install --upgrade pip >/dev/null
+          python3 -m pip install --quiet codemagic-cli-tools
+          export PATH="$HOME/.local/bin:$HOME/Library/Python/3.11/bin:$HOME/Library/Python/3.10/bin:$HOME/Library/Python/3.9/bin:$PATH"
+
+          KEY_FILE="$CM_BUILD_DIR/appstore_connect_key.p8"
+          printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+
+          app-store-connect fetch-signing-files \
+            --type IOS_APP_STORE \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "@$KEY_FILE" \
+            --create \
+            "$BUNDLE_ID"
+
+          CERT_DIR="$HOME/Library/MobileDevice/Certificates"
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          CERT_PATH="$(find "$CERT_DIR" -maxdepth 1 -name '*.p12' -print -quit)"
+          CERT_PASSWORD_FILE="$(find "$CERT_DIR" -maxdepth 1 -name 'certificate_password.txt' -print -quit)"
+          PROFILE_PATH="$(find "$PROFILE_DIR" -maxdepth 1 -name '*.mobileprovision' -print -quit)"
+
+          if [ -z "$CERT_PATH" ] || [ -z "$CERT_PASSWORD_FILE" ] || [ -z "$PROFILE_PATH" ]; then
+            echo "Failed to fetch signing materials from App Store Connect." >&2
+            exit 1
+          fi
+
+          PROFILE_INFO="$(mktemp)"
+          security cms -D -i "$PROFILE_PATH" > "$PROFILE_INFO"
+          PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_INFO")"
+          PROFILE_UUID="$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_INFO")"
+
+          if [ -z "$PROFILE_NAME" ] || [ -z "$PROFILE_UUID" ]; then
+            echo "Unable to parse provisioning profile metadata." >&2
+            exit 1
+          fi
+
+          rm -f "$PROFILE_INFO" "$KEY_FILE"
+
+          keychain initialize
+          keychain add-certificates --certificate "$CERT_PATH" --certificate-password "@file:$CERT_PASSWORD_FILE"
+
+          {
+            printf 'PROVISIONING_PROFILE_PATH=%s\n' "$PROFILE_PATH"
+            printf 'PROVISIONING_PROFILE_NAME=%s\n' "$PROFILE_NAME"
+            printf 'PROVISIONING_PROFILE_UUID=%s\n' "$PROFILE_UUID"
+          } >> "$CM_ENV"
+      - name: Install CocoaPods dependencies
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          cd ios/App
+          pod install
+      - name: Prepare export options
+        script: |
+          cat <<'PLIST' > "$CM_BUILD_DIR/ExportOptions.plist"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+            <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>stripSwiftSymbols</key>
+              <true/>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>compileBitcode</key>
+              <true/>
+              <key>destination</key>
+              <string>export</string>
+              <key>manageAppVersionAndBuildNumber</key>
+              <true/>
+            </dict>
+          </plist>
+          PLIST
+      - name: Archive iOS build
+        script: |
+          set -euo pipefail
+          cd ios/App
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
+          : "${XCODE_SCHEME:=App}"
+          : "${BUNDLE_ID:=com.apex.tradeline}"
+          : "${PROVISIONING_PROFILE_NAME:?Missing PROVISIONING_PROFILE_NAME from signing step}"
+          : "${PROVISIONING_PROFILE_UUID:?Missing PROVISIONING_PROFILE_UUID from signing step}"
+          WORKSPACE="$XCODE_WORKSPACE"
+          SCHEME="$XCODE_SCHEME"
+          BUNDLE="$BUNDLE_ID"
+          WORKSPACE_NAME="$(basename "$WORKSPACE")"
+          xcodebuild \
+            -workspace "$WORKSPACE_NAME" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+            -allowProvisioningUpdates \
+            DEVELOPMENT_TEAM="${TEAM_ID}" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_NAME" \
+            PROVISIONING_PROFILE="$PROVISIONING_PROFILE_UUID" \
+            PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE" \
+            MARKETING_VERSION="$APP_VERSION" \
+            CURRENT_PROJECT_VERSION="$APP_BUILD" \
+            clean archive
+      - name: Export IPA
+        script: |
+          set -euo pipefail
+          xcodebuild \
+            -exportArchive \
+            -archivePath "$CM_BUILD_DIR/App.xcarchive" \
+            -exportOptionsPlist "$CM_BUILD_DIR/ExportOptions.plist" \
+            -exportPath "$CM_BUILD_DIR/export"
+      - name: Upload to TestFlight
+        script: |
+          #!/bin/bash
+          set -euo pipefail
+          IPA_PATH="$(find "$CM_BUILD_DIR/export" -name '*.ipa' -print -quit)"
+          if [ -z "$IPA_PATH" ]; then
+            echo "No IPA produced at $CM_BUILD_DIR/export" >&2
+            exit 1
+          fi
+
+          if [ -z "${APP_STORE_CONNECT_PRIVATE_KEY:-}" ]; then
+            echo "APP_STORE_CONNECT_PRIVATE_KEY is not set; unable to upload to TestFlight." >&2
+            exit 1
+          fi
+
+          KEY_FILE="$CM_BUILD_DIR/appstore_key.p8"
+          printf '%s\n' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+
+          echo "Uploading $IPA_PATH to TestFlight via App Store Connect API key"
+          xcrun altool \
+            --upload-app \
+            --type ios \
+            --file "$IPA_PATH" \
+            --apiKey "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+            --apiKeyFile "$KEY_FILE"
+    artifacts:
+      - $CM_BUILD_DIR/App.xcarchive
+      - $CM_BUILD_DIR/export/*.ipa
