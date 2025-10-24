@@ -50,8 +50,9 @@ workflows:
           #!/bin/bash
           set -euo pipefail
           missing=0
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
           PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
-          WORKSPACE_PATH="${XCODE_WORKSPACE}"
+          WORKSPACE_PATH="$XCODE_WORKSPACE"
           if [ ! -f "$PROJECT_FILE" ]; then
             echo "Expected $PROJECT_FILE before running pod install" >&2
             echo "Run 'npx cap add ios' locally and commit the generated wrapper" >&2
@@ -69,9 +70,12 @@ workflows:
         script: |
           #!/bin/bash
           set -euo pipefail
-          WORKSPACE="${XCODE_WORKSPACE}"
-          SCHEME="${XCODE_SCHEME}"
-          BUNDLE="${BUNDLE_ID}"
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
+          : "${XCODE_SCHEME:=App}"
+          : "${BUNDLE_ID:=com.apex.tradeline}"
+          WORKSPACE="$XCODE_WORKSPACE"
+          SCHEME="$XCODE_SCHEME"
+          BUNDLE="$BUNDLE_ID"
           STORE_ID="${APP_STORE_ID:-}"
 
           echo "Using Xcode workspace: $WORKSPACE"
@@ -136,9 +140,12 @@ workflows:
         script: |
           set -euo pipefail
           cd ios/App
-          WORKSPACE="${XCODE_WORKSPACE}"
-          SCHEME="${XCODE_SCHEME}"
-          BUNDLE="${BUNDLE_ID}"
+          : "${XCODE_WORKSPACE:=ios/App/App.xcworkspace}"
+          : "${XCODE_SCHEME:=App}"
+          : "${BUNDLE_ID:=com.apex.tradeline}"
+          WORKSPACE="$XCODE_WORKSPACE"
+          SCHEME="$XCODE_SCHEME"
+          BUNDLE="$BUNDLE_ID"
           WORKSPACE_NAME="$(basename "$WORKSPACE")"
           xcodebuild \
             -workspace "$WORKSPACE_NAME" \
