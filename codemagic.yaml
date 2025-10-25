@@ -27,23 +27,22 @@ scripts:
   - name: Sanitize package.json (remove npm/Capacitor hooks)
     script: |
       set -euo pipefail
-      node - <<'JS'
-      const fs = require('fs');
-      const path = 'package.json';
-      const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
-      pkg.scripts = pkg.scripts || {};
-      for (const k of ['prebuild','postbuild','capacitor:sync:before','capacitor:sync:after']) {
-        if (pkg.scripts[k]) delete pkg.scripts[k];
-      }
-      fs.writeFileSync(path, JSON.stringify(pkg, null, 2));
-      console.log('Sanitized scripts:', Object.keys(pkg.scripts));
-      JS
+      node --input-type=module -e "
+        import fs from 'fs';
+        const p = JSON.parse(fs.readFileSync('package.json','utf8'));
+        p.scripts = p.scripts || {};
+        for (const k of ['prebuild','postbuild','capacitor:sync:before','capacitor:sync:after']) {
+          if (p.scripts[k]) delete p.scripts[k];
+        }
+        fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
+      "
+      echo "Sanitized package.json scripts."
 
   - name: Resolve version/build
     script: |
       set -euo pipefail
       APP_BUILD="$(date +%y%m%d%H)"
-      echo "APP_BUILD=$APP_BUILD" | tee -a "$CM_ENV"
+      echo "APP_BUILD=$APP_BUILD" >> "$CM_ENV"
       echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
 
   - name: Install deps
@@ -83,11 +82,15 @@ scripts:
       cd ios/App
       pod install --repo-update
 
-  - name: Set iOS Info.plist versions
+  - name: Set iOS Info.plist versions + iPhone-only device family
     script: |
       set -euo pipefail
-      /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" ios/App/App/Info.plist
-      /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" ios/App/App/Info.plist
+      PLIST="ios/App/App/Info.plist"
+      /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" "$PLIST"
+      /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" "$PLIST"
+      /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" "$PLIST" || true
+      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
+      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"   # iPhone only
 
   - name: Initialize keychain and add certificates
     script: |
@@ -121,58 +124,53 @@ scripts:
         echo "ERROR: No App Store provisioning profile found for $BUNDLE_ID in $PROFILE_DIR"
         exit 1
       fi
-      echo "PROFILE_NAME=$PROFILE_NAME" | tee -a "$CM_ENV"
+      echo "PROFILE_NAME=$PROFILE_NAME" >> "$CM_ENV"
       echo "Using provisioning profile: $PROFILE_NAME"
 
   - name: Capacitor copy iOS (force + guards)
     script: |
       set -euo pipefail
       npx cap copy ios
-      [ -f ios/App/App/capacitor.config.json ] || { echo "ERROR: Missing ios/App/App/capacitor.config.json"; exit 1; }
-      [ -d ios/App/App/public ] || { echo "ERROR: Missing ios/App/App/public (web assets)"; exit 1; }
+      test -f ios/App/App/capacitor.config.json || { echo "ERROR: Missing ios/App/App/capacitor.config.json"; exit 1; }
+      test -d ios/App/App/public || { echo "ERROR: Missing ios/App/App/public (web assets). Check Vite outDir and Capacitor webDir."; exit 1; }
 
-  - name: Limit device family to iPhone
+  - name: Prepare App Icons (validate sizes and alpha; build asset catalog)
     script: |
       set -euo pipefail
-      PLIST="ios/App/App/Info.plist"
-      /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" "$PLIST" >/dev/null 2>&1 || true
-      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
-      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
-
-  - name: Prepare App Icons (flatten alpha, enforce sizes, write asset catalog)
-    script: |
-      set -euo pipefail
-      ICON_SRC_DIR="public/assets/brand/App_Icons/ios"
-      ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
-      SRC1024="$ICON_SRC_DIR/AppStore1024.png"
-      SRC180="$ICON_SRC_DIR/iPhoneApp180.png"
-      SRC120="$ICON_SRC_DIR/iPhoneSpotlight120.png"
-      for f in "$SRC1024" "$SRC180" "$SRC120"; do
-        [ -f "$f" ] || { echo "ERROR: Missing $f"; exit 1; }
+      SRC_DIR="public/assets/brand/App_Icons/ios"
+      APP1024="$SRC_DIR/AppStore1024.png"
+      IPHONE180="$SRC_DIR/iPhoneApp180.png"
+      SPOT120="$SRC_DIR/iPhoneSpotlight120.png"
+      for f in "$APP1024" "$IPHONE180" "$SPOT120"; do
+        [ -f "$f" ] || { echo "ERROR: $f not found."; exit 1; }
       done
+      sips -g pixelHeight -g pixelWidth "$APP1024" | grep -q "pixelHeight: 1024" && sips -g pixelWidth "$APP1024" | grep -q "pixelWidth: 1024" || { echo "ERROR: AppStore1024.png must be 1024x1024."; exit 1; }
+      sips -g pixelHeight -g pixelWidth "$IPHONE180" | grep -q "pixelHeight: 180" && sips -g pixelWidth "$IPHONE180" | grep -q "pixelWidth: 180" || { echo "ERROR: iPhoneApp180.png must be 180x180."; exit 1; }
+      sips -g pixelHeight -g pixelWidth "$SPOT120" | grep -q "pixelHeight: 120" && sips -g pixelWidth "$SPOT120" | grep -q "pixelWidth: 120" || { echo "ERROR: iPhoneSpotlight120.png must be 120x120."; exit 1; }
+      # Fail if alpha channel present (icons must be opaque)
+      for f in "$APP1024" "$IPHONE180" "$SPOT120"; do
+        if sips -g hasAlpha "$f" | grep -q "hasAlpha: yes"; then
+          echo "ERROR: $f has transparency (alpha). Please provide opaque PNGs."
+          exit 1
+        fi
+      done
+      ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
       mkdir -p "$ICONSET"
-      python3 - <<'PY'
-import os
-from PIL import Image
+      cp "$APP1024" "$ICONSET/ios-marketing-1024.png"
+      cp "$IPHONE180" "$ICONSET/iphone-60x60@3x.png"
+      cp "$SPOT120" "$ICONSET/iphone-40x40@3x.png"
+      cat > "$ICONSET/Contents.json" <<'JSON'
+      {
+        "images": [
+          { "size": "60x60", "idiom": "iphone", "filename": "iphone-60x60@3x.png", "scale": "3x" },
+          { "size": "40x40", "idiom": "iphone", "filename": "iphone-40x40@3x.png", "scale": "3x" },
+          { "size": "1024x1024", "idiom": "ios-marketing", "filename": "ios-marketing-1024.png", "scale": "1x" }
+        ],
+        "info": { "version": 1, "author": "codemagic" }
+      }
+      JSON
+      echo "AppIcon.appiconset prepared."
 
-ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
-def save_opaque(src, out_name, size):
-img = Image.open(src).convert("RGBA")
-bg = Image.new("RGBA", img.size, "#FFFFFF")
-out = Image.alpha_composite(bg, img).convert("RGB").resize(size, Image.LANCZOS)
-out.save(os.path.join(ICONSET, out_name), "PNG")
-
-os.makedirs(ICONSET, exist_ok=True)
-save_opaque("public/assets/brand/App_Icons/ios/AppStore1024.png", "ItunesArtwork-1024.png", (1024,1024))
-save_opaque("public/assets/brand/App_Icons/ios/iPhoneApp180.png", "Icon-App-60x60@3x.png", (180,180))
-save_opaque("public/assets/brand/App_Icons/ios/iPhoneSpotlight120.png", "Icon-App-60x60@2x.png", (120,120))
-
-open(os.path.join(ICONSET, "Contents.json"), "w").write(
-'{\n "images": [\n {"size":"60x60","idiom":"iphone","filename":"Icon-App-60x60@2x.png","scale":"2x"},\n {"size":"60x60","idiom":"iphone","filename":"Icon-App-60x60@3x.png","scale":"3x"}\n ],\n "info":{"version":1,"author":"xcode"}\n}\n')
-PY
-
-javascript
-Copy code
   - name: Xcode archive (Release)
     script: |
       set -euo pipefail
@@ -185,7 +183,7 @@ Copy code
         -allowProvisioningUpdates \
         clean archive
 
-  - name: Export IPA for App Store
+  - name: Export IPA for App Store (explicit profile)
     script: |
       set -euo pipefail
       cat > exportOptions.plist <<PLIST
