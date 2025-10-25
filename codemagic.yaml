@@ -4,16 +4,18 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 60
 
-    # You connected this in Codemagic (green dot). Use the exact display name.
     integrations:
-      app_store_connect: Created via API
+      app_store_connect: Created via API   # the key you connected (green dot)
 
     environment:
       groups:
-        - ios_config              # TEAM_ID, BUNDLE_ID, etc.
+        - ios_config                      # TEAM_ID, BUNDLE_ID, etc.
+      ios_signing:                        # <-- helps Codemagic pick the right cert+profile
+        distribution_type: app_store
+        bundle_identifier: $BUNDLE_ID
       vars:
         APP_VERSION: "1.0.0"
-        APP_BUILD: "1"            # non-empty for validator; we bump below
+        APP_BUILD: "1"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
       xcode: latest
@@ -30,7 +32,6 @@ workflows:
     scripts:
       - name: Resolve version/build
         script: |
-          # monotonic numeric build (YYMMDDHH)
           APP_BUILD="$(date +%y%m%d%H)"
           echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
 
@@ -40,10 +41,9 @@ workflows:
 
       - name: Build web (ignore lifecycle hooks)
         script: |
-          # Avoids any `prebuild`/`postbuild` surprises from package.json
           NPM_CONFIG_IGNORE_SCRIPTS=true npm run build
 
-      - name: Verify built assets (run checks AFTER build)
+      - name: Verify built assets
         script: |
           node scripts/verify-app.cjs
           node scripts/verify_icons.mjs
@@ -59,15 +59,14 @@ workflows:
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" ios/App/App/Info.plist
 
-      # Sign using Code signing identities (uploaded certs + provisioning profiles)
       - name: Initialize keychain & add uploaded certs
         script: |
           keychain initialize
-          keychain add-certificates
+          keychain add-certificates     # pulls certs you added in Code signing identities
 
       - name: Apply provisioning profiles to Xcode project
         script: |
-          xcode-project use-profiles
+          xcode-project use-profiles    # applies profiles that match ios_signing settings
 
       - name: Xcode archive (Release)
         script: |
@@ -105,6 +104,5 @@ workflows:
 
     publishing:
       app_store_connect:
-        # Use the integration; no API key fields in YAML.
-        auth: integration
+        auth: integration                # uses the connected ASC key
         submit_to_testflight: true
