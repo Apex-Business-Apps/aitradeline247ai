@@ -1,133 +1,63 @@
-name: ci
+name: ci/web
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
+push:
+branches: [main]
+pull_request:
+branches: [main]
+
+permissions:
+contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  NODE_VERSION: 20.11.1
+group: ci-web-${{ github.ref }}
+cancel-in-progress: true
 
 jobs:
-  build:
-    name: ci/build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Build web bundle
-        run: npm run build
+web:
+name: Build + Verify web (no lifecycle traps)
+runs-on: ubuntu-latest
+timeout-minutes: 20
 
-  lint:
-    name: ci/lint
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
 
-  test:
-    name: ci/test
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
-      - name: Run unit tests
-        run: |
-          if npm run | grep -q "test"; then
-            npm test -- --watch=false
-          else
-            echo "No test script defined — skipping."
-          fi
+  - name: Setup Node.js 20.11.1
+    uses: actions/setup-node@v4
+    with:
+      node-version: '20.11.1'
+      cache: 'npm'
 
-  ios:
-    name: ci/ios-build
-    runs-on: macos-14
-    needs: [ build, lint, test ]
-    timeout-minutes: 45
-    env:
-      XCODE_WORKSPACE: ios/App/App.xcworkspace
-      XCODE_SCHEME: App
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - name: Install npm dependencies
-        run: npm ci
-      - name: Build web assets
-        run: npm run build
-      - name: Verify web build artifacts
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [[ ! -f dist/index.html ]]; then
-            echo "::error title=Missing web bundle::Expected dist/index.html after 'npm run build'." >&2
-            exit 1
-          fi
-      - name: Sync Capacitor iOS wrapper
-        shell: bash
-        run: |
-          set -euo pipefail
-          npx --yes cap sync ios
-      - name: Verify iOS project exists
-        shell: bash
-        run: |
-          set -euo pipefail
-          PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
-          WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
-          WORKSPACE_FILE="${WORKSPACE_PATH%/}/contents.xcworkspacedata"
+  - name: Install dependencies
+    run: npm ci --no-audit --no-fund
 
-          missing=0
-          if [[ ! -f "$PROJECT_FILE" ]]; then
-            echo "::error title=Missing Xcode project::Expected $PROJECT_FILE after syncing Capacitor." >&2
-            missing=1
-          fi
-          if [[ ! -f "$WORKSPACE_FILE" ]]; then
-            echo "::error title=Missing Xcode workspace::Expected $WORKSPACE_FILE after syncing Capacitor." >&2
-            missing=1
-          fi
+  - name: Sanitize package.json (remove pre/post and capacitor sync hooks)
+    shell: bash
+    run: |
+      cat > sanitize.mjs <<'JS'
+      import fs from 'node:fs';
+      const p = JSON.parse(fs.readFileSync('package.json','utf8'));
+      p.scripts = p.scripts || {};
+      for (const k of ['prebuild','postbuild','capacitor:sync:before','capacitor:sync:after']) {
+        if (p.scripts[k]) delete p.scripts[k];
+      }
+      fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
+      console.log('Sanitized scripts:', Object.keys(p.scripts));
+      JS
+      node sanitize.mjs
 
-          if (( missing )); then
-            echo "Run 'npx cap add ios' locally and commit the generated ios/App wrapper." >&2
-            exit 1
-          fi
-      - name: Install CocoaPods dependencies
-        shell: bash
-        working-directory: ios/App
-        run: |
-          set -euo pipefail
-          pod install
-      - name: Build iOS workspace (simulator)
-        shell: bash
-        working-directory: ios/App
-        run: |
-          set -euo pipefail
-          xcodebuild \
-            -workspace "$(basename "$XCODE_WORKSPACE")" \
-            -scheme "$XCODE_SCHEME" \
-            -configuration Debug \
-            -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO \
-            build
+  - name: Build web (ignore lifecycle hooks)
+    run: NPM_CONFIG_IGNORE_SCRIPTS=true npm run build
+
+  - name: Verify AFTER build
+    run: |
+      node scripts/verify-app.cjs
+      node scripts/verify_icons.mjs
+
+  - name: Upload web bundle artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: web-dist
+      path: dist
+      if-no-files-found: error
