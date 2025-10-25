@@ -1,6 +1,6 @@
 workflows:
   ios_capacitor_testflight:
-    name: iOS - Capacitor -> TestFlight (single run)
+    name: iOS - Capacitor -> TestFlight
     instance_type: mac_mini_m2
     max_build_duration: 60
 
@@ -30,7 +30,7 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Sanitize package.json (remove npm/Capacitor hooks)
+      - name: Sanitize package.json (remove npm and Capacitor hooks)
         script: |
           node --input-type=module -e "
             import fs from 'fs';
@@ -40,14 +40,13 @@ workflows:
               if (p.scripts[k]) delete p.scripts[k];
             }
             fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
-            console.log('Sanitized scripts:', Object.keys(p.scripts));
           "
 
-      - name: Resolve version/build
+      - name: Resolve version and build
         script: |
           APP_BUILD="$(date +%y%m%d%H)"
-          echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
           echo "APP_BUILD=$APP_BUILD" >> "$CM_ENV"
+          echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
 
       - name: Install deps
         script: |
@@ -66,7 +65,7 @@ workflows:
         script: |
           npx cap sync ios
 
-      - name: Raise iOS deployment target to 15.0 (project + Podfile)
+      - name: Raise iOS deployment target to 15.0 (project and Podfile)
         script: |
           sed -i '' -E "s/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g" ios/App/App.xcodeproj/project.pbxproj
           if grep -q "platform :ios" ios/App/Podfile; then
@@ -118,7 +117,7 @@ workflows:
           echo "PROFILE_NAME=$PROFILE_NAME" >> "$CM_ENV"
           echo "Using provisioning profile: $PROFILE_NAME"
 
-      - name: Capacitor copy iOS (force + guards)
+      - name: Capacitor copy iOS (force and guards)
         script: |
           npx cap copy ios
           if [ ! -f ios/App/App/capacitor.config.json ]; then
@@ -126,11 +125,11 @@ workflows:
             exit 1
           fi
           if [ ! -d ios/App/App/public ]; then
-            echo "ERROR: Missing ios/App/App/public (web assets). Check Vite outDir and Capacitor webDir."
+            echo "ERROR: Missing ios/App/App/public (web assets)"
             exit 1
           fi
 
-      - name: Limit device family to iPhone (skip iPad icons)
+      - name: Limit device family to iPhone
         script: |
           PLIST="ios/App/App/Info.plist"
           if /usr/libexec/PlistBuddy -c "Print :UIDeviceFamily" "$PLIST" >/dev/null 2>&1; then
@@ -138,53 +137,54 @@ workflows:
           fi
           /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
           /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
-          echo "UIDeviceFamily set to iPhone only."
 
-      - name: Prepare App Icons from repo (verify, then write asset catalog)
+      - name: Prepare App Icons from repo (auto-flatten, verify, write asset catalog)
         script: |
           set -euo pipefail
           ICON_DIR="public/assets/brand/App_Icons/ios"
           ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
           mkdir -p "$ICONSET"
-
           SRC1024="$ICON_DIR/AppStore1024.png"
           SRC120="$ICON_DIR/iPhoneSpotlight120.png"
           SRC180="$ICON_DIR/iPhoneApp180.png"
-
           for f in "$SRC1024" "$SRC120" "$SRC180"; do
             [ -f "$f" ] || { echo "ERROR: Missing $f"; exit 1; }
           done
+          python3 - <<'PY' >/dev/null 2>&1 || pip3 install --user Pillow >/dev/null
+          PY
+          python3 - <<'PY'
+import os
+from PIL import Image
 
-          # Validate sizes and alpha
-          check_size () {
-            local file="$1"; local expect="$2"
-            local size
-            size="$(sips -g pixelHeight -g pixelWidth "$file" 2>/dev/null | awk '/pixelHeight|pixelWidth/ {print $2}' | paste -sd 'x' -)"
-            [ "$size" = "$expect" ] || { echo "ERROR: $file must be $expect, got $size"; exit 1; }
-            local has_alpha
-            has_alpha="$(sips -g hasAlpha "$file" 2>/dev/null | awk '/hasAlpha/ {print $2}')"
-            [ "$has_alpha" = "no" ] || { echo "ERROR: $file has transparency (alpha). Flatten to opaque PNG."; exit 1; }
-          }
+ICON_DIR = "public/assets/brand/App_Icons/ios"
+ICONSET  = "ios/App/App/Assets.xcassets/AppIcon.appiconset"
 
-          check_size "$SRC1024" "1024x1024"
-          check_size "$SRC120"  "120x120"
-          check_size "$SRC180"  "180x180"
+SRC1024 = os.path.join(ICON_DIR, "AppStore1024.png")
+SRC120  = os.path.join(ICON_DIR, "iPhoneSpotlight120.png")
+SRC180  = os.path.join(ICON_DIR, "iPhoneApp180.png")
 
-          cp "$SRC120" "$ICONSET/Icon-App-60x60@2x.png"
-          cp "$SRC180" "$ICONSET/Icon-App-60x60@3x.png"
-          cp "$SRC1024" "$ICONSET/ItunesArtwork-1024.png"
+def flatten(src, size, hex_color="#F26722"):
+    img = Image.open(src).convert("RGBA")
+    bg  = Image.new("RGBA", img.size, hex_color)
+    out = Image.alpha_composite(bg, img).convert("RGB").resize(size, Image.LANCZOS)
+    return out
 
-          cat > "$ICONSET/Contents.json" <<'JSON'
-          {
-            "images": [
-              { "size": "60x60", "idiom": "iphone", "filename": "Icon-App-60x60@2x.png", "scale": "2x" },
-              { "size": "60x60", "idiom": "iphone", "filename": "Icon-App-60x60@3x.png", "scale": "3x" }
-            ],
-            "info": { "version": 1, "author": "xcode" }
-          }
-          JSON
+os.makedirs(ICONSET, exist_ok=True)
+out1024 = flatten(SRC1024, (1024,1024)); out1024.save(os.path.join(ICONSET,"ItunesArtwork-1024.png"), "PNG")
+out180  = flatten(SRC180,  (180,180));   out180.save(os.path.join(ICONSET,"Icon-App-60x60@3x.png"), "PNG")
+out120  = flatten(SRC120,  (120,120));   out120.save(os.path.join(ICONSET,"Icon-App-60x60@2x.png"), "PNG")
 
-          echo "Prepared AppIcon.appiconset from repository icons."
+open(os.path.join(ICONSET,"Contents.json"),"w").write(
+"""{
+  "images": [
+    { "size": "60x60", "idiom": "iphone", "filename": "Icon-App-60x60@2x.png", "scale": "2x" },
+    { "size": "60x60", "idiom": "iphone", "filename": "Icon-App-60x60@3x.png", "scale": "3x" }
+  ],
+  "info": { "version": 1, "author": "xcode" }
+}
+""")
+PY
+          ls -la "$ICONSET"
 
       - name: Xcode archive (Release)
         script: |
