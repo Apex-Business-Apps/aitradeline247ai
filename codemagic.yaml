@@ -1,22 +1,21 @@
 workflows:
   ios_capacitor_testflight:
-    name: iOS • Capacitor → TestFlight (Integration + Identities)
+    name: iOS - Capacitor -> TestFlight (Integration + Identities, no loops)
     instance_type: mac_mini_m2
     max_build_duration: 60
 
-    # Use the Apple Developer Portal integration you connected in Codemagic UI
     integrations:
       app_store_connect: Created via API
 
     environment:
       groups:
-        - ios_config                      # TEAM_ID, BUNDLE_ID, etc.
-      ios_signing:                        # tell Codemagic which identity/profile set to pull
+        - ios_config
+      ios_signing:
         distribution_type: app_store
         bundle_identifier: $BUNDLE_ID
       vars:
         APP_VERSION: "1.0.0"
-        APP_BUILD: "1"                    # validator wants non-empty; we auto-bump below
+        APP_BUILD: "1"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
       xcode: latest
@@ -31,9 +30,21 @@ workflows:
         - ios/Pods
 
     scripts:
+      - name: Sanitize package.json (remove npm/Capacitor hooks)
+        script: |
+          node --input-type=module -e "
+            import fs from 'fs';
+            const p = JSON.parse(fs.readFileSync('package.json','utf8'));
+            p.scripts = p.scripts || {};
+            for (const k of ['prebuild','postbuild','capacitor:sync:before','capacitor:sync:after']) {
+              if (p.scripts[k]) delete p.scripts[k];
+            }
+            fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
+            console.log('Scripts after sanitize:', Object.keys(p.scripts));
+          "
+
       - name: Resolve version/build
         script: |
-          # Monotonic numeric build (YYMMDDHH)
           APP_BUILD="$(date +%y%m%d%H)"
           echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
 
@@ -43,23 +54,20 @@ workflows:
 
       - name: Build web (ignore lifecycle hooks)
         script: |
-          # Avoid npm pre/post hook surprises in CI
           NPM_CONFIG_IGNORE_SCRIPTS=true npm run build
 
-      - name: Verify built assets (run checks AFTER build)
+      - name: Verify built assets (after build)
         script: |
           node scripts/verify-app.cjs
           node scripts/verify_icons.mjs
 
-      - name: Sync Capacitor platforms
+      - name: Sync Capacitor iOS
         script: |
           npx cap sync ios
 
-      - name: Raise iOS deployment target to 15.0 (project + Pods)
+      - name: Raise iOS deployment target to 15.0 (project + Podfile)
         script: |
-          # 1) Bump Xcode project deployment target for all configs
           sed -i '' -E "s/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g" ios/App/App.xcodeproj/project.pbxproj
-          # 2) Ensure Podfile platform matches (so Pods compile for the same target)
           if grep -q "platform :ios" ios/App/Podfile; then
             sed -i '' -E "s/platform :ios, *'[0-9.]+'$/platform :ios, '15.0'/" ios/App/Podfile
           else
@@ -76,21 +84,26 @@ workflows:
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" ios/App/App/Info.plist
 
-      - name: Initialize keychain & add uploaded certs
+      - name: Initialize keychain and add certificates
         script: |
           keychain initialize
-          keychain add-certificates         # imports your Code signing identities certificates
+          keychain add-certificates
 
-      - name: Apply provisioning profiles to Xcode project
+      - name: Apply provisioning profiles
         script: |
-          xcode-project use-profiles        # applies profiles that match ios_signing settings
+          xcode-project use-profiles
 
-      - name: Capacitor copy iOS (force)
+      - name: Capacitor copy iOS (force + guards)
         script: |
-          # Ensure web assets + config exist inside the iOS project at archive time
           npx cap copy ios
-          [ -f ios/App/App/capacitor.config.json ] || (echo "❌ Missing ios/App/App/capacitor.config.json" && exit 1)
-          [ -d ios/App/App/public ] || (echo "❌ Missing ios/App/App/public (web assets). Check Vite outDir and cap config.)" && exit 1)
+          if [ ! -f ios/App/App/capacitor.config.json ]; then
+            echo "ERROR: Missing ios/App/App/capacitor.config.json"
+            exit 1
+          fi
+          if [ ! -d ios/App/App/public ]; then
+            echo "ERROR: Missing ios/App/App/public (web assets). Check Vite outDir and Capacitor webDir."
+            exit 1
+          fi
 
       - name: Xcode archive (Release)
         script: |
@@ -128,5 +141,5 @@ workflows:
 
     publishing:
       app_store_connect:
-        auth: integration                  # publish via the connected integration
+        auth: integration
         submit_to_testflight: true
