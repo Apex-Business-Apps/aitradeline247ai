@@ -1,109 +1,39 @@
-workflows:
-  ios_capacitor_testflight:
-    name: iOS - Capacitor -> TestFlight (Integration + Identities, no loops)
-    instance_type: mac_mini_m2
-    max_build_duration: 60
-
-    integrations:
-      app_store_connect: Created via API
-
-    environment:
-      groups:
-        - ios_config
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: $BUNDLE_ID
-      vars:
-        APP_VERSION: "1.0.0"
-        APP_BUILD: "1"
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
-        XCODE_SCHEME: "App"
-      xcode: latest
-      node: 20.11.1
-      npm: 10
-      cocoapods: default
-
-    cache:
-      cache_paths:
-        - ~/.npm
-        - ~/.cocoapods
-        - ios/Pods
-
-    scripts:
-      - name: Sanitize package.json (remove npm/Capacitor hooks)
-        script: |
-          node --input-type=module -e "
-            import fs from 'fs';
-            const p = JSON.parse(fs.readFileSync('package.json','utf8'));
-            p.scripts = p.scripts || {};
-            for (const k of ['prebuild','postbuild','capacitor:sync:before','capacitor:sync:after']) {
-              if (p.scripts[k]) delete p.scripts[k];
-            }
-            fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
-            console.log('Scripts after sanitize:', Object.keys(p.scripts));
-          "
-
-      - name: Resolve version/build
-        script: |
-          APP_BUILD="$(date +%y%m%d%H)"
-          echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
-
-      - name: Install deps
-        script: |
-          npm ci --no-audit --no-fund
-
-      - name: Build web (ignore lifecycle hooks)
-        script: |
-          NPM_CONFIG_IGNORE_SCRIPTS=true npm run build
-
-      - name: Verify built assets (after build)
-        script: |
-          node scripts/verify-app.cjs
-          node scripts/verify_icons.mjs
-
-      - name: Sync Capacitor iOS
-        script: |
-          npx cap sync ios
-
-      - name: Raise iOS deployment target to 15.0 (project + Podfile)
-        script: |
-          sed -i '' -E "s/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g" ios/App/App.xcodeproj/project.pbxproj
-          if grep -q "platform :ios" ios/App/Podfile; then
-            sed -i '' -E "s/platform :ios, *'[0-9.]+'$/platform :ios, '15.0'/" ios/App/Podfile
-          else
-            (echo "platform :ios, '15.0'"; cat ios/App/Podfile) > ios/App/Podfile.tmp && mv ios/App/Podfile.tmp ios/App/Podfile
-          fi
-
-      - name: Install CocoaPods
-        script: |
-          cd ios/App
-          pod install --repo-update
-
-      - name: Set iOS Info.plist versions
-        script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" ios/App/App/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" ios/App/App/Info.plist
-
-      - name: Initialize keychain and add certificates
-        script: |
-          keychain initialize
-          keychain add-certificates
-
       - name: Apply provisioning profiles
         script: |
           xcode-project use-profiles
 
-      - name: Capacitor copy iOS (force + guards)
+      - name: Detect App Store provisioning profile for export
         script: |
-          npx cap copy ios
-          if [ ! -f ios/App/App/capacitor.config.json ]; then
-            echo "ERROR: Missing ios/App/App/capacitor.config.json"
+          # Find a .mobileprovision that matches the BUNDLE_ID and is an App Store profile (no ProvisionedDevices key).
+          PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          MATCHED=""
+          PROFILE_NAME=""
+
+          set -e
+          for f in "$PROFILE_DIR"/*.mobileprovision; do
+            [ -e "$f" ] || continue
+            # Decode to plist
+            PLIST=$(/usr/bin/security cms -D -i "$f")
+            BID=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" /dev/stdin <<<"$PLIST" 2>/dev/null | sed "s/^[A-Z0-9]*\.//")
+            HAS_DEVICES=$(/usr/libexec/PlistBuddy -c "Print :ProvisionedDevices" /dev/stdin <<<"$PLIST" 2>/dev/null && echo yes || echo no)
+            TYPE=$(/usr/libexec/PlistBuddy -c "Print :ProvisionsAllDevices" /dev/stdin <<<"$PLIST" 2>/dev/null && echo enterprise || echo standard)
+            NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" /dev/stdin <<<"$PLIST" 2>/dev/null)
+
+            if [ "$BID" = "$BUNDLE_ID" ] && [ "$HAS_DEVICES" = "no" ] && [ "$TYPE" = "standard" ]; then
+              MATCHED="$f"
+              PROFILE_NAME="$NAME"
+              break
+            fi
+          done
+
+          if [ -z "$MATCHED" ] || [ -z "$PROFILE_NAME" ]; then
+            echo "ERROR: No App Store provisioning profile found for $BUNDLE_ID in $PROFILE_DIR"
+            echo "Make sure an App Store profile for $BUNDLE_ID is present in Code signing identities, or use Fetch profiles."
             exit 1
           fi
-          if [ ! -d ios/App/App/public ]; then
-            echo "ERROR: Missing ios/App/App/public (web assets). Check Vite outDir and Capacitor webDir."
-            exit 1
-          fi
+
+          echo "Using provisioning profile: $PROFILE_NAME"
+          echo "PROFILE_NAME=$PROFILE_NAME" >> $CM_ENV
 
       - name: Xcode archive (Release)
         script: |
@@ -116,9 +46,9 @@ workflows:
             -allowProvisioningUpdates \
             clean archive
 
-      - name: Export IPA for App Store
+      - name: Export IPA for App Store (explicit profile)
         script: |
-          cat > exportOptions.plist <<'PLIST'
+          cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -127,19 +57,15 @@ workflows:
             <key>teamID</key><string>${TEAM_ID}</string>
             <key>stripSwiftSymbols</key><true/>
             <key>compileBitcode</key><false/>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>${BUNDLE_ID}</key><string>${PROFILE_NAME}</string>
+            </dict>
           </dict>
           </plist>
           PLIST
+
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/TradeLine247.xcarchive" \
             -exportOptionsPlist exportOptions.plist \
             -exportPath "$CM_BUILD_DIR/export"
-
-    artifacts:
-      - $CM_BUILD_DIR/export/*.ipa
-      - $CM_BUILD_DIR/TradeLine247.xcarchive
-
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
