@@ -44,7 +44,7 @@ scripts:
       set -euo pipefail
       APP_BUILD="$(date +%y%m%d%H)"
       echo "APP_BUILD=$APP_BUILD" | tee -a "$CM_ENV"
-      echo "APP_VERSION=$APP_VERSION"
+      echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
 
   - name: Install deps
     script: |
@@ -128,15 +128,51 @@ scripts:
     script: |
       set -euo pipefail
       npx cap copy ios
-      if [ ! -f ios/App/App/capacitor.config.json ]; then
-        echo "ERROR: Missing ios/App/App/capacitor.config.json"
-        exit 1
-      fi
-      if [ ! -d ios/App/App/public ]; then
-        echo "ERROR: Missing ios/App/App/public (web assets). Check Vite outDir and Capacitor webDir."
-        exit 1
-      fi
+      [ -f ios/App/App/capacitor.config.json ] || { echo "ERROR: Missing ios/App/App/capacitor.config.json"; exit 1; }
+      [ -d ios/App/App/public ] || { echo "ERROR: Missing ios/App/App/public (web assets)"; exit 1; }
 
+  - name: Limit device family to iPhone
+    script: |
+      set -euo pipefail
+      PLIST="ios/App/App/Info.plist"
+      /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" "$PLIST" >/dev/null 2>&1 || true
+      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
+      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
+
+  - name: Prepare App Icons (flatten alpha, enforce sizes, write asset catalog)
+    script: |
+      set -euo pipefail
+      ICON_SRC_DIR="public/assets/brand/App_Icons/ios"
+      ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
+      SRC1024="$ICON_SRC_DIR/AppStore1024.png"
+      SRC180="$ICON_SRC_DIR/iPhoneApp180.png"
+      SRC120="$ICON_SRC_DIR/iPhoneSpotlight120.png"
+      for f in "$SRC1024" "$SRC180" "$SRC120"; do
+        [ -f "$f" ] || { echo "ERROR: Missing $f"; exit 1; }
+      done
+      mkdir -p "$ICONSET"
+      python3 - <<'PY'
+import os
+from PIL import Image
+
+ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
+def save_opaque(src, out_name, size):
+img = Image.open(src).convert("RGBA")
+bg = Image.new("RGBA", img.size, "#FFFFFF")
+out = Image.alpha_composite(bg, img).convert("RGB").resize(size, Image.LANCZOS)
+out.save(os.path.join(ICONSET, out_name), "PNG")
+
+os.makedirs(ICONSET, exist_ok=True)
+save_opaque("public/assets/brand/App_Icons/ios/AppStore1024.png", "ItunesArtwork-1024.png", (1024,1024))
+save_opaque("public/assets/brand/App_Icons/ios/iPhoneApp180.png", "Icon-App-60x60@3x.png", (180,180))
+save_opaque("public/assets/brand/App_Icons/ios/iPhoneSpotlight120.png", "Icon-App-60x60@2x.png", (120,120))
+
+open(os.path.join(ICONSET, "Contents.json"), "w").write(
+'{\n "images": [\n {"size":"60x60","idiom":"iphone","filename":"Icon-App-60x60@2x.png","scale":"2x"},\n {"size":"60x60","idiom":"iphone","filename":"Icon-App-60x60@3x.png","scale":"3x"}\n ],\n "info":{"version":1,"author":"xcode"}\n}\n')
+PY
+
+javascript
+Copy code
   - name: Xcode archive (Release)
     script: |
       set -euo pipefail
@@ -149,7 +185,7 @@ scripts:
         -allowProvisioningUpdates \
         clean archive
 
-  - name: Export IPA for App Store (explicit profile)
+  - name: Export IPA for App Store
     script: |
       set -euo pipefail
       cat > exportOptions.plist <<PLIST
