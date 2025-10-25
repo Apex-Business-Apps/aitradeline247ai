@@ -1,6 +1,6 @@
 workflows:
   ios_capacitor_testflight:
-    name: iOS - Capacitor -> TestFlight (no loops)
+    name: iOS - Capacitor -> TestFlight (single run)
     instance_type: mac_mini_m2
     max_build_duration: 60
 
@@ -140,23 +140,39 @@ workflows:
           /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
           echo "UIDeviceFamily set to iPhone only."
 
-      - name: Prepare App Icons (generate iPhone icons, verify no alpha)
+      - name: Prepare App Icons from repo (verify, then write asset catalog)
         script: |
           set -euo pipefail
-          SRC="assets/appicon-1024.png"
+          ICON_DIR="public/assets/brand/App_Icons/ios"
           ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
           mkdir -p "$ICONSET"
 
-          [ -f "$SRC" ] || { echo "ERROR: $SRC not found. Add a 1024x1024 PNG without transparency."; exit 1; }
-          SIZE="$(sips -g pixelHeight -g pixelWidth "$SRC" 2>/dev/null | awk '/pixelHeight|pixelWidth/ {print $2}' | paste -sd 'x' -)"
-          [ "$SIZE" = "1024x1024" ] || { echo "ERROR: $SRC must be exactly 1024x1024, got $SIZE"; exit 1; }
-          HAS_ALPHA="$(sips -g hasAlpha "$SRC" 2>/dev/null | awk '/hasAlpha/ {print $2}')"
-          [ "$HAS_ALPHA" = "no" ] || { echo "ERROR: $SRC has transparency (alpha). Flatten onto a solid background and commit again."; exit 1; }
+          SRC1024="$ICON_DIR/AppStore1024.png"
+          SRC120="$ICON_DIR/iPhoneSpotlight120.png"
+          SRC180="$ICON_DIR/iPhoneApp180.png"
 
-          mk() { sips -s format png -Z "$1" "$SRC" --out "$ICONSET/$2" >/dev/null; }
-          mk 120 "Icon-App-60x60@2x.png"
-          mk 180 "Icon-App-60x60@3x.png"
-          cp "$SRC" "$ICONSET/ItunesArtwork-1024.png"
+          for f in "$SRC1024" "$SRC120" "$SRC180"; do
+            [ -f "$f" ] || { echo "ERROR: Missing $f"; exit 1; }
+          done
+
+          # Validate sizes and alpha
+          check_size () {
+            local file="$1"; local expect="$2"
+            local size
+            size="$(sips -g pixelHeight -g pixelWidth "$file" 2>/dev/null | awk '/pixelHeight|pixelWidth/ {print $2}' | paste -sd 'x' -)"
+            [ "$size" = "$expect" ] || { echo "ERROR: $file must be $expect, got $size"; exit 1; }
+            local has_alpha
+            has_alpha="$(sips -g hasAlpha "$file" 2>/dev/null | awk '/hasAlpha/ {print $2}')"
+            [ "$has_alpha" = "no" ] || { echo "ERROR: $file has transparency (alpha). Flatten to opaque PNG."; exit 1; }
+          }
+
+          check_size "$SRC1024" "1024x1024"
+          check_size "$SRC120"  "120x120"
+          check_size "$SRC180"  "180x180"
+
+          cp "$SRC120" "$ICONSET/Icon-App-60x60@2x.png"
+          cp "$SRC180" "$ICONSET/Icon-App-60x60@3x.png"
+          cp "$SRC1024" "$ICONSET/ItunesArtwork-1024.png"
 
           cat > "$ICONSET/Contents.json" <<'JSON'
           {
@@ -167,7 +183,8 @@ workflows:
             "info": { "version": 1, "author": "xcode" }
           }
           JSON
-          echo "Prepared AppIcon.appiconset for iPhone."
+
+          echo "Prepared AppIcon.appiconset from repository icons."
 
       - name: Xcode archive (Release)
         script: |
