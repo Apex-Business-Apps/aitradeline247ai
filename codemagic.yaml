@@ -82,6 +82,23 @@ scripts:
       /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" ios/App/App/Info.plist
       /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" ios/App/App/Info.plist
 
+  - name: Enforce iPhone-only at build-setting level and remove iPad-only plist keys
+    script: |
+      # 1) Force Targeted Device Family to iPhone (1) for all configurations/targets
+      sed -i '' -E 's/TARGETED_DEVICE_FAMILY = [^;]*;/TARGETED_DEVICE_FAMILY = 1;/g' ios/App/App.xcodeproj/project.pbxproj
+
+      # 2) Nuke any stray iPad-specific keys in Info.plist (these can make the target look iPad-capable)
+      PLIST=ios/App/App/Info.plist
+      /usr/libexec/PlistBuddy -c "Delete :UISupportedInterfaceOrientations~ipad" "$PLIST" || true
+      /usr/libexec/PlistBuddy -c "Delete :CFBundleIcons~ipad" "$PLIST" || true
+      /usr/libexec/PlistBuddy -c "Delete :UILaunchImages~ipad" "$PLIST" || true
+
+        # 3) Re-assert iPhone-only device family (plist will be regenerated from build setting at build time, but this keeps things in sync)
+       /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" "$PLIST" || true
+       /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
+       /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
+
+
   - name: Initialize keychain and add certificates
     script: |
       keychain initialize
