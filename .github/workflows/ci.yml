@@ -1,63 +1,57 @@
-name: ci/web
+# .github/workflows/web-ci.yml
+name: ci/build
 
 on:
-push:
-branches: [main]
-pull_request:
-branches: [main]
-
-permissions:
-contents: read
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 concurrency:
-group: ci-web-${{ github.ref }}
-cancel-in-progress: true
+  group: web-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-web:
-name: Build + Verify web (no lifecycle traps)
-runs-on: ubuntu-latest
-timeout-minutes: 20
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-steps:
-  - name: Checkout
-    uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.11.1"
 
-  - name: Setup Node.js 20.11.1
-    uses: actions/setup-node@v4
-    with:
-      node-version: '20.11.1'
-      cache: 'npm'
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
 
-  - name: Install dependencies
-    run: npm ci --no-audit --no-fund
+      - name: Sanitize package.json (remove lifecycle/cap hooks)
+        shell: bash
+        run: |
+          node --input-type=module -e "
+            import fs from 'fs';
+            const p = JSON.parse(fs.readFileSync('package.json','utf8'));
+            p.scripts = p.scripts || {};
+            for (const k of ['prebuild','postbuild','capacitor:sync:before','capacitor:sync:after']) {
+              if (p.scripts[k]) delete p.scripts[k];
+            }
+            fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
+          "
 
-  - name: Sanitize package.json (remove pre/post and capacitor sync hooks)
-    shell: bash
-    run: |
-      cat > sanitize.mjs <<'JS'
-      import fs from 'node:fs';
-      const p = JSON.parse(fs.readFileSync('package.json','utf8'));
-      p.scripts = p.scripts || {};
-      for (const k of ['prebuild','postbuild','capacitor:sync:before','capacitor:sync:after']) {
-        if (p.scripts[k]) delete p.scripts[k];
-      }
-      fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
-      console.log('Sanitized scripts:', Object.keys(p.scripts));
-      JS
-      node sanitize.mjs
+      - name: Build web (ignore lifecycle hooks)
+        run: NPM_CONFIG_IGNORE_SCRIPTS=true npm run build
 
-  - name: Build web (ignore lifecycle hooks)
-    run: NPM_CONFIG_IGNORE_SCRIPTS=true npm run build
+      - name: Verify built assets
+        run: |
+          node scripts/verify-app.cjs
+          node scripts/verify_icons.mjs
 
-  - name: Verify AFTER build
-    run: |
-      node scripts/verify-app.cjs
-      node scripts/verify_icons.mjs
-
-  - name: Upload web bundle artifact
-    uses: actions/upload-artifact@v4
-    with:
-      name: web-dist
-      path: dist
-      if-no-files-found: error
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: |
+            dist/**
+            !**/node_modules/**
