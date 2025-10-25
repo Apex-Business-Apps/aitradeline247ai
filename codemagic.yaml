@@ -1,27 +1,28 @@
 workflows:
   ios_capacitor_testflight:
-    name: iOS Capacitor TestFlight
+    name: TradeLine247 → TestFlight (Capacitor)
     instance_type: mac_mini_m2
     max_build_duration: 60
 
     environment:
+      # Define these two groups in Codemagic → Application → Environment variables.
       groups:
-        - appstore_credentials        # APP_STORE_CONNECT_KEY_IDENTIFIER / APP_STORE_CONNECT_ISSUER_ID / APP_STORE_CONNECT_PRIVATE_KEY
-        - ios_config                  # TEAM_ID / XCODE_WORKSPACE / XCODE_SCHEME / BUNDLE_ID / APP_STORE_ID (if you keep it here)
+        - appstore_credentials      # APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_PRIVATE_KEY
+        - ios_config                # TEAM_ID, XCODE_WORKSPACE, XCODE_SCHEME, BUNDLE_ID (and any other iOS config vars you keep)
       vars:
-        APP_VERSION: "1.0.0"
-        TEAM_ID_FALLBACK: "NWGUYF42KW"
+        APP_VERSION: "1.0.0"        # marketing version
+        TEAM_ID_FALLBACK: "NWGUYF42KW"   # hard stopgap if TEAM_ID were ever missing
       xcode: "16.0"
       cocoapods: "default"
       node: "20.11.1"
       npm: "10"
 
     scripts:
-      - name: Resolve version and build
+      - name: Resolve version/build
         script: |
           set -euo pipefail
           : "${APP_VERSION:=1.0.0}"
-          APP_BUILD="$(date +%y%m%d%H%M)"
+          APP_BUILD="$(date +%y%m%d%H%M)"   # monotonically increasing build
           {
             echo "APP_VERSION=$APP_VERSION"
             echo "APP_BUILD=$APP_BUILD"
@@ -40,9 +41,12 @@ workflows:
       - name: Verify web build artifacts
         script: |
           set -euo pipefail
-          test -f dist/index.html || { echo "Missing dist/index.html after npm run build"; exit 1; }
+          if [[ ! -f dist/index.html ]]; then
+            echo "Missing dist/index.html after npm run build" >&2
+            exit 1
+          fi
 
-      - name: Sync Capacitor iOS
+      - name: Sync Capacitor iOS wrapper
         script: |
           set -euo pipefail
           npx --yes cap sync ios
@@ -53,7 +57,6 @@ workflows:
           PROJECT_FILE="ios/App/App.xcodeproj/project.pbxproj"
           WORKSPACE_PATH="${XCODE_WORKSPACE:-ios/App/App.xcworkspace}"
           WORKSPACE_FILE="${WORKSPACE_PATH%/}/contents.xcworkspacedata"
-
           missing=0
           [[ -f "$PROJECT_FILE" ]]   || { echo "Expected $PROJECT_FILE after cap sync"; missing=1; }
           [[ -f "$WORKSPACE_FILE" ]] || { echo "Expected $WORKSPACE_FILE after cap sync"; missing=1; }
@@ -63,29 +66,42 @@ workflows:
         script: |
           set -euo pipefail
           TEAM_ID_VALUE="${TEAM_ID:-$TEAM_ID_FALLBACK}"
-
           REQUIRED=(APP_STORE_CONNECT_KEY_IDENTIFIER APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY)
           MISSING=()
           for V in "${REQUIRED[@]}"; do
             [[ -n "${!V:-}" ]] || MISSING+=("$V")
           done
           if (( ${#MISSING[@]} )); then
-            echo "Missing environment variables: ${MISSING[*]}"
-            echo "Ensure the 'appstore_credentials' group has: ${REQUIRED[*]}"
+            echo "Missing environment variables: ${MISSING[*]}" >&2
+            echo "Populate the 'appstore_credentials' group with: ${REQUIRED[*]}" >&2
             exit 1
           fi
+          echo "TEAM_ID=$TEAM_ID_VALUE" >> "$CM_ENV"
 
-          {
-            echo "TEAM_ID=$TEAM_ID_VALUE"
-          } >> "$CM_ENV"
+      - name: Fetch signing assets (prov. profiles & certificates)
+        script: |
+          set -euo pipefail
+          pip3 install --disable-pip-version-check --no-cache-dir codemagic-cli-tools==0.29.0
+          keychain initialize
+          # Downloads and installs the correct profiles/certs for the bundle id
+          app-store-connect fetch-signing-files \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_IDENTIFIER" \
+            --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" \
+            --type IOS_APP_STORE \
+            --bundle-id "${BUNDLE_ID:?BUNDLE_ID not set}"
+          # Import downloaded certificates to the keychain used by Xcode
+          keychain add-certificates
+          # Show codesign identities to confirm install (non-fatal)
+          security find-identity -v
 
-      - name: Install CocoaPods
+      - name: Install CocoaPods dependencies
         script: |
           set -euo pipefail
           cd ios/App
-          pod install
+          pod install --repo-update
 
-      - name: Prepare export options
+      - name: Prepare export options (App Store)
         script: |
           set -euo pipefail
           cat > "$CM_BUILD_DIR/ExportOptions.plist" <<'PLIST'
@@ -95,8 +111,7 @@ workflows:
             <dict>
               <key>method</key><string>app-store</string>
               <key>signingStyle</key><string>automatic</string>
-              <key>stripSwiftSymbols</key><true/>
-              <key>compileBitcode</key><true/>
+              <key>uploadBitcode</key><false/>
               <key>destination</key><string>export</string>
               <key>manageAppVersionAndBuildNumber</key><true/>
             </dict>
@@ -111,7 +126,6 @@ workflows:
           WORKSPACE_NAME="$(basename "$WORKSPACE_PATH")"
           SCHEME_NAME="${XCODE_SCHEME:-App}"
           BUNDLE_ID_VALUE="${BUNDLE_ID:-com.apex.tradeline}"
-
           cd "$WORKSPACE_DIR"
           xcodebuild \
             -workspace "$WORKSPACE_NAME" \
@@ -140,6 +154,8 @@ workflows:
 
     publishing:
       app_store_connect:
+        # API key auth: all three values are required by Codemagic
+        # (this exactly matches Codemagic’s publishing schema).
         api_key:
           key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
           issuer_id: $APP_STORE_CONNECT_ISSUER_ID
