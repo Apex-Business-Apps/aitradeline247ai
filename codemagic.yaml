@@ -1,6 +1,6 @@
 workflows:
   ios_capacitor_testflight:
-    name: iOS - Capacitor -> TestFlight
+    name: iOS - Capacitor -> TestFlight (no loops)
     instance_type: mac_mini_m2
     max_build_duration: 60
 
@@ -30,9 +30,8 @@ workflows:
         - ios/Pods
 
     scripts:
-      - name: Sanitize package.json (remove lifecycle and Capacitor hooks)
+      - name: Sanitize package.json (remove npm/Capacitor hooks)
         script: |
-          set -euo pipefail
           node --input-type=module -e "
             import fs from 'fs';
             const p = JSON.parse(fs.readFileSync('package.json','utf8'));
@@ -41,39 +40,32 @@ workflows:
               if (p.scripts[k]) delete p.scripts[k];
             }
             fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
-          "
+            console.log('Sanitized scripts:', Object.keys(p.scripts));
 
       - name: Resolve version/build
         script: |
-          set -euo pipefail
           APP_BUILD="$(date +%y%m%d%H)"
-          echo "APP_BUILD=$APP_BUILD" | tee -a "$CM_ENV"
           echo "Using APP_VERSION=$APP_VERSION / APP_BUILD=$APP_BUILD"
 
       - name: Install deps
         script: |
-          set -euo pipefail
           npm ci --no-audit --no-fund
 
       - name: Build web (ignore lifecycle hooks)
         script: |
-          set -euo pipefail
           NPM_CONFIG_IGNORE_SCRIPTS=true npm run build
 
       - name: Verify built assets (after build)
         script: |
-          set -euo pipefail
           node scripts/verify-app.cjs
           node scripts/verify_icons.mjs
 
       - name: Sync Capacitor iOS
         script: |
-          set -euo pipefail
           npx cap sync ios
 
       - name: Raise iOS deployment target to 15.0 (project + Podfile)
         script: |
-          set -euo pipefail
           sed -i '' -E "s/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g" ios/App/App.xcodeproj/project.pbxproj
           if grep -q "platform :ios" ios/App/Podfile; then
             sed -i '' -E "s/platform :ios, *'[0-9.]+'$/platform :ios, '15.0'/" ios/App/Podfile
@@ -83,32 +75,28 @@ workflows:
 
       - name: Install CocoaPods
         script: |
-          set -euo pipefail
           cd ios/App
           pod install --repo-update
 
       - name: Set iOS Info.plist versions
         script: |
-          set -euo pipefail
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" ios/App/App/Info.plist
 
       - name: Initialize keychain and add certificates
         script: |
-          set -euo pipefail
           keychain initialize
           keychain add-certificates
 
       - name: Apply provisioning profiles
         script: |
-          set -euo pipefail
           xcode-project use-profiles
 
       - name: Detect App Store provisioning profile for export
         script: |
-          set -euo pipefail
           PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
           PROFILE_NAME=""
+          set -e
           for f in "$PROFILE_DIR"/*.mobileprovision; do
             [ -e "$f" ] || continue
             PLIST=$(/usr/bin/security cms -D -i "$f")
@@ -122,70 +110,26 @@ workflows:
             fi
           done
           if [ -z "$PROFILE_NAME" ]; then
-            echo "ERROR: No App Store provisioning profile found for $BUNDLE_ID"
+            echo "ERROR: No App Store provisioning profile found for $BUNDLE_ID in $PROFILE_DIR"
             exit 1
           fi
-          echo "PROFILE_NAME=$PROFILE_NAME" | tee -a "$CM_ENV"
+          echo "PROFILE_NAME=$PROFILE_NAME" >> "$CM_ENV"
           echo "Using provisioning profile: $PROFILE_NAME"
 
       - name: Capacitor copy iOS (force + guards)
         script: |
-          set -euo pipefail
           npx cap copy ios
-          [ -f ios/App/App/capacitor.config.json ] || { echo "ERROR: Missing ios/App/App/capacitor.config.json"; exit 1; }
-          [ -d ios/App/App/public ] || { echo "ERROR: Missing ios/App/App/public (web assets)"; exit 1; }
-
-      - name: Limit device family to iPhone
-        script: |
-          set -euo pipefail
-          PLIST="ios/App/App/Info.plist"
-          /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" "$PLIST" >/dev/null 2>&1 || true
-          /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
-          /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
-
-      - name: Prepare App Icons from repo (auto-flatten, verify, write asset catalog)
-        script: |
-          set -euo pipefail
-          ICON_DIR="public/assets/brand/App_Icons/ios"
-          ICONSET="ios/App/App/Assets.xcassets/AppIcon.appiconset"
-          mkdir -p "$ICONSET"
-          SRC1024="$ICON_DIR/AppStore1024.png"
-          SRC120="$ICON_DIR/iPhoneSpotlight120.png"
-          SRC180="$ICON_DIR/iPhoneApp180.png"
-          for f in "$SRC1024" "$SRC120" "$SRC180"; do
-            [ -f "$f" ] || { echo "ERROR: Missing $f"; exit 1; }
-          done
-          python3 -m pip install --user Pillow >/dev/null 2>&1 || true
-          PYTHONUSERBASE="$HOME/Library/Python" python3 - <<'PY'
-import os
-from PIL import Image
-
-ICON_DIR = "public/assets/brand/App_Icons/ios"
-ICONSET  = "ios/App/App/Assets.xcassets/AppIcon.appiconset"
-
-SRC1024 = os.path.join(ICON_DIR, "AppStore1024.png")
-SRC120  = os.path.join(ICON_DIR, "iPhoneSpotlight120.png")
-SRC180  = os.path.join(ICON_DIR, "iPhoneApp180.png")
-
-def flatten(src, size, hex_color="#F26722"):
-    img = Image.open(src).convert("RGBA")
-    bg  = Image.new("RGBA", img.size, hex_color)
-    out = Image.alpha_composite(bg, img).convert("RGB").resize(size, Image.LANCZOS)
-    return out
-
-os.makedirs(ICONSET, exist_ok=True)
-flatten(SRC1024,(1024,1024)).save(os.path.join(ICONSET,"ItunesArtwork-1024.png"),"PNG")
-flatten(SRC180,(180,180)).save(os.path.join(ICONSET,"Icon-App-60x60@3x.png"),"PNG")
-flatten(SRC120,(120,120)).save(os.path.join(ICONSET,"Icon-App-60x60@2x.png"),"PNG")
-
-open(os.path.join(ICONSET,"Contents.json"),"w").write(
-"{\n  \"images\": [\n    { \"size\": \"60x60\", \"idiom\": \"iphone\", \"filename\": \"Icon-App-60x60@2x.png\", \"scale\": \"2x\" },\n    { \"size\": \"60x60\", \"idiom\": \"iphone\", \"filename\": \"Icon-App-60x60@3x.png\", \"scale\": \"3x\" }\n  ],\n  \"info\": { \"version\": 1, \"author\": \"xcode\" }\n}\n")
-PY
-          ls -la "$ICONSET"
+          if [ ! -f ios/App/App/capacitor.config.json ]; then
+            echo "ERROR: Missing ios/App/App/capacitor.config.json"
+            exit 1
+          fi
+          if [ ! -d ios/App/App/public ]; then
+            echo "ERROR: Missing ios/App/App/public (web assets). Check Vite outDir and Capacitor webDir."
+            exit 1
+          fi
 
       - name: Xcode archive (Release)
         script: |
-          set -euo pipefail
           xcodebuild -workspace "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
             -configuration Release \
@@ -195,9 +139,8 @@ PY
             -allowProvisioningUpdates \
             clean archive
 
-      - name: Export IPA for App Store
+      - name: Export IPA for App Store (explicit profile)
         script: |
-          set -euo pipefail
           cat > exportOptions.plist <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
