@@ -1,3 +1,9 @@
+workflows:
+ios_capacitor_testflight:
+name: iOS - Capacitor -> TestFlight (single run)
+instance_type: mac_mini_m2
+max_build_duration: 60
+
 integrations:
   app_store_connect: Created via API
 
@@ -24,7 +30,7 @@ cache:
     - ios/Pods
 
 scripts:
-  - name: Sanitize package.json (remove npm and Capacitor hooks)
+  - name: Sanitize package.json (remove npm/Capacitor hooks)
     script: |
       node --input-type=module -e "
         import fs from 'fs';
@@ -34,16 +40,14 @@ scripts:
           if (p.scripts[k]) delete p.scripts[k];
         }
         fs.writeFileSync('package.json', JSON.stringify(p, null, 2));
-        console.log('Sanitized scripts:', Object.keys(p.scripts).join(','));
       "
 
-  - name: Resolve version and build
+  - name: Resolve version/build
     script: |
       APP_BUILD="$(date +%y%m%d%H)"
       echo "APP_BUILD=$APP_BUILD" | tee -a "$CM_ENV"
-      echo "Using APP_VERSION=$APP_VERSION APP_BUILD=$APP_BUILD"
 
-  - name: Install dependencies
+  - name: Install deps
     script: |
       npm ci --no-audit --no-fund
 
@@ -60,7 +64,7 @@ scripts:
     script: |
       npx cap sync ios
 
-  - name: Raise iOS deployment target to 15.0 (project and Podfile)
+  - name: Raise iOS deployment target to 15.0 (project + Podfile)
     script: |
       sed -i '' -E "s/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g" ios/App/App.xcodeproj/project.pbxproj
       if grep -q "platform :ios" ios/App/Podfile; then
@@ -74,80 +78,64 @@ scripts:
       cd ios/App
       pod install --repo-update
 
-  - name: Set Info.plist versions and iPhone-only device family
+  - name: Set iOS Info.plist versions + iPhone-only device family
     script: |
-      /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" ios/App/App/Info.plist
-      /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" ios/App/App/Info.plist
-      /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" ios/App/App/Info.plist || true
-      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" ios/App/App/Info.plist
-      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" ios/App/App/Info.plist
-
-  - name: Enforce iPhone-only at build-setting level and remove iPad-only plist keys
-    script: |
-      # 1) Force Targeted Device Family to iPhone (1) for all configurations/targets
-      sed -i '' -E 's/TARGETED_DEVICE_FAMILY = [^;]*;/TARGETED_DEVICE_FAMILY = 1;/g' ios/App/App.xcodeproj/project.pbxproj
-
-      # 2) Nuke any stray iPad-specific keys in Info.plist (these can make the target look iPad-capable)
-      PLIST=ios/App/App/Info.plist
-      /usr/libexec/PlistBuddy -c "Delete :UISupportedInterfaceOrientations~ipad" "$PLIST" || true
-      /usr/libexec/PlistBuddy -c "Delete :CFBundleIcons~ipad" "$PLIST" || true
-      /usr/libexec/PlistBuddy -c "Delete :UILaunchImages~ipad" "$PLIST" || true
-
-        # 3) Re-assert iPhone-only device family (plist will be regenerated from build setting at build time, but this keeps things in sync)
-       /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" "$PLIST" || true
-       /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
-       /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
-
+      PLIST="ios/App/App/Info.plist"
+      /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_VERSION}" "$PLIST"
+      /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD}" "$PLIST"
+      /usr/libexec/PlistBuddy -c "Delete :UIDeviceFamily" "$PLIST" || true
+      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily array" "$PLIST"
+      /usr/libexec/PlistBuddy -c "Add :UIDeviceFamily:0 integer 1" "$PLIST"
 
   - name: Initialize keychain and add certificates
     script: |
       keychain initialize
       keychain add-certificates
 
-  - name: Apply provisioning profiles to Xcode project
+  - name: Apply provisioning profiles
     script: |
       xcode-project use-profiles
 
-  - name: Capacitor copy iOS and guards
+  - name: Capacitor copy iOS (force + guards)
     script: |
       npx cap copy ios
-      if [ ! -f ios/App/App/capacitor.config.json ]; then
-        echo "ERROR: Missing ios/App/App/capacitor.config.json"
-        exit 1
-      fi
-      if [ ! -d ios/App/App/public ]; then
-        echo "ERROR: Missing ios/App/App/public (web assets)"
-        exit 1
-      fi
+      [ -f ios/App/App/capacitor.config.json ] || { echo "ERROR: Missing ios/App/App/capacitor.config.json"; exit 1; }
+      [ -d ios/App/App/public ] || { echo "ERROR: Missing ios/App/App/public (web assets)"; exit 1; }
 
-  - name: Prepare App Icons (flatten alpha, iPhone only)
+  - name: Prepare App Icons (flatten alpha, verify sizes, iPhone only)
     script: |
       set -e
-      SRC_DIR="public/assets/brand/App_Icons/ios"
-      AC_DIR="ios/App/App/Assets.xcassets/AppIcon.appiconset"
-      APPSTORE="$SRC_DIR/AppStore1024.png"
-      PHONE180="$SRC_DIR/iPhoneApp180.png"
-      SPOT120="$SRC_DIR/iPhoneSpotlight120.png"
+      SRC="public/assets/brand/App_Icons/ios"
+      AC="ios/App/App/Assets.xcassets/AppIcon.appiconset"
+      APPSTORE="$SRC/AppStore1024.png"
+      PHONE180="$SRC/iPhoneApp180.png"
+      SPOT120="$SRC/iPhoneSpotlight120.png"
       for f in "$APPSTORE" "$PHONE180" "$SPOT120"; do
         [ -f "$f" ] || { echo "ERROR: $f not found"; exit 1; }
       done
-      check_size() { sips -g pixelWidth -g pixelHeight "$1" 2>/dev/null | awk '/pixelWidth|pixelHeight/ {print $2}' | tr '\n' ' '; }
-      sz="$(check_size "$APPSTORE")"; [ "$sz" = "1024 1024 " ] || { echo "ERROR: AppStore1024.png must be 1024x1024"; exit 1; }
-      sz="$(check_size "$PHONE180")"; [ "$sz" = "180 180 " ] || { echo "ERROR: iPhoneApp180.png must be 180x180"; exit 1; }
-      sz="$(check_size "$SPOT120")"; [ "$sz" = "120 120 " ] || { echo "ERROR: iPhoneSpotlight120.png must be 120x120"; exit 1; }
-      for f in "$APPSTORE" "$PHONE180" "$SPOT120"; do
+      mkdir -p "$AC"
+      ensure_opaque () {
+        in="$1"; out="$2"
         if command -v convert >/dev/null 2>&1; then
-          convert "$f" -background white -alpha remove -alpha off "$f"
+          convert "$in" -background white -alpha remove -alpha off "$out"
         else
-          sips -s format png "$f" --out "$f.tmp.png" >/dev/null
-          mv "$f.tmp.png" "$f"
+          # Fallback: reencode to PNG with sips (will keep opaque if already opaque)
+          /usr/bin/sips -s format png "$in" --out "$out" >/dev/null
         fi
-      done
-      mkdir -p "$AC_DIR"
-      cp "$APPSTORE" "$AC_DIR/AppStore1024.png"
-      cp "$PHONE180" "$AC_DIR/iPhoneApp180.png"
-      cp "$SPOT120" "$AC_DIR/iPhoneSpotlight120.png"
-      cat > "$AC_DIR/Contents.json" <<'JSON'
+      }
+      size_check () {
+        file="$1"; need="$2"
+        W=$(/usr/bin/sips -g pixelWidth "$file" 2>/dev/null | awk '/pixelWidth/ {print $2}')
+        H=$(/usr/bin/sips -g pixelHeight "$file" 2>/dev/null | awk '/pixelHeight/ {print $2}')
+        [ "$W"x = "$need"x ] && [ "$H"x = "$need"x ] || { echo "ERROR: $file must be ${need}x${need}"; exit 1; }
+      }
+      ensure_opaque "$APPSTORE" "$AC/AppStore1024.png"
+      ensure_opaque "$PHONE180" "$AC/iPhoneApp180.png"
+      ensure_opaque "$SPOT120" "$AC/iPhoneSpotlight120.png"
+      size_check "$AC/AppStore1024.png" 1024
+      size_check "$AC/iPhoneApp180.png" 180
+      size_check "$AC/iPhoneSpotlight120.png" 120
+      cat > "$AC/Contents.json" <<'JSON'
       {
         "images": [
           { "idiom": "iphone", "size": "60x60", "scale": "3x", "filename": "iPhoneApp180.png" },
@@ -160,7 +148,6 @@ scripts:
 
   - name: Detect App Store provisioning profile for export
     script: |
-      set -e
       PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
       PROFILE_NAME=""
       for f in "$PROFILE_DIR"/*.mobileprovision; do
@@ -171,8 +158,7 @@ scripts:
         ALL_DEVICES=$(/usr/libexec/PlistBuddy -c "Print :ProvisionsAllDevices" /dev/stdin <<<"$PLIST" 2>/dev/null && echo yes || echo no)
         NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" /dev/stdin <<<"$PLIST" 2>/dev/null)
         if [ "$BID" = "$BUNDLE_ID" ] && [ "$HAS_DEVICES" = "no" ] && [ "$ALL_DEVICES" = "no" ]; then
-          PROFILE_NAME="$NAME"
-          break
+          PROFILE_NAME="$NAME"; break
         fi
       done
       [ -n "$PROFILE_NAME" ] || { echo "ERROR: No App Store profile for $BUNDLE_ID"; exit 1; }
@@ -190,7 +176,7 @@ scripts:
         -allowProvisioningUpdates \
         clean archive
 
-  - name: Export IPA for App Store
+  - name: Export IPA for App Store (explicit profile)
     script: |
       cat > exportOptions.plist <<PLIST
       <?xml version="1.0" encoding="UTF-8"?>
