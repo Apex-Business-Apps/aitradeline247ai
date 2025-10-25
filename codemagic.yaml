@@ -5,12 +5,12 @@ workflows:
     max_build_duration: 60
 
     integrations:
-      app_store_connect: Created via API   # the key you connected (green dot)
+      app_store_connect: Created via API
 
     environment:
       groups:
-        - ios_config                      # TEAM_ID, BUNDLE_ID, etc.
-      ios_signing:                        # <-- helps Codemagic pick the right cert+profile
+        - ios_config
+      ios_signing:
         distribution_type: app_store
         bundle_identifier: $BUNDLE_ID
       vars:
@@ -62,11 +62,22 @@ workflows:
       - name: Initialize keychain & add uploaded certs
         script: |
           keychain initialize
-          keychain add-certificates     # pulls certs you added in Code signing identities
+          keychain add-certificates
 
       - name: Apply provisioning profiles to Xcode project
         script: |
-          xcode-project use-profiles    # applies profiles that match ios_signing settings
+          xcode-project use-profiles
+
+      # 🔧 Ensure iOS has web assets + Capacitor config right before archive
+      - name: Capacitor copy iOS (force)
+        script: |
+          npx cap copy ios
+          echo "Listing expected files:"
+          ls -la ios/App/App | sed -n '1,120p'
+          [ -f ios/App/App/capacitor.config.json ] || (echo "❌ Missing ios/App/App/capacitor.config.json" && exit 1)
+          [ -d ios/App/App/public ] || (echo "❌ Missing ios/App/App/public (web assets). Did build output to 'dist' and is webDir set correctly?)" && exit 1)
+          # Optional (some projects reference this via Cordova bridge)
+          [ -f ios/App/App/config.xml ] || echo "ℹ️ config.xml not found; many Capacitor apps don’t use it. Proceeding."
 
       - name: Xcode archive (Release)
         script: |
@@ -104,5 +115,5 @@ workflows:
 
     publishing:
       app_store_connect:
-        auth: integration                # uses the connected ASC key
+        auth: integration
         submit_to_testflight: true
